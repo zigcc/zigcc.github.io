@@ -1,0 +1,3 @@
+
+serve:
+	hugo serve

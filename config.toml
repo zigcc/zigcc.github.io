@@ -1,0 +1,30 @@
+baseURL = 'https://zig-china.github.io/'
+languageCode = 'en-us'
+title = 'Zig 语言中文社区'
+
+theme = "cupper-hugo-theme"
+
+[[menu.nav]]
+  name = "论坛"
+  weight = 1
+  url = "https://github.com/zig-china/forum/discussions"
+# [[menu.nav]]
+#   name = "月刊"
+#   weight = 2
+#   url = "/post"
+# [[menu.nav]]
+#   name = "Tags"
+#   weight = 3
+#   url = "/tags"
+[[menu.nav]]
+  name = "关于"
+  weight = 4
+  url = "/about"
+[[menu.nav]]
+  name = "RSS"
+  weight = 5
+  url = "/index.xml"
+
+[params]
+  description = "[Zig](https://ziglang.org/) 语言中文社区，致力于分享、传播 Zig 语言在国内的应用"
+  footer =  "@ 2022 [Zig China](https://github.com/zig-china/zig-china.github.io). Licensed under [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/)"

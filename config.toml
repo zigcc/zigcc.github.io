@@ -16,10 +16,10 @@ theme = "cupper-hugo-theme"
 #   name = "Tags"
 #   weight = 3
 #   url = "/tags"
-[[menu.nav]]
-  name = "关于"
-  weight = 4
-  url = "/about"
+# [[menu.nav]]
+#   name = "关于"
+#   weight = 4
+#   url = "/about"
 [[menu.nav]]
   name = "RSS"
   weight = 5

@@ -6,8 +6,13 @@
 #+STARTUP: content
 
 #+begin_quote
-[[https://ziglang.org/zh/][Zig]] 是一种通用的编程语言和工具链，用于维护健壮、性能优越和可重用的软件
+[[https://ziglang.org/zh/][Zig]] 是一种通用的编程语言和工具链，用于维护健壮、性能优越和可重用的软件。
 #+end_quote
 
-- 新手提问、观点分享，请移步论坛
+- 论坛
   - https://zigcc.github.io/forum/
+- 群组
+  - Telegram：https://t.me/ZigChinese
+  - QQ：930564004
+- 意见、反馈
+  - 邮件：[[mailto:jiacai2050+zig@gmail.com][jiacai2050+zig@gmail.com]]

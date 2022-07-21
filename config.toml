@@ -7,7 +7,7 @@ theme = "cupper-hugo-theme"
 [[menu.nav]]
   name = "论坛"
   weight = 1
-  url = "https://github.com/zigcc/forum/discussions"
+  url = "https://zigcc.github.io/forum/"
 # [[menu.nav]]
 #   name = "月刊"
 #   weight = 2
@@ -26,5 +26,5 @@ theme = "cupper-hugo-theme"
   url = "/index.xml"
 
 [params]
-  description = "[Zig](https://ziglang.org/) 语言中文社区，致力于分享、传播 Zig 语言在国内的应用"
+  description = "[Zig](https://ziglang.org/) 语言中文社区，致力于分享、传播 Zig 语言在中文用户内的使用"
   footer =  "@ 2022 [ZigCC](https://github.com/zigcc/zigcc.github.io). Licensed under [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/)"

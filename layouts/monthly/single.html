@@ -1,0 +1,36 @@
+{{ define "main" }}
+<main id="main">
+  <h1>
+    <svg class="bookmark-icon" aria-hidden="true" viewBox="0 0 40 50" focusable="false">
+      <use href="#bookmark"></use>
+    </svg>
+    {{ .Title }}
+  </h1>
+
+  <div class="date">
+    {{ $dateFormat := $.Site.Params.dateFormat | default "Jan 2, 2006" }}
+    {{ $publishDate := .PublishDate }}
+    <strong>{{ T "publish_date" }} </strong>{{ $publishDate.Format $dateFormat }}
+    {{ with .Lastmod }}
+    {{ if gt . $publishDate }}
+    <br>
+    <strong>{{ T "last_updated" }} </strong>{{ .Format $dateFormat }}
+    {{ end }}
+    {{ end }}
+  </div>
+
+  {{ partial "toc.html" . }}
+
+  {{ .Content }}
+  <h1>
+    建议/反馈✉️
+  </h1>
+  <ol>
+    <li>
+      发现内容错误或链接失效？欢迎<a href="{{ .Site.Params.gitRepo }}/blob/master/content/{{ .File.Path }}">提交 PR</a>
+    </li>
+    <li>想要推荐内容，欢迎<a href="https://github.com/zigcc/forum/discussions/new?labels=%E6%9C%88%E5%88%8A&category=general">提交讨论</a>
+  </ol>
+</main>
+{{ partial "disqus.html" . }}
+{{ end }}

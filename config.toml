@@ -31,3 +31,8 @@ theme = "cupper-hugo-theme"
   dateFormat = "Jan 2, 2006"
   showThemeSwitcher =  true
   gitRepo = "https://github.com/zigcc/zigcc.github.io"
+  [params.giscus]           # https://giscus.app/
+    repo = "zigcc/zigcc.github.io"
+    repoId = "R_kgDOHr7nSg"
+    category = "Announcements"
+    categoryId = "DIC_kwDOHr7nSs4CQUsK"

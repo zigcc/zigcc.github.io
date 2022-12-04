@@ -1,7 +1,6 @@
 baseURL = 'https://zigcc.github.io/'
 languageCode = 'en-us'
 title = 'Zig 语言中文社区'
-
 theme = "cupper-hugo-theme"
 
 [[menu.nav]]

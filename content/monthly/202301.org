@@ -20,6 +20,7 @@
 - [[https://github.com/dantecatalfamo/zig-git][dantecatalfamo/zig-git]] ::
   Implementing git structures and functions in zig
 - [[https://github.com/axiomhq/zig-hyperloglog][axiomhq/zig-hyperloglog]] :: Zig library for HyperLogLog estimation
+- [[https://thisweekinzig.mataroa.blog/][This Week In Zig]] :: 一个介绍 Zig 的周刊，主要是 master 分支上的改动
 
 * [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-01-01..2023-02-01][Zig 语言更新]]
 - [[https://github.com/ziglang/zig/pull/14265][Package Manager MVP by andrewrk · Pull Request #14265]] :: Zig 终于开始支持包管理了，不过才刚刚开始，专门有一个[[https://github.com/ziglang/zig/projects/4][面板]]来跟踪相关进度。

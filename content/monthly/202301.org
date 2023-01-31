@@ -1,0 +1,25 @@
+#+TITLE: 202301 | 0.10.1 发布
+#+DATE: 2023-01-31T20:05:19+0800
+#+LASTMOD: 2023-01-31T20:05:19+0800
+
+* [[https://ziglang.org/download/0.10.1/release-notes.html][0.10.1]]
+一个小版本，主要是 bugfix。
+- LLVM 升级到 [[http://releases.llvm.org/15.0.7/docs/ReleaseNotes.html][15.0.7]]
+- 是 0.10.x 的最后一个 release 版本
+* 观点/教程
+- [[https://zig.news/yglcode/code-study-interface-idiomspatterns-in-zig-standard-libraries-4lkj][Code study: interface idioms/patterns in zig standard libraries]] ::
+  由于 Zig 目前还不支持接口抽空，本文介绍了标准库中来实现类似功能的五种方式
+- [[https://kihlander.net/post/a-zig-diary/][A Zig Diary]] :: 作者分享了对 Zig 的使用体验
+- [[https://datastackshow.com/podcast/why-accounting-needs-its-own-database-with-joran-greef-of-tiger-beetle/][Why Accounting Needs Its Own Database with Joran Greef of Tiger Beetle]] :: 播客分享
+- [[https://0110.be/posts/Crossplatform_JNI_builds_with_Zig][Crossplatform JNI builds with Zig]] :: 又一个使用 Zig 作为交叉编译的例子
+* 项目/工具
+- [[https://zig.news/renerocksai/introducing-zap-blazingly-fast-backends-in-zig-3jhh][Introducing ⚡zap⚡ - blazingly fast backends in zig]] ::
+  Zap 是 Zig 对 [[https://facil.io/][facil.io - The C Web Application Framework]] 的封装，本文算是对它的宣传。
+- [[https://zig.news/auguste/indexing-every-zig-for-great-justice-4l1h][Indexing every Zig for great justice]] ::
+  本文介绍了另一种语言服务器协议（LSP)：SCIP，并用 zig 实现。项目处于早期阶段。
+- [[https://github.com/dantecatalfamo/zig-git][dantecatalfamo/zig-git]] ::
+  Implementing git structures and functions in zig
+- [[https://github.com/axiomhq/zig-hyperloglog][axiomhq/zig-hyperloglog]] :: Zig library for HyperLogLog estimation
+
+* [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-01-01..2023-02-01][Zig 语言更新]]
+- [[https://github.com/ziglang/zig/pull/14265][Package Manager MVP by andrewrk · Pull Request #14265]] :: Zig 终于开始支持包管理了，不过才刚刚开始，专门有一个[[https://github.com/ziglang/zig/projects/4][面板]]来跟踪相关进度。

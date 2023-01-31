@@ -1,9 +1,47 @@
-#+TITLE: 202301 | 0.10.1 发布
+#+TITLE: 202301 | 包管理来了
 #+DATE: 2023-01-31T20:05:19+0800
 #+LASTMOD: 2023-01-31T20:05:19+0800
 
-* [[https://ziglang.org/download/0.10.1/release-notes.html][0.10.1]]
-一个小版本，主要是 bugfix。
+* [[https://ziglang.org/download/0.10.1/release-notes.html][0.10.1]] 版本发布
+一个小版本，主要是 bugfix。最主要的功能是：[[https://github.com/ziglang/zig/pull/14265][Package Manager MVP]]，Zig 终于开始支持包管理了！
+不过才刚刚开始，有一个[[https://github.com/ziglang/zig/projects/4][面板]]来跟踪相关 issue 进度。使用的配置文件是 =build.zig.ini= ，格式如下：
+#+begin_src conf
+[package]
+name=libffmpeg
+version=5.1.2
+
+[dependency]
+name=libz
+url=https://github.com/andrewrk/libz/archive/f0e53cc2391741034b144a2c2076ed8a9937b29b.tar.gz
+hash=c9b30cffc40999d2c078ff350cbcee642970a224fe123c756d0892f876cf1aae
+
+[dependency]
+name=libmp3lame
+url=https://github.com/andrewrk/libmp3lame/archive/497568e670bfeb14ab6ef47fb6459a2251358e43.tar.gz
+hash=9ba4f49895b174a3f918d489238acbc146bd393575062b2e3be33488b688e36f
+#+end_src
+=build.zig= 引用方式：
+#+begin_src zig
+const std = @import("std");
+
+pub fn build(b: *std.build.Builder) void {
+    const target = b.standardTargetOptions(.{});
+    const mode = b.standardReleaseOptions();
+
+    const libz_dep = b.dependency("libz", .{});
+    const libmp3lame_dep = b.dependency("libmp3lame", .{});
+
+    const lib = b.addStaticLibrary("ffmpeg", null);
+    lib.setTarget(target);
+    lib.setBuildMode(mode);
+    lib.linkLibrary(libz_dep.artifact("z"));
+    lib.linkLibrary(libmp3lame_dep.artifact("mp3lame"));
+    lib.linkLibC();
+    lib.addIncludePath(".");
+    lib.install();
+}
+#+end_src
+其他关注点：
 - LLVM 升级到 [[http://releases.llvm.org/15.0.7/docs/ReleaseNotes.html][15.0.7]]
 - 是 0.10.x 的最后一个 release 版本
 * 观点/教程
@@ -23,4 +61,3 @@
 - [[https://thisweekinzig.mataroa.blog/][This Week In Zig]] :: 一个介绍 Zig 的周刊，主要是 master 分支上的改动
 
 * [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-01-01..2023-02-01][Zig 语言更新]]
-- [[https://github.com/ziglang/zig/pull/14265][Package Manager MVP by andrewrk · Pull Request #14265]] :: Zig 终于开始支持包管理了，不过才刚刚开始，专门有一个[[https://github.com/ziglang/zig/projects/4][面板]]来跟踪相关进度。

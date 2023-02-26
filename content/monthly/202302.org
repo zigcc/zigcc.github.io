@@ -1,0 +1,37 @@
+#+TITLE: 202302 | 精益求精的包管理
+#+DATE: 2023-02-26T17:36:12+0800
+#+LASTMOD: 2023-01-31T20:05:19+0800
+
+* 包管理器进展
+包管理器自 [[https://github.com/ziglang/zig/pull/14265][#14265]] 合并后一直在不断推进，以下两个是最主要的改变：
+- [[https://github.com/ziglang/zig/issues/14307][build system terminology update: package, project, module, dependency]]
+
+  这里重新梳理了现在的术语，主要有以下几个：
+  - =package= 文件的集合，由文件的 hash 值唯一指定，一个 package 可能包含任意数目的 compilation artifacts 与 modules。
+  - =dependency= 不同 package 之间的有向边，一个 package 可以有任意个依赖，一个 package 也可以用作任意项目的依赖
+  - =module= 文件的集合，每一个模块都有一个 root 文件，在被 =@import= 时会被用到。
+  - =compilation artifact= 编译构建产物，可以是 static library，dynamic library，an executable 或 an object file，对应之前版本的 =LibExeObjStep=
+- [[https://github.com/ziglang/zig/pull/14523][introduce Zig Object Notation and use it for the build manifest file (build.zig.zon)]]
+
+  使用 zon 格式替代之前的 ini，格式如下：
+  #+begin_src zig
+.{
+    .name = "awesome-cli",
+    .version = "0.1.0",
+    .dependencies = .{
+        .simargs = .{
+            .url = "https://github.com/jiacai2050/simargs/archive/0a1a2afd072cc915009a063075743192fc6b1fd5.tar.gz",
+            .hash = "1220a6554eccb2e9a9d7d63047e062314851ffd11315b9e6d1b5e06a9dde3275f150",
+        },
+    },
+}
+  #+end_src
+  一些使用了包管理的实际例子有：
+  - [[https://github.com/andrewrk/ffmpeg][andrewrk/ffmpeg: ffmpeg with the build system replaced by zig]]
+  - [[https://github.com/jiacai2050/loc][jiacai2050/loc: Lines of code in Zig]]，适配包管理的相关 [[https://github.com/jiacai2050/loc/commit/7b01c09a4ba9d3ddc3d067cc6af654601a99035a][commit 修改]]
+* 观点/教程
+- [[https://matklad.github.io/2023/02/10/how-a-zig-ide-could-work.html][How a Zig IDE Could Work]]
+- [[https://devlog.hexops.com/2023/zig-0-11-breaking-build-changes/][Zig tips: v0.11 std.build API / package manager changes | Hexops' devlog]]
+
+* 项目/工具
+* [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-02-01..2023-03-01][Zig 语言更新]]

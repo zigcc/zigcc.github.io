@@ -26,10 +26,13 @@
     },
 }
   #+end_src
-  一些使用了包管理的实际例子有：
+  一些使用了包管理的实际项目：
   - [[https://github.com/andrewrk/ffmpeg][andrewrk/ffmpeg: ffmpeg with the build system replaced by zig]]
   - [[https://github.com/jiacai2050/loc][jiacai2050/loc: Lines of code in Zig]]，适配包管理的相关 [[https://github.com/jiacai2050/loc/commit/7b01c09a4ba9d3ddc3d067cc6af654601a99035a][commit 修改]]
   - [[https://github.com/PCRE2Project/pcre2/pull/206][PCRE2Project/pcre2: zig build support]]
+  - [[https://github.com/nikneym/ws][nikneym/ws: WebSocket library for Zig]]
+
+也欢迎大家给自己熟悉的 C/C++ 项目提 PR 让其支持 zig build，让构建不再那么痛苦。
 * 观点/教程
 - [[https://matklad.github.io/2023/02/10/how-a-zig-ide-could-work.html][How a Zig IDE Could Work]]
 - [[https://devlog.hexops.com/2023/zig-0-11-breaking-build-changes/][Zig tips: v0.11 std.build API / package manager changes | Hexops' devlog]]

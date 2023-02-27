@@ -36,6 +36,25 @@
 * 观点/教程
 - [[https://matklad.github.io/2023/02/10/how-a-zig-ide-could-work.html][How a Zig IDE Could Work]]
 - [[https://devlog.hexops.com/2023/zig-0-11-breaking-build-changes/][Zig tips: v0.11 std.build API / package manager changes | Hexops' devlog]]
+- [[https://lobste.rs/s/zh3ulk/pcre2_support_zig_build][pcre2 support zig build | Lobsters]]
+- [[https://kristoff.it/blog/zig-multi-sequence-for-loops/][Zig's Curious Multi-Sequence For Loops | Loris Cro's Blog]]
+
+  Loris 的文章，演示了最新的 for 语法，开始支持了 range：
+  #+begin_src zig
+for (0..4) |n| {
+   std.debug.print("{} ", .{n});
+}
+  #+end_src
+  同时也支持了一次性迭代多个数组的功能：
+  #+begin_src zig
+
+var elems = [_][]const u8 { "water", "earth", "fire", "wind" };
+var nats = [_][]const u8 { "tribes", "kingdom", "nation", "nomads" };
+
+for (elems, nats) |e, n| {
+   std.debug.print("{s} {s}\n", .{e, n});
+}
+#+end_src
 
 * 项目/工具
 * [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-02-01..2023-03-01][Zig 语言更新]]

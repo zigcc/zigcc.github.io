@@ -31,6 +31,7 @@
   - [[https://github.com/jiacai2050/loc][jiacai2050/loc: Lines of code in Zig]]，适配包管理的相关 [[https://github.com/jiacai2050/loc/commit/7b01c09a4ba9d3ddc3d067cc6af654601a99035a][commit 修改]]
   - [[https://github.com/PCRE2Project/pcre2/pull/206][PCRE2Project/pcre2: zig build support]]
   - [[https://github.com/nikneym/ws][nikneym/ws: WebSocket library for Zig]]
+  - [[https://github.com/natecraddock/ziglua/issues/6][Zig package manager · Issue #6 · natecraddock/ziglua]]
 
 也欢迎大家给自己熟悉的 C/C++ 项目提 PR 让其支持 zig build，让构建不再那么痛苦。
 * 观点/教程

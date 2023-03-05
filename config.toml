@@ -23,10 +23,10 @@ theme = "hugo-xmin"
 #   name = "关于"
 #   weight = 4
 #   url = "/about"
-[[menu.main]]
-  name = "RSS"
-  weight = 50
-  url = "/index.xml"
+# [[menu.main]]
+#   name = "RSS"
+#   weight = 50
+#   url = "/index.xml"
 
 [params]
   description = ""

@@ -1,0 +1,10 @@
+[[https://github.com/zigcc/zigcc.github.io/actions/workflows/gh-pages.yml][https://github.com/zigcc/zigcc.github.io/actions/workflows/gh-pages.yml/badge.svg]]
+
+* Zig 语言中文社区
+- https://zigcc.github.io/
+- 如果没有特殊声明，本网站内容均采用
+  [[https://creativecommons.org/licenses/by-nc-nd/4.0/][CC BY-NC-ND 4.0]] 协议
+
+* 站点更新日志
+- 2022-12-10 :: 切换主题 [[https://github.com/zwbetz-gh/cupper-hugo-theme][cupper-hugo]] --> [[https://github.com/yihui/hugo-xmin][hugo-xmin]]
+- 2022-07-20 :: 首次上线

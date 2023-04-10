@@ -45,7 +45,8 @@ if (thingThatCouldFail()) |good_value| {
 
 现在 =addTest= 和 =addExecutable= 一样，输出都是 =CompileStep= ，它默认不会执行，需要调用 =run()= 拿到 run step 才可以。
 
-构建系统其实是 Zig 生态中比较重要的一环，和 Rust 不同，Zig 即是一门编程语言，也是一系列工具链，比如编译 Zig 是，没有 zigc 这个二进制文件，用的是 =zig build-exe= 或 =build-lib= 。
+* Zig 构建系统介绍
+构建系统其实是 Zig 生态中比较重要的一环，和 Rust 不同，Zig 即是一门编程语言，也是一系列工具链，比如编译 Zig 时，没有 zigc 这个二进制文件，用的是 =zig build-exe= 或 =build-lib= 。
 
 =build.zig= 的作用就是提供了一套声明式 API 来构造 =build-exe= 的参数。这里面有一个核心概念： =Step= ，它构成了一个有向无环图，用来驱动整个编译过程。
 

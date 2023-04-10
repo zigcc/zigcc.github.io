@@ -1,0 +1,38 @@
+#+TITLE: 202303
+#+DATE: 2023-04-10T19:25:59+0800
+#+LASTMOD: 2023-04-10T19:25:59+0800
+
+* 观点/教程
+- [[https://www.reddit.com/r/zig/comments/11wmoky][Creating arbitrary error values by using error.Something syntax]] :: 下面两种方式是等价的：
+  #+begin_src zig
+  const err = error.FileNotFound;
+  const err = (error {FileNotFound}).FileNotFound;
+  #+end_src
+- [[https://notes.eatonphil.com/errors-and-zig.html][Errors and Zig]] :: 主要讲述了 Zig 中如何处理错误，如何携带上下文信息
+  #+begin_src zig
+var x = try thingThatCouldFail();
+
+if (thingThatCouldFail()) |good_value| {
+    x = good_value;
+    break;
+} else |_| {
+    // do something that should fix it for the next time
+    tries -= 1;
+}
+  #+end_src
+- [[https://blog.orhun.dev/zig-bits-02/][Zig Bits 0x2: Using defer to defeat memory leaks]] :: 主要介绍了如何探测内存泄漏，如何用 =defer= 来规避
+- [[https://zigurust.gitlab.io/blog/naive-map/][Naive parallel map implementation in Rust and Zig]] ::
+- [[https://iamkroot.github.io/blog/zig-memleak][The Curious Case of a Memory Leak in a Zig program]] ::
+- [[https://zackoverflow.dev/writing/unsafe-rust-vs-zig/][When Zig is safer and faster than Rust]] :: 比较有趣的文章，作者使用 unsafe rust 与 zig 来实现一个 bytecode 解释器，比较重要的一点是具备 mark-sweep 的 GC 功能。
+- [[https://www.infoworld.com/article/3689648/meet-the-zig-programming-language.html][Meet Zig: The modern alternative to C | InfoWorld]] :: 一篇科普 Zig 的文章
+- [[https://flyx.org/cross-packaging/][Cross-Compiling and packaging C, Go and Zig projects with Nix]] :: 文章介绍了如何
+  利用 Nix 进行交叉编译，对于 C 依赖，作者是通过修改 =pkg-config= 的 =*.pc= 来支持的
+- [[https://www.openmymind.net/Zig-Quirks/][Zig Quirks]] :: 介绍 Zig 的一些特点
+- [[https://matklad.github.io/2023/03/26/zig-and-rust.html][Zig And Rust]] ::
+* 项目/工具
+- [[https://github.com/macovedj/doink][macovedj/doink]] :: Making WebAssembly Components with Zig
+- [[https://github.com/craftlinks/zig_learn_opengl][craftlinks/zig_learn_opengl]] :: : Follow the Learn-OpenGL book using Zig
+- [[https://github.com/b0bleet/zvisor][b0bleet/zvisor]] :: Zig-based Hypervisor (WIP)
+- [[https://github.com/flouthoc/ztick][flouthoc/ztick]] :: Tiny desktop utility to keep notes
+- [[https://github.com/ringtailsoftware/zig-wasm-audio-framebuffer][ringtailsoftware/zig-wasm-audio-framebuffer]] :: Examples of integrating Zig and Wasm for audio and graphics on the web
+* [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-03-01..2023-04-01][Zig 语言更新]]

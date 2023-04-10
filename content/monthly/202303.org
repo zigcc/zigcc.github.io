@@ -55,11 +55,11 @@ if (thingThatCouldFail()) |good_value| {
 pub const MakeFn = *const fn (self: *Step, prog_node: *std.Progress.Node) anyerror!void;
 #+end_src
 
-常见的 Step 实现有：
-- =CompileStep= 编译代码、测试二进制、动态链接库、静态链接库
-- =InstallArtifactStep=  把编译生产的文件复制到 =zig-out= 中
+但一般来说，我们并不需要自己去实现 MakeFn，内置的 Step 已经可以满足大部分需求，比如：
+- =CompileStep= 编译二进制、动态链接库、静态链接库
+- =InstallArtifactStep=  把编译生成的文件复制到 =zig-out= 中
 - =ObjCopyStep= 执行 objcopy 命令
-- =OptionsStep= 定义编译时的选项
+- =OptionsStep= 可以用来定义编译时的一些常量，作为 module 被当前程序使用，比如把当前项目的构建时间、Git 信息写入到代码中。[[https://www.digitalocean.com/community/tutorials/using-ldflags-to-set-version-information-for-go-applications][类似于 Go]] 里面的 ~go build -ldflags="-X 'package_path.variable_name=new_value'"~
 - =RunStep= 执行二进制
 
 Step 中有一类比较特殊，称为 TopLevelStep（简称 TLS），它们可以直接通过 =zig build {topLevelStep}= 的方式来执行，Zig 默认有两个 TLS：

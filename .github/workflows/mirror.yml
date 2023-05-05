@@ -1,0 +1,17 @@
+name: Mirror
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  codeberg:
+    if: github.repository_owner == 'zigcc'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - run: |
+          git push --tags --force https://${{ secrets.CBTOKEN }}@codeberg.org/jiacai2050/zigcc.git "refs/remotes/origin/*:refs/heads/*"

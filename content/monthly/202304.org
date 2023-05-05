@@ -1,6 +1,6 @@
 #+TITLE: 202304
 #+DATE: 2023-05-03T10:31:04+0800
-#+LASTMOD: 2023-05-05T19:04:40+0800
+#+LASTMOD: 2023-05-05T22:05:07+0800
 
 * 观点/教程
 - [[https://zig.news/kristoff/when-should-i-use-an-untagged-union-56ek][When should I use an UNTAGGED Union?]] :: Loris 的文章，作者利用访问 untagged union 的未赋值字段是一种 safety-checked UB 的行为，来解决数组成员被重新赋值过的情况。
@@ -11,8 +11,8 @@
 - [[https://en.liujiacai.net/2023/04/13/zig-build-system/][Zig Build System]] :: 对 Zig build 系统的介绍
 - [[https://matklad.github.io/2023/04/13/reasonable-bootstrap.html][Reasonable Bootstrap]] :: 探讨了编译器如何实现自举的方式
 - [[https://matklad.github.io/2023/04/23/data-oriented-parallel-value-interner.html][Data Oriented Parallel Value Interner]] :: Matklad 探讨了如何实现一个高性能的 Interner
-- [[https://www.youtube.com/watch?v=w3WYdYyjek4][TigerStyle! (Or How To Design Safer Systems in Less Time)]] :: Systems Distributed 23 视频。[[https://www.bilibili.com/video/BV1fm4y1C7XL/?vd_source=c9a0fa14cb8fc01b7eea3432c3c1550c][B 站链接]]
-- [[https://www.youtube.com/watch?v=MqbVoSs0lXk][What Is a Database?]] :: Systems Distributed 23 视频，[[https://www.bilibili.com/video/BV1gP41117zY/][B 站链接]]
+- [[https://www.youtube.com/watch?v=w3WYdYyjek4][TigerStyle! (Or How To Design Safer Systems in Less Time)]] :: Systems Distributed 23 视频。[[https://www.bilibili.com/video/BV1fm4y1C7XL][B 站链接]]
+- [[https://www.youtube.com/watch?v=MqbVoSs0lXk][What Is a Database?]] :: Systems Distributed 23 视频，[[https://www.bilibili.com/video/BV1gP41117zY/][B 站链接]]，作者博客：[[https://www.scattered-thoughts.net/][Scattered Thoughts]]
 * 项目/工具
 - [[https://zig.news/nameless/coming-soon-to-a-zig-near-you-http-client-5b81][Coming Soon to a Zig Near You: HTTP Client]] :: 对标准库 =std.http= 的介绍。
 - [[https://blog.orhun.dev/zig-bits-03/][Zig Bits 0x3: Mastering project management in Zig]] :: 介绍了如何更好地维护一个 Zig 项目，包括：新增依赖、增加测试覆盖率、增加文档、基于 GitHub Action 做持续集成等。

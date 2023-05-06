@@ -1,10 +1,14 @@
-#+TITLE: 202304
+#+TITLE: 202304 | 首次闯入 Tiobe 前 50
 #+DATE: 2023-05-03T10:31:04+0800
-#+LASTMOD: 2023-05-05T22:05:07+0800
+#+LASTMOD: 2023-05-07T07:35:43+0800
 
+* 重大事件
+在 2023 四月份的 [[https://www.tiobe.com/tiobe-index/][Tiobe]] 指数上，Zig [[https://www.techrepublic.com/article/tiobe-index-language-rankings/][排名 46]]，尽管 Loris 发推表示这个数字对 Zig 来说没什么实际意义，但对于多数吃瓜群众来说，这还是十分让人鼓舞的。
+
+{{< tweet user="croloris" id="1646555550358831131" >}}
 * 观点/教程
 - [[https://zig.news/kristoff/when-should-i-use-an-untagged-union-56ek][When should I use an UNTAGGED Union?]] :: Loris 的文章，作者利用访问 untagged union 的未赋值字段是一种 safety-checked UB 的行为，来解决数组成员被重新赋值过的情况。
-- [[https://zig.news/rutenkolk/data-driven-polymorphism-45bk][Data driven polymorphism]] :: 作者用 Zig 来进行实现 Clojure 语言中的 [[https://clojuredocs.org/clojure.core/defmulti][defmulti]]，来实现『动态派发』的效果
+- [[https://zig.news/rutenkolk/data-driven-polymorphism-45bk][Data driven polymorphism]] :: 作者用 Zig 来实现 Clojure 语言中的 [[https://clojuredocs.org/clojure.core/defmulti][defmulti]]，以达到『动态派发』的效果
 - [[https://zig.news/aryaelfren/testing-and-files-as-structs-n94][Testing and Files as Structs]] :: 作者演示了一个文件作为 struct 的效果，这样导入时就可以用 =const Node = @import("Node.zig")= 的方式了。
 - [[https://zig.news/ityonemo/sneaky-error-payloads-1aka][Sneaky Error Payloads]] :: 一种在错误中携带上下文信息的方式，上一期的月报也有类似讨论。 [[https://notes.eatonphil.com/errors-and-zig.html][Errors and Zig]]
 - [[https://www.openmymind.net/Regular-Expressions-in-Zig/][Regular Expressions in Zig]] :: 由于 Zig 现在不支持 C 中的 bitfields，因此无法直接使用  Posix 的 =regex.h= ，这篇文章介绍了一种解决方法。

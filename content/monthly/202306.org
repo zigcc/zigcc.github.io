@@ -1,0 +1,8 @@
+#+TITLE: 202306
+#+DATE: 2023-06-16T17:35:43+0800
+#+LASTMOD: 2023-06-17T10:49:43+0800
+#+DRAFT: true
+* 重大事件
+* 观点/教程
+* 项目/工具
+* [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-05-01..2023-06-01][Zig 语言更新]]

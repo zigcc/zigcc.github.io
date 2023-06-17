@@ -1,8 +1,12 @@
 #+TITLE: 202306
 #+DATE: 2023-06-16T17:35:43+0800
-#+LASTMOD: 2023-06-17T10:49:43+0800
+#+LASTMOD: 2023-06-17T20:37:48+0800
 #+DRAFT: true
 * 重大事件
 * 观点/教程
+- [[https://kristoff.it/blog/note-about-zig-books/][A Note About Zig Books for the Zig Community]] ::  Loris Cro 的博客，由于现在 Zig 的关注度越来越高，一些出版社开始联系社区的人出一本 Zig 的书，Loris 这里阐述了与出版社合作的利弊，以及他也在写一本关于 Zig 的书 =Intro to Zig / systems programming= ，由于 Zig 还是不停的开发中，因为书中会尽量少的去涉及 stdlib 的内容。
+- [[https://ziggit.dev/t/how-far-away-is-0-11-really/744][How far away is 0.11 really?]] :: 社区用户对 0.11 版本发布时间的疑问？
+- [[https://devlog.hexops.com/2023/mach-ecosystem-c-libraries/][Mach: providing an ecosystem of C libraries using the Zig package manager]] :: 作者在文章讲述了利用 Zig 来打包 C 依赖的优势。
+- [[https://ziggit.dev/][Ziggit]] ::
 * 项目/工具
 * [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-05-01..2023-06-01][Zig 语言更新]]

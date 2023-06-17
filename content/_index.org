@@ -1,6 +1,6 @@
 #+TITLE: Zig 语言中文社区
 #+DATE: 2022-07-20T12:42:38+0800
-#+LASTMOD: 2023-05-14T07:07:17+0800
+#+LASTMOD: 2023-06-17T11:43:46+0800
 #+AUTHOR: Jiacai Liu
 #+EMAIL: blog@liujiacai.net
 
@@ -9,12 +9,12 @@
 [[https://ziglang.org/][Zig]] 语言中文社区，致力于分享、传播 Zig 语言在中文用户内的使用。
 
 * 联系方式
-- 邮件：[[mailto:zig@liujiacai.net][zig@liujiacai.net]]
-- Telegram：[[https://t.me/ZigChinese]]
 - 微信公众号
 {{< figure src="https://github.com/zigcc/.github/raw/main/zig_mp.png" height="200" title="Zig 公众号二维码" >}}
 - 微信群 :: 每月月首更新，也可关注公众号获取最新二维码
 {{< figure src="https://github.com/zigcc/.github/raw/main/weixin.jpg" width="200" title="ZigCC 微信群二维码" >}}
+- 邮件：[[mailto:zig@liujiacai.net][zig@liujiacai.net]]
+- Telegram：[[https://t.me/ZigChinese]]
 
 * RSS 订阅
 - [[https://github.com/zigcc/forum/discussions.atom][论坛]]

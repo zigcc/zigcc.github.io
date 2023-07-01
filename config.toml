@@ -30,12 +30,5 @@ theme = "hugo-xmin"
 
 [params]
   description = ""
-  footer =  "@ 2022 [ZigCC](https://github.com/zigcc/zigcc.github.io). Licensed under [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/)"
   dateFormat = "Jan 2, 2006"
-  showThemeSwitcher =  true
   gitRepo = "https://github.com/zigcc/zigcc.github.io"
-  [params.giscus]           # https://giscus.app/
-    repo = "zigcc/zigcc.github.io"
-    repoId = "R_kgDOHr7nSg"
-    category = "Announcements"
-    categoryId = "DIC_kwDOHr7nSs4CQUsK"

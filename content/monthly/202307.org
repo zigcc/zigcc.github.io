@@ -1,0 +1,85 @@
+#+TITLE: 202307
+#+DATE: 2023-08-07T20:05:29+0800
+#+LASTMOD: 2023-08-08T09:16:45+0800
+#+DRAFT: true
+* 重大事件
+* 观点/教程
+- [[https://tigerbeetle.com/blog/2023-07-26-copy-hunting/][Copy Hunting | TigerBeetle]] :: 比较有意思的文章，通过分析 LLVM 的 IR，来避免程序中不必要的 memcpy 以及如何减少 binary 体积
+- [[https://double-trouble.dev/post/zbench/][Taking off with Zig: Putting the Z in Benchmark]] :: Zig 入门文章，作者使用 Zig 来实现了一个 benchmark 库，里面有作者的感受，语言小巧，主要的语言特点：独特的错误处理、显式的内存控制、comptime 执行
+- [[https://hackernoon.com/the-new-wave-of-programming-languages-exploring-the-hidden-gems][The New Wave of Programming Languages: Pony, Zig, Crystal, Vlang, and Julia]] :: 多种语言的对比，Zig 部分的对比：
+
+| Pros                                       | Cons                        |
+|--------------------------------------------+-----------------------------|
+| Excellent low-level control over code      | Relatively new and evolving |
+| Emphasis on safety and reliability         | Limited library support     |
+| Good interoperability with other languages | Steep learning curve        |
+
+- [[https://www.aolium.com/karlseguin/cf03dee6-90e1-85ac-8442-cf9e6c11602a][Parsing timestamps and generating RFC3339 dates in Zig]] :: Zig 标准库里有返回 unixtime 时间戳的函数，但是没有格式化函数，作者这里给出了一种实现：
+  #+begin_src zig
+pub const DateTime = struct {
+    year: u16,
+    month: u8,
+    day: u8,
+    hour: u8,
+    minute: u8,
+    second: u8,
+};
+
+pub fn fromTimestamp(ts: u64) DateTime {
+    const SECONDS_PER_DAY = 86400;
+    const DAYS_PER_YEAR = 365;
+    const DAYS_IN_4YEARS = 1461;
+    const DAYS_IN_100YEARS = 36524;
+    const DAYS_IN_400YEARS = 146097;
+    const DAYS_BEFORE_EPOCH = 719468;
+
+    const seconds_since_midnight: u64 = @rem(ts, SECONDS_PER_DAY);
+    var day_n: u64 = DAYS_BEFORE_EPOCH + ts / SECONDS_PER_DAY;
+    var temp: u64 = 0;
+
+    temp = 4 * (day_n + DAYS_IN_100YEARS + 1) / DAYS_IN_400YEARS - 1;
+    var year: u16 = @intCast(100 * temp);
+    day_n -= DAYS_IN_100YEARS * temp + temp / 4;
+
+    temp = 4 * (day_n + DAYS_PER_YEAR + 1) / DAYS_IN_4YEARS - 1;
+    year += @intCast(temp);
+    day_n -= DAYS_PER_YEAR * temp + temp / 4;
+
+    var month: u8 = @intCast((5 * day_n + 2) / 153);
+    const day: u8 = @intCast(day_n - (@as(u64, @intCast(month)) * 153 + 2) / 5 + 1);
+
+    month += 3;
+    if (month > 12) {
+        month -= 12;
+        year += 1;
+    }
+
+    return DateTime{
+        .year = year,
+        .month = month,
+        .day = day,
+        .hour = @intCast(seconds_since_midnight / 3600),
+        .minute = @intCast(seconds_since_midnight % 3600 / 60),
+        .second = @intCast(seconds_since_midnight % 60)
+    };
+}
+  #+end_src
+- [[https://www.aolium.com/karlseguin/cf03dee6-90e1-85ac-8442-cf9e6c11602a][Parsing timestamps and generating RFC3339 dates in Zig]] :: Zig 标准库里有返回
+- [[https://www.aolium.com/karlseguin/46252c5b-587a-c419-be96-a0ccc2f11de4][Custom JSON serialization in Zig]] :: Zig 里面虽然有很好的 JSON 序列化支持，但是有些时候我们需要自定义某个字段的解析，与 Go =json.Marshaller= 类似，Zig 会在序列化时查找类型的 =jsonStringify= 函数，通过实现这个函数就可以达到目的，文中给出了个示例：
+  #+begin_src zig
+const NumericBoolean = struct {
+    value: bool,
+
+    pub fn jsonStringify(self: NumericBoolean, out: anytype) !void {
+        const json = if (self.value) "1" else "0";
+        return out.print("{s}", .{json});
+    }
+};
+  #+end_src
+
+* 项目/工具
+- [[https://blog.turso.tech/zig-helped-us-move-data-to-the-edge-here-are-our-impressions-67d3a9c45af4][Zig helped us move data to the Edge. Here are our impressions]] :: [[https://turso.tech/][Turso]] 公司的官博，它们公司的产品时边缘数据库，自动同步 PG 的表到 Edge 端，减少访问的时延。在这篇文章里他们介绍了使用 Zig 编写 PostgreSQL 插件的经历，得益于 =translate-c= ，他们可以直接从已有的 C 代码开始构建他们的产品。插件地址：[[https://github.com/turso-extended/pg_turso][pg_turso]]
+- [[https://github.com/tensorush/meduza][tensorush/meduza]] :: 🦎 🧜‍♀️ Zig codebase graph generator that emits a Mermaid class diagram
+- [[https://github.com/AndreaOrru/zen][AndreaOrru/zen]] :: Experimental operating system written in Zig
+*
+* [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-06-01..2023-07-01][Zig 语言更新]]

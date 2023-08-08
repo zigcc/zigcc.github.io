@@ -1,8 +1,9 @@
-#+TITLE: 202307
+#+TITLE: 202307 | 异步缺席 0.11
 #+DATE: 2023-08-07T20:05:29+0800
-#+LASTMOD: 2023-08-08T09:16:45+0800
-#+DRAFT: true
+#+LASTMOD: 2023-08-08T20:47:03+0800
 * 重大事件
+Andrewk 在最新的文章
+[[https://ziglang.org/news/0.11.0-postponed-again/][The Upcoming Release Postponed Two More Weeks and Lacks Async Functions]] 中指出，即将发布的 0.11 中将不会包含对异步的支持，现在异步实在 [[https://github.com/ziglang/zig/tree/stage2-async][stage2-async]] 这个分支上来开发，但是在开发过程中，总是有其他事情出现，然后 Andrewk 就先去搞这些事情了。因此，把对异步的支持放到 0.12 上了。
 * 观点/教程
 - [[https://tigerbeetle.com/blog/2023-07-26-copy-hunting/][Copy Hunting | TigerBeetle]] :: 比较有意思的文章，通过分析 LLVM 的 IR，来避免程序中不必要的 memcpy 以及如何减少 binary 体积
 - [[https://double-trouble.dev/post/zbench/][Taking off with Zig: Putting the Z in Benchmark]] :: Zig 入门文章，作者使用 Zig 来实现了一个 benchmark 库，里面有作者的感受，语言小巧，主要的语言特点：独特的错误处理、显式的内存控制、comptime 执行
@@ -76,10 +77,15 @@ const NumericBoolean = struct {
     }
 };
   #+end_src
+- [[https://matklad.github.io/2023/07/16/three-different-cuts.html][Three Different Cuts]] :: matklad 的文章，介绍了 Rust、Go、Zig 三种语言的 Cut 实现
+- [[https://blog.orhun.dev/zig-bits-04/][Zig Bits 0x4: Building an HTTP client/server from scratch]] :: 介绍了 std.http 这个模块的使用
+- [[https://tigerbeetle.com/blog/2023-07-11-we-put-a-distributed-database-in-the-browser/][We Put a Distributed Database In the Browser – And Made a Game of It]] :: TigerBeetle 的新花样，把数据库搬到了 Web 上。[[https://news.ycombinator.com/item?id=36680535][HN 讨论]]
+- [[https://zig.news/gwenzek/zig-great-design-for-great-optimizations-638][Zig: great design for great optimizations]] :: 比较有意思的文章，作者比较了 Clang、Zig 对相同逻辑代码生产的 LLVM IR，Zig 生成的 IR 更加精简
 
 * 项目/工具
 - [[https://blog.turso.tech/zig-helped-us-move-data-to-the-edge-here-are-our-impressions-67d3a9c45af4][Zig helped us move data to the Edge. Here are our impressions]] :: [[https://turso.tech/][Turso]] 公司的官博，它们公司的产品时边缘数据库，自动同步 PG 的表到 Edge 端，减少访问的时延。在这篇文章里他们介绍了使用 Zig 编写 PostgreSQL 插件的经历，得益于 =translate-c= ，他们可以直接从已有的 C 代码开始构建他们的产品。插件地址：[[https://github.com/turso-extended/pg_turso][pg_turso]]
 - [[https://github.com/tensorush/meduza][tensorush/meduza]] :: 🦎 🧜‍♀️ Zig codebase graph generator that emits a Mermaid class diagram
 - [[https://github.com/AndreaOrru/zen][AndreaOrru/zen]] :: Experimental operating system written in Zig
-*
+- [[https://github.com/EugenHotaj/zig_gpt2][EugenHotaj/zig_gpt2]] :: GPT-2 inference engine written in Zig
+
 * [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-06-01..2023-07-01][Zig 语言更新]]

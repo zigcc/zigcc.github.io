@@ -1,9 +1,14 @@
 #+TITLE: 202307 | 异步缺席 0.11
 #+DATE: 2023-08-07T20:05:29+0800
-#+LASTMOD: 2023-08-08T20:47:03+0800
+#+LASTMOD: 2023-08-09T08:15:59+0800
 * 重大事件
 Andrewk 在最新的文章
-[[https://ziglang.org/news/0.11.0-postponed-again/][The Upcoming Release Postponed Two More Weeks and Lacks Async Functions]] 中指出，即将发布的 0.11 中将不会包含对异步的支持，现在异步实在 [[https://github.com/ziglang/zig/tree/stage2-async][stage2-async]] 这个分支上来开发，但是在开发过程中，总是有其他事情出现，然后 Andrewk 就先去搞这些事情了。因此，把对异步的支持放到 0.12 上了。
+[[https://ziglang.org/news/0.11.0-postponed-again/][The Upcoming Release Postponed Two More Weeks and Lacks Async Functions]] 中指出，即将发布的 0.11 中将不会包含对异步的支持，现在异步是在 [[https://github.com/ziglang/zig/tree/stage2-async][stage2-async]] 这个分支上来开发，但是在开发过程中，总是有其他事情出现，然后 Andrewk 就先去搞这些事情了。因此，把对异步的支持放到 0.12 上了。
+
+另一件事是 [[https://ziglang.org/news/welcome-jacob-young/][Jacob Young Joins the Core Zig Team]]，Core Team 迎来了另一位全职开发者，常用 ID [[https://github.com/jacobly0][jacobly0]]，下面是他最近的提交记录：
+- https://github.com/ziglang/zig/commits?author=jacobly0&since=2023-06-31
+
+恭喜 Core Team，又添一虎将！
 * 观点/教程
 - [[https://tigerbeetle.com/blog/2023-07-26-copy-hunting/][Copy Hunting | TigerBeetle]] :: 比较有意思的文章，通过分析 LLVM 的 IR，来避免程序中不必要的 memcpy 以及如何减少 binary 体积
 - [[https://double-trouble.dev/post/zbench/][Taking off with Zig: Putting the Z in Benchmark]] :: Zig 入门文章，作者使用 Zig 来实现了一个 benchmark 库，里面有作者的感受，语言小巧，主要的语言特点：独特的错误处理、显式的内存控制、comptime 执行

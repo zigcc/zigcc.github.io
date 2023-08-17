@@ -70,7 +70,6 @@ pub fn fromTimestamp(ts: u64) DateTime {
     };
 }
   #+end_src
-- [[https://www.aolium.com/karlseguin/cf03dee6-90e1-85ac-8442-cf9e6c11602a][Parsing timestamps and generating RFC3339 dates in Zig]] :: Zig 标准库里有返回
 - [[https://www.aolium.com/karlseguin/46252c5b-587a-c419-be96-a0ccc2f11de4][Custom JSON serialization in Zig]] :: Zig 里面虽然有很好的 JSON 序列化支持，但是有些时候我们需要自定义某个字段的解析，与 Go =json.Marshaller= 类似，Zig 会在序列化时查找类型的 =jsonStringify= 函数，通过实现这个函数就可以达到目的，文中给出了个示例：
   #+begin_src zig
 const NumericBoolean = struct {

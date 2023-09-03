@@ -1,11 +1,21 @@
 #+TITLE: 202304 | 首次闯入 Tiobe 前 50
 #+DATE: 2023-05-03T10:31:04+0800
-#+LASTMOD: 2023-05-07T07:35:43+0800
+#+LASTMOD: 2023-09-03T20:10:11+0800
 
 * 重大事件
 在 2023 四月份的 [[https://www.tiobe.com/tiobe-index/][Tiobe]] 指数上，Zig [[https://www.techrepublic.com/article/tiobe-index-language-rankings/][排名 46]]，尽管 Loris 发推表示这个数字对 Zig 来说没什么实际意义，但对于多数吃瓜群众来说，这还是十分让人鼓舞的。
 
-{{< tweet user="croloris" id="1646555550358831131" >}}
+#+begin_quote
+For people who heard about Zig just recently:
+
+- Zig is not 2x faster than Rust, despite what recent benchmarks might lead you to believe.
+
+- You won't find many Zig jobs for a few years still, despite the Tiobe stuff.
+
+- Don't join to the Zig community just to rant about Rust.
+
+— Loris Cro ⚡ (@croloris) [[https://twitter.com/croloris/status/1646555550358831131][April 13, 2023]]
+#+end_quote>
 * 观点/教程
 - [[https://zig.news/kristoff/when-should-i-use-an-untagged-union-56ek][When should I use an UNTAGGED Union?]] :: Loris 的文章，作者利用访问 untagged union 的未赋值字段是一种 safety-checked UB 的行为，来解决数组成员被重新赋值过的情况。
 - [[https://zig.news/rutenkolk/data-driven-polymorphism-45bk][Data driven polymorphism]] :: 作者用 Zig 来实现 Clojure 语言中的 [[https://clojuredocs.org/clojure.core/defmulti][defmulti]]，以达到『动态派发』的效果

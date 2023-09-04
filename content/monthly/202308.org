@@ -1,0 +1,139 @@
+#+TITLE: 202308 | 0.11 正式发布
+#+DATE: 2023-09-03T19:38:04+0800
+#+LASTMOD: 2023-09-04T22:05:21+0800
+* [[https://ziglang.org/download/0.11.0/release-notes.html#x86-Backend][0.11 正式发布]]
+0.11 终于在 8 月 4 号释出了，下面来看看它的一些重要改进吧。[[https://news.ycombinator.com/item?id=36995735][HN 讨论]]
+** Peer Type Resolution Improvements
+对等类型解析算法得到改进，下面是一些在 0.10 中不能解析，但在 0.11 中可以解析的例子：
+| Peer Types                      | Resolved Type |
+| [:s]const T, []T                | []const T     |
+| E!*T, ?*T                       | E!?*T         |
+| [*c]T, @TypeOf(null)            | [*c]T         |
+| ?u32, u8                        | ?u32          |
+| [2]u32, struct { u32, u32 }     | [2]u32        |
+| *const @TypeOf(.{}), []const u8 | []const u8    |
+
+而且现在使用 =@intCast= 这类 builtin 都只接受一个参数，目前类型根据上下文自动推断出来。
+** Multi-Object For Loops
+可以同时对多个对象进行遍历：
+#+begin_src zig
+// 之前
+for (input) |x, i| {
+    output[i] = x * 2;
+}
+
+// 现在
+for (input, 0..) |x, i| {
+    output[i] = x * 2;
+}
+#+end_src
+** @min and @max
+主要有两个改动：
+1. 这两个 builtin 现在支持任意多个参数
+2. 返回的类型，会尽可能的紧凑
+#+begin_src zig
+test "@min/@max refines result type" {
+    const x: u8 = 20; // comptime-known
+    var y: u64 = 12345;
+    // Since an exact bound is comptime-known, the result must fit in a u5
+    comptime assert(@TypeOf(@min(x, y)) == u5);
+
+    var x_rt: u8 = x; // runtime-known
+    // Since one argument to @min is a u8, the result must fit in a u8
+    comptime assert(@TypeOf(@min(x_rt, y)) == u8);
+}
+#+end_src
+** @inComptime
+新加的 builtin，用于判断执行是否在 comptime 环境下执行：
+#+begin_src zig
+const global_val = blk: {
+    assert(@inComptime());
+    break :blk 123;
+};
+
+comptime {
+    assert(@inComptime());
+}
+
+fn f() u32 {
+    if (@inComptime()) {
+        return 1;
+    } else {
+        return 2;
+    }
+}
+
+test "@inComptime" {
+    try expectEqual(true, comptime @inComptime());
+    try expectEqual(false, @inComptime());
+    try expectEqual(@as(u32, 1), comptime f());
+    try expectEqual(@as(u32, 2), f());
+}
+#+end_src
+** 类型转化相关 builtin 的重命名
+之前 =@xToY= 形式的 builtin 现在已经改成了 =@yFromX= ，这样的主要好处是便于阅读（从右向左），这是[[https://github.com/ziglang/zig/issues/6128][草案]]。
+** Tuple 类型声明
+现在可以直接用无 field 名字的 struct 来声明 tuple 类型：
+#+begin_src zig
+test "tuple declarations" {
+    const T = struct { u32, []const u8 };
+    var t: T = .{ 1, "foo" };
+    try expect(t[0] == 1);
+    try expectEqualStrings(t[1], "foo");
+
+    var mul = t ** 3;
+    try expect(@TypeOf(mul) != T);
+    try expect(mul.len == 6);
+    try expect(mul[2] == 1);
+    try expectEqualStrings(mul[3], "foo");
+
+    var t2: T = .{ 2, "bar" };
+    var cat = t ++ t2;
+    try expect(@TypeOf(cat) != T);
+    try expect(cat.len == 4);
+    try expect(cat[2] == 2);
+    try expectEqualStrings(cat[3], "bar");
+}
+#+end_src
+
+之前只能用 =std.meta.Tuple= 函数来定义：
+#+begin_src diff
+-    const testcases = [_]std.meta.Tuple(&[_]type{ []const u8, []const u8, bool }){
++    const testcases = [_]struct { []const u8, []const u8, bool }{
+#+end_src
+** 排序
+现在排序算法分布两类：
+- 稳定，blocksort 算法
+- 不稳定，[[https://github.com/ziglang/zig/pull/15412][pdqsort]] 算法，它结合了随机快速排序的快速平均情况和堆排序的快速最坏情况。
+与堆排的快速最差情况相结合，同时在具有特定模式的输入上达到线性时间。
+** Stack Unwinding
+Zig 之前依赖 [[https://en.wikipedia.org/wiki/Call_stack#Stack_and_frame_pointers][frame pointer]] 来做堆栈回卷，但它本身有些代价，因此线上环境可能会通过 =-fomit-frame-pointer= 将其禁用掉。
+
+为了在这种情况下依然能够获取 panic 是的堆栈信息，Zig 现在支持了通过 DWARF unwind tables 和 MachO compact unwind information 来会恢复堆栈，详见：[[https://github.com/ziglang/zig/pull/15823][#15823]]。
+** 包管理
+0.11 首次正式引入了包管理器，具体解释可以参考：[[https://en.liujiacai.net/2023/04/13/zig-build-system/][Zig Build System]]，而且很重要一点，step 之间可以[[https://ziglang.org/download/0.11.0/release-notes.html#Steps-Run-In-Parallel][并发执行]]，
+** Bootstrapping
+C++ 实现的 Zig 编译器已经被彻底移除，这意味着 =-fstage1= 不再生效，Zig 现在只需要一个 2.4M 的 WebAssembly 文件和一个 C 编辑器即可，工作细节可以参考：[[https://ziglang.org/news/goodbye-cpp/][Goodbye to the C++ Implementation of Zig]]。
+** 代码生成
+虽然 Zig 编译器现在还是主要使用 LLVM 来进行代码生成，但在这次发布中，其他几个后端也有了非常大的进步：
+1. C 后端，行为测试通过 98%，而且生成的 C 代码兼容微软的 MSVC，用在了 bootstrapping 中
+2. x86 后端，行为测试通过 88%
+3. aarch64 后端，刚开始
+4. WebAssembly 后端，行为测试通过 86%，
+5. SPIR-V 后端，SPIR-V 是在 GPU 上运行的着色器（shader）和内核的字节码表示法。目前，Zig 的 SPIR-V 后端专注于为 OpenCL 内核生成代码，不过未来可能也会支持兼容 Vulkan 的着色器。
+** 增量编译
+虽然这仍是一个高度 WIP 的功能，但这一版本周期中的许多改进为编译器的增量编译功能铺平了道路。其中最重要的是 [[https://github.com/ziglang/zig/pull/15569][InternPool]]。Zig 用户大多看不到这一改动，但它为编译器带来了许多好处，其中之一就是我们现在更接近增量编译了。增量编译将是 0.12.0 发布周期的重点。
+* 观点/教程
+- [[https://www.aolium.com/karlseguin/4013ac14-2457-479b-e59b-e603c04673c8][Error Handling In Zig]] :: 又一篇讨论错误处理的文章
+- [[https://www.1a-insec.net/blog/10-type-magic-in-zig/][Commiting Type Crimes in Zig]]  :: 对 Zig 类型系统的另一种用法，有些和[[https://zh.wikipedia.org/wiki/%E9%82%B1%E5%A5%87%E6%95%B0][邱奇数]]类似。
+- [[https://www.youtube.com/watch?v=kxT8-C1vmd4][Zig in 100 Seconds]] :: Zig 宣传视频
+- [[https://www.youtube.com/watch?v=vKKTMBoxpS8][Zig Build System & How to Build Software From Source • Andrew Kelley • GOTO 2023]] :: Andrew 关于构建系统的视频，[[https://www.bilibili.com/video/BV1Mh4y1K7yc/][B 站链接]]、[[https://www.youtube.com/watch?v=vKKTMBoxpS8][Youbute]]
+- [[https://rbino.com/posts/wrap-your-nif-with-zig/][Wrap your NIF with Zig]] :: NIF 是 Elixir 中进行 FFI 调用的方式，如果用原生 C 接口来用，会需要写很多胶水代码，
+  作者这里用 comptime 特性来定义了一个 =make_nif_wrapper= 来简化 NIF 的实现，这个技巧在与 C 项目交互时十分有用。
+- [[https://matklad.github.io/2023/08/09/types-and-zig.html][Types and the Zig Programming Language]] :: matklad 对 Zig 类型系统的总结
+- [[https://andrewkelley.me/post/goodbye-twitter-reddit.html][So Long, Twitter and Reddit]] :: Andrew 的最新文章，远离社交平台！
+- [[https://zig.news/edyu/wtf-is-zig-comptime-and-inline-257b][WTF is Zig Comptime (and Inline)]] ::
+- [[https://double-trouble.dev/post/zbench/][Taking off with Zig: Putting the Z in Benchmark — Double Trouble]] ::
+* 项目/工具
+- [[https://devlog.hexops.com/2023/mach-v0.2-released/][Mach v0.2 released]]
+* [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-07-01..2023-08-01][Zig 语言更新]]

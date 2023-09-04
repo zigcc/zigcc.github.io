@@ -1,7 +1,8 @@
 #+TITLE: 202308 | 0.11 正式发布
 #+DATE: 2023-09-03T19:38:04+0800
-#+LASTMOD: 2023-09-03T21:54:02+0800
-* [[https://ziglang.org/download/0.11.0/release-notes.html#x86-Backend][0.11 release note]]
+#+LASTMOD: 2023-09-04T22:05:21+0800
+* [[https://ziglang.org/download/0.11.0/release-notes.html#x86-Backend][0.11 正式发布]]
+0.11 终于在 8 月 4 号释出了，下面来看看它的一些重要改进吧。[[https://news.ycombinator.com/item?id=36995735][HN 讨论]]
 ** Peer Type Resolution Improvements
 对等类型解析算法得到改进，下面是一些在 0.10 中不能解析，但在 0.11 中可以解析的例子：
 | Peer Types                      | Resolved Type |
@@ -123,5 +124,16 @@ C++ 实现的 Zig 编译器已经被彻底移除，这意味着 =-fstage1= 不�
 ** 增量编译
 虽然这仍是一个高度 WIP 的功能，但这一版本周期中的许多改进为编译器的增量编译功能铺平了道路。其中最重要的是 [[https://github.com/ziglang/zig/pull/15569][InternPool]]。Zig 用户大多看不到这一改动，但它为编译器带来了许多好处，其中之一就是我们现在更接近增量编译了。增量编译将是 0.12.0 发布周期的重点。
 * 观点/教程
+- [[https://www.aolium.com/karlseguin/4013ac14-2457-479b-e59b-e603c04673c8][Error Handling In Zig]] :: 又一篇讨论错误处理的文章
+- [[https://www.1a-insec.net/blog/10-type-magic-in-zig/][Commiting Type Crimes in Zig]]  :: 对 Zig 类型系统的另一种用法，有些和[[https://zh.wikipedia.org/wiki/%E9%82%B1%E5%A5%87%E6%95%B0][邱奇数]]类似。
+- [[https://www.youtube.com/watch?v=kxT8-C1vmd4][Zig in 100 Seconds]] :: Zig 宣传视频
+- [[https://www.youtube.com/watch?v=vKKTMBoxpS8][Zig Build System & How to Build Software From Source • Andrew Kelley • GOTO 2023]] :: Andrew 关于构建系统的视频，[[https://www.bilibili.com/video/BV1Mh4y1K7yc/][B 站链接]]、[[https://www.youtube.com/watch?v=vKKTMBoxpS8][Youbute]]
+- [[https://rbino.com/posts/wrap-your-nif-with-zig/][Wrap your NIF with Zig]] :: NIF 是 Elixir 中进行 FFI 调用的方式，如果用原生 C 接口来用，会需要写很多胶水代码，
+  作者这里用 comptime 特性来定义了一个 =make_nif_wrapper= 来简化 NIF 的实现，这个技巧在与 C 项目交互时十分有用。
+- [[https://matklad.github.io/2023/08/09/types-and-zig.html][Types and the Zig Programming Language]] :: matklad 对 Zig 类型系统的总结
+- [[https://andrewkelley.me/post/goodbye-twitter-reddit.html][So Long, Twitter and Reddit]] :: Andrew 的最新文章，远离社交平台！
+- [[https://zig.news/edyu/wtf-is-zig-comptime-and-inline-257b][WTF is Zig Comptime (and Inline)]] ::
+- [[https://double-trouble.dev/post/zbench/][Taking off with Zig: Putting the Z in Benchmark — Double Trouble]] ::
 * 项目/工具
+- [[https://devlog.hexops.com/2023/mach-v0.2-released/][Mach v0.2 released]]
 * [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-07-01..2023-08-01][Zig 语言更新]]

@@ -1,10 +1,40 @@
 <hr/>
 <p>
-&copy; <a href="/">ZigCC</a> 2022 – {{  now.Year }}
-| <a href="https://github.com/zigcc/zigcc.github.io">GitHub</a>
-| <a rel="me" href="https://mastodon.social/@liujiacai">Mastodon</a>
-| <a href="/index.xml">RSS</a>
-| <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">BY-NC-ND 4.0</a>
+  &copy; <a href="/">ZigCC</a> 2022 – {{  now.Year }}
+  | <a href="https://github.com/zigcc/zigcc.github.io">GitHub</a>
+  | <a rel="me" href="https://mastodon.social/@liujiacai">Mastodon</a>
+  | <a href="/index.xml">RSS</a>
+  | <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">BY-NC-ND 4.0</a>
 </p>
 
 <a href="https://emacstalk.codeberg.page/made-with-emacs/"> <img width="150px" height="44px" src="https://en.liujiacai.net/images/blog/made-with-emacs.webp" / > </a>
+
+{{ if .Page.Store.Get "hasMermaid" }}
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: true });
+</script>
+{{ end }}
+
+{{ if (eq true ($.Param "use-mathjax")) }}
+<!-- This part includes the Javascript file -->
+<script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<!-- this part configures it -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\[','\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+             extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+
+{{ end }}

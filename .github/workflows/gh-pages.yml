@@ -29,17 +29,15 @@ jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
-    env:
-      HUGO_VERSION: 0.91.2
     steps:
-      - name: Install Hugo CLI
-        run: |
-          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.deb \
-          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
       - name: Checkout
         uses: actions/checkout@v3
         with:
           submodules: recursive
+      - uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.111.3'
+          extended: true
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v2

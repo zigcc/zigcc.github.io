@@ -12,6 +12,10 @@ theme = "hugo-xmin"
   weight = 20
   url = "/monthly"
 [[menu.main]]
+  name = "文章"
+  weight = 21
+  url = "/post"
+[[menu.main]]
   name = "论坛"
   weight = 30
   url = "https://zigcc.github.io/forum/"
@@ -32,3 +36,10 @@ theme = "hugo-xmin"
   description = ""
   dateFormat = "Jan 2, 2006"
   gitRepo = "https://github.com/zigcc/zigcc.github.io"
+
+[frontmatter]
+  date = [":filename", ":default", ":fileModTime"]
+  lastmod = ['lastmod', ':git', ':fileModTime', ':default']
+
+[permalinks]
+  post = "/post/:year/:month/:day/:slug/"

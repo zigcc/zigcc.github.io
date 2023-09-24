@@ -2,8 +2,7 @@
 
 * Zig 语言中文社区
 - https://zigcc.github.io/
-- 如果没有特殊声明，本网站内容均采用
-  [[https://creativecommons.org/licenses/by-nc-nd/4.0/][CC BY-NC-ND 4.0]] 协议
+- 如果没有特殊声明，本网站内容均采用 [[https://creativecommons.org/licenses/by-nc-nd/4.0/][CC BY-NC-ND 4.0]] 协议
 
 * 社区供稿
 参见：https://zigcc.github.io/post/2023/09/05/hello-world/

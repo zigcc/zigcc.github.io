@@ -1,6 +1,6 @@
 #+TITLE: Zig 语言中文社区
 #+DATE: 2022-07-20T12:42:38+0800
-#+LASTMOD: 2023-07-01T17:46:29+0800
+#+LASTMOD: 2023-09-24T22:49:24+0800
 #+AUTHOR: Jiacai Liu
 
 {{< figure src="/images/logo.svg">}}
@@ -13,6 +13,7 @@
 - 微信群：关注公众号获取
 - 邮件：[[mailto:zig@liujiacai.net][zig@liujiacai.net]]
 - Telegram：[[https://t.me/ZigChinese]]
+- Discord：https://discord.gg/hzArH59u
 
 * RSS 订阅
 - [[https://github.com/zigcc/forum/discussions.atom][论坛]]

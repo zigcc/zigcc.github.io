@@ -1,6 +1,6 @@
-#+TITLE: 202309 | Bun 正式发布 1.0 🚀
+#+TITLE: 202309 | Bun 正式发布 1.0
 #+DATE: 2023-09-23T10:10:58+0800
-#+LASTMOD: 2023-09-24T17:06:59+0800
+#+LASTMOD: 2023-09-24T22:49:53+0800
 * 重大事件
 ** [[https://ziglang.org/news/bounties-damage-open-source-projects/][Bounties Damage Open Source Projects]]
 在 2023-09-11 号，Wasmerio CEO 创建了 [[https://github.com/ziglang/zig/issues/17115][Support WASIX · Issue #17115]]，表示想赞助 Zig 开发者，让其更好地支持 WASIX 平台。

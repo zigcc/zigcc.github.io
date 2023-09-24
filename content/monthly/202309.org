@@ -1,0 +1,36 @@
+#+TITLE: 202309 | Bun 正式发布 1.0 🚀
+#+DATE: 2023-09-23T10:10:58+0800
+#+LASTMOD: 2023-09-24T17:06:59+0800
+* 重大事件
+** [[https://ziglang.org/news/bounties-damage-open-source-projects/][Bounties Damage Open Source Projects]]
+在 2023-09-11 号，Wasmerio CEO 创建了 [[https://github.com/ziglang/zig/issues/17115][Support WASIX · Issue #17115]]，表示想赞助 Zig 开发者，让其更好地支持 WASIX 平台。
+
+Andrew 与 Loris 在这篇文章中主要阐述了这么做为什么是伤害社区的行为：
+1. 助长竞争，牺牲合作
+2. 在软件开发的商业管理方面，悬赏是一种极为简单的方法，这可能让开发者关注短期效益，忽视长期利益，比如维护成本。
+
+这篇文章其实很符合 Andrew 的理念，不想让过多的热钱涌入 Zig 社区，他更想保证 Zig 的独立性，这也是他们创办 [[https://kristoff.it/blog/the-open-source-game/][Software You Can Love]] 的初衷。
+
+** [[https://bun.sh/blog/bun-v1.0][Bun 1.0]]
+面包终于出炉了！Bun 毫无疑问是 Zig 的明星项目，它在 2023-09-08 正式发布了 1.0 版本，这对开发者来说可能没什么太大的区别，毕竟就只是个 tag 而已，但是对于广大的用户来说，这无疑意味着可以在生产环境中去使用了。
+
+Bun 并不简单的是个 Node.js 替代品，而是大而全的工具链：
+- Transpilers，可以直接运行 =js= =jsx= =mjs= =ts= =tsx= =cjs= 文件
+- Bundlers，可以直接替代 webpack、esbuild 等工具
+- Package managers，兼容 npm，识别 =package.json= 格式，可以替代：npm、yarn、
+- Testing libraries，内置 test runner，支持快照测试、模拟和代码覆盖，可以替代：jest、ts-test
+* 观点/教程
+- [[https://linus.dev/posts/kiesel-devlog-1/][Kiesel Devlog #1: Now passing 25% of test262]] :: 另一个 devlog，作者写了一个 JS engine 用来学习 Zig，该作者是 SerenityOS 系统中，Ladybird 浏览器 JS 引擎 LibJS 的作者
+- [[https://mitchellh.com/writing/ghostty-and-useful-zig-patterns][Talk: Introducing Ghostty and Some Useful Zig Patterns]] :: Mitchell Hashimoto 在这篇文章里分享了开发终端 Ghostty 时用的 Zig 常用模式。计划在 2024 年发布 1.0
+  - Comptime Interface
+  - Comptime Data Table Generation
+  - Comptime Type Generation
+  - [[https://www.bilibili.com/video/BV1884y1D7gu/][B 站视频地址]]
+- [[https://www.openmymind.net/learning_zig/][Learning Zig]] :: 一个 Zig 教程，写的非常易懂，推荐每个 Zig 爱好者阅读。
+* 项目/工具
+- [[https://plugins.jetbrains.com/plugin/22456-zigbrains][ZigBrains]] :: A multifunctional Zig Programming Language plugin for the IDEA platform.
+- [[https://github.com/fulcrum-so/ziggy-pydust][fulcrum-so/ziggy-pydust]] :: A toolkit for building Python extensions in Zig.
+- [[https://github.com/jiacai2050/zig-curl][zig-curl]] :: Zig bindings to libcurl.
+- [[https://github.com/darkr4y/OffensiveZig][darkr4y/OffensiveZig]] :: Some attempts at using [[https://ziglang.org/][Zig]] in penetration testing.
+- [[https://wasmlabs.dev/articles/zig-support-on-wasm-workers-server/][Announcing Zig support for Wasm Workers Server]] :: Wasm Workers Server 是一个用于开发 serverless 应用的框架，近期增加了对 Zig 的支持，[[https://workers.wasmlabs.dev/docs/languages/zig][使用文档]]。
+* [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-08-01..2023-09-01][Zig 语言更新]]

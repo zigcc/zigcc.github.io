@@ -5,6 +5,13 @@
 {{ if (gt .Params.date 0) }}<h2 class="date">{{ .Date.Format "2006/01/02" }}</h2>{{ end }}
 </div>
 
+{{ with .TableOfContents }}
+<div id="table-of-contents">
+  <h3>TOC</h3>
+  {{ . | safeHTML }}
+</div>
+{{ end }}
+
 <main>
 {{ .Content }}
 </main>

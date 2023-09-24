@@ -9,19 +9,6 @@
 
 <a href="https://emacstalk.codeberg.page/made-with-emacs/"> <img width="150px" height="44px" src="https://en.liujiacai.net/images/blog/made-with-emacs.webp" / > </a>
 
-<style>
-#table-of-contents {
-    position: fixed;
-    top: 50%;
-    right: 30px;
-    transform: translateY(-50%);
-    background-color: #f0f0f0;
-    padding: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    width: 250px;
-}
-</style>
-
 {{ if .Page.Store.Get "hasMermaid" }}
 <script type="module">
   import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';

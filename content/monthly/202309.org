@@ -1,6 +1,6 @@
 #+TITLE: 202309 | Bun 正式发布 1.0
 #+DATE: 2023-09-23T10:10:58+0800
-#+LASTMOD: 2023-10-04T12:52:20+0800
+#+LASTMOD: 2023-10-04T20:12:55+0800
 * 重大事件
 ** [[https://ziglang.org/news/bounties-damage-open-source-projects/][Bounties Damage Open Source Projects]]
 在 2023-09-11 号，Wasmerio CEO 创建了 [[https://github.com/ziglang/zig/issues/17115][Support WASIX · Issue #17115]]，表示想赞助 Zig 开发者，让其更好地支持 WASIX 平台。
@@ -40,6 +40,8 @@ Bun 并不简单的是个 Node.js 替代品，而是大而全的工具链：
 - [[https://notes.eatonphil.com/2023-10-01-intercepting-and-modifying-linux-system-calls-with-ptrace.html][Intercepting and modifying Linux system calls with ptrace]] :: 用 Zig 来封装 Dtrace，用于跟踪子进程的 syscall
 - [[https://double-trouble.dev/post/zvm/][Managing Zig Versions with zvm: A Technical Dive]] :: 另一个 Zig 版本管理工具，不过这次是用 Zig 写的了
 - [[https://alic.dev/blog/dense-enums][When Zig Outshines Rust -- Memory Efficient Enum Arrays]] :: 一个图文并茂的文章，重点推荐。作者这里通过分析 array of struct 的内存浪费情况，介绍了 Rust/Zig 中不同的解法，Zig 由于有强大的编译期元编程能力，能够更方便的实现 SoA（struct of arrays）
+  {{< figure src="/images/struct-padding.webp" caption="struct 数组的内存布局">}}
+  {{< figure src="/images/soa-layout.webp" caption="SoA 内存布局">}}
 * 项目/工具
 - [[https://plugins.jetbrains.com/plugin/22456-zigbrains][ZigBrains]] :: A multifunctional Zig Programming Language plugin for the IDEA platform.
 - [[https://github.com/fulcrum-so/ziggy-pydust][fulcrum-so/ziggy-pydust]] :: A toolkit for building Python extensions in Zig.

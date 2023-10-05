@@ -18,7 +18,11 @@ theme = "hugo-xmin"
 [[menu.main]]
   name = "论坛"
   weight = 30
-  url = "https://zigcc.github.io/forum/"
+  url = "https://zigcc.github.io/forum"
+[[menu.main]]
+  name = "学习 Zig 教程"
+  weight = 31
+  url = "/learning-zig"
 # [[menu.main]]
 #   name = "Tags"
 #   weight = 3

@@ -1,6 +1,6 @@
 #+TITLE: Zig 多版本管理
 #+DATE: 2023-10-14T09:23:41+0800
-#+LASTMOD: 2023-10-16T19:20:22+0800
+#+LASTMOD: 2023-10-16T21:47:02+0800
 #+TAGS[]: zig
 #+CATEGORIES[]: 编程语言
 
@@ -21,8 +21,8 @@
 - https://github.com/tristanisham/zvm/blob/639dca34b4b1dcbf881fd684020222d8161e4f7a/cli/use.go#L38
 - https://github.com/hendriknielaender/zvm/blob/e0b1bedf1aea58c1627a983a8ef7fd8857a2ee80/src/alias.zig#L13
 
-* asdf 插件
-多版本管理是个常见的需求，比如 Python 中的 [[https://github.com/pyenv/pyenv][pyenv]]、Ruby 中的 [[https://rvm.io/][rvm]]，甚至还有一个通用的框架：[[https://asdf-vm.com/][asdf]]，名字简单暴力，安装方式可以参考官方文档的 [[https://asdf-vm.com/guide/getting-started.html][Getting Started]]。
+* 通用版本管理工具 asdf
+多版本管理是个常见的需求，比如 Python 中的 [[https://github.com/pyenv/pyenv][pyenv]]、Ruby 中的 [[https://rvm.io/][rvm]]，甚至还有一个通用的框架：[[https://asdf-vm.com/][asdf]]，名字简单暴力，敲起来得心应手。安装方式可以参考官方文档的 [[https://asdf-vm.com/guide/getting-started.html][Getting Started]]。
 
 它们的工作原理也都比较类似，通过修改 Shell 中的环境变量实现。在执行具体命令（比如：python、zig）时，会拦截到一个中转的工具（学名叫 [[https://en.wikipedia.org/wiki/Shim_(computing)][shims]]，翻译为“垫片”），由它来确定要执行的版本（比如项目根目录的 =.python-version= ），然后将实际参数派发过去。
 
@@ -42,7 +42,7 @@ asdf local zig <version>
 
 这里说明一点，可以使用 =asdf install zig master= 的方式来安装 master 分支的 Zig，但是由于 Zig 的 master 一直在变，因此本次安装的版本可以会滞后，可以手动把 master 目录改个名字，然后修改 zig 的 shims 让其识别到这个版本，之后就可以继续安装最新的 master 版本：
 #+begin_src bash
-$ tree -L 1 installs/zig
+$ tree -L 1 ~/.asdf/installs/zig
 installs/zig
 ├──0.11.0
 ├──0.12.0-dev.891+2254882eb

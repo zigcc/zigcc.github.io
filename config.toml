@@ -47,3 +47,15 @@ theme = "hugo-xmin"
 
 [permalinks]
   post = "/post/:year/:month/:day/:slug/"
+
+[markup]
+  [markup.tableOfContents]
+    startLevel = 1
+    endLevel = 8
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  # https://gohugo.io/getting-started/configuration-markup/#highlight
+  [markup.highlight]
+    style = "modus-operandi"
+    linenos = true

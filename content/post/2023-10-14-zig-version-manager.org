@@ -1,0 +1,58 @@
+#+TITLE: Zig 多版本管理
+#+DATE: 2023-10-14T09:23:41+0800
+#+LASTMOD: 2023-10-16T09:22:09+0800
+#+TAGS[]: zig
+#+CATEGORIES[]: 编程语言
+
+由于 Zig 还在快速开发迭代中，因此项目很有可能出现新版本 Zig 无法编译的情况，这时候一方面可以跟踪上游进展，看看是否有 workaround，另一个就是使用固定的版本来开发这个项目，显然这种方式更靠谱一些，因此这篇文章就来介绍一些管理多个 Zig 版本的方式。
+
+* Zig version manager
+现在 Zig 的版本管理工具主要有如下几个：
+- [[https://github.com/marler8997/zigup][marler8997/zigup]] :: Download and manage zig compilers
+- [[https://github.com/tristanisham/zvm][tristanisham/zvm]] :: Lets you easily install/upgrade between different versions of Zig
+- [[https://github.com/hendriknielaender/zvm][hendriknielaender/zvm]] :: Fast and simple zig version manager
+
+他们工作方式类似，大致步骤：
+1. 从 https://ziglang.org/download/index.json 这个链接中解析所有版本，然后根据当前系统架构确定要安装的二进制，
+2. 创建一个类似 =current= 软链用来表示当前的 Zig 安装目录，
+3. 根据项目下 =.zig-version= 文件中指定的版本，修改 =current= 软链的指向，保证 =PATH= 中的 Zig 版本是正确的
+
+相关实现：
+- https://github.com/tristanisham/zvm/blob/639dca34b4b1dcbf881fd684020222d8161e4f7a/cli/use.go#L38
+- https://github.com/hendriknielaender/zvm/blob/e0b1bedf1aea58c1627a983a8ef7fd8857a2ee80/src/alias.zig#L13
+
+* asdf 插件
+多版本管理是个常见的需求，比如 Python 中的 [[https://github.com/pyenv/pyenv][pyenv]]、Ruby 中的 [[https://rvm.io/][rvm]]，甚至还有一个通用的框架：[[https://asdf-vm.com/][asdf]]，名字简单暴力。
+
+它们的工作原理也都比较类似，通过修改 Shell 中的环境变量实现。在执行具体命令（比如：python、zig）时，会拦截到一个中转的工具（学名叫 [[https://en.wikipedia.org/wiki/Shim_(computing)][shims]]，翻译为“垫片”），由它来确定要执行的版本（比如项目根目录的 =.python-version= ），然后将实际参数派发过去。
+
+社区也有 Zig 的插件，安装也比较简单：
+#+begin_src bash
+asdf plugin-add zig https://github.com/asdf-community/asdf-zig.git
+#+end_src
+** 常用命令
+#+begin_src bash
+# 列举所有可安装的版本
+asdf list-all zig
+# 设置全局默认版本，会写到 $HOME/.tool-versions 文件
+asdf global zig <version>
+# 设置当前目录使用的版本，会写到 $(pwd)/.tool-versions 文件
+asdf local zig <version>
+#+end_src
+
+这里说明一点，可以使用 =asdf install zig master= 的方式来安装 master 分支的 Zig，但是由于 Zig 的 master 一直在变，因此本次安装的版本可以会滞后，可以手动把 master 目录改个名字，然后修改 zig 的 shims 让其识别到这个版本，之后就可以继续安装 master 版本：
+#+begin_src bash
+$ tree -L 1 installs/zig
+installs/zig
+├──0.11.0
+├──0.12.0-dev.891+2254882eb
+└──master
+
+$ cat ~/.asdf/shims/zig
+#!/usr/bin/env bash
+# asdf-plugin: zig 0.11.0
+# asdf-plugin: zig master
+# asdf-plugin: zig 0.12.0-dev.891+2254882eb
+exec /opt/homebrew/Cellar/asdf/0.13.1/libexec/bin/asdf exec "zig" "$@" # asdf_allow: ' asdf '
+#+end_src
+上面的 =0.12.0-dev.891+2254882eb= 即是从 master 重命名出来的版本。

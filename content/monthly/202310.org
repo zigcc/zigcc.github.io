@@ -1,0 +1,64 @@
+#+TITLE: 202310
+#+DATE: 2023-10-13T07:53:24+0800
+#+LASTMOD: 2023-10-16T09:07:44+0800
+#+DRAFT: true
+* 重大事件
+* 观点/教程
+- [[https://www.openmymind.net/Zig-Interfaces/][Zig Interfaces]] :: 作者介绍了 Zig 中如何实现接口这个经常需要用到的功能。最后的实现也比较巧妙，结合 =anytype= 与 =*anyopaque=
+  #+begin_src zig
+const std = @import("std");
+
+const Writer = struct {
+    // These two fields are the same as before
+    ptr: *anyopaque,
+    writeAllFn: *const fn (ptr: *anyopaque, data: []const u8) anyerror!void,
+
+    // This is new
+    fn init(ptr: anytype) Writer {
+        const T = @TypeOf(ptr);
+        const ptr_info = @typeInfo(T);
+
+        const gen = struct {
+            pub fn writeAll(pointer: *anyopaque, data: []const u8) anyerror!void {
+                const self: T = @ptrCast(@alignCast(pointer));
+                return ptr_info.Pointer.child.writeAll(self, data);
+            }
+        };
+
+        return .{
+            .ptr = ptr,
+            .writeAllFn = gen.writeAll,
+        };
+    }
+
+    // This is the same as before
+    pub fn writeAll(self: Writer, data: []const u8) !void {
+        return self.writeAllFn(self.ptr, data);
+    }
+};
+
+const File = struct {
+    fd: std.os.fd_t,
+
+    fn writeAll(ptr: *anyopaque, data: []const u8) !void {
+        const self: *File = @ptrCast(@alignCast(ptr));
+        // os.write might not write all of `data`, we should really look at the
+        // returned value, the number of bytes written, and handle cases where data
+        // wasn't all written.
+        _ = try std.os.write(self.fd, data);
+    }
+
+    fn writer(self: *File) Writer {
+        return Writer.init(self);
+    }
+};
+
+pub fn main() !void {
+    var file = try std.fs.createFileAbsolute("/tmp/demo.txt", .{});
+    var my_file = File{ .fd = file.handle };
+    const writer = my_file.writer();
+    try writer.writeAll("hello world");
+}
+  #+end_src
+* 项目/工具
+* [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-09-01..2023-10-01][Zig 语言更新]]

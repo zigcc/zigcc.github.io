@@ -1,22 +1,5 @@
-{{ partial "header.html" . }}
-<div class="article-meta">
-<h1><span class="title">{{ .Title | markdownify }}</span></h1>
-{{ with .Params.author }}<h2 class="author">{{ . }}</h2>{{ end }}
-{{ if (gt .Params.date 0) }}<h2 class="date">{{ .Date.Format "2006/01/02" }}</h2>{{ end }}
-</div>
 
-{{ with .TableOfContents }}
-<div id="table-of-contents">
-  <h3>TOC</h3>
-  {{ . | safeHTML }}
-</div>
-{{ end }}
-
-<main>
-{{ .Content }}
-</main>
-
-  <h1>
+ <h1>
     建议/反馈✉️
   </h1>
   <ol>
@@ -28,4 +11,3 @@
     <li>想要分享 Zig 使用经验，欢迎给我们<a href="/post/2023/09/05/hello-world/">供稿</a>
     </li>
   </ol>
-{{ partial "footer.html" . }}

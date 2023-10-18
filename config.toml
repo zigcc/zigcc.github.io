@@ -58,5 +58,5 @@ theme = "hugo-xmin"
       unsafe = true
   # https://gohugo.io/getting-started/configuration-markup/#highlight
   [markup.highlight]
-    style = "modus-operandi"
+    style = "pygments"
     linenos = true

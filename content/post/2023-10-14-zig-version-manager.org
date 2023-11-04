@@ -1,6 +1,6 @@
 #+TITLE: Zig 多版本管理
 #+DATE: 2023-10-14T09:23:41+0800
-#+LASTMOD: 2023-10-16T21:47:02+0800
+#+LASTMOD: 2023-10-20T17:53:03+0800
 #+TAGS[]: zig
 #+CATEGORIES[]: 编程语言
 
@@ -34,13 +34,18 @@ asdf plugin-add zig https://github.com/asdf-community/asdf-zig.git
 #+begin_src bash
 # 列举所有可安装的版本
 asdf list-all zig
+
+asdf install zig <version>
+asdf uninstall zig <version>
 # 设置全局默认版本，会写到 $HOME/.tool-versions 文件
 asdf global zig <version>
 # 设置当前目录使用的版本，会写到 $(pwd)/.tool-versions 文件
 asdf local zig <version>
 #+end_src
 
-这里说明一点，可以使用 =asdf install zig master= 的方式来安装 master 分支的 Zig，但是由于 Zig 的 master 一直在变，因此本次安装的版本可以会滞后，可以手动把 master 目录改个名字，然后修改 zig 的 shims 让其识别到这个版本，之后就可以继续安装最新的 master 版本：
+这里说明一点，可以使用 =asdf install zig master= 的方式来安装 master 分支的 Zig，但是由于 Zig 的 master 一直在变，因此本次安装的版本可以会滞后，一个简单的办法是先卸载，再重新安装。
+
+如果想保留，可以手动把 master 目录改个名字，然后修改 zig 的 shims 让其识别到这个版本，之后就可以继续安装最新的 master 版本：
 #+begin_src bash
 $ tree -L 1 ~/.asdf/installs/zig
 installs/zig
@@ -56,3 +61,20 @@ $ cat ~/.asdf/shims/zig
 exec /opt/homebrew/Cellar/asdf/0.13.1/libexec/bin/asdf exec "zig" "$@" # asdf_allow: ' asdf '
 #+end_src
 上面的 =0.12.0-dev.891+2254882eb= 即是从 master 重命名出来的版本。
+
+** 问题排查
+asdf 现在不支持 verbose 选项，因此安装过程中如果卡在某个地方，没法排查。一般来说，主要是下载 tar 包慢了，毕竟这取决于网络环境，可以这么改一下 [[https://github.com/asdf-community/asdf-zig/blob/51876973b89c5919bb20a3b7a7ce71990f7f6a5e/bin/install#L67][install 文件]]：
+#+begin_src diff
+   echo "∗ Downloading and installing Zig..."
+-  curl --fail --silent --location --create-dirs --output "$source_path" "$download_url"
++  curl --fail --progress-bar --location --create-dirs --output "$source_path" "$download_url"
+   tar -xf "$source_path" -C "$install_path" --strip-components=1
+#+end_src
+
+这样就可以看到进度了：
+#+begin_src bash
+curl --fail --progress-bar --location --create-dirs --output \
+     ~/.asdf/installs/zig/master/zig-macos-aarch64-master.tar.xz \
+     https://ziglang.org/builds/zig-macos-aarch64-0.12.0-dev.1127+32bc07767.tar.xz
+#####################################                                              27.8%
+#+end_src

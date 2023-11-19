@@ -1,0 +1,62 @@
+#+TITLE: 202311
+#+DATE: 2023-11-19T18:26:29+0800
+#+LASTMOD: 2023-11-19T20:38:32+0800
+* 重大事件
+* 观点/教程
+- [[https://www.openmymind.net/Zigs-std-json-Parsed/][Zig's std.json.Parsed(T)]] :: 老朋友 openmymind 的文章，这篇文章主要讲述了使用 Zig 中的 json 库序列化后，如何更好的使用返回值，由于有一个 allocator 参数，因此比不能简单的返回 ~T~ ，作者这里定义了一个 ~Managed~ 来解决：
+  #+begin_src zig
+pub fn Managed(comptime T: type) type {
+	return struct {
+		value: T,
+		arena: *std.heap.ArenaAllocator,
+
+		const Self = @This();
+
+		pub fn fromJson(parsed: std.json.Parsed(T)) Self {
+			return  .{
+				.arena = parsed.arena,
+				.value = parsed.value,
+			};
+		}
+
+		pub fn deinit(self: Self) void {
+			const arena = self.arena;
+			const allocator = arena.child_allocator;
+			arena.deinit();
+			allocator.destroy(arena);
+		}
+	};
+}
+  #+end_src
+- [[https://re.factorcode.org/2023/11/factor-is-faster-than-zig.html][Factor is faster than Zig!]]  :: 一个有意思的案例分享。
+- [[https://www.pierrebeaucamp.com/a-day-with-zig/][A day with Zig]] :: 作者把之前一个 Go 的项目转成 Zig，这里介绍了一些感受，
+  - 文档缺乏
+  - 文件级别导入
+- [[https://registerspill.thorstenball.com/p/zig-zaggin][@fieldParentPtr]] :: 对 ~@fieldParentPtr~ 使用的介绍
+- [[https://sudw1n.gitlab.io/posts/zig-build-docs/][Generating documentation from zig build]] :: 作者在这篇文章里尝试在 zig build 文件中输出文档，目前步骤略微繁琐。
+  #+begin_src zig
+const std = @import("std");
+
+pub fn build(b: *std.Build) void {
+    const exe = b.addExecutable(.{
+        .name = "myprogram",
+        .root_source_file = .{ .path = "src/main.zig" },
+        .target = b.standardTargetOptions(.{}),
+        .optimize = b.standardOptimizeOption(.{}),
+    });
+
+    b.installArtifact(exe);
+
+    const install_docs = b.addInstallDirectory(.{
+        .source_dir = exe.getEmittedDocs(),
+        .install_dir = .prefix,
+        .install_subdir = "docs",
+    });
+
+    const docs_step = b.step("docs", "Copy documentation artifacts to prefix path");
+    docs_step.dependOn(&install_docs.step);
+}
+  #+end_src
+- [[https://www.youtube.com/watch?v=5_oqWE9otaE][What's Zig got that C, Rust and Go don't have? (with Loris Cro)]] :: [视频] Loris 参与的一档播客
+* 项目/工具
+* [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-10-01..2023-11-01][Zig 语言更新]]

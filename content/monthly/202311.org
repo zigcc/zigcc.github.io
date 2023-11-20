@@ -1,6 +1,6 @@
 #+TITLE: 202311
 #+DATE: 2023-11-19T18:26:29+0800
-#+LASTMOD: 2023-11-19T20:38:32+0800
+#+LASTMOD: 2023-11-21T07:50:30+0800
 * 重大事件
 * 观点/教程
 - [[https://www.openmymind.net/Zigs-std-json-Parsed/][Zig's std.json.Parsed(T)]] :: 老朋友 openmymind 的文章，这篇文章主要讲述了使用 Zig 中的 json 库序列化后，如何更好的使用返回值，由于有一个 allocator 参数，因此比不能简单的返回 ~T~ ，作者这里定义了一个 ~Managed~ 来解决：
@@ -58,5 +58,10 @@ pub fn build(b: *std.Build) void {
 }
   #+end_src
 - [[https://www.youtube.com/watch?v=5_oqWE9otaE][What's Zig got that C, Rust and Go don't have? (with Loris Cro)]] :: [视频] Loris 参与的一档播客
+- [[https://mtlynch.io/notes/zig-call-c-simple/][A Simple Example of Calling a C Library from Zig]] :: 一个简明的教程，演示 Zig 如何引用 C 类库
+- [[https://www.reddit.com/r/Zig/comments/17xd46v/what_is_the_zig_philosophy_on_apis_and_abstraction/][What is the Zig philosophy on APIs and abstraction?]] :: 一个 Reddit 帖子，讨论 Zig 的在 API 设计上的哲学、理念。一个有意思的点是 Zig 不支持私有的字段，全部都是 public 的。Andrew 在 [[https://github.com/ziglang/zig/issues/9909#issuecomment-942686366][Proposal: Private Fields #9909]] 这个 issue 里面讨论过原因，主要根据：
+  - 一个结构体的抽象，很难保证不泄漏，比如一个类型的 align、size，一个函数是否可以在 comptime 执行
+  - 一个包的兼容性，应该由文档来解释
+  - 增加私有字段，会增加语言的复杂度，而且这种复杂性本身是完全可以避免的
 * 项目/工具
 * [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-10-01..2023-11-01][Zig 语言更新]]

@@ -1,6 +1,6 @@
 #+TITLE: Zig 语言中文社区
 #+DATE: 2022-07-20T12:42:38+0800
-#+LASTMOD: 2023-10-05T21:34:55+0800
+#+LASTMOD: 2023-11-25T11:04:13+0800
 #+AUTHOR: Jiacai Liu
 
 {{< figure src="/images/logo.svg">}}
@@ -15,6 +15,12 @@
 - Telegram：[[https://t.me/ZigChinese]]
 - Discord：https://discord.gg/hzArH59u
 
+* 学习资料
+由于 Zig 目前还处于快速迭代，因此最权威的资料无疑是官方的 [[https://ziglang.org/documentation/master/][Zig Language Reference]]，遇到语言的细节问题，基本都可以在这里找到答案。其次是社区的一些高质量教程，例如：
+- [[https://zigcc.github.io/learning-zig/][学习 Zig]] :: 该系列教程最初由 Karl Seguin 编写，该教程行文流畅，讲述的脉络由浅入深，深入浅出，是入门 Zig 非常不错的选择
+- [[https://codeberg.org/ziglings/exercises/][ziglings/exercises]] :: Learn the Zig programming language by fixing tiny broken programs.
+- [[https://github.com/zigcc/zig-idioms][zigcc/zig-idioms]] :: Common idioms used in Zig
+- [[https://github.com/zigcc/awesome-zig][zigcc/awesome-zig]] :: A collection of some awesome public Zig programming language projects.
 * RSS 订阅
 - [[https://github.com/zigcc/forum/discussions.atom][论坛]]
 - [[file:monthly/index.xml][月刊]]

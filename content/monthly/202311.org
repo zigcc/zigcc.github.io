@@ -1,7 +1,36 @@
-#+TITLE: 202311
+#+TITLE: 202311 | 传值或传引用，这是个大问题
 #+DATE: 2023-11-19T18:26:29+0800
-#+LASTMOD: 2023-11-21T07:50:30+0800
+#+LASTMOD: 2023-12-03T22:21:02+0800
 * 重大事件
+本月讨论比较多的就是 [[https://www.1a-insec.net/blog/25-zig-reference-semantics/][Zig May Pass Anything By Reference]] 这篇文章了。
+
+它讲述了 Zig 里面一个比较有争议的点，函数的参数到底是传值还是传引用。
+#+begin_src zig
+const AAAA = struct {
+    foo: [100]u32,
+};
+
+fn aaaaa(a: AAAA, b: *AAAA) void {
+  b.*.foo[0] = 5;
+
+  std.debug.print("wtf: {}", .{ a.foo[0] });
+}
+
+pub fn main() !void {
+    var f: AAAA = undefined;
+
+    f.foo[0] = 0;
+
+    aaaaa(f, &f);
+}
+#+end_src
+上面这个例子修改了 =b= 参数的值，但是打印出来的 =a= 的值也被修改了。
+
+传值的好处就是不用担心原值会被修改，传引用的好处就是可以减少数据拷贝的代价。但是 Zig 目前采用的方式是由编译器推导来决定合适的方式。这样的目的是减少程序员负担，但这实际上会给程序带来不确定性，比如上述例子。
+
+Andrew 在 [[https://lobste.rs/s/et3ivs/zig_may_pass_anything_by_reference#c_yvfrnq][Lobster]] 上回复了这个问题，确实是一个比较严重的问题，一种解法是分析一个变量有多少个 alias，编译器只在确定没问题时才进行优化，但是分析一个变量的 alias 有多少不是件容易的事。
+
+其他语言没有，如 C/C++/Rust 等没有进行这种优化尝试，因此没有这个问题，但是 Zig 作为一个新的语言，想尝试来用一种程序员无感的方式来解决，只是目前还没有想到更完善的方案而已。
 * 观点/教程
 - [[https://www.openmymind.net/Zigs-std-json-Parsed/][Zig's std.json.Parsed(T)]] :: 老朋友 openmymind 的文章，这篇文章主要讲述了使用 Zig 中的 json 库序列化后，如何更好的使用返回值，由于有一个 allocator 参数，因此比不能简单的返回 ~T~ ，作者这里定义了一个 ~Managed~ 来解决：
   #+begin_src zig
@@ -64,4 +93,6 @@ pub fn build(b: *std.Build) void {
   - 一个包的兼容性，应该由文档来解释
   - 增加私有字段，会增加语言的复杂度，而且这种复杂性本身是完全可以避免的
 * 项目/工具
+- [[https://zig.news/xq/zig-build-explained-part-2-1850][zig build explained -- building C/C++ projects]] :: 经典文章回顾，如何使用 Zig 构建系统编译 C/C++ 项目
+- [[https://github.com/akhildevelops/cudaz][akhildevelops/cudaz]] :: A Zig Cuda wrapper
 * [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-10-01..2023-11-01][Zig 语言更新]]

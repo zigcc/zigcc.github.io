@@ -1,6 +1,6 @@
 #+TITLE: 202311 | 传值或传引用，这是个大问题
 #+DATE: 2023-11-19T18:26:29+0800
-#+LASTMOD: 2023-12-03T22:41:11+0800
+#+LASTMOD: 2023-12-04T09:23:13+0800
 * 重大事件
 本月讨论比较多的就是 [[https://www.1a-insec.net/blog/25-zig-reference-semantics/][Zig May Pass Anything By Reference]] 这篇文章了。
 
@@ -31,6 +31,10 @@ pub fn main() !void {
 Andrew 在 [[https://lobste.rs/s/et3ivs/zig_may_pass_anything_by_reference#c_yvfrnq][Lobster]] 上回复了这个问题，确实是一个比较严重的问题，一种解法是分析一个变量有多少个 alias，编译器只在确定没问题时才进行优化，但是分析一个变量的 alias 有多少不是件容易的事。
 
 其他语言如 C/C++/Rust 等没有进行这种优化尝试，因此没有这个问题，但是 Zig 作为一个新的语言，想尝试来用一种程序员无感的方式来解决，只是目前还没有想到更完善的方案而已。
+
+一些熟悉 Zig zen 的读者可能会觉得这违背了第一条『Communicate intent precisely』，目前来看确实是这样的，而且 core team 老早就意识到这个问题了，感兴趣的读者可以参考：
+- [[https://github.com/ziglang/zig/issues/5973][Footgun: hidden pass-by-reference #5973]]
+- [[https://github.com/ziglang/zig/issues/12064][Design flaw: Swapping struct fields yields unexpected value #12064]]
 * 观点/教程
 - [[https://www.openmymind.net/Zigs-std-json-Parsed/][Zig's std.json.Parsed(T)]] :: 老朋友 openmymind 的文章，这篇文章主要讲述了使用 Zig 中的 json 库序列化后，如何更好的使用返回值，由于有一个 allocator 参数，因此比不能简单的返回 ~T~ ，作者这里定义了一个 ~Managed~ 来解决：
   #+begin_src zig

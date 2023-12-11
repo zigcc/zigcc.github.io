@@ -17,6 +17,10 @@ theme = "hugo-xmin"
   weight = 21
   url = "/post"
 [[menu.main]]
+  name = "新闻"
+  weight = 22
+  url = "/news"
+[[menu.main]]
   name = "论坛"
   weight = 30
   url = "https://zigcc.github.io/forum"

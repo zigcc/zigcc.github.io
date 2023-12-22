@@ -2,7 +2,8 @@ name: Mirror
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -10,7 +11,7 @@ jobs:
     if: github.repository_owner == 'zigcc'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - run: |

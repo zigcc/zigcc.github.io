@@ -24,7 +24,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version-file: .tool-versions
+          node-version: "20"
       - name: Prettier check
         run: |
           make lint

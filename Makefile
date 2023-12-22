@@ -7,7 +7,7 @@ init:
 	git submodule update --init
 
 lint:
-	npx prettier@2.7.1 . --check
+	npx prettier . --check
 
 format:
-	npx prettier@2.7.1 --write .
+	npx prettier --write .

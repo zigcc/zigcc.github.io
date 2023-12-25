@@ -57,12 +57,9 @@ Zig 构建系统仍然缺少文档，对很多人来说，这是不使用它的�
 
 构建系统的核心理念是，Zig 工具链将编译一个 Zig 程序 (build.zig)，该程序将导出一个特殊的入口点（`pub fn build(b: *std.build.Builder) void`），当我们调用 zig build 时，该入口点将被调用。
 
-
 然后，该函数将创建一个由 std.build.Step 节点组成的有向无环图，其中每个步骤都将执行构建过程的一部分。
 
-
 每个步骤都有一组依赖关系，这些依赖关系需要在步骤本身完成之前完成。作为用户，我们可以通过调用 zig build step-name 来调用某些已命名的步骤，或者使用其中一个预定义的步骤（例如 install）。
-
 
 要创建这样一个步骤，我们需要调用 Builder.step
 
@@ -72,7 +69,6 @@ Zig 构建系统仍然缺少文档，对很多人来说，这是不使用它的�
         const named_step = b.step("step-name", "This is what is shown in help");
         _ = named_step;
     }
-
 
 这将为我们创建一个新的步骤 step-name，当我们调用 zig build --help 时将显示该步骤：
 
@@ -110,7 +106,7 @@ Step 遵循与 std.mem.Allocator 相同的接口模式，需要实现一个 make
 
 我们在这里添加了几行。首先，const exe = b.addExecutable 将创建一个新的 LibExeObjStep，将 src/main.zig 编译成一个名为 fresh 的文件（或 Windows 上的 fresh.exe）。
 
-第二个添加的内容是 compile_step.dependOn(&exe.step);。这就是我们构建依赖关系图的方法，并声明当编译_step 生成时，exe 也需要生成。
+第二个添加的内容是 compile_step.dependOn(&exe.step);。这就是我们构建依赖关系图的方法，并声明当编译\_step 生成时，exe 也需要生成。
 
 你可以调用 zig build，然后再调用 zig build compile 来验证这一点。第一次调用不会做任何事情，但第二次调用会输出一些编译信息。
 
@@ -118,7 +114,7 @@ Step 遵循与 std.mem.Allocator 相同的接口模式，需要实现一个 make
 
 ## 交叉编译
 
-交叉编译是通过设置程序的目标和编译模式来实现的 
+交叉编译是通过设置程序的目标和编译模式来实现的
 
     // 。代码块编号1.4：
 
@@ -132,7 +128,6 @@ Step 遵循与 std.mem.Allocator 相同的接口模式，需要实现一个 make
         const compile_step = b.step("compile", "Compiles src/main.zig");
         compile_step.dependOn(&exe.step);
     }
-
 
 在这里，`.optimize = .ReleaseSafe`, 将向编译调用传递 -O ReleaseSafe。但是！LibExeObjStep.setTarget 需要一个 std.zig.CrossTarget 作为参数，而你通常希望这个参数是可配置的。
 
@@ -169,6 +164,7 @@ Step 遵循与 std.mem.Allocator 相同的接口模式，需要实现一个 make
                                     ReleaseSafe
                                     ReleaseFast
                                     ReleaseSmall
+
 前两个选项由 standardTargetOptions 添加，其他选项由 standardOptimizeOption 添加。现在，我们可以在调用构建脚本时使用这些选项：
 
     zig build -Dtarget=x86_64-windows-gnu -Dcpu=athlon_fx
@@ -199,7 +195,6 @@ Step 遵循与 std.mem.Allocator 相同的接口模式，需要实现一个 make
         b.getInstallStep().dependOn(&install_exe.step);
     }
 
-
 这将做几件事：
 
 1. 创建一个新的 InstallArtifactStep，将 exe 的编译结果复制到 $prefix/bin 中。
@@ -212,6 +207,7 @@ Step 遵循与 std.mem.Allocator 相同的接口模式，需要实现一个 make
     zig-out
     └── bin
         └── fresh
+
 现在运行 ./zig-out/bin/fresh，就能看到这条漂亮的信息：
 
     info: All your codebase are belong to us.
@@ -235,7 +231,6 @@ Step 遵循与 std.mem.Allocator 相同的接口模式，需要实现一个 make
         });
         b.installArtifact(exe);
     }
-
 
 如果你在项目中内置了多个应用程序，你可能会想创建几个单独的安装步骤，并手动依赖它们，而不是直接调用 b.installArtifact(exe);，但通常这样做是正确的。
 
@@ -267,7 +262,6 @@ Step 遵循与 std.mem.Allocator 相同的接口模式，需要实现一个 make
         run_step.dependOn(&run_cmd.step);
     }
 
-
 RunStep 有几个函数可以为执行进程的 argv 添加值：
 
 addArg 将向 argv 添加一个字符串参数。
@@ -278,7 +272,7 @@ addFileSourceArg 会将其他步骤生成的任何文件添加到 argv。
 请注意，第一个参数必须是我们要运行的可执行文件的路径。在本例中，我们要运行 exe 的编译输出。
 
 现在，当我们调用 zig build run 时，我们将看到与自己运行已安装的 exe 相同的输出：
-    info: All your codebase are belong to us.
+info: All your codebase are belong to us.
 
 请注意，这里有一个重要的区别： 使用 RunStep 时，我们从 ./zig-cache/.../fresh 而不是 zig-out/bin/fresh 运行可执行文件！如果你加载的文件相对于可执行路径，这一点可能很重要。
 
@@ -308,6 +302,7 @@ RunStep 的配置非常灵活，可以通过 stdin 向进程传递数据，也�
         const run_step = b.step("run", "Run the app");
         run_step.dependOn(&run_cmd.step);
     }
+
 这样就可以在 cli 上的 -- 后面传递参数：
 
     zig build run -- -o foo.bin foo.asm

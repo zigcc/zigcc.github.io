@@ -1,9 +1,9 @@
-#+TITLE: Zig 语言中文社区第二次线上会议
+#+TITLE: ZigCC 第二次线上会议
 #+DATE: 2023-12-27T08:39:51+0800
-#+LASTMOD: 2023-12-27T08:58:15+0800
+#+LASTMOD: 2023-12-27T09:00:34+0800
 #+TAGS[]: community
 
-2023-12-23 日，ZigCC 社区开始了第二次线上会议，共有 5 名 Zig 爱好者参加，分别是：
+2023-12-23，ZigCC 社区开始了第二次线上会议，共有 5 名 Zig 爱好者参加，分别是：
 - [[https://github.com/jiacai2050/][西瓜]]
 - [[https://github.com/orgs/zigcc/people/xnhp0320][贺鹏]]
 - [[https://github.com/labspc][Lambert]]

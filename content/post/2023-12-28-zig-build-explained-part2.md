@@ -1,3 +1,9 @@
+---
+title: zig 构建系统解析 - 第二部分
+author: Reco
+date: "2023-12-24T19:15:02+0800"
+---
+
 # zig build explained - part2
 
 ## 注释

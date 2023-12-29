@@ -272,7 +272,8 @@ addFileSourceArg 会将其他步骤生成的任何文件添加到 argv。
 请注意，第一个参数必须是我们要运行的可执行文件的路径。在本例中，我们要运行 exe 的编译输出。
 
 现在，当我们调用 zig build run 时，我们将看到与自己运行已安装的 exe 相同的输出：
-info: All your codebase are belong to us.
+
+    info: All your codebase are belong to us.
 
 请注意，这里有一个重要的区别： 使用 RunStep 时，我们从 ./zig-cache/.../fresh 而不是 zig-out/bin/fresh 运行可执行文件！如果你加载的文件相对于可执行路径，这一点可能很重要。
 

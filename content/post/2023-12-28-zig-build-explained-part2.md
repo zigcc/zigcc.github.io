@@ -229,8 +229,6 @@ addIncludePath 和 addLibraryPath 都可以被多次调用，以向编译器添�
             run_step.dependOn(&run_cmd.step);
         }
 
-
-
 上面的示例非常简单，所以你可能会想为什么需要这样的东西。答案是，有些库的头文件名称非常通用，如 api.h 或 buffer.h，而您希望使用两个共享头文件名称的不同库。
 
 ## 构建 C++ 项目

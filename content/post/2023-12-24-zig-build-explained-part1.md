@@ -3,7 +3,7 @@ title: zig 构建系统解析 - 第一部分
 author: Reco
 date: "2023-12-24T19:15:02+0800"
 ---
-
+原文链接： https://zig.news/xq/zig-build-explained-part-1-59lf
 # zig 构建系统解析 - 第一部分
 
 Zig 构建系统仍然缺少文档，对很多人来说，这是不使用它的致命理由。还有一些人经常寻找构建项目的秘诀，但也在与构建系统作斗争。

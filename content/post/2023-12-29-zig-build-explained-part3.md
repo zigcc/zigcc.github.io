@@ -3,7 +3,10 @@ title: zig 构建系统解析 - 第三部分
 author: Reco
 date: "2023-12-29T19:15:02+0800"
 ---
+
 # zig build explained - part3
+
+原文链接： https://zig.news/xq/zig-build-explained-part-3-1ima
 
 注释
 从现在起，我将只提供一个最小的 build.zig，说明解决一个问题所需的文件。如果你想了解如何将所有这些文件粘合到一个漂亮舒适的构建文件中，请阅读第一篇文章。

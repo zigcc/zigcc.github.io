@@ -1,19 +1,19 @@
 #+TITLE: ZigCC 第二次线上会议
 #+DATE: 2023-12-27T08:39:51+0800
-#+LASTMOD: 2023-12-27T09:00:34+0800
+#+LASTMOD: 2023-12-27T20:25:07+0800
 #+TAGS[]: community
 
 2023-12-23，ZigCC 社区开始了第二次线上会议，共有 5 名 Zig 爱好者参加，分别是：
 - [[https://github.com/jiacai2050/][西瓜]]
-- [[https://github.com/orgs/zigcc/people/xnhp0320][贺鹏]]
+- [[https://github.com/xnhp0320][贺鹏]]
 - [[https://github.com/labspc][Lambert]]
-- [[https://github.com/orgs/zigcc/people/fwx5618177][冯文轩]]
+- [[https://github.com/fwx5618177][冯文轩]]
 - [[https://github.com/1000copy][Reco]]
 
 这次会议主要是同步了之前会议落实的 action，主要是同步了不同项目的进展，由于临近年底，大家进度都不算太大，但还是有所进展，算是开了个好头😄
 
 * 项目进展
-** [[https://github.com/zigcc/zig-os][Zig-os]]
+** [[https://github.com/zigcc/zig-os][Zig-OS]]
 - 主要参与人员：西瓜
 - 进展：粗略看完 rust 版本的教程；完成 freestanding 二进制，现在卡在了 bootloader 阶段
 ** [[https://github.com/learnzig/learnzig][Learn zig]]

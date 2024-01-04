@@ -1,8 +1,8 @@
 #+TITLE: Zig 语言中文社区
 #+DATE: 2022-07-20T12:42:38+0800
-#+LASTMOD: 2023-12-30T14:49:11+0800
+#+LASTMOD: 2024-01-04T08:12:30+0800
 
-{{< figure src="/images/logo.svg">}}
+{{< figure src="/logo/zigcc-logo.svg" height="300px" >}}
 
 [[https://ziglang.org/][Zig]] 语言中文社区，致力于分享、传播 Zig 语言在中文用户内的使用。
 

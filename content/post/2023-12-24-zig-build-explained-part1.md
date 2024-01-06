@@ -57,11 +57,11 @@ Zig 构建系统仍然缺少文档，对很多人来说，这是不使用它的�
 
 ## 基础知识
 
-构建系统的核心理念是，Zig 工具链将编译一个 Zig 程序 (build.zig)，该程序将导出一个特殊的入口点（`pub fn build(b: *std.build.Builder) void`），当我们调用 zig build 时，该入口点将被调用。
+构建系统的核心理念是，Zig 工具链将编译一个 Zig 程序 (build.zig)，该程序将导出一个特殊的入口点（`pub fn build(b: *std.build.Builder) void`），当我们调用 `zig build` 时，该入口点将被调用。
 
 然后，该函数将创建一个由 std.build.Step 节点组成的有向无环图，其中每个步骤都将执行构建过程的一部分。
 
-每个步骤都有一组依赖关系，这些依赖关系需要在步骤本身完成之前完成。作为用户，我们可以通过调用 zig build step-name 来调用某些已命名的步骤，或者使用其中一个预定义的步骤（例如 install）。
+每个步骤都有一组依赖关系，这些依赖关系需要在步骤本身完成之前完成。作为用户，我们可以通过调用 `zig build ${step-name}` 来调用某些已命名的步骤，或者使用其中一个预定义的步骤（例如 install）。
 
 要创建这样一个步骤，我们需要调用 Builder.step
 
@@ -72,7 +72,7 @@ Zig 构建系统仍然缺少文档，对很多人来说，这是不使用它的�
         _ = named_step;
     }
 
-这将为我们创建一个新的步骤 step-name，当我们调用 zig build --help 时将显示该步骤：
+这将为我们创建一个新的步骤 step-name，当我们调用 `zig build --help` 时将显示该步骤：
 
     $ zig build --help
     使用方法： zig build [steps] [options］
@@ -89,7 +89,7 @@ Zig 构建系统仍然缺少文档，对很多人来说，这是不使用它的�
 
 Step 遵循与 std.mem.Allocator 相同的接口模式，需要实现一个 make 函数。步骤创建时将调用该函数。对于我们在这里创建的步骤，该函数什么也不做。
 
-现在，我们需要创建一个漂亮的 Zig 程序：
+现在，我们需要创建一个稍正式的 Zig 程序：
 
 ## 编译 Zig 源代码
 
@@ -108,7 +108,7 @@ Step 遵循与 std.mem.Allocator 相同的接口模式，需要实现一个 make
 
 我们在这里添加了几行。首先，const exe = b.addExecutable 将创建一个新的 LibExeObjStep，将 src/main.zig 编译成一个名为 fresh 的文件（或 Windows 上的 fresh.exe）。
 
-第二个添加的内容是 compile_step.dependOn(&exe.step);。这就是我们构建依赖关系图的方法，并声明当编译\_step 生成时，exe 也需要生成。
+第二个添加的内容是 compile_step.dependOn(&exe.step);。这就是我们构建依赖关系图的方法，并声明当执行 `compile_step` 时，`exe` 步骤也需要执行。
 
 你可以调用 zig build，然后再调用 zig build compile 来验证这一点。第一次调用不会做任何事情，但第二次调用会输出一些编译信息。
 
@@ -179,7 +179,7 @@ Step 遵循与 std.mem.Allocator 相同的接口模式，需要实现一个 make
 
 ## 安装工件
 
-要安装任何东西，我们必须让它依赖于构建器的安装步骤。该步骤是已创建的，可通过 Builder.getInstallStep() 访问。我们还需要创建一个新的 InstallArtifactStep，将我们的 exe 工件复制到安装目录（通常是 zig-out）
+要安装任何东西，我们必须让它依赖于构建器的安装步骤。该步骤是已创建的，可通过 Builder.getInstallStep() 访问。我们还需要创建一个新的 InstallArtifactStep，将我们的 exe 文件复制到安装目录（通常是 zig-out）
 
     // 。代码块编号1.5：
 
@@ -210,7 +210,7 @@ Step 遵循与 std.mem.Allocator 相同的接口模式，需要实现一个 make
     └── bin
         └── fresh
 
-现在运行 ./zig-out/bin/fresh，就能看到这条漂亮的信息：
+现在运行 ./zig-out/bin/fresh，就能看到这条信息：
 
     info: All your codebase are belong to us.
 

@@ -4,12 +4,10 @@ author: Reco
 date: "2023-12-29T19:15:02+0800"
 ---
 
-# zig build explained - part3
+> - 原文链接： https://zig.news/xq/zig-build-explained-part-3-1ima
+> - API 适配到 Zig 0.11.0 版本
 
-> 原文链接： https://zig.news/xq/zig-build-explained-part-3-1ima
-> API 适配到 Zig 0.11.0 版本
-
-从现在起，我将只提供一个最精简的 build.zig，用来说明解决一个问题所需的步骤。如果你想了解如何将所有这些文件粘合到一个构建文件中，请阅读本系列[第一篇文章](2023-12-24-zig-build-explained-part1.md)。
+从现在起，我将只提供一个最精简的 build.zig，用来说明解决一个问题所需的步骤。如果你想了解如何将所有这些文件粘合到一个构建文件中，请阅读本系列[第一篇文章](/post/2023/12/24/zig-build-explained-part1/)。
 
 ## 复合项目
 

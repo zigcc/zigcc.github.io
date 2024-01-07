@@ -1,5 +1,4 @@
 [[https://github.com/zigcc/zigcc.github.io/actions/workflows/gh-pages.yml][https://github.com/zigcc/zigcc.github.io/actions/workflows/gh-pages.yml/badge.svg]]
-[[https://img.shields.io/discord/1155469703846834187][https://discord.gg/57JR9u7M]]
 
 * Zig 语言中文社区
 - https://zigcc.github.io/

@@ -183,7 +183,7 @@ Zig 提供了 LLVM c 编译器 clang。第一种是 zig cc 或 zig c++，它是�
         // 还是一步步看源代码，找新的函数，addIncludeDir,addLibDir ->new function
         exe.addIncludePath(std.build.LazyPath.relative("bass/linux"));
         exe.addLibraryPath(std.build.LazyPath.relative("bass/linux/x64"));
-        exe.linkSystemLibraryName("bass");
+        exe.linkSystemLibrary("bass");
         b.installArtifact(exe);
         const run_cmd = b.addRunArtifact(exe);
         run_cmd.step.dependOn(b.getInstallStep());
@@ -242,7 +242,6 @@ addIncludePath 和 addLibraryPath 都可以被多次调用，以向编译器添�
         });
         exe.addCSourceFile(.{ .file = std.build.LazyPath.relative("main.c"), .flags = &.{} });
         exe.addCSourceFile(.{ .file = std.build.LazyPath.relative("buffer.cc"), .flags = &.{} });
-        exe.linkLibC();
         exe.linkLibCpp();
         b.installArtifact(exe);
         const run_cmd = b.addRunArtifact(exe);
@@ -280,7 +279,6 @@ addIncludePath 和 addLibraryPath 都可以被多次调用，以向编译器添�
             .file = std.build.LazyPath.relative("buffer.cc"),
             .flags = &.{"-std=c++17"}
             });
-        exe.linkLibC();
         exe.linkLibCpp();
         b.installArtifact(exe);
         const run_cmd = b.addRunArtifact(exe);

@@ -174,14 +174,14 @@ date: "2023-12-29T19:15:02+0800"
         exe.linkLibC();
         exe.addIncludePath(.{ .path = "vendor/libcurl/include" });
         exe.addLibraryPath(.{ .path = "vendor/libcurl/lib" });
-        exe.linkSystemLibraryName("curl");
+        exe.linkSystemLibrary("curl");
     }
 
 addIncludePath 将文件夹添加到搜索路径中，这样 Zig 就能找到 curl/curl.h 文件。注意，我们也可以在这里传递 "vendor/libcurl/include/curl"，但你通常应该检查一下你的库到底想要什么。
 
 addLibraryPath对库文件也有同样的作用。这意味着 Zig 现在也会搜索 "vendor/libcurl/lib "文件夹中的库。
 
-最后，linkSystemLibraryName 会告诉 Zig 搜索名为 "curl "的库。如果你留心观察，就会发现上面列表中的文件名是 libcurl.so，而不是 curl.so。在unixoid系统中，库文件的前缀通常是lib，这样就不会将其传递给系统。在 Windows 系统中，库文件的名字应该是 curl.lib 或类似的名字。
+最后，linkSystemLibrary 会告诉 Zig 搜索名为 "curl "的库。如果你留心观察，就会发现上面列表中的文件名是 libcurl.so，而不是 curl.so。在unixoid系统中，库文件的前缀通常是lib，这样就不会将其传递给系统。在 Windows 系统中，库文件的名字应该是 curl.lib 或类似的名字。
 
 ## 静态链接
 
@@ -262,13 +262,13 @@ addLibraryPath对库文件也有同样的作用。这意味着 Zig 现在也会�
                 .flags = &cflags,
                 });
         const target = b.standardTargetOptions(.{});
-            const optimize = b.standardOptimizeOption(.{});
-            const exe = b.addExecutable(.{
-                .name = "test",
-                .root_source_file = .{ .path = "src/main.zig" },
-                .target = target,
-                .optimize = optimize,
-            });
+        const optimize = b.standardOptimizeOption(.{});
+        const exe = b.addExecutable(.{
+            .name = "test",
+            .root_source_file = .{ .path = "src/main.zig" },
+            .target = target,
+            .optimize = optimize,
+        });
         exe.linkLibC()；
         exe.addIncludePath(.{ .path = "vendor/libcurl/include" });
         exe.linkLibrary(curl)；

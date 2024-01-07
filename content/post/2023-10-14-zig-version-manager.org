@@ -1,6 +1,6 @@
 #+TITLE: Zig 多版本管理
 #+DATE: 2023-10-14T09:23:41+0800
-#+LASTMOD: 2023-10-20T17:53:03+0800
+#+LASTMOD: 2024-01-07T11:00:22+0800
 #+TAGS[]: zig
 #+CATEGORIES[]: 编程语言
 
@@ -60,7 +60,17 @@ $ cat ~/.asdf/shims/zig
 # asdf-plugin: zig 0.12.0-dev.891+2254882eb
 exec /opt/homebrew/Cellar/asdf/0.13.1/libexec/bin/asdf exec "zig" "$@" # asdf_allow: ' asdf '
 #+end_src
-上面的 =0.12.0-dev.891+2254882eb= 即是从 master 重命名出来的版本。
+上面的 =0.12.0-dev.891+2254882eb= 即是从 master 重命名出来的版本。下面这个脚本可以自动把 master 的版本固定下来：
+#+begin_src bash
+V=$(zig version)
+
+mv ~/.asdf/installs/zig/master ~/.asdf/installs/zig/${V}
+
+# 如果是 Linux，直接用 sed -i 就好了，不需要后面的引号，macOS 上需要
+sed -i '' "1a\\
+# asdf-plugin: zig ${V}
+"  ~/.asdf/shims/zig
+#+end_src
 
 ** 问题排查
 asdf 现在不支持 verbose 选项，因此安装过程中如果卡在某个地方，没法排查。一般来说，主要是下载 tar 包慢了，毕竟这取决于网络环境，可以这么改一下 [[https://github.com/asdf-community/asdf-zig/blob/51876973b89c5919bb20a3b7a7ce71990f7f6a5e/bin/install#L67][install 文件]]：

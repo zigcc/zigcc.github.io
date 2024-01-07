@@ -6,19 +6,16 @@ date: "2023-12-24T19:15:02+0800"
 
 # zig build explained - part2
 
-原文链接： https://zig.news/xq/zig-build-explained-part-2-1850
+> 原文链接： https://zig.news/xq/zig-build-explained-part-2-1850
+> API 适配到 Zig 0.11.0 版本
 
 ## 注释
 
-从现在起，我将只提供一个最小的 build.zig，说明解决一个问题所需的文件。如果你想了解如何将所有这些文件粘合到一个构建文件中，请阅读第一篇文章。
-
-## 注意事项
-
-你可以在这个 [Git 仓库](https://github.com/MasterQ32/zig-build-chapter-2)中找到构建脚本中引用的所有源文件。因此，如果你想尝试构建这些示例，请继续！
+从现在起，我将只提供一个最精简的 build.zig，用来说明解决一个问题所需的步骤。如果你想了解如何将所有这些文件粘合到一个构建文件中，请阅读本系列[第一篇文章](2023-12-24-zig-build-explained-part1.md)。
 
 ## 在命令行上编译 C 代码
 
-Zig 有两种编译 C 代码的方法，使用哪种很容易混淆。
+Zig 有两种编译 C 代码的方法，而且这两种很容易混淆。
 
 ### 使用 zig cc
 

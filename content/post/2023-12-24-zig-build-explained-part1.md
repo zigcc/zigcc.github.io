@@ -4,7 +4,8 @@ author: Reco
 date: "2023-12-24T19:15:02+0800"
 ---
 
-原文链接： https://zig.news/xq/zig-build-explained-part-1-59lf
+> 原文链接： https://zig.news/xq/zig-build-explained-part-1-59lf
+> API 适配到 Zig 0.11.0 版本
 
 # zig 构建系统解析 - 第一部分
 

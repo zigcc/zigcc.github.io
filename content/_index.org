@@ -24,6 +24,7 @@
 * 学习资料
 由于 Zig 目前还处于快速迭代，因此最权威的资料无疑是官方的 [[https://ziglang.org/documentation/master/][Zig Language Reference]]，遇到语言的细节问题，基本都可以在这里找到答案。其次是社区的一些高质量教程，例如：
 - [[https://zigcc.github.io/learning-zig/][学习 Zig]] :: 该系列教程最初由 Karl Seguin 编写，该教程行文流畅，讲述的脉络由浅入深，深入浅出，是入门 Zig 非常不错的选择
+- [[https://learnzig.nvimer.org/][learnzig]] :: zig 中文教程，简单、快速地学习 Zig
 - [[https://codeberg.org/ziglings/exercises/][ziglings/exercises]] :: Learn the Zig programming language by fixing tiny broken programs.
 - [[https://zigcc.github.io/zig-cookbook/][Zig Cookbook]] :: A collection of simple Zig programs that demonstrate good practices to accomplish common programming tasks
 - [[https://github.com/zigcc/zig-idioms][zigcc/zig-idioms]] :: Common idioms used in Zig

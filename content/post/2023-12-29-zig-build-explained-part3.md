@@ -50,45 +50,51 @@ date: "2023-12-29T19:15:02+0800"
 
 添加软件包通常使用 LibExeObjStep 上的 addPackage 函数。该函数使用一个 std.build.Pkg 结构来描述软件包的外观：
 
-    pub const Module = struct {
-        builder: *Build,
-        source_file: LazyPath,
-        dependencies: std.StringArrayHashMap(*Module),
-    };
+```zig
+pub const Module = struct {
+    builder: *Build,
+    source_file: LazyPath,
+    dependencies: std.StringArrayHashMap(*Module),
+};
+```
 
 我们可以看到，它有2个成员：
 
-    source_file 是定义软件包根文件的 FileSource。这通常只是指向文件的路径，如 vendor/zig-args/args.zig
-    dependencies 是该软件包所需的可选软件包片段。如果我们使用更复杂的软件包，这通常是必需的。
+source_file 是定义软件包根文件的 FileSource。这通常只是指向文件的路径，如 vendor/zig-args/args.zig
+dependencies 是该软件包所需的可选软件包片段。如果我们使用更复杂的软件包，这通常是必需的。
 
 这是个人建议：我通常会在 build.zig 的顶部创建一个名为 pkgs 的结构/名称空间，看起来有点像这样：
 
-        const args =  b.createModule(.{
-            .source_file = .{ .path = "libs/args/args.zig" },
-            .dependencies = &.{},
-        });
+```zig
+const args = b.createModule(.{
+    .source_file = .{ .path = "libs/args/args.zig" },
+    .dependencies = &.{},
+});
 
-        const interface = b.createModule(.{
-            .source_file = .{ .path = "libs/interface.zig/interface.zig" },
-            .dependencies = &.{},
-        });
+const interface = b.createModule(.{
+    .source_file = .{ .path = "libs/interface.zig/interface.zig" },
+    .dependencies = &.{},
+});
 
-        const lola = b.createModule(.{
-            .source_file = .{ .path = "src/library/main.zig" },
-            .dependencies = &.{},
-        });
-        const pkgs = .{
-            .args = args,
+const lola = b.createModule(.{
+    .source_file = .{ .path = "src/library/main.zig" },
+    .dependencies = &.{},
+});
+const pkgs = .{
+    .args = args,
 
-            .interface = interface,
+    .interface = interface,
 
-            .lola = lola,
-        };
+    .lola = lola,
+};
+```
 
 随后通过编译步骤exe，把模块加入进来。函数addModule的第一个参数name 是模块名称
 
-        exe.addModule("lola",pkgs.lola);
-        exe.addModule("args",pkgs.args);
+```zig
+exe.addModule("lola",pkgs.lola);
+exe.addModule("args",pkgs.args);
+```
 
 ## 添加库
 
@@ -102,28 +108,30 @@ date: "2023-12-29T19:15:02+0800"
 
 对于 unixoid 系统，我们通常可以使用系统软件包管理器来链接系统库。方法是调用 linkSystemLibrary，它会使用 pkg-config 自行找出所有路径：
 
-    //demo 3.2
-    const std = @import("std");
-    pub fn build(b: *std.Build) void {
-        const target = b.standardTargetOptions(.{});
-        const optimize = b.standardOptimizeOption(.{});
-        const exe = b.addExecutable(.{
-            .name = "example",
-            .root_source_file = .{ .path = "main.zig" },
-            .target = target,
-            .optimize = optimize,
-        });
-        exe.linkLibC();
-        exe.linkSystemLibrary("curl");
-        b.installArtifact(exe);
-        const run_cmd = b.addRunArtifact(exe);
-        run_cmd.step.dependOn(b.getInstallStep());
-        if (b.args) |args| {
-            run_cmd.addArgs(args);
-        }
-        const run_step = b.step("run", "Run the app");
-        run_step.dependOn(&run_cmd.step);
+```zig
+//demo 3.2
+const std = @import("std");
+pub fn build(b: *std.Build) void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+    const exe = b.addExecutable(.{
+        .name = "example",
+        .root_source_file = .{ .path = "main.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+    exe.linkLibC();
+    exe.linkSystemLibrary("curl");
+    b.installArtifact(exe);
+    const run_cmd = b.addRunArtifact(exe);
+    run_cmd.step.dependOn(b.getInstallStep());
+    if (b.args) |args| {
+        run_cmd.addArgs(args);
     }
+    const run_step = b.step("run", "Run the app");
+    run_step.dependOn(&run_cmd.step);
+}
+```
 
 对于 Linux 系统，这是链接外部库的首选方式。
 
@@ -131,27 +139,29 @@ date: "2023-12-29T19:15:02+0800"
 
 不过，您也可以链接您作为二进制文件提供商的库。为此，我们需要调用几个函数。首先，让我们来看看这样一个库是什么样子的：
 
-    ./vendor/libcurl
-    include
-    │ └── curl
-    │ ├── curl.h
-    │ ├── curlver.h
-    │ ├── easy.h
-    │ ├── mprintf.h
-    │ ├─── multi.h
-    │ ├── options.h
-    │ ├── stdcheaders.h
-    │ ├── system.h
-    │ ├── typecheck-gcc.h
-    │ └── urlapi.h
-    ├── lib
-    │ ├── libcurl.a
-    │ ├── libcurl.so
-    │ └── ...
-    ├─── bin
-    │ └── ...
-    └──share
-        └── ...
+```
+./vendor/libcurl
+include
+│ └── curl
+│ ├── curl.h
+│ ├── curlver.h
+│ ├── easy.h
+│ ├── mprintf.h
+│ ├─── multi.h
+│ ├── options.h
+│ ├── stdcheaders.h
+│ ├── system.h
+│ ├── typecheck-gcc.h
+│ └── urlapi.h
+├── lib
+│ ├── libcurl.a
+│ ├── libcurl.so
+│ └── ...
+├─── bin
+│ └── ...
+└──share
+    └── ...
+```
 
 我们可以看到，vendor/libcurl/include 路径包含我们的头文件，vendor/libcurl/lib 文件夹包含一个静态库（libcurl.a）和一个共享/动态库（libcurl.so）。
 
@@ -159,23 +169,25 @@ date: "2023-12-29T19:15:02+0800"
 
 要链接 libcurl，我们需要先添加 include 路径，然后向 zig 提供库的前缀和库名：(todo代码有待验证,因为curl可能需要自己编译自己生成static lib)
 
-    //demo 3.3
-    const std = @import("std");
-    pub fn build(b: *std.build.Builder) void {
-        const target = b.standardTargetOptions(.{});
-        const optimize = b.standardOptimizeOption(.{});
-        const exe = b.addExecutable(.{
-            .name = "test",
-            .root_source_file = .{ .path = "main.zig" },
-            .target = target,
-            .optimize = optimize,
-        });
-        b.installArtifact(exe);
-        exe.linkLibC();
-        exe.addIncludePath(.{ .path = "vendor/libcurl/include" });
-        exe.addLibraryPath(.{ .path = "vendor/libcurl/lib" });
-        exe.linkSystemLibrary("curl");
-    }
+```zig
+//demo 3.3
+const std = @import("std");
+pub fn build(b: *std.build.Builder) void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+    const exe = b.addExecutable(.{
+        .name = "test",
+        .root_source_file = .{ .path = "main.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+    b.installArtifact(exe);
+    exe.linkLibC();
+    exe.addIncludePath(.{ .path = "vendor/libcurl/include" });
+    exe.addLibraryPath(.{ .path = "vendor/libcurl/lib" });
+    exe.linkSystemLibraryName("curl");
+}
+```
 
 addIncludePath 将文件夹添加到搜索路径中，这样 Zig 就能找到 curl/curl.h 文件。注意，我们也可以在这里传递 "vendor/libcurl/include/curl"，但你通常应该检查一下你的库到底想要什么。
 
@@ -187,22 +199,24 @@ addLibraryPath对库文件也有同样的作用。这意味着 Zig 现在也会�
 
 当我们要静态链接一个库时，我们必须采取一些不同的方法：
 
-    pub fn build(b: *std.build.Builder) void {
-         const target = b.standardTargetOptions(.{});
-        const optimize = b.standardOptimizeOption(.{});
-        const exe = b.addExecutable(.{
-            .name = "test",
-            .root_source_file = .{ .path = "src/main.zig" },
-            .target = target,
-            .optimize = optimize,
-        });
-        b.installArtifact(exe);
-        exe.linkLibC();
-        exe.addIncludeDir("vendor/libcurl/include")；
-        exe.addObjectFile("vendor/libcurl/lib/libcurl.a")；
-        exe.addIncludePath(.{ .path = "vendor/libcurl/include" });
-        exe.addLibraryPath(.{ .path = "vendor/libcurl/lib" });
-    }
+```zig
+pub fn build(b: *std.build.Builder) void {
+     const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+    const exe = b.addExecutable(.{
+        .name = "test",
+        .root_source_file = .{ .path = "src/main.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+    b.installArtifact(exe);
+    exe.linkLibC();
+    exe.addIncludeDir("vendor/libcurl/include")；
+    exe.addObjectFile("vendor/libcurl/lib/libcurl.a")；
+    exe.addIncludePath(.{ .path = "vendor/libcurl/include" });
+    exe.addLibraryPath(.{ .path = "vendor/libcurl/lib" });
+}
+```
 
 对 addIncludeDir 的调用没有改变，但我们突然不再调用带 link 的函数了？你可能已经知道了： 静态库实际上就是对象文件的集合。在 Windows 上，这一点也很相似，据说 MSVC 也使用了相同的工具集。
 
@@ -210,25 +224,27 @@ addLibraryPath对库文件也有同样的作用。这意味着 Zig 现在也会�
 
 注意：大多数静态库都有一些传递依赖关系。在我编译 libcurl 的例子中，就有 nghttp2、zstd、z 和 pthread，我们需要再次手动链接它们：
 
-    // 示例片段
-    pub fn build(b: *std.build.Builder) void {
-        const target = b.standardTargetOptions(.{});
-        const optimize = b.standardOptimizeOption(.{});
-        const exe = b.addExecutable(.{
-            .name = "test",
-            .root_source_file = .{ .path = "src/main.zig" },
-            .target = target,
-            .optimize = optimize,
-        });
-        b.installArtifact(exe);
-        exe.linkLibC();
-        exe.addIncludePath(.{ .path = "vendor/libcurl/include" });
-        exe.addLibraryPath(.{ .path = "vendor/libcurl/lib" });
-        exe.linkSystemLibrary("nghttp2")；
-        exe.linkSystemLibrary("zstd")；
-        exe.linkSystemLibrary("z")；
-        exe.linkSystemLibrary("pthread")；
-    }
+```zig
+// 示例片段
+pub fn build(b: *std.build.Builder) void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+    const exe = b.addExecutable(.{
+        .name = "test",
+        .root_source_file = .{ .path = "src/main.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+    b.installArtifact(exe);
+    exe.linkLibC();
+    exe.addIncludePath(.{ .path = "vendor/libcurl/include" });
+    exe.addLibraryPath(.{ .path = "vendor/libcurl/lib" });
+    exe.linkSystemLibrary("nghttp2")；
+    exe.linkSystemLibrary("zstd")；
+    exe.linkSystemLibrary("z")；
+    exe.linkSystemLibrary("pthread")；
+}
+```
 
 我们可以继续静态链接越来越多的库，并拉入完整的依赖关系树。
 
@@ -240,41 +256,36 @@ addLibraryPath对库文件也有同样的作用。这意味着 Zig 现在也会�
 
 这样做的好处是，我们可以更容易地交叉编译我们的程序。为此，我们需要将库的构建文件转换成我们的 build.zig。这通常需要对 build.zig 和你的库所使用的构建系统都有很好的了解。但让我们假设这个库是超级简单的，只是由一堆 C 文件组成：
 
-    // 示例片段
-    pub fn build(b: *std.build.Builder) void {
-        const cflags = .{}；
+```zig
+// 示例片段
+pub fn build(b: *std.build.Builder) void {
+    const cflags = .{}；
 
-        const curl = b.addSharedLibrary("curl", null, .unversioned)；
-        exe.addCSourceFile(.{
-                .file = std.build.LazyPath.relative("vendor/libcurl/src/tool_main.c"),
-                .flags = &cflags,
-                });
-        exe.addCSourceFile(.{
-                .file = std.build.LazyPath.relative("vendor/libcurl/src/tool_msgs.c"),
-                .flags = &cflags,
-                });
-        exe.addCSourceFile(.{
-                .file = std.build.LazyPath.relative("vendor/libcurl/src/tool_dirhie.c"),
-                .flags = &cflags,
-                });
-        exe.addCSourceFile(.{
-                .file = std.build.LazyPath.relative("vendor/libcurl/src/tool_doswin.c"),
-                .flags = &cflags,
-                });
-        const target = b.standardTargetOptions(.{});
-        const optimize = b.standardOptimizeOption(.{});
-        const exe = b.addExecutable(.{
-            .name = "test",
-            .root_source_file = .{ .path = "src/main.zig" },
-            .target = target,
-            .optimize = optimize,
-        });
-        exe.linkLibC()；
-        exe.addIncludePath(.{ .path = "vendor/libcurl/include" });
-        exe.linkLibrary(curl)；
-        b.installArtifact(exe);
+    const curl = b.addSharedLibrary("curl", null, .unversioned)；
+    exe.addCSourceFile(.{
+            .file = std.build.LazyPath.relative("vendor/libcurl/src/tool_main.c"),
+            .flags = &cflags,
+            });
+    exe.addCSourceFile(.{
+            .file = std.build.LazyPath.relative("vendor/libcurl/src/tool_msgs.c"),
+            .flags = &cflags,
+            });
+    exe.addCSourceFile(.{
+            .file = std.build.LazyPath.relative("vendor/libcurl/src/tool_dirhie.c"),
+            .flags = &cflags,
+            });
+    exe.addCSourceFile(.{
+            .file = std.build.LazyPath.relative("vendor/libcurl/src/tool_doswin.c"),
+            .flags = &cflags,
+            });
+    const target = b.standardTargetOptions(.{});
+    exe.linkLibC()；
+    exe.addIncludePath(.{ .path = "vendor/libcurl/include" });
+    exe.linkLibrary(curl)；
+    b.installArtifact(exe);
 
-    }
+}
+```
 
 这样，我们就可以使用 addSharedLibrary 和 addStaticLibrary 向 LibExeObjStep 添加库。
 
@@ -287,51 +298,55 @@ addLibraryPath对库文件也有同样的作用。这意味着 Zig 现在也会�
 系统工具
 使用预装的系统工具非常简单，只需使用 addSystemCommand 创建一个新步骤即可：
 
-    // demo 3.5
-    const std = @import("std");
-    pub fn build(b: *std.build.Builder) void {
-        const target = b.standardTargetOptions(.{});
-        const optimize = b.standardOptimizeOption(.{});
-        const exe = b.addExecutable(.{
-            .name = "test",
-            .root_source_file = .{ .path = "src/main.zig" },
-            .target = target,
-            .optimize = optimize,
-        });
-        const cmd = b.addSystemCommand(&.{
-            "flex",
-            "-outfile=lines.c",
-            "lines.l",
-        });
-        b.installArtifact(exe);
-        exe.step.dependOn(&cmd.step);
-    }
+```zig
+// demo 3.5
+const std = @import("std");
+pub fn build(b: *std.build.Builder) void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+    const exe = b.addExecutable(.{
+        .name = "test",
+        .root_source_file = .{ .path = "src/main.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+    const cmd = b.addSystemCommand(&.{
+        "flex",
+        "-outfile=lines.c",
+        "lines.l",
+    });
+    b.installArtifact(exe);
+    exe.step.dependOn(&cmd.step);
+}
+```
 
 从这里可以看出，我们只是向 addSystemCommand 传递了一个选项数组，该数组将反映我们的命令行调用。然后，我们按照习惯创建可执行文件，并使用 dependOn 在 cmd 上添加步骤依赖关系。
 
 我们也可以反其道而行之，在编译程序时添加有关程序的小信息:
 
-    //demo3.6
-    const std = @import("std");
-    pub fn build(b: *std.build.Builder) void {
-        const target = b.standardTargetOptions(.{});
-        const optimize = b.standardOptimizeOption(.{});
-        const exe = b.addExecutable(.{
-            .name = "test",
-            .root_source_file = .{ .path = "main.zig" },
-            .target = target,
-            .optimize = optimize,
-        });
-        b.installArtifact(exe);
-        const cmd = b.addSystemCommand(&.{"size"});
-        cmd.addArtifactArg(exe);
-        b.getInstallStep().dependOn(&cmd.step);
-    }
+```zig
+//demo3.6
+const std = @import("std");
+pub fn build(b: *std.build.Builder) void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+    const exe = b.addExecutable(.{
+        .name = "test",
+        .root_source_file = .{ .path = "main.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+    b.installArtifact(exe);
+    const cmd = b.addSystemCommand(&.{"size"});
+    cmd.addArtifactArg(exe);
+    b.getInstallStep().dependOn(&cmd.step);
+}
+```
 
 size 是一个很好的工具，它可以输出有关可执行文件代码大小的信息，可能如下所示：
 
-    文本 数据 BSS Dec 十六进制 文件名
-    12377 620 104 13101 332d ...
+文本 数据 BSS Dec 十六进制 文件名
+12377 620 104 13101 332d ...
 
 如您所见，我们在这里使用了 addArtifactArg，因为 addSystemCommand 只会返回一个 std.build.RunStep。这样，我们就可以增量构建完整的命令行，包括任何 LibExeObjStep 输出、FileSource 或逐字参数。
 
@@ -339,32 +354,34 @@ size 是一个很好的工具，它可以输出有关可执行文件代码大小
 
 最酷的是 我们还可以从 LibExeObjStep 获取 std.build.RunStep：
 
-    // 示例片段
-    const std = @import("std");
-    pub fn build(b: *std.build.Builder) void {
-         const target = b.standardTargetOptions(.{});
-        const optimize = b.standardOptimizeOption(.{});
-        const game = b.addExecutable(.{
-            .name = "game",
-            .root_source_file = .{ .path = "src/game.zig" },
-            .target = target,
-            .optimize = optimize,
-        });
-        b.installArtifact(game);
-        const pack_tool = b.addExecutable(.{
-            .name = "pack",
-            .root_source_file = .{ .path = "tools/pack.zig" },
-            .target = target,
-            .optimize = optimize,
-        });
-        //译者改动：const precompilation = pack_tool.run(); // returns *RunStep
-        const precompilation = b.addRunArtifact(pack_tool);
-        precompilation.addArtifactArg(game);
-        precompilation.addArg("assets.zip");
+```zig
+// 示例片段
+const std = @import("std");
+pub fn build(b: *std.build.Builder) void {
+     const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+    const game = b.addExecutable(.{
+        .name = "game",
+        .root_source_file = .{ .path = "src/game.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+    b.installArtifact(game);
+    const pack_tool = b.addExecutable(.{
+        .name = "pack",
+        .root_source_file = .{ .path = "tools/pack.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+    //译者改动：const precompilation = pack_tool.run(); // returns *RunStep
+    const precompilation = b.addRunArtifact(pack_tool);
+    precompilation.addArtifactArg(game);
+    precompilation.addArg("assets.zip");
 
-        const pack_step = b.step("pack", "Packs the game and assets together");
-        pack_step.dependOn(&precompilation.step);
-    }
+    const pack_step = b.step("pack", "Packs the game and assets together");
+    pack_step.dependOn(&precompilation.step);
+}
+```
 
 此构建脚本将首先编译一个名为 pack 的可执行文件。然后将以我们的游戏和 assets.zig 文件作为命令行参数调用该可执行文件。
 
@@ -376,93 +393,95 @@ size 是一个很好的工具，它可以输出有关可执行文件代码大小
 
 下面的编译脚本将编译一个虚构的工具，它可以通过 flex 生成的词法器解析输入文件，然后使用 curl 连接到服务器，并在那里传送一些文件。当我们调用 zig build deploy 时，项目将被打包成一个 zip 文件。正常的 zig 编译调用只会准备一个未打包的本地调试安装。
 
-    // 示例片段
-    const std = @import("std");
-    pub fn build(b: *std.build.Builder) void {
-        const mode = b.standardOptimizeOption(.{});
-        // const mode = b.standardReleaseOptions();
+```zig
+// 示例片段
+const std = @import("std");
+pub fn build(b: *std.build.Builder) void {
+    const mode = b.standardOptimizeOption(.{});
+    // const mode = b.standardReleaseOptions();
 
-        const target = b.standardTargetOptions(.{});
+    const target = b.standardTargetOptions(.{});
 
-        // Generates the lex-based parser
-        const parser_gen = b.addSystemCommand(&[_][]const u8{
-            "flex",
-            "--outfile=review-parser.c",
-            "review-parser.l",
-        });
+    // Generates the lex-based parser
+    const parser_gen = b.addSystemCommand(&[_][]const u8{
+        "flex",
+        "--outfile=review-parser.c",
+        "review-parser.l",
+    });
 
-        // Our application
-        const exe = b.addExecutable(.{
-            .name = "upload-review",
-            .root_source_file = .{ .path = "src/main.zig" },
-            .target = target,
-            .optimize = mode,
-        });
+    // Our application
+    const exe = b.addExecutable(.{
+        .name = "upload-review",
+        .root_source_file = .{ .path = "src/main.zig" },
+        .target = target,
+        .optimize = mode,
+    });
 
-        {
-            exe.step.dependOn(&parser_gen.step);
+    {
+        exe.step.dependOn(&parser_gen.step);
 
-            exe.addCSourceFile(.{ .file = std.build.LazyPath.relative("review-parser.c"), .flags = &.{} });
-
-            // add zig-args to parse arguments
-
-            const ap = b.createModule(.{
-                .source_file = .{ .path = "vendor/zig-args/args.zig" },
-                .dependencies = &.{},
-            });
-            exe.addModule("args-parser", ap);
-
-            // add libcurl for uploading
-            exe.addIncludePath(std.build.LazyPath.relative("vendor/libcurl/include"));
-            exe.addObjectFile(std.build.LazyPath.relative("vendor/libcurl/lib/libcurl.a"));
-
-            exe.linkLibC();
-            b.installArtifact(exe);
-            // exe.install();
-        }
-
-        // Our test suite
-        const test_step = b.step("test", "Runs the test suite");
-        const test_suite = b.addTest(.{
-            .root_source_file = .{ .path = "src/tests.zig" },
-        });
-
-        test_suite.step.dependOn(&parser_gen.step);
         exe.addCSourceFile(.{ .file = std.build.LazyPath.relative("review-parser.c"), .flags = &.{} });
+
+        // add zig-args to parse arguments
+
+        const ap = b.createModule(.{
+            .source_file = .{ .path = "vendor/zig-args/args.zig" },
+            .dependencies = &.{},
+        });
+        exe.addModule("args-parser", ap);
 
         // add libcurl for uploading
         exe.addIncludePath(std.build.LazyPath.relative("vendor/libcurl/include"));
         exe.addObjectFile(std.build.LazyPath.relative("vendor/libcurl/lib/libcurl.a"));
 
-        test_suite.linkLibC();
+        exe.linkLibC();
+        b.installArtifact(exe);
+        // exe.install();
+    }
 
-        test_step.dependOn(&test_suite.step);
+    // Our test suite
+    const test_step = b.step("test", "Runs the test suite");
+    const test_suite = b.addTest(.{
+        .root_source_file = .{ .path = "src/tests.zig" },
+    });
+
+    test_suite.step.dependOn(&parser_gen.step);
+    exe.addCSourceFile(.{ .file = std.build.LazyPath.relative("review-parser.c"), .flags = &.{} });
+
+    // add libcurl for uploading
+    exe.addIncludePath(std.build.LazyPath.relative("vendor/libcurl/include"));
+    exe.addObjectFile(std.build.LazyPath.relative("vendor/libcurl/lib/libcurl.a"));
+
+    test_suite.linkLibC();
+
+    test_step.dependOn(&test_suite.step);
+
+    {
+        const deploy_step = b.step("deploy", "Creates an application bundle");
+
+        // compile the app bundler
+        const deploy_tool = b.addExecutable(.{
+            .name = "deploy",
+            .root_source_file = .{ .path = "tools/deploy.zig" },
+            .target = target,
+            .optimize = mode,
+        });
 
         {
-            const deploy_step = b.step("deploy", "Creates an application bundle");
-
-            // compile the app bundler
-            const deploy_tool = b.addExecutable(.{
-                .name = "deploy",
-                .root_source_file = .{ .path = "tools/deploy.zig" },
-                .target = target,
-                .optimize = mode,
-            });
-
-            {
-                deploy_tool.linkLibC();
-                deploy_tool.linkSystemLibrary("libzip");
-            }
-
-            const bundle_app = b.addRunArtifact(deploy_tool);
-            bundle_app.addArg("app-bundle.zip");
-            bundle_app.addArtifactArg(exe);
-            bundle_app.addArg("resources/index.htm");
-            bundle_app.addArg("resources/style.css");
-
-            deploy_step.dependOn(&bundle_app.step);
+            deploy_tool.linkLibC();
+            deploy_tool.linkSystemLibrary("libzip");
         }
+
+        const bundle_app = b.addRunArtifact(deploy_tool);
+        bundle_app.addArg("app-bundle.zip");
+        bundle_app.addArtifactArg(exe);
+        bundle_app.addArg("resources/index.htm");
+        bundle_app.addArg("resources/style.css");
+
+        deploy_step.dependOn(&bundle_app.step);
     }
+}
+```
 
 如你所见，代码量很大，但通过使用块，我们可以将构建脚本结构化为逻辑组。
 

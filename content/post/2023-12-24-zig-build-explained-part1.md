@@ -23,36 +23,36 @@ Zig 构建系统仍然缺少文档，对很多人来说，这是不使用它的�
 
 这将生成如下 build.zig 文件（我去掉了注释）
 
-    // -代码块编号@1.1
-
-    const std = @import("std");
-    pub fn build(b: *std.Build) void {
-        const target = b.standardTargetOptions(.{});
-        const optimize = b.standardOptimizeOption(.{});
-        const exe = b.addExecutable(.{
-            .name = "test",
-            .root_source_file = .{ .path = "src/main.zig" },
-            .target = target,
-            .optimize = optimize,
-        });
-        b.installArtifact(exe);
-        const run_cmd = b.addRunArtifact(exe);
-        run_cmd.step.dependOn(b.getInstallStep());
-        if (b.args) |args| {
-            run_cmd.addArgs(args);
-        }
-        const run_step = b.step("run", "Run the app");
-        run_step.dependOn(&run_cmd.step);
-        const unit_tests = b.addTest(.{
-            .root_source_file = .{ .path = "src/main.zig" },
-            .target = target,
-            .optimize = optimize,
-        });
-
-        const run_unit_tests = b.addRunArtifact(unit_tests);
-        const test_step = b.step("test", "Run unit tests");
-        test_step.dependOn(&run_unit_tests.step);
+```zig
+const std = @import("std");
+pub fn build(b: *std.Build) void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+    const exe = b.addExecutable(.{
+        .name = "test",
+        .root_source_file = .{ .path = "src/main.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+    b.installArtifact(exe);
+    const run_cmd = b.addRunArtifact(exe);
+    run_cmd.step.dependOn(b.getInstallStep());
+    if (b.args) |args| {
+        run_cmd.addArgs(args);
     }
+    const run_step = b.step("run", "Run the app");
+    run_step.dependOn(&run_cmd.step);
+    const unit_tests = b.addTest(.{
+        .root_source_file = .{ .path = "src/main.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+
+    const run_unit_tests = b.addRunArtifact(unit_tests);
+    const test_step = b.step("test", "Run unit tests");
+    test_step.dependOn(&run_unit_tests.step);
+}
+```
 
 ## 基础知识
 
@@ -64,25 +64,28 @@ Zig 构建系统仍然缺少文档，对很多人来说，这是不使用它的�
 
 要创建这样一个步骤，我们需要调用 Builder.step
 
-    // -代码块编号@1.2：
-    const std = @import("std");
-    pub fn build(b: *std.build.Builder) void {
-        const named_step = b.step("step-name", "This is what is shown in help");
-        _ = named_step;
-    }
+```zig
+const std = @import("std");
+pub fn build(b: *std.build.Builder) void {
+    const named_step = b.step("step-name", "This is what is shown in help");
+    _ = named_step;
+}
+```
 
 这将为我们创建一个新的步骤 step-name，当我们调用 `zig build --help` 时将显示该步骤：
 
-    $ zig build --help
-    使用方法： zig build [steps] [options］
+```bash
+$ zig build --help
+使用方法： zig build [steps] [options］
 
-    Steps:
-    install (default)           Copy build artifacts to prefix path
-    uninstall                   Remove build artifacts from prefix path
-    step-name                   This is what is shown in help
+Steps:
+install (default)           Copy build artifacts to prefix path
+uninstall                   Remove build artifacts from prefix path
+step-name                   This is what is shown in help
 
-    General Options:
-    ...
+General Options:
+...
+```
 
 请注意，除了在 zig build --help 中添加一个小条目并允许我们调用 zig build step-name 之外，这个步骤仍然没有任何作用。
 
@@ -96,14 +99,14 @@ Step 遵循与 std.mem.Allocator 相同的接口模式，需要实现一个 make
 
 现在，让我们创建一个步骤来编译我们的 src/main.zig 文件（之前由 zig init-exe 创建）
 
-    // 。代码块编号1.3：
-
-    const std = @import("std");
-    pub fn build(b: *std.build.Builder) void {
-        const exe = b.addExecutable(.{.name = "fresh",.root_source_file = .{ .path = "src/main.zig" },});
-        const compile_step = b.step("compile", "Compiles src/main.zig");
-        compile_step.dependOn(&exe.step);
-    }
+```zig
+const std = @import("std");
+pub fn build(b: *std.build.Builder) void {
+    const exe = b.addExecutable(.{.name = "fresh",.root_source_file = .{ .path = "src/main.zig" },});
+    const compile_step = b.step("compile", "Compiles src/main.zig");
+    compile_step.dependOn(&exe.step);
+}
+```
 
 我们在这里添加了几行。首先，const exe = b.addExecutable 将创建一个新的 LibExeObjStep，将 src/main.zig 编译成一个名为 fresh 的文件（或 Windows 上的 fresh.exe）。
 
@@ -117,60 +120,66 @@ Step 遵循与 std.mem.Allocator 相同的接口模式，需要实现一个 make
 
 交叉编译是通过设置程序的目标和编译模式来实现的
 
-    // 。代码块编号1.4：
-
-    const std = @import("std");
-    pub fn build(b: *std.build.Builder) void {
-        const exe = b.addExecutable(.{
-            .name = "fresh",
-            .root_source_file = .{ .path = "src/main.zig" },
-            .optimize = .ReleaseSafe,
-        });
-        const compile_step = b.step("compile", "Compiles src/main.zig");
-        compile_step.dependOn(&exe.step);
-    }
+```zig
+const std = @import("std");
+pub fn build(b: *std.build.Builder) void {
+    const exe = b.addExecutable(.{
+        .name = "fresh",
+        .root_source_file = .{ .path = "src/main.zig" },
+        .optimize = .ReleaseSafe,
+    });
+    const compile_step = b.step("compile", "Compiles src/main.zig");
+    compile_step.dependOn(&exe.step);
+}
+```
 
 在这里，`.optimize = .ReleaseSafe`, 将向编译调用传递 -O ReleaseSafe。但是！LibExeObjStep.setTarget 需要一个 std.zig.CrossTarget 作为参数，而你通常希望这个参数是可配置的。
 
 幸运的是，构建系统为此提供了两个方便的函数：
 
-    Builder.standardReleaseOptions
-    Builder.standardTargetOptions
+- Builder.standardReleaseOptions
+- Builder.standardTargetOptions
 
 使用这些函数，可以将编译模式和目标作为命令行选项：
 
-    const std = @import("std");
+```zig
+const std = @import("std");
 
-    pub fn build(b: *std.build.Builder) void {
-        const target = b.standardTargetOptions(.{});
-        const optimize = b.standardOptimizeOption(.{});
-        const exe = b.addExecutable(.{
-            .name = "fresh",
-            .root_source_file = .{ .path = "src/main.zig" },
-            .target = target,
-            .optimize = optimize,
-        });
-        const compile_step = b.step("compile", "Compiles src/main.zig");
-        compile_step.dependOn(&exe.step);
-    }
+pub fn build(b: *std.build.Builder) void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+    const exe = b.addExecutable(.{
+        .name = "fresh",
+        .root_source_file = .{ .path = "src/main.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+    const compile_step = b.step("compile", "Compiles src/main.zig");
+    compile_step.dependOn(&exe.step);
+}
+```
 
 现在，如果你调用 zig build --help 命令，就会在输出中看到以下部分，而之前这部分是空的：
 
-    Project-Specific Options:
-    -Dtarget=[string]            The CPU architecture, OS, and ABI to build for
-    -Dcpu=[string]               Target CPU features to add or subtract
-    -Doptimize=[enum]            Prioritize performance, safety, or binary size (-O flag)
-                                    Supported Values:
-                                    Debug
-                                    ReleaseSafe
-                                    ReleaseFast
-                                    ReleaseSmall
+```
+Project-Specific Options:
+-Dtarget=[string]            The CPU architecture, OS, and ABI to build for
+-Dcpu=[string]               Target CPU features to add or subtract
+-Doptimize=[enum]            Prioritize performance, safety, or binary size (-O flag)
+                                Supported Values:
+                                Debug
+                                ReleaseSafe
+                                ReleaseFast
+                                ReleaseSmall
+```
 
 前两个选项由 standardTargetOptions 添加，其他选项由 standardOptimizeOption 添加。现在，我们可以在调用构建脚本时使用这些选项：
 
-    zig build -Dtarget=x86_64-windows-gnu -Dcpu=athlon_fx
-    zig build -Doptimize=ReleaseSafe
-    zig build -Doptimize=ReleaseSmall
+```
+zig build -Dtarget=x86_64-windows-gnu -Dcpu=athlon_fx
+zig build -Doptimize=ReleaseSafe
+zig build -Doptimize=ReleaseSmall
+```
 
 可以看到，对于布尔选项，我们可以省略 =true，直接设置选项本身。
 
@@ -180,21 +189,21 @@ Step 遵循与 std.mem.Allocator 相同的接口模式，需要实现一个 make
 
 要安装任何东西，我们必须让它依赖于构建器的安装步骤。该步骤是已创建的，可通过 Builder.getInstallStep() 访问。我们还需要创建一个新的 InstallArtifactStep，将我们的 exe 文件复制到安装目录（通常是 zig-out）
 
-    // 。代码块编号1.5：
-
-    const std = @import("std");
-    pub fn build(b: *std.build.Builder) void {
-        const target = b.standardTargetOptions(.{});
-        const optimize = b.standardOptimizeOption(.{});
-        const exe = b.addExecutable(.{
-            .name = "fresh",
-            .root_source_file = .{ .path = "src/main.zig" },
-            .target = target,
-            .optimize = optimize,
-        });
-        const install_exe = b.addInstallArtifact(exe, .{});
-        b.getInstallStep().dependOn(&install_exe.step);
-    }
+```zig
+const std = @import("std");
+pub fn build(b: *std.build.Builder) void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+    const exe = b.addExecutable(.{
+        .name = "fresh",
+        .root_source_file = .{ .path = "src/main.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+    const install_exe = b.addInstallArtifact(exe, .{});
+    b.getInstallStep().dependOn(&install_exe.step);
+}
+```
 
 这将做几件事：
 
@@ -205,33 +214,37 @@ Step 遵循与 std.mem.Allocator 相同的接口模式，需要实现一个 make
 
 现在，当你调用 zig build 时，你会看到一个新的目录 zig-out 被创建了.看起来有点像这样：
 
-    zig-out
-    └── bin
-        └── fresh
+```
+zig-out
+└── bin
+    └── fresh
+```
 
 现在运行 ./zig-out/bin/fresh，就能看到这条信息：
 
-    info: All your codebase are belong to us.
+```
+info: All your codebase are belong to us.
+```
 
 或者，你也可以通过调用 zig build uninstall 再次卸载。这将删除 zig build install 创建的所有文件，但不会删除目录！
 
 由于安装过程是一个非常普通的操作，它有快捷方法，以缩短代码。
 
-    // 。代码块编号1.6：
+```zig
+const std = @import("std");
 
-    const std = @import("std");
-
-    pub fn build(b: *std.build.Builder) void {
-        const target = b.standardTargetOptions(.{});
-        const optimize = b.standardOptimizeOption(.{});
-        const exe = b.addExecutable(.{
-            .name = "fresh",
-            .root_source_file = .{ .path = "src/main.zig" },
-            .target = target,
-            .optimize = optimize,
-        });
-        b.installArtifact(exe);
-    }
+pub fn build(b: *std.build.Builder) void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+    const exe = b.addExecutable(.{
+        .name = "fresh",
+        .root_source_file = .{ .path = "src/main.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+    b.installArtifact(exe);
+}
+```
 
 如果你在项目中内置了多个应用程序，你可能会想创建几个单独的安装步骤，并手动依赖它们，而不是直接调用 b.installArtifact(exe);，但通常这样做是正确的。
 
@@ -245,36 +258,38 @@ Step 遵循与 std.mem.Allocator 相同的接口模式，需要实现一个 make
 
 为此，我们需要一个 RunStep，它将执行我们能在系统上运行的任何可执行文件
 
-    // 代码块编号1.7
-
-    const std = @import("std");
-    pub fn build(b: *std.build.Builder) void {
-        const target = b.standardTargetOptions(.{});
-        const optimize = b.standardOptimizeOption(.{});
-        const exe = b.addExecutable(.{
-            .name = "fresh",
-            .root_source_file = .{ .path = "src/main.zig" },
-            .target = target,
-            .optimize = optimize,
-        });
-        const run_cmd = b.addRunArtifact(exe);
-        run_cmd.step.dependOn(b.getInstallStep());
-        const run_step = b.step("run", "Run the app");
-        run_step.dependOn(&run_cmd.step);
-    }
+```zig
+const std = @import("std");
+pub fn build(b: *std.build.Builder) void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+    const exe = b.addExecutable(.{
+        .name = "fresh",
+        .root_source_file = .{ .path = "src/main.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+    const run_cmd = b.addRunArtifact(exe);
+    run_cmd.step.dependOn(b.getInstallStep());
+    const run_step = b.step("run", "Run the app");
+    run_step.dependOn(&run_cmd.step);
+}
+```
 
 RunStep 有几个函数可以为执行进程的 argv 添加值：
 
-addArg 将向 argv 添加一个字符串参数。
-addArgs 将同时添加多个字符串参数
-addArtifactArg 将向 argv 添加 LibExeObjStep 的结果文件
-addFileSourceArg 会将其他步骤生成的任何文件添加到 argv。
+- addArg 将向 argv 添加一个字符串参数。
+- addArgs 将同时添加多个字符串参数
+- addArtifactArg 将向 argv 添加 LibExeObjStep 的结果文件
+- addFileSourceArg 会将其他步骤生成的任何文件添加到 argv。
 
 请注意，第一个参数必须是我们要运行的可执行文件的路径。在本例中，我们要运行 exe 的编译输出。
 
 现在，当我们调用 zig build run 时，我们将看到与自己运行已安装的 exe 相同的输出：
 
-    info: All your codebase are belong to us.
+```
+info: All your codebase are belong to us.
+```
 
 请注意，这里有一个重要的区别： 使用 RunStep 时，我们从 ./zig-cache/.../fresh 而不是 zig-out/bin/fresh 运行可执行文件！如果你加载的文件相对于可执行路径，这一点可能很重要。
 
@@ -284,30 +299,32 @@ RunStep 的配置非常灵活，可以通过 stdin 向进程传递数据，也�
 
 如果你想从 zig 编译命令行向进程传递参数，可以通过访问 Builder.args 来实现
 
-    // 。代码块编号1.8：
-
-    const std = @import("std");
-    pub fn build(b: *std.build.Builder) void {
-         const target = b.standardTargetOptions(.{});
-        const optimize = b.standardOptimizeOption(.{});
-        const exe = b.addExecutable(.{
-            .name = "fresh",
-            .root_source_file = .{ .path = "src/main.zig" },
-            .target = target,
-            .optimize = optimize,
-        });
-        const run_cmd = b.addRunArtifact(exe);
-        run_cmd.step.dependOn(b.getInstallStep());
-        if (b.args) |args| {
-            run_cmd.addArgs(args);
-        }
-        const run_step = b.step("run", "Run the app");
-        run_step.dependOn(&run_cmd.step);
+```zig
+const std = @import("std");
+pub fn build(b: *std.build.Builder) void {
+     const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+    const exe = b.addExecutable(.{
+        .name = "fresh",
+        .root_source_file = .{ .path = "src/main.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+    const run_cmd = b.addRunArtifact(exe);
+    run_cmd.step.dependOn(b.getInstallStep());
+    if (b.args) |args| {
+        run_cmd.addArgs(args);
     }
+    const run_step = b.step("run", "Run the app");
+    run_step.dependOn(&run_cmd.step);
+}
+```
 
 这样就可以在 cli 上的 -- 后面传递参数：
 
-    zig build run -- -o foo.bin foo.asm
+```
+zig build run -- -o foo.bin foo.asm
+```
 
 ## 结论
 

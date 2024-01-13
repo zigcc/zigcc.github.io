@@ -5,14 +5,14 @@ on:
     - cron: "10 20 * * *"
   pull_request:
     paths:
-      - "example/**"
-      - ".github/workflows/example.yml"
+      - "examples/**"
+      - ".github/workflows/examples.yml"
   push:
     branches:
       - main
     paths:
-      - "example/**"
-      - ".github/workflows/example.yml"
+      - "examples/**"
+      - ".github/workflows/examples.yml"
 
 defaults:
   run:

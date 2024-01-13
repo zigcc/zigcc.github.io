@@ -76,16 +76,25 @@ Zig 目前有三种主要的发版构建模式：`ReleaseSafe`、`ReleaseFast` �
 使用 `zig build` 时，取决于构建脚本的配置。默认构建脚本将包含以下代码行：
 
 ```zig
-// Standard release options allow the person running `zig build` to select
-// between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
+// standardReleaseOptions 允许我们在运行 zig build 时，手动选择需要构建的目标平台和架构
+// 默认情况下为本机构建
 const mode = b.standardReleaseOptions();
 
-// ...
-exe.setBuildMode(mode);
+// standardOptimizeOption 允许我们在运行 zig build 时，手动选择构建模式
+// 默认情况下为 Debug
+const optimize = b.standardOptimizeOption(.{});
+
+// 标准构建一个可执行二进制程序的步骤
+const exe = b.addExecutable(.{
+    .name = "zig",
+    .root_source_file = .{ .path = "src/main.zig" },
+    .target = target,
+    .optimize = optimize,
+});
 ```
 
-这是你在命令行中指定发布模式的方式：`zig build -Drelease-safe`（或
-`-Drelease-fast`，或 `-Drelease-small`）。
+这是你在命令行中指定发布模式的方式：`zig build -Doptimized=ReleaseSafe`（或
+`-Doptimized=ReleaseFast`，或 `-Doptimized=ReleaseSmall`）。
 
 # 选择正确的构建目标
 
@@ -127,8 +136,9 @@ $ zig build-exe myapp.zig -target aarch64-macos
 其它一些相关的构建目标：
 
 ```zig
-x86-64-linux // uses musl libc
+x86-64-linux // uses gnu libc
 x86-64-linux-gnu // uses glibc
+x86-64-musl // uses musl libc
 x86-64-windows // uses MingW headers
 x86-64-windows-msvc // uses MSVC headers but they need to be present in your system
 wasm32-freestanding // you will have to use build-obj since wasm modules are not full exes
@@ -140,14 +150,21 @@ wasm32-freestanding // you will have to use build-obj since wasm modules are not
 最后，别忘了 `build.zig` 里的一切都必须明确定义，因此目标选项能以以下行的方式工作：
 
 ```zig
-// Standard target options allows the person running `zig build` to choose
-// what target to build for. Here we do not override the defaults, which
-// means any target is allowed, and the default is native. Other options
-// for restricting supported target set are available.
-const target = b.standardTargetOptions(.{});
+// standardReleaseOptions 允许我们在运行 zig build 时，手动选择需要构建的目标平台和架构
+// 默认情况下为本机构建
+const mode = b.standardReleaseOptions();
 
-// ...
-exe.setTarget(target);
+// standardOptimizeOption 允许我们在运行 zig build 时，手动选择构建模式
+// 默认情况下为 Debug
+const optimize = b.standardOptimizeOption(.{});
+
+// 标准构建一个可执行二进制程序的步骤
+const exe = b.addExecutable(.{
+    .name = "zig",
+    .root_source_file = .{ .path = "src/main.zig" },
+    .target = target,
+    .optimize = optimize,
+});
 ```
 
 这也意味着如果你想添加其他限制或以某种方式改变构建时应该如何指定目标，

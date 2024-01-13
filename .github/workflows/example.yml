@@ -1,0 +1,38 @@
+name: example
+
+on:
+  schedule:
+    - cron: "10 20 * * *"
+  pull_request:
+    paths:
+      - "example/**"
+      - ".github/workflows/example.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "example/**"
+      - ".github/workflows/example.yml"
+
+defaults:
+  run:
+    working-directory: example
+
+jobs:
+  examples:
+    timeout-minutes: 10
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        zig: [0.11.0, master]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: ${{ matrix.zig }}
+
+      - name: run examples
+        run: make build

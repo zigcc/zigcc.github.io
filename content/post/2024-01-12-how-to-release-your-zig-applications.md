@@ -6,7 +6,7 @@ date: "2024-01-12T12:04:50-0500"
 
 > - 原文链接： https://zig.news/kristoff/how-to-release-your-zig-applications-2h90
 > - API 适配到 Zig 0.11.0 版本
-> - 本文配套代码在[这里](https://github.com/zigcc/zigcc.github.io/main/examples/20240112)找到
+> - 本文配套代码在[这里](https://github.com/zigcc/zigcc.github.io/tree/main/examples/20240112)找到
 
 你刚用 Zig 写了一个应用程序，并希望其他人使用它。
 让用户方便使用的一种方式是为他们提供应用程序的预构建可执行文件。

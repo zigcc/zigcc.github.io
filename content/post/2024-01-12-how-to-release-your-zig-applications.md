@@ -78,7 +78,7 @@ Zig 目前有三种主要的发版构建模式：`ReleaseSafe`、`ReleaseFast` �
 ```zig
 // standardReleaseOptions 允许我们在运行 zig build 时，手动选择需要构建的目标平台和架构
 // 默认情况下为本机构建
-const mode = b.standardReleaseOptions();
+const target = b.standardTargetOptions(.{});
 
 // standardOptimizeOption 允许我们在运行 zig build 时，手动选择构建模式
 // 默认情况下为 Debug
@@ -152,7 +152,7 @@ wasm32-freestanding // you will have to use build-obj since wasm modules are not
 ```zig
 // standardReleaseOptions 允许我们在运行 zig build 时，手动选择需要构建的目标平台和架构
 // 默认情况下为本机构建
-const mode = b.standardReleaseOptions();
+const target = b.standardTargetOptions(.{});
 
 // standardOptimizeOption 允许我们在运行 zig build 时，手动选择构建模式
 // 默认情况下为 Debug

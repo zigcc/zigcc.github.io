@@ -93,8 +93,8 @@ const exe = b.addExecutable(.{
 });
 ```
 
-这是你在命令行中指定发布模式的方式：`zig build -Doptimized=ReleaseSafe`（或
-`-Doptimized=ReleaseFast`，或 `-Doptimized=ReleaseSmall`）。
+这是你在命令行中指定发布模式的方式：`zig build -Doptimize=ReleaseSafe`（或
+`-Doptimize=ReleaseFast`，或 `-Doptimize=ReleaseSmall`）。
 
 # 选择正确的构建目标
 

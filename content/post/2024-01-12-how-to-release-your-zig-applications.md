@@ -119,7 +119,6 @@ const exe = b.addExecutable(.{
 没错，如果你指定你想要为 `x86-64-linux` 构建，
 Zig 将设定一个与该系列所有 CPU 完全兼容的基线 CPU。
 
-
 如果你想微调指令集的选择，你可以查看 `zig build` 的 `-Dcpu` 和 `zig build-exe` 的
 `-mcpu`。我不会在这篇文章中更多地涉及这些细节。
 

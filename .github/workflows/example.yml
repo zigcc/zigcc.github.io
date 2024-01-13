@@ -1,4 +1,4 @@
-name: example
+name: Run Examples
 
 on:
   schedule:
@@ -16,7 +16,7 @@ on:
 
 defaults:
   run:
-    working-directory: example
+    working-directory: examples
 
 jobs:
   examples:
@@ -34,5 +34,6 @@ jobs:
         with:
           version: ${{ matrix.zig }}
 
-      - name: run examples
-        run: make build
+      - name: Run Examples
+        run: |
+          ./run-all.sh

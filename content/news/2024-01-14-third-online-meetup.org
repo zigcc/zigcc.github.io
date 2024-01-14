@@ -1,0 +1,35 @@
+#+TITLE: ZigCC 第三次线上会议
+#+DATE: 2024-01-14T09:20:41+0800
+#+LASTMOD: 2024-01-14T09:43:46+0800
+#+AUTHOR: 西瓜
+
+在 2024-01-13 晚，ZigCC 社区举行了第三次线上会议，参会人员：
+- [[https://github.com/jiacai2050/][西瓜]]
+- [[https://github.com/labspc][Lambert]]
+- [[https://github.com/jinzhongjia][金中甲]]
+- [[https://github.com/byte911][夜白]]
+
+会议主要讨论了下面两个议题：
+- 公众号运营
+- 如何与其他社区互动
+
+* 公众号运营
+这是最近群里聊到的问题，由于 Zig 语言本身术语较新的技术，因此社区内资料比较少，这导致很多人感兴趣的人没有一个好的学习途径。
+
+但对中文环境来说，我们其实之前已经积攒了一些素材，是完全可以通过公众号的形式进行传播的，主要来源：
+- [[https://zigcc.github.io/learning-zig/][Learning Zig 中文翻译]]
+- [[https://zigcc.github.io/zig-course/][Zig 语言圣经]]
+- [[https://zigcc.github.io/zig-cookbook/][Zig Cookbook]]
+
+目前可以按照 Rust 日报的方式，每日截取其中的片段进行发送，方便读者在闲暇浏览阅读；另一方面，公众号也会介绍 [[https://github.com/zigcc/awesome-zig][awesome-zig]] 中的实际项目，同步他们的进展。
+
+虽然名字是『Zig 日报』，但应该不会每天都发，毕竟 Zig 社区还比较年轻，但估计间隔不会超过 3 天，看后续运行实际效果再来调整频率。
+
+主要参与人员：西瓜、金中甲
+* 社区互动
+目前我们的成员在 Zig 的实践方面相对较少，因此决定目前不过多的去宣传，在积攒了一些实际项目经验后，再来考虑。
+
+* 欢迎更多朋友加入 ZigCC
+现在回看，距离第一次 ZigCC 线上会议过了一个月，经过 ZigCC 成员的努力，还是交出了一份比较满意的答卷，[[https://github.com/zigcc/zig-cookbook][cookbook]] 项目斩获 400+ 的⭐️，而且我们也有了新的 [[https://github.com/zigcc/logo][logo]]，另外要感谢金中甲同学，他把之前自己写的教程捐给了 ZigCC，质量非常高，因此我们决定把他重命名为 [[https://zigcc.github.io/zig-course/][Zig 语言圣经]]，熟悉 Rust 的朋友可能会知道原因。😃
+
+也许在读文章的你也在犹豫是否能加入，担心没有 Zig 经验是否会有影响，其实这都不是核心，现在的成员也没说 Zig 经验有多丰富，只要有踏实做事的心态，愿意帮助他人即可，Zig 可以慢慢学，有想法的朋友可以邮件到 zig@liujiacai.net ，简单自我介绍，之后我会拉到对应群组中，便于开展后续的工作。

@@ -8,11 +8,11 @@ pub fn build(b: *std.build.Builder) void {
         .target = target,
         .optimize = optimize,
     });
-    const cmd = b.addSystemCommand(&.{
-        "flex",
-        "-outfile=lines.c",
-        "lines.l",
-    });
+    // const cmd = b.addSystemCommand(&.{
+    //     "flex",
+    //     "-outfile=lines.c",
+    //     "lines.l",
+    // });
     b.installArtifact(exe);
-    exe.step.dependOn(&cmd.step);
+    // exe.step.dependOn(&cmd.step);
 }

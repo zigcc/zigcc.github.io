@@ -23,20 +23,21 @@ pub fn build(b: *std.build.Builder) void {
 
     {
         exe.step.dependOn(&parser_gen.step);
-
-        exe.addCSourceFile(.{ .file = std.build.LazyPath.relative("review-parser.c"), .flags = &.{} });
-
+        // todo 作为译者我太难了。这个原作者没有提供各种依赖文件，我自己拼太难了，可以build通过但是无法执行通过
+        // exe.addCSourceFile(.{ .file = std.build.LazyPath.relative("review-parser.c"), .flags = &.{} });
+        // todo 作为译者我太难了。这个原作者没有提供各种依赖文件，我自己拼太难了，可以build通过但是无法执行通过
         // add zig-args to parse arguments
 
-        const ap = b.createModule(.{
-            .source_file = .{ .path = "vendor/zig-args/args.zig" },
-            .dependencies = &.{},
-        });
-        exe.addModule("args-parser", ap);
+        // const ap = b.createModule(.{
+        //     .source_file = .{ .path = "vendor/zig-args/args.zig" },
+        //     .dependencies = &.{},
+        // });
+        // exe.addModule("args-parser", ap);
 
         // add libcurl for uploading
         exe.addIncludePath(std.build.LazyPath.relative("vendor/libcurl/include"));
-        exe.addObjectFile(std.build.LazyPath.relative("vendor/libcurl/lib/libcurl.a"));
+        // todo 作为译者我太难了。这个原作者没有提供各种依赖文件，我自己拼太难了，可以build通过但是无法执行通过
+        // exe.addObjectFile(std.build.LazyPath.relative("vendor/libcurl/lib/libcurl.a"));
 
         exe.linkLibC();
         b.installArtifact(exe);
@@ -50,11 +51,13 @@ pub fn build(b: *std.build.Builder) void {
     });
 
     test_suite.step.dependOn(&parser_gen.step);
-    exe.addCSourceFile(.{ .file = std.build.LazyPath.relative("review-parser.c"), .flags = &.{} });
+    // todo 作为译者我太难了。这个原作者没有提供各种依赖文件，我自己拼太难了，可以build通过但是无法执行通过
+    // exe.addCSourceFile(.{ .file = std.build.LazyPath.relative("review-parser.c"), .flags = &.{} });
 
     // add libcurl for uploading
     exe.addIncludePath(std.build.LazyPath.relative("vendor/libcurl/include"));
-    exe.addObjectFile(std.build.LazyPath.relative("vendor/libcurl/lib/libcurl.a"));
+    // todo 作为译者我太难了。这个原作者没有提供各种依赖文件，我自己拼太难了，可以build通过但是无法执行通过
+    // exe.addObjectFile(std.build.LazyPath.relative("vendor/libcurl/lib/libcurl.a"));
 
     test_suite.linkLibC();
 

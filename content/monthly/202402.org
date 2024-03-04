@@ -1,6 +1,6 @@
 #+TITLE: 202402 | Zig 2024 Roadmap 新鲜出炉
 #+DATE: 2024-03-04T20:54:50+0800
-#+LASTMOD: 2024-03-04T21:57:06+0800
+#+LASTMOD: 2024-03-04T21:59:03+0800
 * 重大事件
 Andrew 最近在 zigshow 节目中介绍了 Zig 2024 年的规划，主要有以下几点：
 
@@ -23,7 +23,8 @@ B 站搬运地址：https://www.bilibili.com/video/BV1UC4y167w9/
   - [[https://github.com/ZigEmbeddedGroup/foundation-libc][ZigEmbeddedGroup/foundation-libc]]，A libc implementation written in Zig that is designed to be used with freestanding targets.
 - [[https://devlog.hexops.com/2024/building-the-directx-shader-compiler-better-than-microsoft/][Building the DirectX shader compiler better than Microsoft?]] ::
 - [[http://coypu.sdf.org/porting-zig.html][Porting Zig to NetBSD]] ::
-- [[https://blog.syndica.io/sig-engineering-part-2-accountsdb-more/][Sig Engineering - Part 2 - Progress on AccountsDB & more]] :: Syndica 公司的 Sig，这是一款用 Zig 编写的、专注于 RPS 的 Solana 验证器客户端。在这篇文章里，他们分析了如何优化 HashMap 的性能，而且实现了一个基于本地磁盘的 Allocator。
+- [[https://blog.syndica.io/sig-engineering-part-2-accountsdb-more/][Sig Engineering - Part 2 - Progress on AccountsDB & more]] :: Syndica 公司的 Sig，这是一款用 Zig 编写的、专注于 RPS 的 Solana 验证器客户端。在这篇文章里，他们分析了如何优化 HashMap 的性能，而且实现了一个基于本地磁盘的 Allocator。而且他们还在招聘 Zig 工程师：
+  - [[https://jobs.ashbyhq.com/syndica/15ab4e32-0f32-41a0-b8b0-16b6518158e9][Senior Software Engineer (Zig/C/Rust) @ Syndica]]
 
 * 项目/工具
 - [[https://github.com/semickolon/kirei][semickolon/kirei]] :: 🌸 The prettiest keyboard software

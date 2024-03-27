@@ -1,6 +1,6 @@
 #+TITLE: 202403
 #+DATE: 2024-03-13T20:32:27+0800
-#+LASTMOD: 2024-03-27T08:36:20+0800
+#+LASTMOD: 2024-03-27T22:40:03+0800
 #+DRAFT: true
 * 重大事件
 * 观点/教程
@@ -64,10 +64,28 @@ $ echo '00010203040506070809' | xxd -r -p | ./zig-out/bin/count-bytes
 bytes:           10
 execution time:  162.195µs
 #+end_src
-可以看到，通过 =zig build run= 的方式来执行时，耗时相比直接执行编译好的二进制要快 10 倍。
-问题的关键在于 shell 的 pipeline 的执行机制，对于 =A | B= 这样一个简单的 pipeline，一般本能的会认为 B 只会在 A
-执行完后才开始执行，但是实际上它们是同时运行的，因此，在上面的例子里 =main= 函数的执行时间在 =zig build run= 方式下，
-其实执行的要晚一些，因为它需要先执行编译操作，因此造成了这个误差。
+  可以看到，通过 =zig build run= 的方式来执行时，耗时相比直接执行编译好的二进制要快 10 倍。
+  问题的关键在于 shell 的 pipeline 的执行机制，对于 =A | B= 这样一个简单的 pipeline，一般本能的会认为 B 只会在 A
+  执行完后才开始执行，但是实际上它们是同时运行的，因此，在上面的例子里 =main= 函数的执行时间在 =zig build run= 方式下，
+  其实执行的要晚一些，因为它需要先执行编译操作，因此造成了这个误差。
+- [[https://neurobug.com/posts/zig/billion/][One Bilion rows in zig]] :: 作者用[[https://1brc.dev/][ 1BRC]] 这个项目作为 Zig 的练手项目，里面用到了 [[https://github.com/mstange/samply][mstange/samply]] 这个 Profiler
+  工具，还起来还比较实用。
+- [[https://matklad.github.io/2024/03/21/defer-patterns.html][Zig defer Patterns]] :: Matklad 最新的一篇文章，里面讲述了 defer 除了做资源回收外，其他的一些惯用法，里面有几个有趣的点：
+  #+begin_src zig
+errdefer comptime unreachable
+  #+end_src
+  文中称这个是 Zig 的巅峰用法😅， =errdefer unreachable= 还比较好理解，即在执行出错时，执行 unreachable ，加上 comptime 呢？其实这是阻止 Zig 编译器生产错误处理的代码，即在编译时期保证下面的逻辑不会出错，确实用的很巧妙！一个很好的示例：[[https://github.com/ziglang/zig/pull/19364/files][std.hash_map: fix pointer lock safety false positive by andrewrk · Pull Request #19364 · ziglang/zig]]
+
+  另一个小技巧是 errdefer 竟然支持错误捕获，即下面这种用法：
+  #+begin_src zig
+const port = port: {
+    errdefer |err| std.log.err("failed to read the port number: {!}", .{err});
+    var buf: [fmt.count("{}\n", .{maxInt(u16)})]u8 = undefined;
+    const len = try process.stdout.?.readAll(&buf);
+    break :port try fmt.parseInt(u16, buf[0 .. len -| 1], 10);
+};
+  #+end_src
+
 * 项目/工具
 - [[https://github.com/xataio/pgzx][xataio/pgzx]] :: Create PostgreSQL extensions using Zig. 一个例子：
   #+begin_src zig

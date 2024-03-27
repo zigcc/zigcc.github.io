@@ -1,6 +1,6 @@
 #+TITLE: 202402 | Zig 2024 Roadmap 新鲜出炉
 #+DATE: 2024-03-04T20:54:50+0800
-#+LASTMOD: 2024-03-04T21:59:03+0800
+#+LASTMOD: 2024-03-06T20:39:20+0800
 * 重大事件
 Andrew 最近在 zigshow 节目中介绍了 Zig 2024 年的规划，主要有以下几点：
 
@@ -17,7 +17,7 @@ Andrew 最近在 zigshow 节目中介绍了 Zig 2024 年的规划，主要有以
 B 站搬运地址：https://www.bilibili.com/video/BV1UC4y167w9/
 * 观点/教程
 - [[https://www.infoworld.com/article/3713082/fast-growing-zig-tops-stack-overflow-survey-for-highest-paid-programming-language.html][Fast-growing Zig tops Stack Overflow survey for highest-paid programming language]] :: 估计是 Bun 带动的贫富差距？！
-- [[https://text.garden/writings/generationalpool.html][Pool with generational references in Zig]] :: 作者在文中介绍了一种有意思的思路：当有很多制作指向同一个对象时，如何不用遍历这些指针就能让其失效，答案是用一个胖指针，包括两部分：真正的数据指针和指向对象的年龄，当指针的年龄和指向对象的年龄不一致时，即认为该指针失效。
+- [[https://text.garden/writings/generationalpool.html][Pool with generational references in Zig]] :: 作者在文中介绍了一种有意思的思路：当有很多指针指向同一个对象时，如何不用遍历这些指针就能让其失效，答案是用一个胖指针，包括两部分：真正的数据指针和指向对象的年龄，当指针的年龄和指向对象的年龄不一致时，即认为该指针失效。
 - [[https://lupyuen.codeberg.page/articles/tcc.html][TCC RISC-V Compiler runs in the Web Browser (thanks to Zig Compiler)]] :: [[https://github.com/sellicott/tcc-riscv32][TCC]] 是一个 64 位 RISC-V 的编译器，作者在这篇文章里利用 Zig 把它编译成 WebAssembly 放到浏览器里执行。其中的难点在于 TCC 会调用 Posix 的一些函数，比如：fopen、fprintf、strncpy、malloc 等，但是这些在 WebAssembly 里是没有的，因此需要[[https://github.com/lupyuen/tcc-riscv32-wasm/blob/main/zig/tcc-wasm.zig#L447-L774][自己实现]]，不过幸好 Zig 社区内已经有不少 libc 的实现了：
   - [[https://github.com/marler8997/ziglibc][marler8997/ziglibc]]
   - [[https://github.com/ZigEmbeddedGroup/foundation-libc][ZigEmbeddedGroup/foundation-libc]]，A libc implementation written in Zig that is designed to be used with freestanding targets.

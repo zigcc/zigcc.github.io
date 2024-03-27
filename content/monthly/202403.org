@@ -1,0 +1,103 @@
+#+TITLE: 202403
+#+DATE: 2024-03-13T20:32:27+0800
+#+LASTMOD: 2024-03-27T08:36:20+0800
+#+DRAFT: true
+* 重大事件
+* 观点/教程
+- [[https://github.com/ziglang/zig/pull/19208][Redesign How Autodoc Works]] :: Andrew 在这个 PR 里重构了现有的文档系统 Autodoc，之前的实现问题很多。比如：
+  - 很多功能重复的文件，最夸张的是 =lib/docs/ziglexer.js= ，它是用 JS 实现的 Zig 的解析器，其实 Zig 已经在标准库中暴露解析相关 API，通过 wasm 就可以调用
+  - 功能更强，因为新设计方案不再处理 ZIR，而是直接处理源文件，这意味着它拥有100% 的信息，不需要向后拼凑任何东西。
+  - sources.tar 文件经 HTTP 层解压后，直接进入 wasm 模块的内存。使用 std.tar 对 tar 文件进行解析，并对源文件进行就地解析，同时在哈希表中添加一些额外的计算。虽然可以通过 Worker 来加快解析速度，但单线程的解析速度已经非常快，因此这并不是非常有必要。
+
+    快来体验最新的文档系统吧：https://ziglang.org/documentation/master/std/
+- [[https://notes.eatonphil.com/2024-03-15-zig-rust-and-other-languages.html][Zig, Rust, and other languages]] :: 老朋友 Phil Eaton 的文章，在这里他针对以下几点进行了语言对比：
+  - 内存管理。Zig 最大的问题是不支持 RAII，一个近似的概念是 arenas 分配器。
+  - 标准库，主要是讨论标准库是否应该精简为主， =node_modules= 是业界经常提到的一个反面例子，一般支持精简的人会认为，
+    - 语言的 std 不容易出现 breaking changes，想 Python 里就有 urllib、urllib2、urllib3 这三个网络库，
+      但是社区推荐的并不是这三个，而是 requests，这样 std 的位置就有些尴尬
+    - Zig 目前的标准库算是中等大小，json、compress 压缩等功能都有
+  - 显示分配，这算是 Zig 的强项，其他语言很少有支持这个的，因此作者在这建议增加一种类似 =must-not-allocate= 的注解，
+    这样高级语言里，也可以保值某些操作不会有内存分配。
+- [[https://mtlynch.io/zig-extraneous-build/][Why does an extraneous build step make my Zig app 10x faster?]] :: 作者在这篇文章里分享了自己遇到的一个很有意思的问题，
+  同一份代码，执行方式不同，竟然有不同的耗时。最小复现代码：
+  #+begin_src zig
+// src/main.zig
+
+const std = @import("std");
+
+pub fn countBytes(reader: anytype) !u32 {
+    var count: u32 = 0;
+    while (true) {
+        _ = reader.readByte() catch |err| switch (err) {
+            error.EndOfStream => {
+                return count;
+            },
+            else => {
+                return err;
+            },
+        };
+        count += 1;
+    }
+}
+
+pub fn main() !void {
+    var reader = std.io.getStdIn().reader();
+
+    var timer = try std.time.Timer.start();
+    const start = timer.lap();
+    const count = try countBytes(&reader);
+    const end = timer.read();
+    const elapsed_micros = @as(f64, @floatFromInt(end - start)) / std.time.ns_per_us;
+
+    const output = std.io.getStdOut().writer();
+    try output.print("bytes:           {}\n", .{count});
+    try output.print("execution time:  {d:.3}µs\n", .{elapsed_micros});
+}
+  #+end_src
+  两种执行方式：
+  #+begin_src bash
+$ echo '00010203040506070809' | xxd -r -p | zig build run -Doptimize=ReleaseFast
+bytes:           10
+execution time:  13.549µs
+
+$ echo '00010203040506070809' | xxd -r -p | ./zig-out/bin/count-bytes
+bytes:           10
+execution time:  162.195µs
+#+end_src
+可以看到，通过 =zig build run= 的方式来执行时，耗时相比直接执行编译好的二进制要快 10 倍。
+问题的关键在于 shell 的 pipeline 的执行机制，对于 =A | B= 这样一个简单的 pipeline，一般本能的会认为 B 只会在 A
+执行完后才开始执行，但是实际上它们是同时运行的，因此，在上面的例子里 =main= 函数的执行时间在 =zig build run= 方式下，
+其实执行的要晚一些，因为它需要先执行编译操作，因此造成了这个误差。
+* 项目/工具
+- [[https://github.com/xataio/pgzx][xataio/pgzx]] :: Create PostgreSQL extensions using Zig. 一个例子：
+  #+begin_src zig
+const std = @import("std");
+const pgzx = @import("pgzx");
+
+comptime {
+    pgzx.PG_MODULE_MAGIC();
+
+    pgzx.PG_FUNCTION_V1("char_count_zig", char_count_zig);
+}
+
+fn char_count_zig(input_text: []const u8, target_char: []const u8) !u32 {
+    if (target_char.len > 1) {
+        return pgzx.elog.Error(@src(), "Target char is more than one byte", .{});
+    }
+
+    pgzx.elog.Info(@src(), "input_text: {s}\n", .{input_text});
+    pgzx.elog.Info(@src(), "target_char: {s}\n", .{target_char});
+    pgzx.elog.Info(@src(), "Target char len: {}\n", .{target_char.len});
+
+    var count: u32 = 0;
+    for (input_text) |char| {
+        if (char == target_char[0]) {
+            count += 1;
+        }
+    }
+    return count;
+}
+  #+end_src
+
+
+* [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-02-01..2024-03-01][Zig 语言更新]]

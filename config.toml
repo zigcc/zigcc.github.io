@@ -1,4 +1,4 @@
-baseURL = 'https://zigcc.github.io/'
+baseURL = 'https://ziglang.cc'
 languageCode = 'en'
 defaultContentLanguage = 'zh-cn'
 title = 'Zig 语言中文社区'
@@ -23,7 +23,7 @@ theme = "hugo-xmin"
 [[menu.main]]
   name = "论坛"
   weight = 30
-  url = "https://zigcc.github.io/forum"
+  url = "https://ask.ziglang.cc"
 # [[menu.main]]
 #   name = "Tags"
 #   weight = 3

@@ -1,6 +1,6 @@
 #+TITLE: 202403
 #+DATE: 2024-03-13T20:32:27+0800
-#+LASTMOD: 2024-03-27T22:40:03+0800
+#+LASTMOD: 2024-03-28T19:55:58+0800
 #+DRAFT: true
 * 重大事件
 * 观点/教程
@@ -70,11 +70,63 @@ execution time:  162.195µs
   其实执行的要晚一些，因为它需要先执行编译操作，因此造成了这个误差。
 - [[https://neurobug.com/posts/zig/billion/][One Bilion rows in zig]] :: 作者用[[https://1brc.dev/][ 1BRC]] 这个项目作为 Zig 的练手项目，里面用到了 [[https://github.com/mstange/samply][mstange/samply]] 这个 Profiler
   工具，还起来还比较实用。
-- [[https://matklad.github.io/2024/03/21/defer-patterns.html][Zig defer Patterns]] :: Matklad 最新的一篇文章，里面讲述了 defer 除了做资源回收外，其他的一些惯用法，里面有几个有趣的点：
+- [[https://matklad.github.io/2024/03/21/defer-patterns.html][Zig defer Patterns]] :: Matklad 最新的一篇文章，Ziggit [[https://ziggit.dev/t/zig-defer-patterns/3638/3][讨论链接]]。里面讲述了 defer 除了做资源回收外，其他的一些惯用法，里面有几个有趣的点：
   #+begin_src zig
 errdefer comptime unreachable
   #+end_src
-  文中称这个是 Zig 的巅峰用法😅， =errdefer unreachable= 还比较好理解，即在执行出错时，执行 unreachable ，加上 comptime 呢？其实这是阻止 Zig 编译器生产错误处理的代码，即在编译时期保证下面的逻辑不会出错，确实用的很巧妙！一个很好的示例：[[https://github.com/ziglang/zig/pull/19364/files][std.hash_map: fix pointer lock safety false positive by andrewrk · Pull Request #19364 · ziglang/zig]]
+  文中称这个是 Zig 的巅峰用法😅， =errdefer unreachable= 还比较好理解，即在执行出错时，执行 unreachable ，加上 comptime 呢？
+
+  其实这是阻止 Zig 编译器生产错误处理的代码，即在编译时期保证下面的逻辑不会出错，确实用的很巧妙！一个简单的例子：
+
+  #+begin_src zig
+const std = @import("std");
+
+test "errdeferWithUnreachable" {
+    errdefer comptime unreachable;
+    const i = try inc(1);
+    std.testing.expectEqual(i, 2);
+}
+
+fn inc(a: i8) !i8 {
+    if (a > 10) {
+        return error.TooLarge;
+    }
+    return a + 1;
+}
+  #+end_src
+  直接执行 =zig test= ，在编译时会报下面的错误：
+#+begin_src shell
+test.zig:4:23: error: reached unreachable code
+    errdefer comptime unreachable;
+#+end_src
+虽然 =a= 是个运行时的值，但是 =errdefer comptime unreachable= 不关心这个，只要 Zig 编译器开始生成 ErrorSet 相关代码，
+编译就会报错，去掉上面的 if 代码块后，测试就可以正常执行。一个实际的例子：
+- [[https://github.com/ziglang/zig/pull/19364/files][std.hash_map: fix pointer lock safety false positive by andrewrk · Pull Request #19364 · ziglang/zig]]
+#+begin_src diff
+   assert(std.math.isPowerOfTwo(new_cap));
+
+   var map: Self = .{};
+-  defer map.deinit(allocator);
+-  map.pointer_stability.lock();
+   try map.allocate(allocator, new_cap);
++  errdefer comptime unreachable;
++  map.pointer_stability.lock();
+   map.initMetadatas();
+   map.available = @truncate((new_cap * max_load_percentage) / 100);
+
+@@6581,7 @@ pub fn HashMapUnmanaged(
+   self.size = 0;
+   self.pointer_stability = .{ .state = .unlocked };
+   std.mem.swap(Self, self, &map);
++  map.deinit(allocator);
+
++
++test "getOrPut allocation failure" {
++    var map: std.StringHashMapUnmanaged(void) = .{};
++    try testing.expectError(error.OutOfMemory, map.getOrPut(std.testing.failing_allocator, "hello"));
++}
+#+end_src
+可以看到， 这么修改后，就可以保证 =map.deinit(allocator)= 语句之前没有错误可能产生！读者可以细细品味一下这个用法。
 
   另一个小技巧是 errdefer 竟然支持错误捕获，即下面这种用法：
   #+begin_src zig

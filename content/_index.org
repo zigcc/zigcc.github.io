@@ -1,17 +1,25 @@
 #+TITLE: Zig 语言中文社区
 #+DATE: 2022-07-20T12:42:38+0800
-#+LASTMOD: 2024-03-30T10:19:55+0800
+#+LASTMOD: 2024-03-31T08:25:20+0800
 
 {{< figure src="https://ziglang.cc/logo/zigcc-logo-2.svg" height="300px" >}}
 
-[[https://ziglang.org/][Zig]] 语言中文社区，致力于分享、传播 Zig 语言在中文用户内的使用。
+#+begin_quote
+[[https://ziglang.org/][Zig]] 语言中文社区（Zig Chinese Community，简称：ZigCC），致力于分享、传播 Zig 语言在中文用户内的使用。
+
+[[/post/2023/09/05/hello-world/][欢迎 Zig 爱好者向本网站供稿]]
+#+end_quote
+
 
 #+BEGIN_EXPORT html
 <a href="https://discord.gg/UraRxD6WXD">
 <img src="https://img.shields.io/discord/1155469703846834187?label=Chat at Discord" />
 </a>
 <a href="/index.xml">
-<img src="https://img.shields.io/badge/rss-F88900.svg?style=flat&logo=rss&logoColor=white" />
+<img src="https://img.shields.io/badge/rss-F88900.svg?style=flat&logo=RSS&logoColor=white&label=网站" />
+</a>
+<a href="https://ask.ziglang.cc/atom.xml">
+<img src="https://img.shields.io/badge/rss-F88900.svg?style=flat&logo=RSS&logoColor=white&label=论坛" />
 </a>
 #+END_EXPORT
 
@@ -29,18 +37,9 @@
 - [[https://ziglang.cc/zig-cookbook/][Zig Cookbook]] :: A collection of simple Zig programs that demonstrate good practices to accomplish common programming tasks
 - [[https://github.com/zigcc/zig-idioms][zigcc/zig-idioms]] :: Common idioms used in Zig
 - [[https://github.com/zigcc/awesome-zig][zigcc/awesome-zig]] :: A collection of some awesome public Zig programming language projects.
-* RSS 订阅
-- [[https://ask.ziglang.cc/atom.xml][论坛]]
-- [[file:monthly/index.xml][月刊]]
-* 月刊
-社区内的最新进展，信息来源：[[https://zig.news/top/month][Zig NEWS]]、[[https://zigmonthly.org/][Zig monthly]]、[[https://lobste.rs/t/zig][Lobsters]]、[[https://www.reddit.com/r/Zig/][Reddit]]、[[https://discu.eu/weekly/zig/][Zig weekly newsletter]]、[[https://ziggit.dev/][Ziggit]]、[[https://github.com/zigcc/forum/discussions/new?labels=%E6%9C%88%E5%88%8A&category=general][用户推荐]]
-
 * 更新日志
 - 2024-03-29 :: 使用自定义域名 ziglang.cc
 - 2022-12-10 :: 切换主题 [[https://github.com/zwbetz-gh/cupper-hugo-theme][cupper-hugo]] --> [[https://github.com/yihui/hugo-xmin][hugo-xmin]]
 - 2022-07-20 :: 首次上线
-
-* 社区供稿
-参见：[[https://ziglang.cc/post/2023/09/05/hello-world/]]
 
 * 文章列表

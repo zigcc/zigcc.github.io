@@ -2,12 +2,15 @@ baseURL = 'https://ziglang.cc'
 languageCode = 'en'
 defaultContentLanguage = 'zh-cn'
 title = 'Zig 语言中文社区'
-theme = "hugo-xmin"
 
 [[menu.main]]
   name = "主页"
   weight = 10
   url = "/"
+[[menu.main]]
+  name = "日报"
+  weight = 11
+  url = "https://github.com/zigcc/forum/issues"
 [[menu.main]]
   name = "月刊"
   weight = 20
@@ -41,6 +44,15 @@ theme = "hugo-xmin"
   description = ""
   dateFormat = "Jan 2, 2006"
   gitRepo = "https://github.com/zigcc/zigcc.github.io"
+  [params.giscus]
+    repo = "zigcc/zigcc.github.io"
+    repoId = "R_kgDOHr7nSg"
+    category = "Announcements"
+    categoryId = "DIC_kwDOHr7nSs4CQUsK"
+
+[module]
+  [[module.imports]]
+    path = "github.com/jiacai2050/hugo-xmin"
 
 [frontmatter]
   date = [":filename", ":default", ":fileModTime"]

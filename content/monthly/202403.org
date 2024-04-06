@@ -1,8 +1,22 @@
-#+TITLE: 202403
+#+TITLE: 202403 | ziglang.cc 正式上线
 #+DATE: 2024-03-13T20:32:27+0800
-#+LASTMOD: 2024-03-28T19:55:58+0800
-#+DRAFT: true
+#+LASTMOD: 2024-04-06T16:43:26+0800
 * 重大事件
+#+begin_quote
+https://ziglang.cc/
+#+end_quote
+之前 ZigCC 所有项目都是托管在 GitHub 之上，网页基于 Pages 构建，域名自然也就是 github.io 的，虽然 GitHub 提供了很多利于开发者的服务，但过于依赖 GitHub 这种商业公司，还是不利于 ZigCC 的长远发展，域名是其中很重要一个，有了独立域名，网页托管选择就多了，比如 [[https://pages.cloudflare.com/][Cloudflare Pages]]。
+
+另一个大家比较关心的问题就是 0.12 的发版，虽然 [[https://github.com/ziglang/zig/milestone/23][milestone]] 显示还剩 10 来个 open 的 issue，但是这只是个幌子，核心团队还是有可能随时 delay。不过从剩下的 issue 来分析，主要问题还剩两大类：
+1. 构建系统完善
+2. 修复之前功能带来的回滚问题（regression 这个 tag）
+
+新功能看来是已经 ready 了，但这并不是说剩下的这些工具就好解决了，Andrew 在 [[https://rustacean-station.org/episode/andrew-kelley/][Zig with Andrew Kelley]] 这一期播客里提到的 [[https://zh.wikipedia.org/wiki/90-90%E6%B3%95%E5%88%99][90-90]] 理论很好的解释了这一点：
+#+begin_quote
+（开发软件时）前 90% 的代码要花费 90% 的开发时间，剩余的 10% 的代码要再花费 90% 的开发时间。
+#+end_quote
+
+当然，后面 ZigCC 也会紧密关注发布动态，有消息第一时间分享给大家。耐不住寂寞的朋友，可以先去刷刷 Zig 的 discord。
 * 观点/教程
 - [[https://github.com/ziglang/zig/pull/19208][Redesign How Autodoc Works]] :: Andrew 在这个 PR 里重构了现有的文档系统 Autodoc，之前的实现问题很多。比如：
   - 很多功能重复的文件，最夸张的是 =lib/docs/ziglexer.js= ，它是用 JS 实现的 Zig 的解析器，其实 Zig 已经在标准库中暴露解析相关 API，通过 wasm 就可以调用
@@ -84,7 +98,7 @@ const std = @import("std");
 test "errdeferWithUnreachable" {
     errdefer comptime unreachable;
     const i = try inc(1);
-    std.testing.expectEqual(i, 2);
+    try std.testing.expectEqual(i, 2);
 }
 
 fn inc(a: i8) !i8 {
@@ -137,6 +151,8 @@ const port = port: {
     break :port try fmt.parseInt(u16, buf[0 .. len -| 1], 10);
 };
   #+end_src
+  - [[https://ziggit.dev/t/build-system-tricks/3531/1][Build system tricks]] :: 介绍了 zig build 的使用技巧，这些技巧有助于在确保方便地命名和布局构建步骤的同时，如何使用构建系统的每个部分。
+  - [[https://blog.mjgrzymek.com/blog/zigwasm][Using Zig with WebAssembly]] :: 如何将 Zig 编译成 wasm，并传递复杂的参数。
 
 * 项目/工具
 - [[https://github.com/xataio/pgzx][xataio/pgzx]] :: Create PostgreSQL extensions using Zig. 一个例子：
@@ -168,6 +184,23 @@ fn char_count_zig(input_text: []const u8, target_char: []const u8) !u32 {
     return count;
 }
   #+end_src
+
+- [[https://github.com/NoelJacob/zman][Manage Zig installations]] :: 又又又叒一个 Zig 管理工具，Rust 开发。
+  #+begin_src bash
+zman default latest
+zman default master
+zman default 0.12.0
+  #+end_src
+
+- [[https://github.com/mahdifrmz/qooil][mahdifrmz/qooil]] :: 用 Zig 语言编写的文件传输软件
+
+- [[https://github.com/timfayz/pretty][timfayz/pretty]] :: Pretty printer for arbitrary data structures in Zig
+
+- [[https://github.com/liyu1981/zcmd.zig][liyu1981/zcmd.zig]] :: Zcmd is a single file lib to replace zig's std.childProcess.run with the ability of running pipeline like bash.
+
+- [[https://github.com/zigcc/zig-milestone][zigcc/zig-milestone]] :: Zig milstone monitor
+
+
 
 
 * [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-02-01..2024-03-01][Zig 语言更新]]

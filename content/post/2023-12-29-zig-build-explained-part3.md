@@ -17,7 +17,7 @@ date: "2023-12-29T19:15:02+0800"
 
 ## 软件包
 
-译者：此处代码和说明，需要zig build-exe --pkg-begin，但是在0.11已经失效。所以删除。
+译者：此处代码和说明，需要 zig build-exe --pkg-begin，但是在 0.11 已经失效。所以删除。
 
 ## 库
 
@@ -39,7 +39,7 @@ date: "2023-12-29T19:15:02+0800"
 如果我们的项目越来越多，那么在构建过程中就需要使用工具。这些工具通常会完成以下任务：
 
 生成一些代码（如解析器生成器、序列化器或库头文件）
-捆绑应用程序（例如生成 APK、捆绑应用程序......）。
+捆绑应用程序（例如生成 APK、捆绑应用程序……）。
 创建资产包
 ...
 有了 Zig，我们不仅能在构建过程中利用现有工具，还能为当前主机编译我们自己（甚至外部）的工具并运行它们。
@@ -58,7 +58,7 @@ pub const Module = struct {
 };
 ```
 
-我们可以看到，它有2个成员：
+我们可以看到，它有 2 个成员：
 
 source_file 是定义软件包根文件的 FileSource。这通常只是指向文件的路径，如 vendor/zig-args/args.zig
 dependencies 是该软件包所需的可选软件包片段。如果我们使用更复杂的软件包，这通常是必需的。
@@ -89,7 +89,7 @@ const pkgs = .{
 };
 ```
 
-随后通过编译步骤exe，把模块加入进来。函数addModule的第一个参数name 是模块名称
+随后通过编译步骤 exe，把模块加入进来。函数 addModule 的第一个参数 name 是模块名称
 
 ```zig
 exe.addModule("lola",pkgs.lola);
@@ -139,7 +139,7 @@ pub fn build(b: *std.Build) void {
 
 不过，您也可以链接您作为二进制文件提供商的库。为此，我们需要调用几个函数。首先，让我们来看看这样一个库是什么样子的：
 
-```
+```plain
 ./vendor/libcurl
 include
 │ └── curl
@@ -167,7 +167,7 @@ include
 
 ### 动态链接
 
-要链接 libcurl，我们需要先添加 include 路径，然后向 zig 提供库的前缀和库名：(todo代码有待验证,因为curl可能需要自己编译自己生成static lib)
+要链接 libcurl，我们需要先添加 include 路径，然后向 zig 提供库的前缀和库名：(todo 代码有待验证,因为 curl 可能需要自己编译自己生成 static lib)
 
 ```zig
 //demo 3.3
@@ -191,9 +191,9 @@ pub fn build(b: *std.build.Builder) void {
 
 addIncludePath 将文件夹添加到搜索路径中，这样 Zig 就能找到 curl/curl.h 文件。注意，我们也可以在这里传递 "vendor/libcurl/include/curl"，但你通常应该检查一下你的库到底想要什么。
 
-addLibraryPath对库文件也有同样的作用。这意味着 Zig 现在也会搜索 "vendor/libcurl/lib "文件夹中的库。
+addLibraryPath 对库文件也有同样的作用。这意味着 Zig 现在也会搜索 "vendor/libcurl/lib "文件夹中的库。
 
-最后，linkSystemLibrary 会告诉 Zig 搜索名为 "curl "的库。如果你留心观察，就会发现上面列表中的文件名是 libcurl.so，而不是 curl.so。在unixoid系统中，库文件的前缀通常是lib，这样就不会将其传递给系统。在 Windows 系统中，库文件的名字应该是 curl.lib 或类似的名字。
+最后，linkSystemLibrary 会告诉 Zig 搜索名为 "curl "的库。如果你留心观察，就会发现上面列表中的文件名是 libcurl.so，而不是 curl.so。在 unixoid 系统中，库文件的前缀通常是 lib，这样就不会将其传递给系统。在 Windows 系统中，库文件的名字应该是 curl.lib 或类似的名字。
 
 ## 静态链接
 

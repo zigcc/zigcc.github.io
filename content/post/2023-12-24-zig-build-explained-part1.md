@@ -161,7 +161,7 @@ pub fn build(b: *std.build.Builder) void {
 
 现在，如果你调用 zig build --help 命令，就会在输出中看到以下部分，而之前这部分是空的：
 
-```
+```plain
 Project-Specific Options:
 -Dtarget=[string]            The CPU architecture, OS, and ABI to build for
 -Dcpu=[string]               Target CPU features to add or subtract
@@ -175,7 +175,7 @@ Project-Specific Options:
 
 前两个选项由 standardTargetOptions 添加，其他选项由 standardOptimizeOption 添加。现在，我们可以在调用构建脚本时使用这些选项：
 
-```
+```plain
 zig build -Dtarget=x86_64-windows-gnu -Dcpu=athlon_fx
 zig build -Doptimize=ReleaseSafe
 zig build -Doptimize=ReleaseSmall
@@ -214,7 +214,7 @@ pub fn build(b: *std.build.Builder) void {
 
 现在，当你调用 zig build 时，你会看到一个新的目录 zig-out 被创建了.看起来有点像这样：
 
-```
+```plain
 zig-out
 └── bin
     └── fresh
@@ -222,7 +222,7 @@ zig-out
 
 现在运行 ./zig-out/bin/fresh，就能看到这条信息：
 
-```
+```plain
 info: All your codebase are belong to us.
 ```
 
@@ -287,7 +287,7 @@ RunStep 有几个函数可以为执行进程的 argv 添加值：
 
 现在，当我们调用 zig build run 时，我们将看到与自己运行已安装的 exe 相同的输出：
 
-```
+```plain
 info: All your codebase are belong to us.
 ```
 
@@ -322,7 +322,7 @@ pub fn build(b: *std.build.Builder) void {
 
 这样就可以在 cli 上的 -- 后面传递参数：
 
-```
+```plain
 zig build run -- -o foo.bin foo.asm
 ```
 

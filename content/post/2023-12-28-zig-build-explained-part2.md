@@ -23,7 +23,7 @@ Zig 提供了 LLVM c 编译器 clang。第一种是 zig cc 或 zig c++，它是�
 
 假设我们有一个由 main.c 和 buffer.c 生成的项目，我们可以用下面的命令行来构建它：
 
-```
+```plain
 zig cc -o example buffer.c main.c
 ```
 
@@ -33,7 +33,7 @@ zig cc -o example buffer.c main.c
 
 使用 zig cc 进行交叉编译与使用 Zig 本身一样简单：
 
-```
+```plain
 zig cc -o example.exe -target x86_64-windows-gnu buffer.c main.c
 ```
 
@@ -43,7 +43,7 @@ zig cc -o example.exe -target x86_64-windows-gnu buffer.c main.c
 
 使用 Zig 工具链构建 C 项目的另一种方法与构建 Zig 项目的方法相同：
 
-```
+```plain
 zig build-exe -lc main.c buffer.c
 ```
 
@@ -51,7 +51,7 @@ zig build-exe -lc main.c buffer.c
 
 交叉编译也是如此，只需通过 -target x86_64-windows-gnu 或其他目标三元组即可：
 
-```
+```plain
 zig build-exe -lc -target x86_64-windows-gnu main.c buffer.c
 ```
 
@@ -93,7 +93,7 @@ pub fn build(b: *std.Build) void {
 
 然后，我们通过 addCSourceFile 添加两个 C 语言文件：
 
-```
+```plain
 exe.addCSourceFile(.{ .file = std.build.LazyPath.relative("main.c"), .flags = &.{} });
 exe.addCSourceFile(.{ .file = std.build.LazyPath.relative("buffer.c"), .flags = &.{} });
 ```
@@ -174,7 +174,7 @@ pub fn build(b: *std.Build) void {
 
 让我们创建程序，并通过 URL 调用它
 
-```
+```plain
 zig build
 ./zig-out/bin/downloader  https://mq32.de/public/ziggy.txt
 ```
@@ -549,7 +549,7 @@ pub fn build(b: *std.Build) void {
 这就是需要做的一切！是这样吗？
 
 实际上，有一种情况现在还没有得到很好的支持：
-您应用程序的入口点现在必须在 Zig 代码中，因为根文件必须导出一个 pub fn main(...) ....。
+您应用程序的入口点现在必须在 Zig 代码中，因为根文件必须导出一个 pub fn main(...) ……。
 因此，如果你想将 C 项目中的代码移植到 Zig 中，你必须将 argc 和 argv 转发到你的 C 代码中，并将 C 代码中的 main 重命名为其他函数（例如 oldMain），然后在 Zig 中调用它。如果需要 argc 和 argv，可以通过 std.process.argsAlloc 获取。或者更好： 在 Zig 中重写你的入口点，然后从你的项目中移除一些 C 语言！
 
 ## 结论

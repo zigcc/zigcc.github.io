@@ -27,4 +27,5 @@ jobs:
           node-version: "latest"
       - name: Prettier check
         run: |
+          echo "If lint fails, run `make format` and commit again."
           make lint

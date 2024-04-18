@@ -1,0 +1,52 @@
+#+TITLE: 202404
+#+DATE: 2024-04-18T21:59:49+0800
+#+LASTMOD: 2024-04-18T22:02:51+0800
+#+DRAFT: true
+* 重大事件
+* 观点/教程
+- [[https://github.com/zigcc/forum/issues/112][Zig 中任意精度整数用途与实现]] :: 由于 CPU 在访问内存时，一般都会有对齐的要求，对于这种非常规的数字，在内存中的地址会是怎样的呢？可以做一个简单的实验：
+
+  #+begin_src zig
+const std = @import("std");
+
+const Foo = packed struct {
+    a: u3,
+    b: u2,
+};
+
+pub fn main() !void {
+    const vs = [_]u3{ 1, 2, 3 };
+    for (&vs) |*b| {
+        std.debug.print("{p}-{b}\n", .{ b, b.* });
+    }
+
+    std.debug.print("U3 size: {d}\n", .{@sizeOf(u3)});
+    std.debug.print("Foo size: {d}\n", .{@sizeOf(Foo)});
+
+    const foos = [_]Foo{
+        .{ .a = 1, .b = 3 },
+    };
+
+    std.debug.print("foo as bytes: {b}\n", .{std.mem.sliceAsBytes(&foos)});
+
+    for (foos) |b| {
+        std.debug.print("{any}-{any}\n", .{ &b.a, &b.b });
+    }
+}
+  #+end_src
+  输出：
+  #+begin_src bash
+u3@104d11a2c-1
+u3@104d11a2d-10
+u3@104d11a2e-11
+U3 size: 1
+Foo size: 1
+foo as bytes: { 11001 }
+u3@16b196367-u2@16b196367
+  #+end_src
+
+  通过前三个输出可以知道，每个 u3 实际占用一个字节，但当用在 packed 结构中，就会变成 3 个 bit。其中的 11001 就是字段 a b 混合后的值，且 a 是三位，b 是高两位。
+
+
+* 项目/工具
+* [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-03-01..2024-04-01][Zig 语言更新]]

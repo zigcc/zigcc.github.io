@@ -44,6 +44,7 @@ title = 'Zig 语言中文社区'
   description = ""
   dateFormat = "Jan 2, 2006"
   gitRepo = "https://github.com/zigcc/zigcc.github.io"
+  twitterCardEnabled = true
   [params.giscus]
     repo = "zigcc/zigcc.github.io"
     repoId = "R_kgDOHr7nSg"
@@ -60,6 +61,7 @@ title = 'Zig 语言中文社区'
 
 [permalinks]
   post = "/post/:year/:month/:day/:slug/"
+  news = "/news/:year/:month/:day/:slug/"
 
 [markup]
   [markup.tableOfContents]

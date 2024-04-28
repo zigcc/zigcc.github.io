@@ -1,6 +1,6 @@
 #+TITLE: 202404
 #+DATE: 2024-04-18T21:59:49+0800
-#+LASTMOD: 2024-04-18T22:02:51+0800
+#+LASTMOD: 2024-04-28T10:40:58+0800
 #+DRAFT: true
 * 重大事件
 * 观点/教程
@@ -46,7 +46,6 @@ u3@16b196367-u2@16b196367
   #+end_src
 
   通过前三个输出可以知道，每个 u3 实际占用一个字节，但当用在 packed 结构中，就会变成 3 个 bit。其中的 11001 就是字段 a b 混合后的值，且 a 是三位，b 是高两位。
-
-
+- [[https://procmarco.com/blog/learnings-from-building-a-db-in-zig/][Learnings From Building a DB in Zig]] :: 作者分享了在一次 3 天的 Hackthon 中，使用 Zig 开发一个数据库的经历。
 * 项目/工具
 * [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-03-01..2024-04-01][Zig 语言更新]]

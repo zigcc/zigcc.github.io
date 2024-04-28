@@ -1,0 +1,32 @@
+#+TITLE: 0.12.0 Release Party
+#+DATE: 2024-04-28T09:53:45+0800
+#+LASTMOD: 2024-04-28T10:44:16+0800
+#+AUTHOR: Jiacai Liu
+
+2024-04-20，0.12.0 终于发布了，历时 8 个月，有 268 位贡献者，一共进行了 3688 次提交！下面是它的 Release notes：
+- https://ziglang.org/download/0.12.0/release-notes.html
+
+ZigCC 对这个文档进行了翻译、整理，供需要升级适配的朋友参考：
+- [[https://course.ziglang.cc/update/upgrade-0.12.0][0.12.0 升级指南]]
+- [[https://course.ziglang.cc/update/0.12.0-description][0.12.0 版本说明]]
+
+为了庆祝这一盛事，ZigCC 决定在 2024-04-27 举行了一次线上的发行聚会，主要来讨论这次的版本，下面是视频回看地址：
+- https://youtu.be/H0IqBNsH-9M
+- https://www.bilibili.com/video/BV1Nb421Y7WX/
+
+在这次会议上，主要讨论了两部分内容：
+
+第一是构建系统，0.12.0 版本对用户来说，主要是稳定了构建系统的 API，这对于 Zig 生态的构建十分重要，如果某用户写了一个基础库，但是升级 Zig 版本后，就没法编译了，可以想象，这是很沮丧的事情。
+
+Zig 的构建系统分为两部分：
+- zon 文件，声明依赖， =zig fetch= 会去下载里面的依赖
+- =build.zig= 文件，项目的构建器，由多个 Step 形成一个有向无环图，来驱动不同逻辑的进行，如安装头文件、编译静态链接库等。Step 里面最重要的是 Compile ，addTest、addExecutable 返回的都是它，主要功能是对代码进行编译。其他常见的 Step 还有
+  - ConfigHeader 配置要用的头文件
+  - InstallArtifact，将编译好的 lib 或 bin 安装到 zig-out 目录中
+
+第二个是自己写的 x86 的后端，它可以不依赖 llvm 直接生成可以执行的汇编代码，这也是 [[https://github.com/ziglang/zig/issues/16270][make the main zig executable no longer depend on LLVM, LLD, and Clang libraries #16270]]
+这个 issue 的基础。之前笔者以为所谓移除 llvm，是把 Zig 代码翻译成 C 代码，然后再有不同架构下的 C 编译器来生成最终的可执行文件，目前看这种想法是错误的，
+尽管 Zig 有 C 这个后端，但目前看并不是解决这个 issue 专用的。
+
+这就不得不好奇，Zig 团队难道要把生成所有架构下的二进制？还是说对于用的少的架构，[[https://github.com/ziglang/zig/issues/13265][直接生成 llvm 的 bc 文件]]，然后剩下的活再交给 llvm 去做？
+目前笔者还没有十分明确的答案，希望今后能尽快搞清楚这个问题，也欢迎了解的读者留言指出。

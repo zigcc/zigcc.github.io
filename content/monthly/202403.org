@@ -1,6 +1,6 @@
 #+TITLE: 202403 | ziglang.cc 正式上线
 #+DATE: 2024-03-13T20:32:27+0800
-#+LASTMOD: 2024-04-06T16:51:27+0800
+#+LASTMOD: 2024-05-02T22:14:30+0800
 * 重大事件
 #+begin_quote
 https://ziglang.cc/
@@ -193,14 +193,8 @@ zman default 0.12.0
   #+end_src
 
 - [[https://github.com/mahdifrmz/qooil][mahdifrmz/qooil]] :: 用 Zig 语言编写的文件传输软件
-
 - [[https://github.com/timfayz/pretty][timfayz/pretty]] :: Pretty printer for arbitrary data structures in Zig
-
 - [[https://github.com/liyu1981/zcmd.zig][liyu1981/zcmd.zig]] :: Zcmd is a single file lib to replace zig's std.childProcess.run with the ability of running pipeline like bash.
-
 - [[https://github.com/zigcc/zig-milestone][zigcc/zig-milestone]] :: Zig milstone monitor
-
-
-
 
 * [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-02-01..2024-03-01][Zig 语言更新]]

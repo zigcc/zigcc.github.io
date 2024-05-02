@@ -1,10 +1,12 @@
 #+TITLE: Zig 语言中文社区
 #+DATE: 2022-07-20T12:42:38+0800
-#+LASTMOD: 2024-03-31T08:25:20+0800
+#+LASTMOD: 2024-05-02T11:39:41+0800
 
 {{< figure src="https://ziglang.cc/logo/zigcc-logo-2.svg" height="300px" >}}
 
 #+begin_quote
+Zig Chinese Community is dedicated to sharing and spreading the use of Zig language among Chinese users.
+
 [[https://ziglang.org/][Zig]] 语言中文社区（Zig Chinese Community，简称：ZigCC），致力于分享、传播 Zig 语言在中文用户内的使用。
 
 [[/post/2023/09/05/hello-world/][欢迎 Zig 爱好者向本网站供稿]]

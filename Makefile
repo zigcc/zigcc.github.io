@@ -13,3 +13,10 @@ lint:
 format:
 	npx @lint-md/cli --fix .
 	npx prettier@3.1.1 --write .
+
+
+EXCLUDE = --exclude "*webp" --exclude "*svg" --exclude "*gif"
+IMG_PATH = ./static/images
+webp:
+	fd -t f $(EXCLUDE) --full-path $(IMG_PATH) --exec convert {} {.}.webp \;
+	fd -t f $(EXCLUDE) --full-path $(IMG_PATH) --exec rm {} \;

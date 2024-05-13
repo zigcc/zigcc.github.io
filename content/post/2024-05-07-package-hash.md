@@ -227,3 +227,6 @@ file: a77c3ca16664533409c4618f54a43f9039427431894d09b03490a91a10864a4c: src/root
 file: 7b398ebd7ddb3ae30ff1ff1010445b3ed1f252db46608b6a6bd9aace233bc1a4: src/util.zig
 1220110dc58ece4168ae3b2a0863c8676f8842bbbac763ad30e6ed1e2b68d973d615
 ```
+
+此外，社区已经有人把 multihash 的算法实现独立成一个单独的包，便于计算一个包的 hash 值：
+- https://github.com/Calder-Ty/multihash

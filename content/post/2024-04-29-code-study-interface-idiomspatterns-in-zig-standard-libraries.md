@@ -1,7 +1,7 @@
 ---
 title: "代码探究: Zig 标准库中的接口习语/模式"
 author: Rui Chen
-date: 2024-04-29T15:58:24-05:00
+date: 2024-05-24T23:21:12-05:00
 ---
 
 > - 原文链接： https://zig.news/yglcode/code-study-interface-idiomspatterns-in-zig-standard-libraries-4lkj

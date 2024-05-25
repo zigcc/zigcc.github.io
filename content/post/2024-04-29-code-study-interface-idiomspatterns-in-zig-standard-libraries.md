@@ -89,7 +89,7 @@ fn init_data() struct { point: Point, box: Box, circle: Circle } {
 # 接口1：枚举标签联合
 
 Loris Cro 在[“使用 Zig 0.10.0 轻松实现接口”](https://zig.news/kristoff/easy-interfaces-with-zig-0100-2hc5)
-中介绍了使用枚举标签联合作为接口的方法。这是最简单的解决方案，尽管你必须在联合中显式列出所有“实现”接口的变体类型。
+中介绍了使用枚举标签联合作为接口的方法。这是最简单的解决方案，尽管你必须在联合类型中显式列出所有“实现”该接口的变体类型。
 
 ```zig
 const Shape1 = union(enum) {

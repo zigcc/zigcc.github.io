@@ -4,13 +4,15 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
     const strip = b.option(bool, "strip", "Set to true to strip binary") orelse false;
+
     const exe = b.addExecutable(.{
         .name = "example",
         .root_source_file = .{ .path = "src/main.zig" },
         .target = target,
         .optimize = optimize,
+        .strip = strip,
     });
-    exe.strip = strip;
+
     b.installArtifact(exe);
 
     const run_cmd = b.addRunArtifact(exe);

@@ -1,10 +1,10 @@
 ---
-title: "代码探究: Zig 标准库中的接口习语/模式"
+title: "Zig 标准库中的实现接口的惯用法与模式"
 author: Rui Chen
 date: 2024-05-24T23:21:12-05:00
 ---
 
-> - 原文链接： https://zig.news/yglcode/code-study-interface-idiomspatterns-in-zig-standard-libraries-4lkj
+> 原文链接： https://zig.news/yglcode/code-study-interface-idiomspatterns-in-zig-standard-libraries-4lkj
 
 # 引言
 
@@ -19,19 +19,17 @@ Zig 标准库应用了一些代码习语或模式以达到类似效果。
 
 这里有一些显著的不同：
 
-- Go 的接口与它们抽象的类型/实例是独立的。当观察到不同类型之间的公共 API/方法模式时，可以随时添加新接口。无需像在 Java 中那样回过头去修改类型以实现新的接口。
-- Go 的接口只包含用于动态分派的 `vtab`，并且偏好小型方法集/`vtable`，例如 `io.Reader` 和 `io.Writer`
-只有一个方法。常见的工具函数如`io.Copy`、`CopyN`、`ReadFull`、`ReadAtLeast` 等，作为包函数提供，
-使用这些小接口。与之相比，Zig 的接口，如 `std.mem.Allocator`，通常包含 `vtable` 和作为方法的常用工具；
-因此它们通常有许多方法。
+- 在 Go 中，接口的定义与实现是独立的。可以在任何位置给一个类型实现新接口，只需保证其方法签名与新接口一致即可。无需像在 Java 中那样，需要回过头去修改类型定义，来实现新的接口。
+- Go 的接口只包含用于动态分派的 `vtab`，并且推荐 vtable 中方法即可能少 ，例如 `io.Reader` 和 `io.Writer`只有一个方法。
+常见的工具函数如`io.Copy`、`CopyN`、`ReadFull`、`ReadAtLeast` 等，作为包函数提供，内部使用这些小接口。
+与之相比，Zig 的接口，如 `std.mem.Allocator`，同时包含 `vtable` 和一些工具方法，因此方法会多一些。
 
-以下是 Zig 的代码习语/模式在动态分派方面的学习笔记，代码摘自 Zig 标准库
-并以简单示例重录。为了专注于 vtab/动态分派，工具方法被移除，
-代码稍作修改以适应 Go 的小接口独立于具体类型的模型。
+以下是 Zig 的代码习语/模式在动态分派方面的学习笔记，代码摘自 Zig 标准库并以简单示例重录。为了专注于 vtab/动态分派，工具方法被移除，
+代码稍作修改以适应 Go 中不依赖具体类型的“小”接口模式。
 
 完整代码位于[此仓库](https://github.com/yglcode/zig_interfaces)，你可以使用 `zig test interfaces.zig` 运行它。
 
-# 设置
+# 背景设定
 
 让我们使用经典的面向对象编程示例，创建一些形状：点（`Point`）、盒子（`Box`）和圆（`Circle`）。
 

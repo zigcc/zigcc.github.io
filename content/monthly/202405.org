@@ -1,11 +1,12 @@
 #+TITLE: 202405
-#+DATE: 2024-05-02T22:18:59+0800
-#+LASTMOD: 2024-05-06T09:35:39+0800
-#+DRAFT: true
-* 重大事件
+#+DATE: 2024-06-02T22:18:59+0800
+#+LASTMOD: 2024-06-03T23:05:49+0800
+
 * 观点/教程
-- [[https://arne.me/blog/thoughts-on-zig][Thoughts on Zig]] :: 又一篇 Zig 初学者的使用体验文档，如果你也在犹豫要不要学 Zig，这是个不错的经验参考。
-- [[https://www.reddit.com/r/Zig/comments/1ckstjv/im_sold_on_zigs_simplicity/][I'm sold on Zig's simplicity : r/Zig]] :: 一个具有资深经验开发者，在这里描述了自己选择业余项目语言的经历：
+** [[https://arne.me/blog/thoughts-on-zig][Thoughts on Zig]]
+又一篇 Zig 初学者的使用体验文档，如果你也在犹豫要不要学 Zig，这是个不错的经验参考。
+** [[https://www.reddit.com/r/Zig/comments/1ckstjv/im_sold_on_zigs_simplicity/][I'm sold on Zig's simplicity : r/Zig]]
+一个具有资深经验开发者，在这里描述了自己选择业余项目语言的经历：
   - Rust 越来越复杂，有种发展成 C++ 的趋势
   - C++ 新版本的特性（比如 module）LSP 支持的不够好，而且历史包袱严重
   - C 缺少元编程，并且没有命名空间
@@ -16,5 +17,47 @@
   - 与 C 无缝交换，
   - 具有 Result 效果的错误处理
   - 唯一缺失的就是『接口』，但这一点并不是很关键，就像在 C里也没有，但是 C 可以做任何事
+* [[https://andrewkelley.me/post/zig-new-cli-progress-bar-explained.html][Zig's New CLI Progress Bar Explained]]
+Andrew 的一篇文章，讲述了在最新版的 Zig 中，对进度条的改进实现，现在的进度展示更加友好。
+
+实现的难点在于在多线程环境下，如何保证高性能，文章中大致讲述了其实现：
+- 首先通过预先分配好需要使用的结构，保证后续无需在进行 heap 申请
+- 通过 atomic 操作来实现一个无锁的 freelist，用于申请、释放 Node
+* [[https://www.openmymind.net/Writing-a-Task-Scheduler-in-Zig/][Writing a task scheduler in Zig]]
+Openmymind 作者的又一力作，通过编写一个任务调度器，讲述了多线程编程的基本要领：
+- 共享的数据要加锁
+- 条件变量要和锁一起使用，会有[[https://en.wikipedia.org/wiki/Spurious_wakeup][惊群效应]]，因此在被唤醒时，需要重新检查状态是否正确。
+  #+begin_src zig
+fn run(self: *Self) void {
+  while (true) {
+    self.mutex.lock();
+    while (self.queue.peek() == null) {
+      self.cond.wait(&self.mutex);
+    }
+    // TODO
+  }
+}
+  #+end_src
+  它会在 wait 前释放锁，在 wait 返回时先加锁，类似下面的实现：
+  #+begin_src zig
+fn wait(c: *std.Thread.Condition, mutex: *std.Thread.Mutex) void {
+  // do some setup
+  // ...
+
+  mutex.unlock();
+
+  // whatever happens, we'll always return with this locked
+  defer mutex.lock();
+
+  // wait for signal
+  // or timeout if calling timedWait
+  // ...
+}
+  #+end_src
 * 项目/工具
+- [[https://github.com/chung-leong/zigar][zigar]] :: Enable the use of Zig code in JavaScript project。它可以让你直接在 JS 中调用 zig 代码，背后原理是编译成了 wasm 实现的。
+- [[https://github.com/srijan-paul/nez][srijan-paul/nez]] :: An emulator for the NES console.
+- [[https://github.com/deckarep/ziglang-set][deckarep/ziglang-set]] :: A generic and general purpose Set implementation for the Zig language
+- [[https://github.com/akarpovskii/tuile][akarpovskii/tuile]] :: A Text UI library for Zig
+
 * [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-05-01..2024-06-01][Zig 语言更新]]

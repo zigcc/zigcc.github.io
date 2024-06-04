@@ -1,6 +1,6 @@
 #+TITLE: 202405
 #+DATE: 2024-06-02T22:18:59+0800
-#+LASTMOD: 2024-06-03T23:05:49+0800
+#+LASTMOD: 2024-06-04T19:26:01+0800
 
 * 观点/教程
 ** [[https://arne.me/blog/thoughts-on-zig][Thoughts on Zig]]
@@ -26,7 +26,7 @@ Andrew 的一篇文章，讲述了在最新版的 Zig 中，对进度条的改�
 * [[https://www.openmymind.net/Writing-a-Task-Scheduler-in-Zig/][Writing a task scheduler in Zig]]
 Openmymind 作者的又一力作，通过编写一个任务调度器，讲述了多线程编程的基本要领：
 - 共享的数据要加锁
-- 条件变量要和锁一起使用，会有[[https://en.wikipedia.org/wiki/Spurious_wakeup][惊群效应]]，因此在被唤醒时，需要重新检查状态是否正确。
+- 条件变量要和锁一起使用，会有[[https://en.wikipedia.org/wiki/Spurious_wakeup][虚假唤醒]]的问题，因此在被唤醒时，需要重新检查状态是否正确。
   #+begin_src zig
 fn run(self: *Self) void {
   while (true) {

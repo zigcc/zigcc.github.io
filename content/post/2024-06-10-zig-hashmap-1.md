@@ -1,14 +1,14 @@
 ---
-title: "Zig HashMap - 1"
+title: "HashMap 原理介绍上篇"
 author: Wenxuan Feng
 date: 2024-06-10T07:57:05.138Z
 ---
 
 > 原文地址: https://www.openmymind.net/Zigs-HashMap-Part-1/
 
-# 引言
+## 引言
 
-> 这篇文章的前提是了解 [Zig 的范型实现](https://www.openmymind.net/learning_zig/generics/)
+> 阅读这篇文章的前提是了解 [Zig 的范型实现](https://www.openmymind.net/learning_zig/generics/)
 
 如大多数哈希映射实现一样，Zig 的 `std.HashMap` 依赖于两个函数：`hash(key: K) u64` 和 `eql(key_a: K, key_b: K) bool`。其中，哈希函数接收一个键并返回一个无符号的64位整数作为哈希码。相同的关键字总是会返回相同的哈希码。然而，为了处理不同的键可能生成相同哈希码的情况（即碰撞），我们还需要 `eql` 函数来确定两个键是否相等。
 

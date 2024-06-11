@@ -6,17 +6,17 @@ date: 2024-06-10T07:57:05.138Z
 
 > 原文地址: https://www.openmymind.net/Zigs-HashMap-Part-1/
 
-# 前言
+# 引言
 
-> 本文的前提是您认同 [Zig 的范型实现](https://www.openmymind.net/learning_zig/generics/)
+> 这篇文章的前提是了解 [Zig 的范型实现](https://www.openmymind.net/learning_zig/generics/)
 
-如大多数哈希映射实现一样，Zig 的 `std.HashMap` 依赖于两个函数，`hash(key: K) u64` 和 `eql(key_a: K, key_b: K) bool`。哈希函数接受一个键并返回一个无符号的 64 位整数，称为哈希码。相同的键总是返回相同的哈希码。但哈希函数可以为两个不同的键生成相同的哈希码，这就是我们还需要 `eql` 函数的一个原因：用来确定两个键是否相同。
+如大多数哈希映射实现一样，Zig 的 `std.HashMap` 依赖于两个函数：`hash(key: K) u64` 和 `eql(key_a: K, key_b: K) bool`。其中，哈希函数接收一个键并返回一个无符号的64位整数，称为哈希码。相同的关键字总是会返回相同的哈希码。然而，为了处理不同的键可能生成相同哈希码的情况（即碰撞），我们还需要 `eql` 函数来确定两个键是否相等。
 
-这些都是标准的操作，但是 Zig 的实现有一些具体的细节值得探讨。鉴于标准库中哈希映射类型的数量以及文档似乎不完整且令人困惑，这一点尤其正确。具体来说，有六种哈希映射变体：`std.HashMap`、`std.HashMapUnmanaged`、`std.AutoHashMap`、`std.AutoHashMapUnmanaged`、`std.StringHashMap`、`std.StringHashMapUnmanaged`。另外五种是简单的封装：它们都是基于 `std.HashMapUnmanaged` 来构建的。由于这种构成方式，这五种变体的文档编写相对较为复杂，我认为文档生成器在处理这种情况时做得并不好，所以阅读起来具有挑战性。
+这是一些标准做法，但Zig的实现有一些特定的细节值得关注。尤其是考虑到标准库中包含多种哈希映射类型以及文档似乎不完整且令人困惑这一点。具体来说，有六种哈希映射变体：`std.HashMap`, `std.HashMapUnmanaged`, `std.AutoHashMap`, `std.AutoHashMapUnmanaged`, `std.StringHashMap`, 和 `std.StringHashMapUnmanaged`。
 
-> 还有一个完全不同的 `ArrayHashMap`，它具有不同的属性（例如保留插入顺序），我们在这里不会涉及。
+`std.HashMapUnmanaged`包含了实现的主要部分。其他五个都是对它简单的包装。由于这些变体是通过一个名为“unmanaged”的字段进行包装的，因此这五种类型的文档处理不清晰。
 
-如果我们查看 `std.HashMap` 的 `put` 方法，我们会看到一个经常重复的模式：
+如果查看 `std.HashMap` 的 `put` 方法，会发现一个经常重复的应用模式：
 
 ```Zig
 pub fn put(self: *Self, key: K, value: V) Allocator.Error!void {

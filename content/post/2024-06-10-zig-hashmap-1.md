@@ -4,10 +4,6 @@ author: Wenxuan Feng
 date: 2024-06-10T07:57:05.138Z
 ---
 
-> 原文地址: https://www.openmymind.net/Zigs-HashMap-Part-1/
-
-# 引言
-
 > 阅读这篇文章的前提是了解 [Zig 的范型实现](https://www.openmymind.net/learning_zig/generics/)
 
 如大多数哈希映射实现一样，Zig 的 `std.HashMap` 依赖于两个函数：`hash(key: K) u64` 和 `eql(key_a: K, key_b: K) bool`。其中，哈希函数接收一个键并返回一个无符号的64位整数作为哈希码。相同的关键字总是会返回相同的哈希码。然而，为了处理不同的键可能生成相同哈希码的情况（即碰撞），我们还需要 `eql` 函数来确定两个键是否相等。
@@ -384,3 +380,5 @@ pub fn hash(_: HashContext, u: User) u64 {
 希望你现在对 Zig 的哈希表的实现以及如何在代码中利用它们有了更好的理解。在大多数情况下，`std.StringHashMap` 或 `std.AutoHashMap` 就足够了。但知道 `*Unmanaged` 变体的存在和目的，以及更通用的 `std.HashMap`，可能会派上用场。如果没有其他用途，现在文档和它们的实现应该更容易理解了。
 
 在下一部分，我们将深入探讨哈希表的键和值，它们是如何存储和管理的。
+
+> 原文地址: https://www.openmymind.net/Zigs-HashMap-Part-1/

@@ -156,4 +156,4 @@ fn run(worker: *Worker) void {
 
 这个示例应该能突出显示我认为明确的分配器提供的两个实际优势：
 1. 简化资源管理（通过类似`ArenaAllocator`的方式）
-2. 通过重用分配来提高性能
+2. 通过重用分配来提高性能（例如我们之前在 `retain_with_limit` 或 `FixedBufferAllocator` 时所做的一样）

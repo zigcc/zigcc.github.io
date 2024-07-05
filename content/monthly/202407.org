@@ -1,0 +1,33 @@
+#+TITLE: 202407
+#+DATE: 2024-07-05T21:22:52+0800
+#+LASTMOD: 2024-07-05T21:33:20+0800
+#+DRAFT: true
+
+* 重大事件
+* 观点/教程
+** [[https://kristoff.it/blog/improving-your-zls-experience/][Improving Your Zig Language Server Experience]]
+ Loris Cro 的最新文章，介绍了一个改进 Zig 编码体验的小技巧，十分推荐大家使用。具体来说是这样的：
+ 通过配置 zls，达到保存文件时，自动进行源码检查。
+ #+begin_src js
+{
+  "enable_build_on_save": true,
+  "build_on_save_step": "check"
+}
+ #+end_src
+ 对 zls 做如上配置后（配置文件可以通过 =zls --show-config-path= 查看 ），zls 就会在保存时，自动执行 =zig build check= ，这个 =check= 一般来说是这样的：
+ #+begin_src zig
+const exe_check = b.addExecutable(.{
+    .name = "foo",
+    .root_source_file = b.path("src/main.zig"),
+    .target = target,
+    .optimize = optimize,
+});
+
+const check = b.step("check", "Check if foo compiles");
+check.dependOn(&exe_check.step);
+ #+end_src
+ 由于 Zig 目前的一个 bug（[[https://github.com/ziglang/zig/issues/18877][#18877]]），这个 =exe_check= 不能作为 install、run 的依赖，否则在编译时，就不会增加 =-fno-emit-bin= 选项。
+
+ 而这个选项的作用就是让 Zig 来分析我们的代码，但是不会调用 LLVM 来生成最终的二进制文件，因此速度会比较快。
+* 项目/工具
+* [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-07-01..2024-08-01][Zig 语言更新]]

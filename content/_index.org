@@ -1,6 +1,6 @@
 #+TITLE: Zig 语言中文社区
 #+DATE: 2022-07-20T12:42:38+0800
-#+LASTMOD: 2024-06-16T13:35:54+0800
+#+LASTMOD: 2024-07-08T15:21:19+0800
 
 {{< figure src="https://ziglang.cc/logo/zigcc-logo-2.svg" height="300px" >}}
 
@@ -32,13 +32,16 @@ Zig Chinese Community is dedicated to sharing and spreading the use of Zig langu
 - 邮件：[[mailto:hello@ziglang.cc][hello@ziglang.cc]]
 - https://discord.gg/UraRxD6WXD
 * 学习资料
-由于 Zig 目前还处于快速迭代，因此最权威的资料无疑是官方的 [[https://ziglang.org/documentation/master/][Zig Language Reference]]，遇到语言的细节问题，基本都可以在这里找到答案。其次是社区的一些高质量教程，例如：
+由于 Zig 目前还处于快速迭代，因此最权威的资料无疑是官方的 [[https://ziglang.org/documentation/master/][Zig Language Reference]]，遇到语言的细节问题，基本都可以在这里找到答案。
+其次是社区的一些高质量教程，例如：
 - [[https://ziglang.cc/learning-zig/][学习 Zig]] :: 该系列教程最初由 Karl Seguin 编写，该教程行文流畅，讲述的脉络由浅入深，深入浅出，是入门 Zig 非常不错的选择
-- [[https://ziglang.cc/zig-course/][Zig 语言圣经]] :: 一部全面而深入介绍 Zig 编程语言的权威指南
+- [[https://course.ziglang.cc][Zig 语言圣经]] :: 一份内容全面、深入浅出介绍 Zig 的教程
 - [[https://codeberg.org/ziglings/exercises/][ziglings/exercises]] :: Learn the Zig programming language by fixing tiny broken programs.
-- [[https://ziglang.cc/zig-cookbook/][Zig Cookbook]] :: A collection of simple Zig programs that demonstrate good practices to accomplish common programming tasks
-- [[https://github.com/zigcc/zig-idioms][zigcc/zig-idioms]] :: Common idioms used in Zig
+- [[https://cookbook.ziglang.cc/][Zig Cookbook]] :: A collection of simple Zig programs that demonstrate good practices to accomplish common programming tasks
 - [[https://github.com/zigcc/awesome-zig][zigcc/awesome-zig]] :: A collection of some awesome public Zig programming language projects.
+- [[https://github.com/zigcc/zig-idioms][zigcc/zig-idioms]] :: Common idioms used in Zig
+
+推荐使用 asdf 来安装 Zig，具体可参考[[/post/2023/10/14/zig-version-manager/][这里]]。
 * 更新日志
 - 2024-03-29 :: 使用自定义域名 ziglang.cc
 - 2022-12-10 :: 切换主题 [[https://github.com/zwbetz-gh/cupper-hugo-theme][cupper-hugo]] --> [[https://github.com/yihui/hugo-xmin][hugo-xmin]]

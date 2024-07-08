@@ -1,6 +1,6 @@
 #+TITLE: Zig 多版本管理
 #+DATE: 2023-10-14T09:23:41+0800
-#+LASTMOD: 2024-04-06T16:13:47+0800
+#+LASTMOD: 2024-07-08T15:17:05+0800
 #+TAGS[]: zig
 #+CATEGORIES[]: 编程语言
 
@@ -13,7 +13,7 @@
 - [[https://github.com/hendriknielaender/zvm][hendriknielaender/zvm]] :: Fast and simple zig version manager
 
 他们工作方式类似，大致步骤：
-1. 从 https://ziglang.org/download/index.json 这个链接中解析所有版本，然后根据当前系统架构确定要安装的二进制，
+1. 从 [[https://ziglang.org/download/index.json][index.json]] 解析所有版本，然后根据当前系统架构确定要安装的二进制，
 2. 创建一个类似 =current= 软链用来表示当前的 Zig 安装目录，
 3. 根据项目下 =.zig-version= 文件中指定的版本，修改 =current= 软链的指向，保证 =PATH= 中的 Zig 版本是正确的
 

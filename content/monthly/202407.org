@@ -1,6 +1,6 @@
 #+TITLE: 202407
 #+DATE: 2024-07-05T21:22:52+0800
-#+LASTMOD: 2024-07-08T15:25:05+0800
+#+LASTMOD: 2024-07-10T22:08:58+0800
 #+DRAFT: true
 
 * 重大事件
@@ -35,5 +35,12 @@ check.dependOn(&exe_check.step);
 zls --config-path zls.json
 #+end_src
 这样不同的项目就可以用不同的检查步骤了。
+** [[https://guergabo.substack.com/p/systems-distributed-24][Systems Distributed '24]]
+作者对这次会议的一个回顾总结，议题主要有如下几个方向：
+- Systems Thinking and Engineering Culture
+- The Rise of New Software Abstractions
+- Ensuring Safe and Correct Software
+- Lessons from Building Distributed Databases
+- Notes from Water Cooler Chats
 * 项目/工具
 * [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-07-01..2024-08-01][Zig 语言更新]]

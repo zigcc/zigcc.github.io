@@ -1,19 +1,12 @@
 #+TITLE: Zig 语言中文社区
 #+DATE: 2022-07-20T12:42:38+0800
-#+LASTMOD: 2024-07-08T15:21:19+0800
+#+LASTMOD: 2024-07-14T10:08:59+0800
 
 {{< figure src="https://ziglang.cc/logo/zigcc-logo-2.svg" height="300px" >}}
 
-#+begin_quote
-Zig Chinese Community is dedicated to sharing and spreading the use of Zig language among Chinese users.
-
-[[https://ziglang.org/][Zig]] 语言中文社区（Zig Chinese Community，简称：ZigCC），致力于分享、传播 Zig 语言在中文用户内的使用。
-
-[[/post/2023/09/05/hello-world/][欢迎 Zig 爱好者向本网站供稿]]
-#+end_quote
-
-
 #+BEGIN_EXPORT html
+<center>
+<p>欢迎来到 Zig 语言中文社区！（Zig Chinese Community，简称：ZigCC）</p>
 <a href="https://discord.gg/UraRxD6WXD">
 <img src="https://img.shields.io/discord/1155469703846834187?label=Chat at Discord" />
 </a>
@@ -23,26 +16,56 @@ Zig Chinese Community is dedicated to sharing and spreading the use of Zig langu
 <a href="https://ask.ziglang.cc/atom.xml">
 <img src="https://img.shields.io/badge/rss-F88900.svg?style=flat&logo=RSS&logoColor=white&label=论坛" />
 </a>
+</center>
 #+END_EXPORT
 
-* 联系方式
-- 微信公众号
-{{< figure src="https://github.com/zigcc/.github/raw/main/zig_mp.png" height="130" title="Zig 公众号二维码" >}}
-- 微信群：关注公众号获取
-- 邮件：[[mailto:hello@ziglang.cc][hello@ziglang.cc]]
-- https://discord.gg/UraRxD6WXD
+
+我们是一群对 Zig 编程语言充满热情的开发者、学习者和爱好者。我们致力于：
+1. 分享 Zig 相关的知识和经验
+2. 翻译 Zig 官方文档和重要资源
+3. 组织线上线下的学习活动和讨论
+4. 推广 Zig 语言在中文开发者中的应用
+
+#+begin_quote
+Zig Chinese Community is dedicated to sharing and spreading the use of Zig language among Chinese users.
+#+end_quote
+
+* 加入我们
+无论你是 Zig 专家还是初学者，我们都欢迎你的加入！可以通过以下方式参与社区:
+- 加入我们的在线讨论群：[[https://github.com/orgs/zigcc/discussions/134][微信群]]、[[https://discord.gg/UraRxD6WXD][Discord]]、[[https://t.me/ZigChinese][Telegram]]
+- 分享你的 Zig 项目和经验（[[/post/2023/09/05/hello-world/][供稿方式]]）。会在[[https://github.com/zigcc/.github/blob/main/zig_mp.png][微信公众号]]中同步。
+- 参加我们组织的线上线下活动
+
+让我们一起探索 Zig 的魅力,推动 Zig 在中文开发者社区的发展!
+
+有任何疑问、建议，欢迎通过邮件与我们交流：[[mailto:hello@ziglang.cc][hello@ziglang.cc]]
 * 学习资料
 由于 Zig 目前还处于快速迭代，因此最权威的资料无疑是官方的 [[https://ziglang.org/documentation/master/][Zig Language Reference]]，遇到语言的细节问题，基本都可以在这里找到答案。
 其次是社区的一些高质量教程，例如：
+- [[https://zig.guide/][Zig Guide]] :: 英文资料， [[https://github.com/Sobeston][Sobeston]] 用户编写
 - [[https://ziglang.cc/learning-zig/][学习 Zig]] :: 该系列教程最初由 Karl Seguin 编写，该教程行文流畅，讲述的脉络由浅入深，深入浅出，是入门 Zig 非常不错的选择
 - [[https://course.ziglang.cc][Zig 语言圣经]] :: 一份内容全面、深入浅出介绍 Zig 的教程
 - [[https://codeberg.org/ziglings/exercises/][ziglings/exercises]] :: Learn the Zig programming language by fixing tiny broken programs.
 - [[https://cookbook.ziglang.cc/][Zig Cookbook]] :: A collection of simple Zig programs that demonstrate good practices to accomplish common programming tasks
-- [[https://github.com/zigcc/awesome-zig][zigcc/awesome-zig]] :: A collection of some awesome public Zig programming language projects.
-- [[https://github.com/zigcc/zig-idioms][zigcc/zig-idioms]] :: Common idioms used in Zig
+- [[https://github.com/zigcc/awesome-zig][Awesome Zig]] :: A collection of some awesome public Zig programming language projects.
 
-推荐使用 asdf 来安装 Zig，具体可参考[[/post/2023/10/14/zig-version-manager/][这里]]。
+最后，推荐使用版本管理工具 [[/post/2023/10/14/zig-version-manager/][asdf]] 来安装 Zig，具体步骤：
+#+begin_src bash
+git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
+cat <<'EOF' >> $HOME/.bashrc
+source "$HOME/.asdf/asdf.sh"
+source "$HOME/.asdf/completions/asdf.bash"
+EOF
+
+asdf plugin-add zig https://github.com/zigcc/asdf-zig.git
+
+# 安装最新版
+asdf install zig latest
+asdf global zig latest
+zig version
+#+end_src
 * 更新日志
+- 2024-07-14 :: 启用 Zig 社区微信 2 群
 - 2024-03-29 :: 使用自定义域名 ziglang.cc
 - 2022-12-10 :: 切换主题 [[https://github.com/zwbetz-gh/cupper-hugo-theme][cupper-hugo]] --> [[https://github.com/yihui/hugo-xmin][hugo-xmin]]
 - 2022-07-20 :: 首次上线

@@ -1,9 +1,22 @@
-#+TITLE: 202407
+#+TITLE: 202407 | 为什么 Zig 是最热门的编程语言之一
 #+DATE: 2024-07-05T21:22:52+0800
-#+LASTMOD: 2024-07-10T22:08:58+0800
+#+LASTMOD: 2024-07-30T22:08:56+0800
 #+DRAFT: true
 
 * 重大事件
+在[[https://leaddev.com/tech/why-zig-one-hottest-programming-languages-learn][这篇文章]]里，作者引用 Stackoverflow 2024 年的[[https://survey.stackoverflow.co/2024/technology][调查报告]]，指出 Zig 语言是最热门的编程语言之一，并且 Zig 开发者的薪水都很高，平均年收入为75,332美元！
+
+尽管使用 Zig 语言的开发者仅占调查人数的 1%，但上升趋势明显。Zig 语言的倡导者、自由和开放源码软件开发者 Ali Cheragi 说：
+#+begin_quote
+Zig 的魅力在于它的简洁性、现代设计以及在底层控制和运行时安全性之间取得的平衡。
+#+end_quote
+
+Zig 开发者的一些观点：
+- 我选择 Zig 作为我的日常用语，是因为它独特的功能和目标组合。我被 Zig 的安全性所吸引，因为它可以让我控制最底层的部件。
+- 与许多其他语言不同，Zig 可以与现有的 C 代码实现真正的无缝互操作。出于多种原因，这一点至关重要。
+- Zig 正在对大量编程基础架构进行彻底改造，而这些基础架构在过去 40 年里无人敢碰。
+  C 和 C++ 是著名的核心编程语言，在这两种语言中，你可以完全控制硬件。 但与此同时，这些语言的工具链却非常糟糕。 Zig 允许用户涉猎这些核心编程语言，但可以使用更好的工具链，兼容各种语言和更丰富的功能。
+
 * 观点/教程
 ** [[https://kristoff.it/blog/improving-your-zls-experience/][Improving Your Zig Language Server Experience]]
  Loris Cro 的最新文章，介绍了一个改进 Zig 编码体验的小技巧，十分推荐大家使用。具体来说是这样的：
@@ -42,5 +55,64 @@ zls --config-path zls.json
 - Ensuring Safe and Correct Software
 - Lessons from Building Distributed Databases
 - Notes from Water Cooler Chats
+** [[https://jstrieb.github.io/posts/c-reflection-zig/][C Macro Reflection in Zig – Zig Has Better C Interop Than C Itself]]
+该作者分享了利用 typeInfo 来在编译时获取字段名的能力，要知道，在 C 里面是没有这个功能的。
+#+begin_src zig
+pub export fn WindowProc(hwnd: win32.HWND, uMsg: c_uint, wParam: win32.WPARAM, lParam: win32.LPARAM) callconv(windows.WINAPI) win32.LRESULT {
+    // Handle each type of window message we care about
+    _ = switch (uMsg) {
+        win32.WM_CLOSE => win32.DestroyWindow(hwnd),
+        win32.WM_DESTROY => win32.PostQuitMessage(0),
+        else => {
+            stdout.print("Unknown window message: 0x{x:0>4}\n", .{uMsg}) catch undefined;
+        },
+    };
+    return win32.DefWindowProcA(hwnd, uMsg, wParam, lParam);
+}
+
+#+end_src
+上面这个函数是 Window 编写窗口应用时用到的回调函数，Window 操作系统会把用户触发的事件通过 =uMsg= 传递过来，为了能够从一个数字，找对对应的名字，在 Zig 里面可以用如下函数实现：
+#+begin_src zig
+// The WM_* macros have values less than 65536, so an array of that size can
+// represent all of them
+fn get_window_messages() [65536][:0]const u8 {
+    var result: [65536][:0]const u8 = undefined;
+    @setEvalBranchQuota(1000000);
+    // Loop over all struct fields and match against the expected prefix
+    for (@typeInfo(win32).Struct.decls) |field| {
+        if (field.name.len >= 3 and std.mem.eql(u8, field.name[0..3], "WM_")) {
+            const value = @field(win32, field.name);
+            result[value] = field.name;
+        }
+    }
+    // We return by value here, not by reference, so this is safe to do
+    return result;
+}
+#+end_src
+** [[https://effectivetypescript.com/2024/07/17/advent2023-zig/][A TypeScripter's Take on Zig (Advent of Code 2023)]]
+以下该作者的一些心得体会：
+
+- Zig 没有 scanf 等价物，正则表达式也不方便。因此，对于解析输入，它是拆分、拆分、拆分。最后，我分解出了一些 splitIntoBuf 和提取 IntsIntoBuf 帮助程序，这些帮助程序可以很快地读取大多数问题的输入。
+- Zig 支持所有大小的 int，一直到 u65536。如果出现溢出，请尝试使用更大的整数类型。我在一些问题上使用了 u128和 i128。
+- StringToEnum 是解析受限制的字符串或字符集的一个简单技巧。
+- 可以在结构上定义一个 format 方法，使它们按照您的喜好打印。
+- 尽量避免将字符串复制到 StringHashMap 中用作键。从 JS 发出这样的命令感觉很自然，但是在 Zig 中会很尴
+  尬，因为您需要跟踪这些字符串以便稍后释放它们。如果您可以将您的键放入一个结构或元组中，那将会工作得
+  更好，因为它们具有值语义。如果需要字符串，可以使用切片。
+- 注意数值范围的错误。如果你想包含 max，它是 =min..(max + 1)= ，而不是 =min..max= 。
+- 代码中将有大量的@intCast。
+- 我发现奇怪的是 Zig 有一个内置的 PriorityQueue，但是没有内置的 Queue，可以用 =std.SinglyLinkedList= 替代
+- 用于处理字符串的许多函数都在 std.mem 中，例如 std.mem.eql 和 std.mem.startsWith
+- 使用 std.met.eql 比较 structs，而不是 ~=~
+- 有一个按偏移量和长度切片的技巧: =array [start..][0..length]=
+- 记忆函数通常是很有用的。我不知道 Zig 有没有通用的方法
+- 调试构建比优化构建慢得多，有时候慢10倍。如果你在一个合理的时间内得到一个答案的10倍之内，尝试一个不同的发布模式。
+- 迭代时不要对数组列表进行修改
+- 在 JavaScript 允许您内联表达式的某些情况下，您可能需要分解出一个变量来澄清生存期。看看[[https://github.com/ziglang/zig/issues/12414][这个问题]]。
+
+
 * 项目/工具
+- [[https://github.com/18alantom/fex][18alantom/fex]] :: A command-line file explorer prioritizing quick navigation.
+- [[https://github.com/griush/zm][griush/zm]] :: SIMD Math library fully cross-platform
+
 * [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-07-01..2024-08-01][Zig 语言更新]]

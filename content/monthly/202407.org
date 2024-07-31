@@ -1,7 +1,6 @@
-#+TITLE: 202407 | 为什么 Zig 是最热门的编程语言之一
+#+TITLE: 202407 | Zig 成为最热门的编程语言
 #+DATE: 2024-07-05T21:22:52+0800
-#+LASTMOD: 2024-07-30T22:08:56+0800
-#+DRAFT: true
+#+LASTMOD: 2024-07-31T21:57:13+0800
 
 * 重大事件
 在[[https://leaddev.com/tech/why-zig-one-hottest-programming-languages-learn][这篇文章]]里，作者引用 Stackoverflow 2024 年的[[https://survey.stackoverflow.co/2024/technology][调查报告]]，指出 Zig 语言是最热门的编程语言之一，并且 Zig 开发者的薪水都很高，平均年收入为75,332美元！

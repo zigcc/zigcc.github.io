@@ -1,6 +1,6 @@
 #+TITLE: Zig 语言中文社区
 #+DATE: 2022-07-20T12:42:38+0800
-#+LASTMOD: 2024-07-14T10:08:59+0800
+#+LASTMOD: 2024-08-03T17:00:24+0800
 
 {{< figure src="https://ziglang.cc/logo/zigcc-logo-2.svg" height="300px" >}}
 
@@ -34,7 +34,7 @@ Zig Chinese Community is dedicated to sharing and spreading the use of Zig langu
 无论你是 Zig 专家还是初学者，我们都欢迎你的加入！可以通过以下方式参与社区:
 - 加入我们的在线讨论群：[[https://github.com/orgs/zigcc/discussions/134][微信群]]、[[https://discord.gg/UraRxD6WXD][Discord]]、[[https://t.me/ZigChinese][Telegram]]
 - 分享你的 Zig 项目和经验（[[/post/2023/09/05/hello-world/][供稿方式]]）。会在[[https://github.com/zigcc/.github/blob/main/zig_mp.png][微信公众号]]中同步。
-- 参加我们组织的线上线下活动
+- 参加我们组织的线上线下活动，[[/news][这里]]有活动日历。
 
 让我们一起探索 Zig 的魅力,推动 Zig 在中文开发者社区的发展!
 

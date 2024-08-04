@@ -1,6 +1,6 @@
 #+TITLE: Zig 语言中文社区
 #+DATE: 2022-07-20T12:42:38+0800
-#+LASTMOD: 2024-08-03T17:00:24+0800
+#+LASTMOD: 2024-08-04T08:56:04+0800
 
 {{< figure src="https://ziglang.cc/logo/zigcc-logo-2.svg" height="300px" >}}
 
@@ -39,31 +39,6 @@ Zig Chinese Community is dedicated to sharing and spreading the use of Zig langu
 让我们一起探索 Zig 的魅力,推动 Zig 在中文开发者社区的发展!
 
 有任何疑问、建议，欢迎通过邮件与我们交流：[[mailto:hello@ziglang.cc][hello@ziglang.cc]]
-* 学习资料
-由于 Zig 目前还处于快速迭代，因此最权威的资料无疑是官方的 [[https://ziglang.org/documentation/master/][Zig Language Reference]]，遇到语言的细节问题，基本都可以在这里找到答案。
-其次是社区的一些高质量教程，例如：
-- [[https://zig.guide/][Zig Guide]] :: 英文资料， [[https://github.com/Sobeston][Sobeston]] 用户编写
-- [[https://ziglang.cc/learning-zig/][学习 Zig]] :: 该系列教程最初由 Karl Seguin 编写，该教程行文流畅，讲述的脉络由浅入深，深入浅出，是入门 Zig 非常不错的选择
-- [[https://course.ziglang.cc][Zig 语言圣经]] :: 一份内容全面、深入浅出介绍 Zig 的教程
-- [[https://codeberg.org/ziglings/exercises/][ziglings/exercises]] :: Learn the Zig programming language by fixing tiny broken programs.
-- [[https://cookbook.ziglang.cc/][Zig Cookbook]] :: A collection of simple Zig programs that demonstrate good practices to accomplish common programming tasks
-- [[https://github.com/zigcc/awesome-zig][Awesome Zig]] :: A collection of some awesome public Zig programming language projects.
-
-最后，推荐使用版本管理工具 [[/post/2023/10/14/zig-version-manager/][asdf]] 来安装 Zig，具体步骤：
-#+begin_src bash
-git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
-cat <<'EOF' >> $HOME/.bashrc
-source "$HOME/.asdf/asdf.sh"
-source "$HOME/.asdf/completions/asdf.bash"
-EOF
-
-asdf plugin-add zig https://github.com/zigcc/asdf-zig.git
-
-# 安装最新版
-asdf install zig latest
-asdf global zig latest
-zig version
-#+end_src
 * 更新日志
 - 2024-07-14 :: 启用 Zig 社区微信 2 群
 - 2024-03-29 :: 使用自定义域名 ziglang.cc

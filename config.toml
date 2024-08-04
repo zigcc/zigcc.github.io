@@ -8,8 +8,12 @@ title = 'Zig 语言中文社区'
   weight = 10
   url = "/"
 [[menu.main]]
-  name = "日报"
+  name = "学习"
   weight = 11
+  url = "/learn"
+[[menu.main]]
+  name = "日报"
+  weight = 15
   url = "https://github.com/zigcc/forum/issues"
 [[menu.main]]
   name = "月刊"
@@ -27,10 +31,6 @@ title = 'Zig 语言中文社区'
   name = "论坛"
   weight = 30
   url = "https://ask.ziglang.cc"
-# [[menu.main]]
-#   name = "Tags"
-#   weight = 3
-#   url = "/tags"
 # [[menu.main]]
 #   name = "关于"
 #   weight = 4

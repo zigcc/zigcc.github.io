@@ -24,8 +24,7 @@ description = 'Zig 语言中文社区'
 [params]
   github_repo = "https://github.com/zigcc/zigcc.github.io"
   offlineSearch = true
-  dateFormat = "Jan 2, 2006"
-  twitterCardEnabled = true
+  time_format_blog = "2006-01-02"
   [params.giscus]
     repo = "zigcc/zigcc.github.io"
     repoId = "R_kgDOHr7nSg"
@@ -88,7 +87,7 @@ showLightDarkModeMenu = true
   desc = "我们会定期举行线上会议，畅聊 Zig 中的一切"
 
 [module]
-proxy = "https://goproxy.cn,direct"
+proxy = "direct,https://goproxy.cn"
   [[module.imports]]
     path = "github.com/google/docsy"
 

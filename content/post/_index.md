@@ -4,5 +4,5 @@ type: blog
 cascade:
 - type: blog
   _target:
-  path: "/**"
+    path: "/**"
 ---

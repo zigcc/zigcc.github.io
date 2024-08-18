@@ -1,7 +1,8 @@
 #+TITLE: ZigCC 第三次线上会议
 #+DATE: 2024-01-14T09:20:41+0800
-#+LASTMOD: 2024-01-14T11:31:40+0800
+#+LASTMOD: 2024-08-18T12:01:56+0800
 #+AUTHOR: 西瓜
+#+TAGS[]: community
 
 在 2024-01-13 晚，ZigCC 社区举行了第三次线上会议，参会人员：
 - [[https://github.com/jiacai2050/][西瓜]]

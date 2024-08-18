@@ -30,7 +30,7 @@ jobs:
           submodules: recursive
       - uses: peaceiris/actions-hugo@v2
         with:
-          hugo-version: "0.111.3"
+          hugo-version: "latest"
           extended: true
       - name: Setup Pages
         id: pages
@@ -41,6 +41,8 @@ jobs:
           HUGO_ENVIRONMENT: production
           HUGO_ENV: production
         run: |
+          npm i -D postcss postcss-cli autoprefixer
+          hugo mod get
           hugo \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/"

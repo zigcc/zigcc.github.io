@@ -1,6 +1,7 @@
 #+TITLE: 0.12.0 Release Party 回顾
 #+DATE: 2024-04-28T09:53:45+0800
-#+LASTMOD: 2024-04-28T10:53:13+0800
+#+LASTMOD: 2024-08-18T12:03:29+0800
+#+TAGS[]: community
 #+AUTHOR: Jiacai Liu
 
 2024-04-20，0.12.0 终于发布了，历时 8 个月，有 268 位贡献者，一共进行了 3688 次提交！下面是它的 Release notes：

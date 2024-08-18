@@ -1,6 +1,12 @@
 #+TITLE: 学习 Zig
 #+DATE: 2024-08-04T08:51:07+0800
-#+LASTMOD: 2024-08-04T08:55:33+0800
+#+LASTMOD: 2024-08-18T11:48:26+0800
+{{% blocks/cover title="学习 Zig" image_anchor="bottom" height="auto" %}}
+
+
+{{% /blocks/cover %}}
+
+{{% blocks/section %}}
 
 * 资料
 由于 Zig 目前还处于快速迭代，因此最权威的资料无疑是官方的 [[https://ziglang.org/documentation/master/][Zig Language Reference]]，遇到语言的细节问题，基本都可以在这里找到答案。
@@ -29,3 +35,12 @@ asdf install zig latest
 asdf global zig latest
 zig version
 #+end_src
+
+{{% /blocks/section %}}
+
+{{% blocks/section %}}
+
+# This is another section
+{.text-center}
+
+{{% /blocks/section %}}

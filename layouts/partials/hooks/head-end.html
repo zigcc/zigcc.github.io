@@ -1,0 +1,10 @@
+<script>
+  fetch("https://en.liujiacai.net/pv/write?" + new URLSearchParams({
+    ns: "EN-BLOG",
+    url: document.location.href,
+    title: document.title,
+    referrer: window.frames.top.document.referrer
+  }), {
+    mode: "no-cors"
+  }).catch(console.log);
+</script>

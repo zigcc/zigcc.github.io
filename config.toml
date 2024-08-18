@@ -2,48 +2,29 @@ baseURL = 'https://ziglang.cc'
 languageCode = 'en'
 defaultContentLanguage = 'zh-cn'
 title = 'Zig 语言中文社区'
+description = 'Zig 语言中文社区'
 
-[[menu.main]]
-  name = "主页"
-  weight = 10
-  url = "/"
 [[menu.main]]
   name = "学习"
   weight = 11
   url = "/learn"
 [[menu.main]]
-  name = "日报"
-  weight = 15
-  url = "https://github.com/zigcc/forum/issues"
-[[menu.main]]
   name = "月刊"
   weight = 20
   url = "/monthly"
 [[menu.main]]
-  name = "文章"
+  name = "博客"
   weight = 21
   url = "/post"
 [[menu.main]]
-  name = "新闻"
-  weight = 22
-  url = "/news"
-[[menu.main]]
-  name = "论坛"
-  weight = 30
-  url = "https://ask.ziglang.cc"
-# [[menu.main]]
-#   name = "关于"
-#   weight = 4
-#   url = "/about"
-# [[menu.main]]
-#   name = "RSS"
-#   weight = 50
-#   url = "/index.xml"
+  name = "社区"
+  weight = 40
+  url = "/community"
 
 [params]
-  description = ""
+  github_repo = "https://github.com/zigcc/zigcc.github.io"
+  offlineSearch = true
   dateFormat = "Jan 2, 2006"
-  gitRepo = "https://github.com/zigcc/zigcc.github.io"
   twitterCardEnabled = true
   [params.giscus]
     repo = "zigcc/zigcc.github.io"
@@ -51,9 +32,65 @@ title = 'Zig 语言中文社区'
     category = "Announcements"
     categoryId = "DIC_kwDOHr7nSs4CQUsK"
 
+[params.ui]
+navbar_logo = false
+showLightDarkModeMenu = true
+
+[params.copyright]
+  authors = """
+  | [BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+  | <a rel="me" href="https://mastodon.social/@liujiacai">Mastodon</a>
+  | [RSS](/index.xml)
+  """
+  from_year = 2022
+[params.links]
+# End user relevant links. These will show up on left side of footer and in the community page if you have one.
+[[params.links.user]]
+  name = "GitHub Discussion"
+  url = "https://github.com/orgs/zigcc/discussions"
+  icon = "fab fa-github"
+[[params.links.user]]
+  name = "Discord"
+  url = "https://discord.gg/UraRxD6WXD"
+  icon = "fab fa-discord"
+[[params.links.user]]
+  name = "Telegram"
+  url = "https://t.me/ZigChinese"
+  icon = "fab fa-telegram"
+[[params.links.user]]
+  name = "微信群"
+  url = "https://github.com/orgs/zigcc/discussions/134"
+  icon = "fab fa-weixin"
+[[params.links.user]]
+  name = "微信公众号"
+  url = "https://github.com/zigcc/.github/blob/main/zig_mp.png"
+  icon = "fab fa-weixin"
+[[params.links.user]]
+  name = "邮件"
+  url = "mailto:hello@ziglang.cc"
+  icon = "fa fa-envelope"
+  desc = "有任何疑问、建议，欢迎通过邮件与我们交流"
+
+[[params.links.developer]]
+  name = "文章供稿"
+  url = "/post/2023/09/05/hello-world/"
+  icon = "fab fa-blogger"
+  desc = "分享 Zig 使用经验"
+[[params.links.developer]]
+  name = "Zig 圣经"
+  url = "https://course.ziglang.cc/"
+  icon = "fa fa-book"
+  desc = "完善、改进圣经内容"
+[[params.links.developer]]
+  name = "线上会议"
+  url = "/post/news"
+  icon = "fa-brands fa-meetup"
+  desc = "我们会定期举行线上会议，畅聊 Zig 中的一切"
+
 [module]
+proxy = "https://goproxy.cn,direct"
   [[module.imports]]
-    path = "github.com/jiacai2050/hugo-xmin"
+    path = "github.com/google/docsy"
 
 [frontmatter]
   date = [":filename", ":default", ":fileModTime"]
@@ -61,7 +98,6 @@ title = 'Zig 语言中文社区'
 
 [permalinks]
   post = "/post/:year/:month/:day/:slug/"
-  news = "/news/:year/:month/:day/:slug/"
 
 [markup]
   [markup.tableOfContents]
@@ -70,6 +106,8 @@ title = 'Zig 语言中文社区'
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+    [markup.goldmark.parser.attribute]
+      block = true
   # https://gohugo.io/getting-started/configuration-markup/#highlight
   [markup.highlight]
     style = "pygments"

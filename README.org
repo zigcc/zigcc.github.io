@@ -4,5 +4,22 @@
 - [[https://ziglang.cc]]
 - 如果没有特殊声明，本网站内容均采用 [[https://creativecommons.org/licenses/by-nc-nd/4.0/][CC BY-NC-ND 4.0]] 协议
 
-* 社区供稿
-参见：[[https://ziglang.cc/post/2023/09/05/hello-world/]]
+#+BEGIN_EXPORT html
+<center>
+<p>欢迎来到 Zig 语言中文社区！（Zig Chinese Community，简称：ZigCC）</p>
+<a href="https://discord.gg/UraRxD6WXD">
+<img src="https://img.shields.io/discord/1155469703846834187?label=Chat at Discord" />
+</a>
+<a href="/index.xml">
+<img src="https://img.shields.io/badge/rss-F88900.svg?style=flat&logo=RSS&logoColor=white&label=网站" />
+</a>
+<a href="https://ask.ziglang.cc/atom.xml">
+<img src="https://img.shields.io/badge/rss-F88900.svg?style=flat&logo=RSS&logoColor=white&label=论坛" />
+</a>
+</center>
+#+END_EXPORT
+
+
+#+begin_quote
+Zig Chinese Community is dedicated to sharing and spreading the use of Zig language among Chinese users.
+#+end_quote

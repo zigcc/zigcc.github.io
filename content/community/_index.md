@@ -3,7 +3,7 @@ title: 博客
 ---
 
 {{% blocks/section %}}
-让我们一起探索 Zig 的魅力，推动 Zig 在中文开发者社区的发展!
+让我们一起探索 Zig 的魅力，推动 Zig 在中文社区内的发展！
 {.text-center}
 
 {{% /blocks/section %}}

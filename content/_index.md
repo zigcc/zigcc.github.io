@@ -1,6 +1,6 @@
 ---
 title: Zig 语言中文社区
-description: 欢迎来到 Zig 语言中文社区！（Zig Chinese Community，简称：ZigCC）
+description: 探索 Zig 魅力，推动 Zig 在中文社区内的发展！
 ---
 
 {{% blocks/cover height="full" %}}
@@ -8,7 +8,6 @@ description: 欢迎来到 Zig 语言中文社区！（Zig Chinese Community，�
 <img height="300px" src="https://ziglang.cc/logo/zigcc-logo-2.svg"/>
 
 {{% param description %}}
-
 > Zig Chinese Community is dedicated to sharing and spreading the use of Zig language among Chinese users.
 
 <a class="btn btn-lg btn-primary" href="https://github.com/zigcc">GitHub<i class="fab fa-github ms-2 "></i></a>

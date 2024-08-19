@@ -48,6 +48,7 @@ showLightDarkModeMenu = true
   name = "GitHub Discussion"
   url = "https://github.com/orgs/zigcc/discussions"
   icon = "fab fa-github"
+  desc = "新手提问；经验分享"
 [[params.links.user]]
   name = "Discord"
   url = "https://discord.gg/UraRxD6WXD"
@@ -64,17 +65,18 @@ showLightDarkModeMenu = true
   name = "微信公众号"
   url = "https://github.com/zigcc/.github/blob/main/zig_mp.png"
   icon = "fab fa-weixin"
+  desc = "跟进社区最新动态"
 [[params.links.user]]
   name = "邮件"
   url = "mailto:hello@ziglang.cc"
   icon = "fa fa-envelope"
-  desc = "有任何疑问、建议，欢迎通过邮件与我们交流"
+  desc = "写信交流"
 
 [[params.links.developer]]
   name = "文章供稿"
   url = "/post/2023/09/05/hello-world/"
   icon = "fab fa-blogger"
-  desc = "分享 Zig 使用经验"
+  desc = "分享 Zig 使用经验，改进网站体验"
 [[params.links.developer]]
   name = "Zig 圣经"
   url = "https://course.ziglang.cc/"

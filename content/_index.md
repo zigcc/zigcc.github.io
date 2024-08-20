@@ -1,25 +1,12 @@
 ---
 title: Zig 语言中文社区
-description: 探索 Zig 魅力，推动 Zig 在中文社区内的发展！
 ---
 
 {{% blocks/cover height="full" %}}
 
-<img height="300px" src="https://ziglang.cc/logo/zigcc-logo-2.svg"/>
+<img width="40%" src="https://ziglang.cc/logo/zigcc-logo-2.svg"/>
 
-{{% param description %}}
-> Zig Chinese Community is dedicated to sharing and spreading the use of Zig language among Chinese users.
-
-<a class="btn btn-lg btn-primary" href="https://github.com/zigcc">GitHub<i class="fab fa-github ms-2 "></i></a>
-<a class="btn btn-lg btn-primary" href="learn">
-学习<i class="fas fa-arrow-alt-circle-right ms-2"></i>
-</a>
-
-
-{{% blocks/link-down color="info" %}}
-{{% /blocks/cover %}}
-
-{{% blocks/lead color="primary" %}}
+Zig 中文社区致力于在中文用户中分享和传播 Zig 语言！
 
 我们是一群对 Zig 编程语言充满热情的开发者、学习者和爱好者。我们致力于：
 1. 分享 Zig 相关的知识和经验
@@ -28,4 +15,10 @@ description: 探索 Zig 魅力，推动 Zig 在中文社区内的发展！
 4. 推广 Zig 语言在中文开发者中的应用
 
 无论你是 Zig 专家还是初学者，[我们都欢迎你的加入](/community)！
-{{% /blocks/lead %}}
+
+<a class="btn btn-lg btn-primary" href="https://github.com/zigcc">GitHub<i class="fab fa-github ms-2 "></i></a>
+<a class="btn btn-lg btn-primary" href="learn">
+学习<i class="fas fa-arrow-alt-circle-right ms-2"></i>
+</a>
+
+{{% /blocks/cover %}}

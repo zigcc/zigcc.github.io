@@ -2,7 +2,7 @@ baseURL = 'https://ziglang.cc'
 languageCode = 'en'
 defaultContentLanguage = 'zh-cn'
 title = 'Zig 语言中文社区'
-description = 'Zig 语言中文社区'
+description = 'Zig Chinese Community is dedicated to sharing and spreading the use of Zig language among Chinese users.'
 
 [[menu.main]]
   name = "学习"
@@ -32,7 +32,7 @@ description = 'Zig 语言中文社区'
     categoryId = "DIC_kwDOHr7nSs4CQUsK"
 
 [params.ui]
-navbar_logo = false
+# navbar_logo = false
 showLightDarkModeMenu = true
 
 [params.copyright]
@@ -43,7 +43,6 @@ showLightDarkModeMenu = true
   """
   from_year = 2022
 [params.links]
-# End user relevant links. These will show up on left side of footer and in the community page if you have one.
 [[params.links.user]]
   name = "GitHub Discussion"
   url = "https://github.com/orgs/zigcc/discussions"
@@ -70,7 +69,7 @@ showLightDarkModeMenu = true
   name = "邮件"
   url = "mailto:hello@ziglang.cc"
   icon = "fa fa-envelope"
-  desc = "写信交流"
+  desc = ""
 
 [[params.links.developer]]
   name = "文章供稿"

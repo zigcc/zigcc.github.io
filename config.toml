@@ -5,7 +5,7 @@ title = 'Zig 语言中文社区'
 description = 'Zig Chinese Community is dedicated to sharing and spreading the use of Zig language among Chinese users.'
 
 [[menu.main]]
-  name = "学习"
+  name = "学习 Zig"
   weight = 11
   url = "/learn"
 [[menu.main]]

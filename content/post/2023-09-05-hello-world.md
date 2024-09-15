@@ -6,7 +6,7 @@ date: "2023-09-05T16:13:13+0800"
 
 欢迎社区用户向 ZigCC 供稿（关于 Zig 的任何话题），方便与社区更多人分享。文章会发布在：
 
-- [ZigCC 网站](https://zigcc.github.io)
+- [ZigCC 网站](https://ziglang.cc)
 - [ZigCC 公众号](https://github.com/zigcc/.github/raw/main/zig_mp.png)
 
 # 供稿方式

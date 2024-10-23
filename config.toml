@@ -112,3 +112,6 @@ proxy = "direct,https://goproxy.cn"
   [markup.highlight]
     style = "pygments"
     linenos = true
+
+[outputs]
+section = [ "HTML", "RSS", "print" ]

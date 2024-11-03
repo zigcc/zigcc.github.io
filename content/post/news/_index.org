@@ -1,10 +1,13 @@
 #+TITLE: 社区新闻
 #+DATE: 2024-08-03T16:43:51+0800
-#+LASTMOD: 2024-08-18T12:00:13+0800
+#+LASTMOD: 2024-11-03T10:21:19+0800
 #+TYPE: docs
 
-我们会定期举行线上会议来畅聊 Zig，感兴趣的朋友可以通过下面日历查看，或订阅[[https://calendar.yandex.com/export/ics.xml?private_token=71fd8e02d7944f4e7ae44cc8a9b8877da9e9f2f1&tz_id=Asia/Hong_Kong][这个 iCalendar]]。如果感兴趣，可以发邮件到 hello@ziglang.cc 索要线上会议地址。
+我们会不定期举行线上会议来畅聊 Zig，感兴趣的朋友可以通过下面日历查看，或订阅[[https://calendar.yandex.com/export/ics.xml?private_token=71fd8e02d7944f4e7ae44cc8a9b8877da9e9f2f1&tz_id=Asia/Hong_Kong][这个 iCalendar]]。
 
 #+BEGIN_EXPORT html
-<iframe src="https://calendar.yandex.com/embed/week?&layer_ids=29400285&tz_id=Asia/Hong_Kong&layer_names=Zig 中文社区" width="800" height="450" frameborder="0" style="border: 1px solid #eee"></iframe>
+<iframe src="https://calendar.yandex.com/embed/month?&layer_ids=29400285&tz_id=Asia/Hong_Kong&layer_names=Zig 中文社区" width="800" height="450" frameborder="0" style="border: 1px solid #eee"></iframe>
 #+END_EXPORT
+如果感兴趣，可以按照下面方式索要线上会议地址：
+1. 发邮件到 hello@ziglang.cc
+2. Discord 群聊：https://discord.gg/UraRxD6WXD

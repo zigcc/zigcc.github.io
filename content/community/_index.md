@@ -1,12 +1,14 @@
 ---
-title: 博客
+title: 社区
+params:
+  contributingUrl: /contributing
 ---
 
 {{% blocks/section color="white" %}}
 
 由于 Zig 目前还处于快速迭代，因此最权威的资料无疑是官方的 [Zig Language Reference](https://ziglang.org/documentation/master/)，遇到语言的细节问题，基本都可以在这里找到答案。 其次是社区的一些高质量教程，例如：
 
-- **[Zig Guide](https://zig.guide/):** 英文资料， [Sobeston](https://github.com/Sobeston) 用户编写
+- **[Zig Guide](https://zig.guide/):** 英文资料， [Sobeston](https://github.com/Sobeston) 编写
 - **[Zig in 30 minutes](https://gist.github.com/ityonemo/769532c2017ed9143f3571e5ac104e50):**
 - **[Zig 日报](https://github.com/zigcc/forum/issues):**
 - **[学习 Zig](https://learn.ziglang.cc):** 该系列教程最初由 Karl Seguin 编写，该教程行文流畅，讲述的脉络由浅入深，深入浅出，是入门 Zig 非常不错的选择

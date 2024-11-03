@@ -17,6 +17,10 @@ description = 'Zig Chinese Community is dedicated to sharing and spreading the u
   weight = 21
   url = "/post"
 [[menu.main]]
+  name = "贡献"
+  weight = 30
+  url = "/contributing"
+[[menu.main]]
   name = "社区"
   weight = 40
   url = "/community"

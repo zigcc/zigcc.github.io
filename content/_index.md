@@ -16,7 +16,7 @@ Zig 中文社区致力于在中文用户中分享和传播 Zig 语言！
 
 无论你是 Zig 专家还是初学者，[我们都欢迎你的加入](/community)！
 
-<a class="btn btn-lg btn-primary" href="https://github.com/zigcc">GitHub<i class="fab fa-github ms-2 "></i></a>
+<a class="btn btn-lg btn-primary" href="/contributing">贡献<i class="fab fa-github ms-2 "></i></a>
 <a class="btn btn-lg btn-primary" href="learn">
 学习<i class="fas fa-arrow-alt-circle-right ms-2"></i>
 </a>

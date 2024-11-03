@@ -1,6 +1,6 @@
 #+TITLE: 202410 | 向 Zig 软件基金会认捐 30 万美元
 #+DATE: 2024-10-26T00:17:35+0800
-#+LASTMOD: 2024-11-03T11:40:02+0800
+#+LASTMOD: 2024-11-03T15:21:14+0800
 * 重大事件
 ** 向 Zig 软件基金会认捐 30 万美元
 Mitchell 在其最新的博客上宣布：我和我的妻子向 Zig 软件基金会 (ZSF) 捐赠了 300,000 美元。
@@ -45,13 +45,24 @@ const instr: IType = @bitCast(encoded_instr);
 - https://zine-ssg.io/log/
 ** [[https://ziglang.org/news/website-zine/][The Zig Website Has Been Re-engineered]]
 Zig 官网已经用 [[https://zine-ssg.io/][Zine]] 重写！
+** [[https://thenewstack.io/rust-vs-zig-in-reality-a-somewhat-friendly-debate/][Rust vs. Zig in Reality: A (Somewhat) Friendly Debate]]
 ** [[https://kevinlynagh.com/rust-zig/][Why I rewrote my Rust keyboard firmware in Zig: consistency, mastery, and fun]]
-** [[https://www.youtube.com/watch?v=xOySJpQlmv4&feature=youtu.be][I made an operating system that self replicates doom on a network “from scratch” - YouTube]]
+** [[https://teckrevie.blogspot.com/2024/09/why-zig-programmers-are-cashing-in-deep.html][Why Zig Programmers Are Cashing In: A Deep Dive into the Lucrative World of Zig]]
+** 视频
+*** [[https://www.youtube.com/watch?v=xOySJpQlmv4&feature=youtu.be][I made an operating system that self replicates doom on a network “from scratch”]]
+*** [[https://www.youtube.com/watch?feature=shared&v=3fWx5BOiUiY][Rust vs Zig vs Go: Performance (Latency - Throughput - Saturation - Availability)]]
+*** [[https://www.youtube.com/live/Kf7BIPUUfsc?t=764][Let's explore Vulkan API with Zig programming language from scratch]]
 * 项目/工具
 - [[https://github.com/laohanlinux/boltdb-zig][laohanlinux/boltdb-zig]] :: a zig implement kv database
 - [[https://github.com/E-xyza/zigler][zigler]] :: Zig NIFs in Elixir
 - [[https://github.com/gdonald/blackjack-zig][gdonald/blackjack-zig]] :: Console Blackjack written in Zig
 - [[https://github.com/rabinnh/zig-vscode-linux][rabinnh/zig-vscode-linux]] :: Instructions on setting up VSCode to debug Zig on Linux
 - [[https://github.com/lframosferreira/brainzuck][lframosferreira/brainzuck]] :: [[https://en.wikipedia.org/wiki/Brainfuck][Brainf*ck]] interpreter written in Zig 0.12.0! Have fun!
-
+- [[https://github.com/BitlyTwiser/snek][BitlyTwiser/snek]] :: A simple CLI parser to build CLI applications in Zig
+- [[https://github.com/zml/zml][zml/zml]] :: High performance AI inference stack. Built for production.
+- [[https://github.com/BitlyTwiser/zdotenv][BitlyTwiser/zdotenv]] :: A port of Godotenv for Zig
+- [[https://github.com/sbancuz/OpenMP-zig][sbancuz/OpenMP-zig]] ::  An implementation of the OpenMP directives for Zig
+- [[https://github.com/tusharsadhwani/zigimports][tusharsadhwani/zigimports]] :: Automatically remove unused imports and globals from Zig files.
+- [[https://github.com/Mario-SO/zigitor][Mario-SO/zigitor]] ::  Video editor 🎬 written in Zig ⚡ using raylib
+- [[https://github.com/pwbh/ymlz][pwbh/ymlz]] ::  Small and convenient yaml parser for Zig
 * [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-10-01..2024-11-01][Zig 语言更新]]

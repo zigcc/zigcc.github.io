@@ -48,7 +48,7 @@ ATM 代表自动取款机，因此它的代码的逻辑就是模拟自动取款�
 同时它也包含一堆的消息，每个消息都包含了系统状态的转化。
 比如消息 InsertCard 代表将ATM的状态从ready转化到cardInserted，这代表用户插入卡。
 
-消息 Incorrect 代表将ATM的状态冲cardInserted 转化到 cardInserted，
+消息 Incorrect 代表将ATM的状态从cardInserted 转化到 cardInserted，
 这代表了一种循环，表示用户输错了pin，但是可以再次尝试输入pin，当然我们要求最多可以尝试三次。
 
 整个程序效果如下：

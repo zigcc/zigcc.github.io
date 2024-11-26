@@ -11,7 +11,7 @@ date: 2024-11-26T13:32:00+08:00
 
 而状态主要是在代码层面帮助人们理解消息的产生和处理。
 
-## 1.2 介绍typed-fsm-zig的优势
+## 1.2 介绍[typed-fsm-zig](https://github.com/sdzx-1/typed-fsm-zig)的优势
 
 利用zig强大的类型系统加上一些编程规范，我们可以在zig中实现类型安全的有限状态机。
 

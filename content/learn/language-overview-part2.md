@@ -5,7 +5,6 @@ weight: 4
 
 > 原文地址：<https://www.openmymind.net/learning_zig/language_overview_2>
 
-
 本部分继续上一部分的内容：熟悉 Zig 语言。我们将探索 Zig 的控制流和结构以外的类型。通过这两部分的学习，我们将掌握 Zig 语言的大部分语法，这让我们可以继续深入 Zig 语言，同时也为如何使用 std 标准库打下了基础。
 
 ## 控制流

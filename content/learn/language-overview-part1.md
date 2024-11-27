@@ -5,7 +5,6 @@ weight: 3
 
 > 原文地址：<https://www.openmymind.net/learning_zig/language_overview_1>
 
-
 Zig 是一种强类型编译语言。它支持泛型，具有强大的编译时元编程功能，并且**不包含**垃圾收集器。许多人认为 Zig 是 C 的现代替代品。因此，该语言的语法与 C 类似，比较明显的就是以分号结尾的语句和以花括号分隔的块。
 
 Zig 代码如下所示：

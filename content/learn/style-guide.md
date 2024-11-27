@@ -5,7 +5,6 @@ weight: 5
 
 > 原文地址：<https://www.openmymind.net/learning_zig/style_guide>
 
-
 本小节的主要内容是介绍 Zig 编译器强制遵守的 2 条规则，以及 Zig 标准库的命名惯例(naming convention)。
 
 ## 未使用变量 Unused Variable

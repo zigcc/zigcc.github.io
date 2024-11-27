@@ -23,6 +23,7 @@ pub fn put(self: *Self, key: K, value: V) Allocator.Error!void {
 正如我所说，大部分繁重的工作都由 `std.HashMapUnmanaged` 完成，其他变体通过一个名为 `unmanaged` 的字段对其进行封装。
 
 # Unmanaged
+
 在Zig标准库中随处可见的类型命名约定是 `unmanaged`。这种命名方式表明所涉及的类型不维护 `allocator`。任何需要分配内存的方法都会显式地将 `allocator` 作为参数传递。要实际看到这一点，可以考虑下面这个链表的例子：
 
 ```Zig
@@ -138,7 +139,7 @@ pub fn LinkedList(comptime T: type) type {
 
 `unmanaged` 类型有几个好处。最重要的是它们更加明确。与知道像 `LinkList(T)` 这样的类型可能在某个时刻需要分配内存不同，未管理变体的明确 API 标识了进行分配/释放的特定方法。这可以帮助减少意外并为调用者提供更大的控制权。未管理类型的次要好处是它们通过不引用分配器节省了一些内存。一些应用可能需要存储成千上万甚至更多这样的结构，在这种情况下，这种节省可以累积起来。
 
-为了简化，本文的其余部分不会再提到 `unmanaged`。我们看到关于 `StringHashMap` 或 `AutoHashMap` 或 `HashMap` 的任何内容同样适用于它们的 *Unmanaged 变体。
+为了简化，本文的其余部分不会再提到 `unmanaged`。我们看到关于 `StringHashMap` 或 `AutoHashMap` 或 `HashMap` 的任何内容同样适用于它们的 Unmanaged 变体。
 
 # HashMap 与 AutoHashMap
 
@@ -377,6 +378,7 @@ pub fn hash(_: HashContext, u: User) u64 {
 插入这两个函数，以上示例应该可以工作。
 
 # 结论
+
 希望你现在对 Zig 的哈希表的实现以及如何在代码中利用它们有了更好的理解。在大多数情况下，`std.StringHashMap` 或 `std.AutoHashMap` 就足够了。但知道 `*Unmanaged` 变体的存在和目的，以及更通用的 `std.HashMap`，可能会派上用场。如果没有其他用途，现在文档和它们的实现应该更容易理解了。
 
 在下一部分，我们将深入探讨哈希表的键和值，它们是如何存储和管理的。

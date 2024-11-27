@@ -7,12 +7,10 @@ init:
 	git submodule update --init
 
 lint:
-	npx @lint-md/cli  .
-	npx prettier@3.1.1 . --check
+	npx @lint-md/cli  **/*
 
 format:
-	npx @lint-md/cli --fix .
-	npx prettier@3.1.1 --write .
+	npx @lint-md/cli --fix **/*
 
 
 EXCLUDE = --exclude "*webp" --exclude "*svg" --exclude "*gif"

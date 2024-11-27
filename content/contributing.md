@@ -4,6 +4,7 @@ type: docs
 ---
 
 Zig 中文社区是一个开放的组织，我们致力于推广 Zig 在中文群体中的使用，有多种方式可以参与进来：
+
 1. 供稿，分享自己使用 Zig 的心得，方式见下文
 2. 改进 zigcc 组织下的开源项目，这是 [open issues](https://github.com/search?q=state%3Aopen+org%3Azigcc++NOT+%E6%97%A5%E6%8A%A5&type=issues&ref=advsearch)
 3. 参与不定期的[线上会议](/post/news/)

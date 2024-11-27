@@ -34,4 +34,4 @@ params:
 - **2024-03-29:** 使用自定义域名 ziglang.cc
 - **2022-12-10:** 切换主题 [cupper-hugo](https://github.com/zwbetz-gh/cupper-hugo-theme) &#x2013;> [hugo-xmin](https://github.com/yihui/hugo-xmin)
 - **2022-07-20:** 首次上线
-{{% /blocks/section %}}
+  {{% /blocks/section %}}

@@ -2,7 +2,7 @@
 title: Learning Zig 中文翻译
 type: docs
 cascade:
-- type: docs
+  - type: docs
 ---
 
 [《学习 Zig》](https://www.openmymind.net/learning_zig/)系列教程最初由 [Karl Seguin](https://github.com/karlseguin) 编写，该教程行文流畅，讲述的脉络由浅入深，深入浅出，是入门 Zig 非常不错的选择。因此，[Zig 中文社区](https://ziglang.cc)将其翻译成中文，便于在中文用户内阅读与传播。

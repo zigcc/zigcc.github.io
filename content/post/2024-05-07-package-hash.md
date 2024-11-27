@@ -34,13 +34,14 @@ date: 2024-05-07T02:45:10.692Z
 
 经过一番探索，我找到了一个文档：[doc/build.zig.zon.md](https://github.com/ziglang/zig/blob/1a6485d111d270014f57c46c53597a516a24dc47/doc/build.zig.zon.md)，似乎没有任何线索指向它。而文档中对哈希有段简短的描述。
 
-> - **哈希**
-> - 类型为字符串。
-> - **[多重哈希](https://multiformats.io/multihash/)**
-> 该哈希值是基于一系列文件内容计算得出的，这些文件是在获取URL后并应用了路径规则后得到的。
-这个字段是最重要的；一个包是的唯一性是由它的哈希值确定的，不同的 URL 可能对应同一个包。
+- **哈希**
+- 类型为字符串。
+- **[多重哈希](https://multiformats.io/multihash/)**
+  该哈希值是基于一系列文件内容计算得出的，这些文件是在获取URL后并应用了路径规则后得到的。
+  这个字段是最重要的；一个包是的唯一性是由它的哈希值确定的，不同的 URL 可能对应同一个包。
 
 ## 多重哈希
+
 在他们的网站上有一个很好的可视化展示，说明了这一过程: [多重哈希](https://multiformats.io/multihash/)。
 
 ![multihash 示意图](/images/zon-multihash.webp)
@@ -127,6 +128,7 @@ hasher.update(hashed_file.normalized_path);
 ```
 
 然后我们根据我们正在哈希的文件类型进行切换。有两个分支：
+
 - 一个用于常规文件
 - 一个用于符号链接
 
@@ -164,6 +166,7 @@ hasher.update(link_name);
 首先进行路径分隔符的规整，保证不同平台一致，之后将符号链接的目标路径输入 `hasher`。在 `hashFileFallible` 函数最后，把计算出的哈希值赋值给 `HashedFile` 对象的 `hash` 字段。
 
 ## 组合哈希
+
 尽管有了单个文件的哈希值，但我们仍不知道如何得到最终的哈希。幸运的是，曙光就在眼前。
 
 下一步是确保我们有可复现的结果。 `HashedFile` 对象被存储在一个数组中，但文件系统遍历算法可能会改变，所以我们需要对那个数组进行排序。
@@ -211,6 +214,7 @@ for (all_files.items) |hashed_file| {
 # 译者注
 
 在使用本地包时，可以使用下面的命令进行 hash 问题的排查：
+
 ```bash
  (main)$ zig fetch --debug-hash .
 file: 001f530a93f06d8ad8339ec2f60f17ff9ff0ae29ceaed36942a8bc96ba9d7e26: LICENSE
@@ -229,4 +233,5 @@ file: 7b398ebd7ddb3ae30ff1ff1010445b3ed1f252db46608b6a6bd9aace233bc1a4: src/util
 ```
 
 此外，社区已经有人把 multihash 的算法实现独立成一个单独的包，便于计算一个包的 hash 值：
+
 - https://github.com/Calder-Ty/multihash

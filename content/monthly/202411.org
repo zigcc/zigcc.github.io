@@ -1,6 +1,6 @@
 #+TITLE: 202411
 #+DATE: 2024-12-09T21:02:40+0800
-#+LASTMOD: 2024-12-09T23:16:41+0800
+#+LASTMOD: 2024-12-09T23:27:21+0800
 * 观点/教程
 ** [[https://injuly.in/blog/announcing-jam/index.html][Why am I writing a JavaScript toolchain in Zig?]]
 [[https://github.com/srijan-paul/jam][JAM]] 作者写的一篇文章，分析里市面上现有的 JS 工具链（bundler、formatter、linter 等），虽然已经很好用，但是不够快。下面是他举的几个例子：
@@ -64,14 +64,14 @@ pub fn main() !void {
 ** [[https://jakstys.lt/2024/zig-reproduced-without-binaries/][Zig Reproduced Without Binaries]]
 一个很有趣的实验，在 0.10 版本中，Zig 编译器实现了自举，即可以用老版本的 Zig 来编译 Zig 源码，生成最新的 Zig 二进制。这里重新复习一下这个复杂的流程：
 
-之所以复杂，问题在于老版本的 Zig 从那里来呢？对于 Zig 来说就是 [[https://github.com/ziglang/zig/blob/master/stage1/zig1.wasm][zig1.wasm]]，它是用没自举前的 Zig，利用 LLVM 后端，以 wasm32-wasi 为目标生成的二进制文件。
+之所以复杂，问题在于老版本的 Zig 从哪里来呢？对于 Zig 来说就是 [[https://github.com/ziglang/zig/blob/master/stage1/zig1.wasm][zig1.wasm]]，它是用没自举前的 Zig，利用 LLVM 后端，以 wasm32-wasi 为目标生成的二进制文件。
 为了保证足够小，这里面只保留了 C 后端，这样就得到了一个小到可以放到代码仓库中的 Zig 编译器。这篇文章就是证明这个文件没有被私自篡改过！
 
 - 之后利用 Zig 团队自己写的 wasm2c.c 把 zig1.wasm 编译成 zig1.c，之后用 cc 编译 zig1.c 就可以得到 stage1 的 zig 编译器
 - 之后再用 zig1 编译 zig 源码，由于 zig1 之后 C 后端，因此这里得到的产物是 zig2.c，再利用 cc 就可以可以 stage2 的 zig。
   zig2 功能上已经完备，但是速度很慢（没有经过 LLVM 优化）
 - 最后再用 zig2 继续编译 zig 源码，得到最后的 zig3，这也是我们下载 zig 安装包时包含的版本
-- 如果再继续用 zig3 来编译 zig 源码，得到的 zig4 会合 zig3 一模一样。
+- 如果再继续用 zig3 来编译 zig 源码，得到的 zig4 会和 zig3 一模一样。
 
 细节可以参考：
 - [[https://ziglang.org/news/goodbye-cpp/][Goodbye to the C++ Implementation of Zig]]

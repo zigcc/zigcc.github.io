@@ -1,0 +1,87 @@
+#+TITLE: 202411
+#+DATE: 2024-12-09T21:02:40+0800
+#+LASTMOD: 2024-12-09T23:16:41+0800
+* 观点/教程
+** [[https://injuly.in/blog/announcing-jam/index.html][Why am I writing a JavaScript toolchain in Zig?]]
+[[https://github.com/srijan-paul/jam][JAM]] 作者写的一篇文章，分析里市面上现有的 JS 工具链（bundler、formatter、linter 等），虽然已经很好用，但是不够快。下面是他举的几个例子：
+- Lossless, cache efficient syntax trees，现在通用的 JS 语法树表示是 [[https://github.com/estree/estree][ESTree]]，尽管设计上很简洁，但在遍历时不够高效，需要有遍历多次
+  才能得到有用信息（eslint 里就有四次！），而且都是指针的树结构非常不利用重复利用 CPU，Carbon 编译器就有一种更紧凑的 AST 表示。
+- Compile time AST query processing。Lint 的规则大部分都是模式匹配，大部分时候都有多个嵌套的 if 逻辑，为了简化插件开发者，eslint
+  采用了一种 [[https://estools.github.io/esquery/][esquery]] 的语法，示例：
+  #+begin_src js
+if (
+  node.type == "CallExpression" &&
+  node.callee.type === "MemberExpression" &&
+  node.callee.object.type === "Identifier" &&
+  node.callee.object.name === "child_process"
+) {
+ // many of these checks are to satisfy typescript^
+}
+
+
+if (matches(
+    'CallExpression[callee.object.name = child_process]',
+     node
+  )) {
+  // much better
+}
+  #+end_src
+  esquery 的问题在于执行效率，通过借助于 zig 的 comptime 来在编译器翻译 esquery 就避免了运行时开销。
+** [[https://kristoff.it/blog/advent-of-code-zig/][Advent of Code in Zig | Loris Cro's Blog]]
+一年一度的 AoC 又到了，这篇文章里给出了一些使用的技巧来帮助大家用 Zig 来解决 AoC 问题。
+- 工具链，最新的版本 0.13 和 zls
+- 手册，和 [[https://github.com/ziglang/zig/wiki/How-to-read-the-standard-library-source-code][How to read the standard library source code · ziglang/zig Wiki]]
+- 使用 =embedFile= 来嵌入输入的测试用例：
+  #+begin_src zig
+const std = @import("std");
+const input = @embedFile("path/to/input.txt");
+
+pub fn main() !void {
+   for (input) |byte| {
+      //...
+   }
+}
+  #+end_src
+- 分词
+  - std.mem.tokenizeScalar
+  - std.mem.splitScalar
+  - std.mem.splitAny
+  - std.mem.window 滑动窗口，用法可参考：[[https://zig.news/pyrolistical/new-way-to-split-and-iterate-over-strings-2akh][New way to split and iterate over strings - Zig NEWS]]
+- 数据操作
+  - 解析数字， =std.fmt.parseInt()=
+  - 位操作，可以用任意宽度的数字（u1，u2 等）， =std.BitStack=, =std.DynamicBitSet= 这两个也非常有用
+
+更重要的，作者最后提到 AoC 可能不是学习 Zig 的最好方式：
+#+begin_quote
+虽然 AoC 非常有趣，但它并不是练习软件工程的方法。 每个 AoC 练习都要求你找到一个问题的解决方案，虽然你需要编写一个程序来解决这个问题，
+但你的程序将是一个只需运行一次（一次正确）的一次性脚本。
+
+当你的软件需要稳健、优化和可维护时，Zig 就会大显身手，而这些对于 AoC 来说都不重要。
+
+因此，请注意，虽然肯定能用 Zig 解决 AoC 问题，而且 Zig 的某些功能甚至能帮助您取得比其他语言更快的进展，但它最终还是针对软件工程进行了优化，而这并不是您在 AoC 中要做的事情。
+#+end_quote
+** [[https://floooh.github.io/2024/08/24/zig-and-emulators.html][Zig and Emulators]]
+** [[https://jakstys.lt/2024/zig-reproduced-without-binaries/][Zig Reproduced Without Binaries]]
+一个很有趣的实验，在 0.10 版本中，Zig 编译器实现了自举，即可以用老版本的 Zig 来编译 Zig 源码，生成最新的 Zig 二进制。这里重新复习一下这个复杂的流程：
+
+之所以复杂，问题在于老版本的 Zig 从那里来呢？对于 Zig 来说就是 [[https://github.com/ziglang/zig/blob/master/stage1/zig1.wasm][zig1.wasm]]，它是用没自举前的 Zig，利用 LLVM 后端，以 wasm32-wasi 为目标生成的二进制文件。
+为了保证足够小，这里面只保留了 C 后端，这样就得到了一个小到可以放到代码仓库中的 Zig 编译器。这篇文章就是证明这个文件没有被私自篡改过！
+
+- 之后利用 Zig 团队自己写的 wasm2c.c 把 zig1.wasm 编译成 zig1.c，之后用 cc 编译 zig1.c 就可以得到 stage1 的 zig 编译器
+- 之后再用 zig1 编译 zig 源码，由于 zig1 之后 C 后端，因此这里得到的产物是 zig2.c，再利用 cc 就可以可以 stage2 的 zig。
+  zig2 功能上已经完备，但是速度很慢（没有经过 LLVM 优化）
+- 最后再用 zig2 继续编译 zig 源码，得到最后的 zig3，这也是我们下载 zig 安装包时包含的版本
+- 如果再继续用 zig3 来编译 zig 源码，得到的 zig4 会合 zig3 一模一样。
+
+细节可以参考：
+- [[https://ziglang.org/news/goodbye-cpp/][Goodbye to the C++ Implementation of Zig]]
+- [[https://www.reddit.com/r/Zig/comments/142gwls/why_is_the_bootstrapping_process_so_complicated/][Why is the bootstrapping process so complicated? : r/Zig]]
+* 项目/工具
+- [[https://goreleaser.com/customization/zig-builds/][Builds (Zig) - GoReleaser]] :: 版本发布工具 GoReleaser 支持了 Zig
+- [[https://github.com/follgad/zig-ai][FOLLGAD/zig-ai: OpenAI SDK with streaming support]] ::
+- [[https://github.com/zouyee/zig-learning][A bunch of links to blog posts, articles, videos, etc for learning Zig]] ::
+- [[https://github.com/Super-ZIG/cli][Super-ZIG/cli: Easy command line interface in ZIG.]] ::
+- [[https://github.com/deckarep/zigualizer][deckarep/zigualizer]] :: Zigualizer: A music visualizer built with Zig, powered by the FFT algorithm.
+- [[https://github.com/freref/fancy-cat][freref/fancy-cat]] :: PDF reader for terminal emulators using the Kitty image protocol
+- [[https://github.com/Dr-Nekoma/lyceum][Dr-Nekoma/lyceum]] :: An MMO game written in Erlang (+ PostgreSQL) + Zig (+ Raylib)
+* [[https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-11-01..2024-12-01][Zig 语言更新]]

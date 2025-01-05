@@ -3,6 +3,11 @@ languageCode = 'en'
 defaultContentLanguage = 'zh-cn'
 title = 'Zig 语言中文社区'
 description = 'Zig Chinese Community is dedicated to sharing and spreading the use of Zig language among Chinese users.'
+copyright = """ © 2022–2025
+  | <a href="https://github.com/zigcc/zigcc.github.io">Source Code</a>
+  | <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">BY-NC-ND 4.0</a>
+  | <a href="/index.xml">RSS</a>
+"""
 
 [[menu.main]]
   name = "学习 Zig"
@@ -39,13 +44,6 @@ description = 'Zig Chinese Community is dedicated to sharing and spreading the u
 # navbar_logo = false
 showLightDarkModeMenu = true
 
-[params.copyright]
-  authors = """
-  \\| [BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/)
-  \\| <a rel="me" href="https://mastodon.social/@liujiacai">Mastodon</a>
-  \\| [RSS](/index.xml)
-  """
-  from_year = 2022
 [params.links]
 [[params.links.user]]
   name = "GitHub Discussion"

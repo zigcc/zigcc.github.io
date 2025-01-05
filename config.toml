@@ -41,9 +41,9 @@ showLightDarkModeMenu = true
 
 [params.copyright]
   authors = """
-  | [BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/)
-  | <a rel="me" href="https://mastodon.social/@liujiacai">Mastodon</a>
-  | [RSS](/index.xml)
+  \\| [BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+  \\| <a rel="me" href="https://mastodon.social/@liujiacai">Mastodon</a>
+  \\| [RSS](/index.xml)
   """
   from_year = 2022
 [params.links]

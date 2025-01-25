@@ -337,8 +337,6 @@ pub fn writeSumFn(
 
 回到泛型的例子，有一些值得强调的细微之处：
 
-> 元编程
-
 ```Zig
 pub fn writeMyStructOfType(
     writer: std.io.AnyWriter,

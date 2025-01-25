@@ -6,7 +6,7 @@ date: 2025-01-23T12:00:00+08:00
 
 > 原文: <https://www.scottredig.com/blog/bonkers_comptime/>
 
-> 译注：原文中的代码快是交互式，翻译时并没有移植这一块。另外，由于 comptime 本身即是关键概念，并且下文的意思更侧重于 Zig comptime 的特性，故下文大多使用 comptime 代替编译时概念。
+> 译注：原文中的代码块是交互式，翻译时并没有移植。另外，由于 comptime 本身即是关键概念，并且下文的意思更侧重于 Zig comptime 的特性，故下文大多使用 comptime 代替编译时概念。
 
 ## 引子
 

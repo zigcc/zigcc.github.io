@@ -360,7 +360,6 @@ pub fn writeMyStructOfType(
     try writer.print("}};\n", .{});
 }
 ```
-```
 
 以上 struct 字段的生成体现了上述两种转换（`conversions`）方式，并且将两者混合在了一行中。 字段的类型表达式由生成器/运行时完成，而字段本身则作为运行时代码使用的定义。
 

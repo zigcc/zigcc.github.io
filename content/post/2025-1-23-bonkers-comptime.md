@@ -1,13 +1,11 @@
 ---
-title: Zig Comptime 非常好
+title: Zig comptime 棒极了
 author: xihale
 date: 2025-01-23T12:00:00+08:00
 ---
 
 > 原文: <https://www.scottredig.com/blog/bonkers_comptime/>  
-> 译注：原文中的代码快是交互式，翻译时并没有移植这一块。
-
-> 译注：由于 comptime 本身即是关键概念，并且下文的意思更侧重于 Zig comptime 的特性，故下文大多使用 comptime 代替（涵盖）编译时概念。
+> 译注：原文中的代码快是交互式，翻译时并没有移植这一块。另外，由于 comptime 本身即是关键概念，并且下文的意思更侧重于 Zig comptime 的特性，故下文大多使用 comptime 代替（涵盖）编译时概念。
 
 ## 引子
 
@@ -376,7 +374,7 @@ pub fn writeMyStructOfType(
 
 在阅读 Zig 代码以理解代码行为时，考虑 comptime 并不是必要的。而当编写 comptime 代码时，我通常会将其视为程序特化（Partial Evaluation）的一种形式。然而，如果你知道如何使用不同的元编程方法解决问题，你很可能有能力将其翻译成 comptime 形式。
 
-元编程中直接生成代码的方法的存在，就是我全力支持 Zig 风格的 comptime 元编程的原因。尽管，直接生成代码是几乎是最强大的，但是，在阅读和调试时忽略 comptime 的特性的元编程方法确是最简单的。正因如此，我给本文取名为《Zig 的 comptime 非常好》。
+元编程中直接生成代码的方法的存在，就是我全力支持 Zig 风格的 comptime 元编程的原因。尽管，直接生成代码是几乎是最强大的，但是，在阅读和调试时忽略 comptime 的特性的元编程方法确是最简单的。正因如此，我给本文取名为《Zig comptime 棒极了》。
 
 ## 进一步阅读
 

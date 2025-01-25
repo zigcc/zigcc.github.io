@@ -25,11 +25,6 @@ Zig Chinese Community is dedicated to sharing and spreading the use of Zig langu
 #+end_quote
 
 本网站使用 [[https://gohugo.io/][hugo]]（extended 版本）与 [[https://www.docsy.dev/][docsy]] 主题进行构建。
-预览之前请确保已安装必要的 =postcss= 依赖
-#+begin_src bash
-# install depends
-npm i -D postcss postcss-cli autoprefixer
-#+end_src
 
 #+begin_src bash
 # For macOS
@@ -47,3 +42,11 @@ sudo snap install hugo
 # run server
 hugo server
 #+end_src
+
+如果启动 server 时报错，可以安装以下依赖：
+#+begin_src bash
+# install depends
+npm i -D postcss postcss-cli autoprefixer
+#+end_src
+
+参考：https://www.docsy.dev/docs/get-started/docsy-as-module/installation-prerequisites/#install-postcss

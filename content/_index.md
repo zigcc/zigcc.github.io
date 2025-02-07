@@ -22,4 +22,10 @@ Zig 中文社区致力于在中文用户中分享和传播 Zig 语言！
 学习<i class="fas fa-arrow-alt-circle-right ms-2"></i>
 </a>
 
+<style>
+ol{
+  list-style: none;
+}
+</style>
+
 {{% /blocks/cover %}}

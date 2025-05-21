@@ -90,7 +90,7 @@ showLightDarkModeMenu = true
   desc = "我们会定期举行线上会议，畅聊 Zig 中的一切"
 
 [module]
-proxy = "direct,https://goproxy.cn"
+# proxy = "https://goproxy.cn,direct"
   [[module.imports]]
     path = "github.com/google/docsy"
 

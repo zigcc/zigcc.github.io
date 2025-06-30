@@ -182,3 +182,15 @@ html {
     scrollbar-color: #444 var(--bg);
   }
 }
+
+#meta p{
+  margin: 0;
+}
+
+#meta #author::before{
+  content: "借由：";
+}
+
+h1{
+  margin-bottom: 0;
+}

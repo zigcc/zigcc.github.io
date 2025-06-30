@@ -261,3 +261,5 @@ code.conf .comment {
   color: var(--comment-gray); /* ; comment or # comment */
   font-style: italic;
 }
+
+/* TODO: cpp support */

@@ -1,0 +1,70 @@
+---
+.title = "ZigCC 第二次线上会议",
+.date = @date("2023-12-27T08:39:51+0800"),
+.author = "ZigCC",
+.layout = "post.shtml",
+.draft = false,
+---
+
+2023-12-23，ZigCC 社区开始了第二次线上会议，共有 5 名 Zig
+爱好者参加，分别是：
+
+- [西瓜](https://github.com/jiacai2050/)
+- [贺鹏](https://github.com/xnhp0320)
+- [Lambert](https://github.com/labspc)
+- [冯文轩](https://github.com/fwx5618177)
+- [Reco](https://github.com/1000copy)
+
+这次会议主要是同步了之前会议落实的
+action，主要是同步了不同项目的进展，由于临近年底，大家进度都不算太大，但还是有所进展，算是开了个好头😄
+
+# 项目进展
+
+## [Zig-OS](https://github.com/zigcc/zig-os)
+
+- 主要参与人员：西瓜
+- 进展：粗略看完 rust 版本的教程；完成 freestanding 二进制，现在卡在了
+  bootloader 阶段
+
+## [Learn zig](https://github.com/learnzig/learnzig)
+
+- 主要参与人员：金中甲
+- zig的进阶特性，诸如构建系统、包管理、与C交互均已完成，目前教程内容已基本覆盖日常使用
+- 增加了评论区的功能
+- 待完成：反射（编译期反射和运行时反射）、内建函数说明（包含使用例子）、未定义行为、wasm、原子操作这些边缘部分
+
+## Zig 教学视频
+
+- 主要参与人员：Lambert
+- <https://github.com/labspc/learn-zig-in-the-style-of-c>
+- 暂无明显进展
+
+## [Zig cookbook](https://github.com/zigcc/zig-cookbook)
+
+- 主要参与人员：夜白、西瓜
+- 已经完成大部分内容 👍
+
+## Zig 构建系统教程
+
+- 主要参与人员：Reco
+- 目前主要是对 [zig build
+  explained](https://zig.news/xq/zig-build-explained-part-3-1ima)
+  系列文章翻译
+
+# 新人介绍
+
+在第一次会议后，有一些朋友想加入 ZigCC
+社区，经过简单筛选，新增一名成员：Reco，下面是他的一些履历：
+
+- 南美 Optimes co.,limited 联合创始人、CTO
+- 任我行软件股份有限公司 集团CTO
+
+其他技术兴趣经历
+
+1.  图灵出版社区签约作者。4本电子系列书：《Vue.js小书》《Git小书》《HTTP小书》《Swift
+    iOS开发小书》
+2.  微软 DotNet 技术俱乐部 2007-2010年成都地区主席
+3.  <https://github.com/1000copy>
+
+非常欢迎 Reco 的加入！也希望更多对 Zig 感兴趣的朋友加入我们，普及 Zig
+在中文社区内的使用。联系邮箱：zig@liujiacai.net

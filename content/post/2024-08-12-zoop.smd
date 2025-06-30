@@ -1,0 +1,486 @@
+---
+.title = "zoop 实现原理分析",
+.date = @date("2024-08-12T14:31:22+08:00"),
+.author = "朱亚东",
+.layout = "post.shtml",
+.draft = false,
+---
+
+# zoop 是什么
+
+zoop 是 zig 的一个 OOP 解决方案，详细信息可以看看 [zoop官网](https://zhuyadong.github.io/zoop-docs/)。
+
+# 为什么不用别的 OOP 语言
+
+简单的说，是我个人原因，必需使用 zig 的同时，还一定要用 OOP，所以有了 zoop。
+
+# zoop 入门
+
+## 类和方法
+
+```zig
+pub const Base = struct {
+    pub usingnamespace zoop.Fn(@This());
+    mixin: zoop.Mixin(@This()),
+}
+```
+
+2-3行是一个struct成为zoop类必需的两行，这样一来，`Base` 就成为了一个 zoop 的类。
+
+创建 `Base` 的对象有两种方法：
+
+- 在堆上： `var obj = try Base.new(allocator);`
+- 在栈上：`var obj = Base.make(); obj.initMixin();`
+
+栈上创建的对象必需调用对象的 `initMixin()` 方法，因为对象地址对 zoop 来说很重要，而在 `make()` 中是无法知道这个返回的对象会放在什么地址，只能通过外部调用 `initMixin()` 来通知 zoop 这个地址。
+
+销毁对象的方法是 `obj.destroy()`，这是 zoop 自动为所有类加上的方法，不需要用户去定义。
+
+我们可以给 `Base` 加上方法和字段，就是正常的 zig 方法和字段：
+
+```zig
+pub const Base = struct {
+    pub usingnamespace zoop.Fn(@This());
+    mixin: zoop.Mixin(@This()),
+
+    name: []const u8,
+
+    pub fn init(self: *Base, name: []const u8) void {
+        self.name = name;
+    }
+}
+```
+
+因为创建 zoop 类对象的方法不是 `init()`，因此在 zoop 类中，一般把 `init()` 当作初始化方法而不是创建方法。这种常规的方法，是没法被子类继承的，属于类的私有方法。要定义可以继承的方法，需要用如下形式来定义：
+
+```zig
+pub const Base = struct {
+    ...// 和上面一样，这里不写了
+
+    pub fn Fn(comptime T: type) type {
+        return zoop.Method(.{
+            struct {
+                pub fn getName(this: *T ) []const u8 {
+                    return this.cast(Base).name;
+                }
+            },
+        });
+    }
+}
+```
+
+看起来有点怪，下面解释 zoop 实现原理的时候会解释这些奇怪的地方，现在我们先熟悉用法，不要在意这些细节^\_^。
+
+上面的代码给 `Base` 添加了一个可以继承的方法 `getName()`。
+
+## 类的继承
+
+zoop 引入一个关键字 `extends` 用来实现继承，比如下面我们定义 `Base` 的子类 `Child`：
+
+```zig
+pub const Child = struct {
+    // 表示我继承 Base
+    pub const extends = .{Base};
+
+    // 必要的两行
+    pub usingnamespace zoop.Fn(@This());
+    mixin: zoop.Mixin(@This());
+
+    // 我的初始化函数，里面调用父类的初始化函数
+    pub fn init(self: *Child, name: []const u8) void {
+        self.cast(Base).init(name);
+    }
+}
+test {
+    const t = std.testing;
+
+    var sub = try Child.new(t.allocator);
+    sub.init("sub");
+    defer sub.destroy();
+    const name = sub.getName(); // 使用继承来的方法 getName()
+    try t.expectEqualStrings(name, "sub");
+}
+```
+
+## 接口定义
+
+zoop 中的接口，实际上是一个胖指针。下面我们定义一个接口 `IGetName`:
+
+```zig
+pub const IGetName = struct {
+    // 定义接口的 `Vtable`，说明接口有哪些方法
+    pub const Vtable = zoop.DevVtable(@This(), struct {
+        getName: *const fn(self: *anyopaque) []const u8,
+    });
+    // 必需的一行
+    pub usingnamespace zoop.Api(@This());
+
+    // 必需的两个字段
+    ptr: *anyopaque,
+    vptr: *const Vtable,
+
+    // 必需的胶水代码，用来调用 `Vtable` 里面的函数
+    pub fn Api(comptime I:type) type {
+        return struct {
+            pub fn getName(self: I) []const u8 {
+                return self.vptr.getName(self.ptr);
+            }
+        }
+    }
+}
+```
+
+上面的代码具体原理下面会说到，这里大家知道接口就是这样定义的就行了。上面的代码定义了接口 `IGetName`，这个接口有一个方法 `getName()`。
+
+## 接口实现
+
+上面的 `Base` 类正好也有个符合 `IGetName` 接口的方法 `getName()`，那我们修改一下 `Base` 的代码让它来实现 `IGetName` 接口：
+
+```zig
+pub const Base = struct {
+    // 我实现 IGetName 接口
+    pub const extends = .{IGetName};
+
+    // 以下省略
+    ...
+}
+```
+
+可以看到实现接口和继承用的同样一个关键字 `extends`。因为子类会继承父类的接口，所以这样一来，`Child` 也自动实现了 `IGetName` 接口。
+
+## 方法重写和虚函数调用
+
+我们修改上面 `Child` 的代码，重写 `getName()` 方法：
+
+```zig
+pub const Child = struct {
+    ...
+    // 省略上面已知代码，下面代码重写了 Base.getName()
+
+    pub fn Fn(comptime T: type) type {
+        return zoop.Method(.{
+            struct {
+                pub fn getName(_: *T) []const u8 {
+                    return "override";
+                }
+            },
+        });
+    }
+}
+```
+
+要注意，只有可继承方法才可以被重写，可继承方法和重写的方法都要通过上面 `pub fn Fn(comptime T: type) type` 这样的方式来定义。
+重写的方法，只有通过接口，才能进行虚函数调用，下面是例子：
+
+```zig
+const t = std.testing;
+
+var child = try Child.new(t.allocator);
+child.init("Child");
+defer child.destroy();
+
+var base: *Base = child.cast(Base);
+
+// 不通过接口调用 getName()
+try t.expectEqualStrings(child.getName(), "override");
+try t.expectEqualStrings(base.getName(), "Child");
+
+// 通过接口调用(虚函数调用) getName();
+try t.expectEqualStrings(child.as(IGetName).?.getName(), "override");
+try t.expectEqualStrings(base.as(IGetName).?.getName(), "override");
+```
+
+上面例子中 `cast`、`as` 属于 zoop 中的类型转换，详细可以参考 [zoop 类型转换](https://zhuyadong.github.io/zoop-docs/guide/as-cast)
+
+那么 zoop 的基本使用方法就介绍到这里，下面我们开始介绍 zoop 的实现原理。
+
+# 预设场景
+
+接下来的讨论基于如下的属于 `mymod` 模块的类和接口：
+
+```zig
+/// 接口 IGetName
+pub const IGetName = struct {
+    pub const Vtable = zoop.DevVtable(@This(), struct {
+        getName: *const fn(self: *anyopaque) []const u8,
+    });
+    pub usingnamespace zoop.Api(@This());
+
+    ptr: *anyopaque,
+    vptr: *const Vtable,
+
+    pub fn Api(comptime I:type) type {
+        return struct {
+            pub fn getName(self: I) []const u8 {
+                return self.vptr.getName(self.ptr);
+            }
+        }
+    }
+}
+
+/// 接口 ISetName
+pub const ISetName = struct {
+    pub const Vtable = zoop.DevVtable(@This(), struct {
+        setName: *const fn(self: *anyopaque, name: []const u8) void,
+    });
+    pub usingnamespace zoop.Api(@This());
+
+    ptr: *anyopaque,
+    vptr: *const Vtable,
+
+    pub fn Api(comptime I:type) type {
+        return struct {
+            pub fn setName(self: I, name: []const u8) void {
+                self.vptr.setName(self.ptr, name);
+            }
+        }
+    }
+}
+
+/// 基类 Base
+pub const Base = struct {
+    pub const extends = .{ISetName};
+    pub usingnamespace zoop.Fn(@This());
+
+    name: []const u8,
+    mixin: zoop.Mixin(@This()),
+
+    pub fn Fn(comptime T: type) type {
+        return zoop.Method(.{
+            struct {
+                pub fn setName(this: *T, name: []const u8) void {
+                    this.cast(Base).name = name;
+                }
+            },
+        });
+    }
+}
+
+/// 子类 Child
+pub const Child = struct {
+    pub const extends = .{Base, IGetName};
+    pub usingnamespace zoop.Fn(@This());
+
+    mixin: zoop.Mixin(@This()),
+
+    pub fn Fn(comptime T: type) type {
+        return zoop.Method(.{
+            struct {
+                pub fn getName(this: *T) []const u8 {
+                    return this.cast(Base).name;
+                }
+            },
+        });
+    }
+}
+```
+
+接口有两个:
+
+- `IGetName`: 接口方法 `getName`
+- `ISetName`: 接口方法 `setName`
+
+类有两个:
+
+- `Base`: 基类，实现接口 `ISetName`
+- `Child`: 子类，继承 `Base`，并实现接口 `IGetName`
+
+# 核心数据结构 `zoop.Mixin(T)`
+
+我们看看两个类的 `mixin` 这个数据里面有什么：
+
+```zig
+pub const VtableFunc = *const fn (ifacename: []const u8) ?*IObject.Vtable;
+pub const SuperPtrFunc = *const fn (rootptr: *anyopaque, typename: []const u8) ?*anyopaque;
+
+zoop.Mixin(Base) = struct {
+    deallocator: ?std.mem.Allocator = null,
+    meta: struct {
+        rootptr: ?*anyopaque = null,
+        typeinfo: *struct {
+            typename: []const u8,
+            getVtable: VtableFunc,
+            getSuperPtr: SuperPtrFunc,
+        },
+    },
+    data: struct {},
+}
+
+zoop.Mixin(Child) = struct {
+    deallocator: ?std.mem.Allocator = null,
+    meta: struct {
+        rootptr: ?*anyopaque = null,
+        typeinfo: *struct {
+            typename: []const u8,
+            getVtable: VtableFunc,
+            getSuperPtr: SuperPtrFunc,
+        },
+    },
+    data: struct {
+        mymod_Base: Base,
+    },
+}
+```
+
+可以看出，两者的唯一的差别在于 `Child.mixin.data` 里面包含了一个 `Base`, 而 `Base.mixin.data` 里面是空的。说明在 zoop 中，类有多少个父类，则类的 `mixin.data` 中，就有多少个父类的数据。
+
+我们再来看看 `mixin.meta` 这个数据。先看看 `rootptr` 这个字段，如果我们现在有一个 `Base` 对象 `base`，那么 `base.mixin.meta.rootptr == &base` 是成立的；如果现在有一个 `Child` 对象 `child`，那么如下两条成立：
+
+- `child.mixin.meta.rootptr == &child`
+- `child.mixin.data.mymod_Base.mixin.meta.rootptr == &child`
+
+事实上，`child.mixin.data.mymod_Base.mixin.meta` 里面的内容就是完全复制的 `child.mixin.meta`，因为所有内层对象的 `mixin.meta` 都是复制的最外层那个对象的 `mixin.meta`，因而所有对象的 `rootptr` 都指向最外层对象，这也是为什么叫 `rootptr` 的原因。
+
+再看看 `typeinfo` 字段，这个字段是一个有3个字段的结构：
+
+- `typename`: 这是 `rootptr` 指向对象的类型名
+- `getVtable`: 根据接口名获得接口 `Vtable` 的函数
+- `getSuperPtr`: 根据父类名获得 `mixin.data` 中父类指针
+
+上面两个函数获取的都是最外层对象的数据。根据对 `mixin` 数据的分析，zoop 的类型转换的原理就很清楚了，大家可以参考官网上关于 [类型转换](https://zhuyadong.github.io/zoop-docs/guide/as-cast) 的内容。
+
+# 动态构造类的方法、接口方法、和 `Vtable`
+
+OOP 概念中的继承，重写，虚函数，实质其实就是在编译时动态构造需要的方法和属性。zoop 中主要是通过通过 [zoop.tuple](https://zhuyadong.github.io/zoop-docs/reference/tuple) 这个模块来进行编译时动态构造。
+
+这部分需要大家有一定的 [zig comptime](https://ziglang.org/documentation/0.13.0/#comptime) 的知识，同时如果大家理解了这部分知识，那么 zoop 动态构造方法属性的部分实际不难理解。（建议同时也看看 [zig 圣经](https://course.ziglang.cc/advanced/comptime) 中和 `comptime` 有关的部分，写的很好）
+
+下面我介绍一下 zoop 中用到的 `comptime` 一些技巧，相信会对大家今后使用 zig 有帮助。
+
+## `struct` 很万能
+
+`comptime` 编程中，`struct` 是你最好的朋友，想在不同的 `comptime` 函数之间传递数据，最方便的方式，就是通过构造一个 `struct`，把想传递的数据通过 `pub const xxx = ...` 的方式传递出去，通过 `struct` 保存数据最好的地方，就在于这个数据在运行时也是可用的 （`struct` 中的常量，是保存在 exe 的 `.data` 区，运行时可见），[zoop.tuple](https://zhuyadong.github.io/zoop-docs/reference/tuple) 就是通过这个方法实现的。
+
+## 动态构造 `struct` 的字段，用 `@Type()`
+
+网上好像很少有关于 `@Type()` 的使用说明，一般都是通过看 `zig.std` 的代码来学习，那我这里就稍微说明一下，希望能对大家有帮助。
+目前 zig 通过 `@Type()`，能动态构造的 `struct`，只有纯字段类型的 `struct` (个人理解)。构造的方法，就是先把计算好的一个 `std.builtin.Type.StructField` 数组传递给 `@Type()` 来返回一个 `struct`，比如以下代码：
+
+```zig
+fn GenStruct() type {
+    comptime var fields:[2]std.builtin.Type.StructField = undefined;
+    fields[0] = .{
+        .name = "age",
+        .type = i32,
+        .default_value = null,
+        .is_comptime = false,
+        .alignment = @alignOf(i32),
+    };
+    fields[1] = .{
+        .name = "name",
+        .type = []const u8,
+        .default_value = null,
+        .is_comptime = false,
+        .alignment = @alignOf([]const u8),
+    };
+
+    return @Type(.{
+        .Struct = .{
+            .layout = .auto,
+            .fields = fields[0..],
+            .decls = &.{},
+            .is_tuple = false,
+        }
+    });
+}
+
+const MyStruct = GenStruct();
+```
+
+这样上面的 `MyStruct` 就相当于：
+
+```zig
+const MyStruct = struct {
+    age: i32,
+    name: []const u8,
+};
+```
+
+zoop 动态构造 `Vtable` 就是通过这个方法做到的，参考 [zoop.DefVtable 原理](https://zhuyadong.github.io/zoop-docs/reference/principle#DefVtable) 和 [zoop 源代码](https://github.com/zhuyadong/zoop.git)
+
+## 动态构造 `struct` 的函数，用 `usingnamespace`
+
+要想定义 `struct` 中的函数，理论上代码是一定要写在 `struct` 中的，目前 zig 唯一留下的一个口子，就是 `usingnamespace`，zoop 正是利用这个特性，来动态构造 `struct` 的函数。
+
+我们回顾一下 `Base` 中定义 `setName` 方法的代码：
+
+```zig
+pub fn Fn(comptime T: type) type {
+    return zoop.Method(.{
+        struct {
+            pub fn setName(this: *T, name: []const u8) void {
+                this.cast(Base).name = name;
+            }
+        },
+    });
+}
+```
+
+这里 `zoop.Method()` 返回的是什么呢，返回的是：
+
+```zig
+struct {
+    pub const value = .{
+        struct {
+            pub fn setName(this: *T, name: []const u8) void {
+                this.cast(Base).name = name;
+            }
+        },
+    };
+}
+```
+
+通过返回一个 `struct` 的方式，在它的 `value` 常量中保存了一个 `tuple`，`tuple` 有一个带有方法 `setName` 的 `struct` 元素。众所周知，`tuple` 是可以各种组合的 （参考 [zoop.tuple](https://zhuyadong.github.io/zoop-docs/reference/tuple)），于是 zoop 通过 [zoop.Fn](https://zhuyadong.github.io/zoop-docs/reference/zoop#Fn)，比如上例中 `Child` 中的 `pub usingnamespace zoop.Fn(@This())`，把 `Child` 类型代入 `Base.Fn` 中，就相当于在 `Child` 内写了如下代码：
+
+```zig
+pub usingnamespace struct {
+            pub fn setName(this: *Child, name: []const u8) void {
+                this.cast(Base).name = name;
+            }
+        };
+```
+
+因而实现了对 `Base.setName()` 方法的继承。
+
+## 运行时根据类型找 `Vtable` 和父类指针
+
+这个功能的实现当时第一版是使用的 `std.StaticStringMap` 保存了一个类中所有接口名到接口 `Vtable` ，以及父类名到父类数据在本类中的地址偏移的映射。和 C++ 的 `dynamic_cast` 比起来，性能是比较差的。后来看到西瓜大大发的一个链接 [点这里](https://github.com/SuperAuguste/cursed-zig-errors)，忽然意识到这不就是我一直想要的 `comptime` 全局变量么，我终于能写出 `typeId(comptime T: type) u32` 这样的函数了：
+
+```zig
+fn typeId(comptime T: type) u32 {
+    return @intCast(@intFromError(@field(anyerror, "#" ++ @typeName(T))));
+}
+```
+
+这里利用的，就是上面说到的链接中提示到的一个 zig 的 `error` 类型的特点：访问 `error` 中不存在的值，zig 会生成一个唯一的新值返回，并且这个在 `comptime` 的时候同样有效。
+
+有了 `typeId()` 函数，上面的事从根据类型名查哈希表，就变成了在数组中找同样的 `typeid` 了，整数比较对比字符串比较，那性能是快了好几倍的，根据我的了解，C++ 的 `dynamic_cast` 也是在数组中比较 `typeid`，这样一来，zoop 的动态转换性能，就和 C++ 差不多了。
+
+利用这个新的 `typeId()` 函数，zoop 怎么做动态类型转换，我从 zoop 中抄一段代码大家一看就明白：
+
+```zig
+/// 返回一个函数，函数的功能是输入接口 `typeid`，返回针对T的该接口的 Vtable
+fn getVtableFunc(comptime T: type) VtableFunc {
+    // 先找出 T 实现的所有接口
+    const ifaces = tuple.Append(.{IObject}, Interfaces(T)).value;
+
+    // 所有接口的 typeid 和 Vtable 编译时计算好并保存在 kvs 数组中
+    const KV = struct { typeid: u32, vtable: *IObject.Vtable };
+    comptime var kvs: [ifaces.len]KV = undefined;
+    inline for (ifaces, 0..) |iface, i| {
+        kvs[i] = .{ .typeid = typeId(iface), .vtable = @ptrCast(makeVtable(T, RealVtable(iface))) };
+    }
+
+    return (struct {
+        pub fn func(typeid: u32) ?*IObject.Vtable {
+            // 根据 typeid，从 kvs 数组中找出 Vtable
+            for (kvs) |kv| {
+                if (kv.typeid == typeid) return kv.vtable;
+            }
+            return null;
+        }
+    }).func;
+}
+```
+
+上面是找 `Vtable` 的实现，找父类指针的实现原理是一样的，大家可以去看 zoop 源代码了解细节。

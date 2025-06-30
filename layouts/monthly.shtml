@@ -8,7 +8,7 @@
     <a href="$loop.it.link()"><li :text="$loop.it.title"></li></a>
   </ul>
   <div :html="$page.content()"></div>
-  <div id="prev-next">
+  <div id="prev-next" :if="$page.isSection().not()">
     <div :if="$page.prevPage?()">
       <a href="$if.link()">
         ←

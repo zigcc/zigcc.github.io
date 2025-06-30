@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head id="head">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1">
+    <meta name="description" content="Zig Chinese Community is dedicated to sharing and spreading the use of Zig language among Chinese users.">
+    <title>Zig 语言中文社区</title>
+    <link type="text/css" rel="stylesheet" href="/style.css">
+    <link type="text/css" rel="stylesheet" href="/highlight.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- TODO replace this -->
+    
+  <link type="text/css" rel="stylesheet" href="/style.css">
+
+  </head>
+  <body id="body">
+    <div class="header">
+      <a href="/" class="site-title"><h1>Zig 语言中文社区</h1></a>
+      <nav>
+        <a href="/learn/">学习 Zig</a>
+         &nbsp; • &nbsp;
+        <a href="/monthly/">月刊</a>
+         &nbsp; • &nbsp;
+        <a href="/post/">博客</a>
+         &nbsp; • &nbsp;
+        <a href="/contributing/">贡献</a>
+         &nbsp; • &nbsp;
+        <a href="/community/">社区</a>
+      </nav>
+    </div>
+    
+  <!-- TODO: 根据页面内容长度决定是否显示 TOC -->
+  <div class="docs">
+    <!-- TODO: 层级 h1 -->
+    <h1>Table of Contents</h1>
+    <div><ul>
+<li>栈帧</li><li>悬空指针</ul></div>
+  </div>
+  <div class="content"><blockquote><p>原文地址：<a href="https://www.openmymind.net/learning_zig/stack_memory" target="_blank">https://www.openmymind.net/learning_zig/stack_memory</a></p></blockquote><p>通过深入研究指针，我们了解了变量、数据和内存之间的关系。因此，我们对内存的分布有了一定的了解，但我们还没有讨论如何管理数据以及内存。对于运行时间短和简单的脚本来说，这可能并不重要。在 32GB 笔记本电脑时代，你可以启动程序，使用几百兆内存读取文件和解析 HTTP 响应，做一些了不起的事情，然后退出。程序退出时，操作系统会知道，它给程序分配的内存可以被回收，并用于其他用途了。</p><p>但对于运行数天、数月甚至数年的程序来说，内存就成了有限而宝贵的资源，很可能会被同一台机器上运行的其他进程抢占。根本不可能等到程序退出后再释放内存。这就是垃圾回收器的主要工作：了解哪些数据不再使用，并释放其内存。在 Zig 中，你就是垃圾回收器。</p><p>我们编写的大多数程序都会使用内存的三个区域。第一个是全局空间，也就是存储程序常量（包括字符串字面量）的地方。所有全局数据都被嵌入到二进制文件中，在编译时（也就是运行时）完全已知，并且不可更改。这些数据在程序的整个生命周期中都存在，从不需要增加或减少内存。除了会影响二进制文件的大小外，我们完全不必担心这个问题。</p><p>内存的第二个区域是调用栈，也是本小节的主题。第三个区域是堆，将在下一小节讨论。</p><blockquote><p>三块内存区域实际上没有真正的物理差别。操作系统和可执行文件创造了“内存区域”这个概念。</p></blockquote><h1>栈帧</h1><p>迄今为止，我们所见的所有数据都是常量，存储在二进制的全局数据部分或作为局部变量。局部表示该变量只在其声明的范围内有效。在 Zig 中，范围从花括号开始到结束。大多数变量的范围限定在一个函数内，包括函数参数，或一个控制流块，比如 if。但是，正如所见，你可以创建任意块，从而创建任意范围。</p><p>在上一部分中，我们可视化了 <code>main</code> 和 <code>levelUp</code> 函数的内存，每个函数都有一个 User:</p><pre><code>main: user -&gt;    -------------  (id: 1043368d0)
+                 |     1     |
+                 -------------  (power: 1043368d8)
+                 |    100    |
+                 -------------  (name.len: 1043368dc)
+                 |     4     |
+                 -------------  (name.ptr: 1043368e4)
+                 | 1182145c0 |-------------------------
+levelUp: user -&gt; -------------  (id: 1043368ec)       |
+                 |     1     |                        |
+                 -------------  (power: 1043368f4)    |
+                 |    100    |                        |
+                 -------------  (name.len: 1043368f8) |
+                 |     4     |                        |
+                 -------------  (name.ptr: 104336900) |
+                 | 1182145c0 |-------------------------
+                 -------------                        |
+                                                      |
+                 .............  empty space           |
+                 .............  or other data         |
+                                                      |
+                 -------------  (1182145c0)        &lt;---
+                 |    &apos;G&apos;    |
+                 -------------
+                 |    &apos;o&apos;    |
+                 -------------
+                 |    &apos;k&apos;    |
+                 -------------
+                 |    &apos;u&apos;    |
+                 -------------
+</code></pre><p><code>levelUp</code> 紧接在 <code>main</code> 之后是有原因的：这是我们的简化版调用栈。当我们的程序启动时，<code>main</code> 及其局部变量被推入调用栈。当 <code>levelUp</code> 被调用时，它的参数和任何局部变量都会被添加到调用栈上。重要的是，当 <code>levelUp</code> 返回时，它会从栈中弹出。 在 <code>levelUp</code> 返回并且控制权回到 <code>main</code> 后，我们的调用栈如下所示：</p><pre><code>main: user -&gt;    -------------  (id: 1043368d0)
+                 |     1     |
+                 -------------  (power: 1043368d8)
+                 |    100    |
+                 -------------  (name.len: 1043368dc)
+                 |     4     |
+                 -------------  (name.ptr: 1043368e4)
+                 | 1182145c0 |-------------------------
+                 -------------                        |
+                                                      |
+                 .............  empty space           |
+                 .............  or other data         |
+                                                      |
+                 -------------  (1182145c0)        &lt;---
+                 |    &apos;G&apos;    |
+                 -------------
+                 |    &apos;o&apos;    |
+                 -------------
+                 |    &apos;k&apos;    |
+                 -------------
+                 |    &apos;u&apos;    |
+                 -------------
+</code></pre><p>当一个函数被调用时，其整个栈帧被推入调用栈——这就是我们需要知道每种类型大小的原因之一。尽管我们可能直到特定的代码行执行时，才能知道我们 <code>user</code> 的名字的长度（假设它不是一个常量字符串字面量），但我们知道我们的函数有一个 <code>User</code> 类型的变量，除了其他字段，只需要 8 字节来存储<code>name.len</code>和 8 字节来存储<code>name.ptr</code>。</p><p>当函数返回时，它的栈帧（最后推入调用栈的帧）会被弹出。令人惊讶的事情刚刚发生：<code>levelUp</code> 使用的内存已被自动释放！虽然从技术上讲，这些内存可以返回给操作系统，但据我所知，没有任何实现会真正缩小调用栈（不过，在必要时，实现会动态增加调用栈）。不过，用于存储 <code>levelUp</code> 堆栈帧的内存现在可以在我们的进程中用于另一个堆栈帧了。</p><blockquote><p>在普通程序中，调用堆栈可能会变得很大。在一个典型程序所使用的所有框架代码和库之间，你最终会发现深层嵌套的函数。通常情况下，这并不是问题，但有时你可能会遇到堆栈溢出错误。当我们的调用栈空间耗尽时，就会发生这种情况。这种情况通常发生在递归函数中，即函数会调用自身。</p></blockquote><p>与全局数据一样，调用栈也由操作系统和可执行文件管理。程序启动时，以及此后启动的每个线程，都会创建一个调用栈（其大小通常可在操作系统中配置）。调用栈在程序的整个生命周期中都存在，如果是线程，则在线程的整个生命周期中都存在。程序或线程退出时，调用栈将被释放。我们的全局数据包含所有程序的全局数据，而调用栈只包含当前执行的函数层次的栈帧。这样做既能有效利用内存，又能简化堆栈帧的管理。</p><h1>悬空指针</h1><p>栈帧的简洁和高效令人惊叹。但它也很危险：当函数返回时，它的任何本地数据都将无法访问。这听起来似乎很合理，毕竟这是本地数据，但却会带来严重的问题。请看这段代码：</p><pre><code class="zig"><span class="keyword">const</span> <span class="module constant variable_builtin type variable">std</span> <span class="operator">=</span> <span class="function_builtin keyword_import">@import</span><span class="punctuation_bracket">(</span><span class="string">&quot;std&quot;</span><span class="punctuation_bracket">)</span><span class="punctuation_delimiter">;</span>
+
+<span class="keyword_modifier">pub</span> <span class="keyword_function">fn</span> <span class="constant variable_builtin type variable function">main</span><span class="punctuation_bracket">(</span><span class="punctuation_bracket">)</span> <span class="type_builtin">void</span> <span class="punctuation_bracket">{</span>
+	<span class="keyword">const</span> <span class="constant variable_builtin type variable">user1</span> <span class="operator">=</span> <span class="constant variable_builtin type variable">User</span><span class="punctuation_delimiter">.</span><span class="type constant variable_builtin function_call variable_member variable">init</span><span class="punctuation_bracket">(</span><span class="number">1</span><span class="punctuation_delimiter">,</span> <span class="number">10</span><span class="punctuation_bracket">)</span><span class="punctuation_delimiter">;</span>
+	<span class="keyword">const</span> <span class="constant variable_builtin type variable">user2</span> <span class="operator">=</span> <span class="constant variable_builtin type variable">User</span><span class="punctuation_delimiter">.</span><span class="type constant variable_builtin function_call variable_member variable">init</span><span class="punctuation_bracket">(</span><span class="number">2</span><span class="punctuation_delimiter">,</span> <span class="number">20</span><span class="punctuation_bracket">)</span><span class="punctuation_delimiter">;</span>
+
+	<span class="constant variable_builtin type variable">std</span><span class="punctuation_delimiter">.</span><span class="constant variable_builtin type variable_member variable">debug</span><span class="punctuation_delimiter">.</span><span class="type constant variable_builtin function_call variable_member variable">print</span><span class="punctuation_bracket">(</span><span class="string">&quot;User {d} has power of {d}</span><span class="string string_escape">\n</span><span class="string">&quot;</span><span class="punctuation_delimiter">,</span> <span class="punctuation_delimiter">.</span><span class="punctuation_bracket">{</span><span class="constant variable_builtin type variable">user1</span><span class="punctuation_delimiter">.</span><span class="constant variable_builtin type variable_member variable">id</span><span class="punctuation_delimiter">,</span> <span class="constant variable_builtin type variable">user1</span><span class="punctuation_delimiter">.</span><span class="constant variable_builtin type variable_member variable">power</span><span class="punctuation_bracket">}</span><span class="punctuation_bracket">)</span><span class="punctuation_delimiter">;</span>
+	<span class="constant variable_builtin type variable">std</span><span class="punctuation_delimiter">.</span><span class="constant variable_builtin type variable_member variable">debug</span><span class="punctuation_delimiter">.</span><span class="type constant variable_builtin function_call variable_member variable">print</span><span class="punctuation_bracket">(</span><span class="string">&quot;User {d} has power of {d}</span><span class="string string_escape">\n</span><span class="string">&quot;</span><span class="punctuation_delimiter">,</span> <span class="punctuation_delimiter">.</span><span class="punctuation_bracket">{</span><span class="constant variable_builtin type variable">user2</span><span class="punctuation_delimiter">.</span><span class="constant variable_builtin type variable_member variable">id</span><span class="punctuation_delimiter">,</span> <span class="constant variable_builtin type variable">user2</span><span class="punctuation_delimiter">.</span><span class="constant variable_builtin type variable_member variable">power</span><span class="punctuation_bracket">}</span><span class="punctuation_bracket">)</span><span class="punctuation_delimiter">;</span>
+<span class="punctuation_bracket">}</span>
+
+<span class="keyword_modifier">pub</span> <span class="keyword">const</span> <span class="constant variable_builtin type variable">User</span> <span class="operator">=</span> <span class="keyword_type">struct</span> <span class="punctuation_bracket">{</span>
+	<span class="constant variable_builtin type variable_member variable">id</span><span class="punctuation_delimiter">:</span> <span class="type_builtin">u64</span><span class="punctuation_delimiter">,</span>
+	<span class="constant variable_builtin type variable_member variable">power</span><span class="punctuation_delimiter">:</span> <span class="type_builtin">i32</span><span class="punctuation_delimiter">,</span>
+
+	<span class="keyword_function">fn</span> <span class="constant variable_builtin type variable function">init</span><span class="punctuation_bracket">(</span><span class="constant variable_builtin variable_parameter variable type">id</span><span class="punctuation_delimiter">:</span> <span class="type_builtin">u64</span><span class="punctuation_delimiter">,</span> <span class="constant variable_builtin variable_parameter variable type">power</span><span class="punctuation_delimiter">:</span> <span class="type_builtin">i32</span><span class="punctuation_bracket">)</span> <span class="operator">*</span><span class="constant variable_builtin type variable">User</span><span class="punctuation_bracket">{</span>
+		<span class="keyword">var</span> <span class="constant variable_builtin type variable">user</span> <span class="operator">=</span> <span class="constant variable_builtin type variable">User</span><span class="punctuation_bracket">{</span>
+			<span class="punctuation_delimiter">.</span><span class="constant variable_builtin type variable_member variable">id</span> <span class="operator">=</span> <span class="constant variable_builtin type variable">id</span><span class="punctuation_delimiter">,</span>
+			<span class="punctuation_delimiter">.</span><span class="constant variable_builtin type variable_member variable">power</span> <span class="operator">=</span> <span class="constant variable_builtin type variable">power</span><span class="punctuation_delimiter">,</span>
+		<span class="punctuation_bracket">}</span><span class="punctuation_delimiter">;</span>
+		<span class="keyword_return">return</span> <span class="operator">&amp;</span><span class="constant variable_builtin type variable">user</span><span class="punctuation_delimiter">;</span>
+	<span class="punctuation_bracket">}</span>
+<span class="punctuation_bracket">}</span><span class="punctuation_delimiter">;</span>
+</code></pre>
+<p>粗瞥一眼，预期会有下面的输出：</p><pre><code class="bash"><span class="constant function">User</span> <span class="constant">1</span> <span class="constant">has</span> <span class="constant">power</span> <span class="constant">of</span> <span class="constant">10</span>
+<span class="constant function">User</span> <span class="constant">2</span> <span class="constant">has</span> <span class="constant">power</span> <span class="constant">of</span> <span class="constant">20</span>
+</code></pre>
+<p>但实际上:</p><pre><code class="bash"><span class="constant function">User</span> <span class="constant">2</span> <span class="constant">has</span> <span class="constant">power</span> <span class="constant">of</span> <span class="constant">20</span>
+<span class="constant function">User</span> <span class="constant">9114745905793990681</span> <span class="constant">has</span> <span class="constant">power</span> <span class="constant">of</span> <span class="constant">0</span>
+</code></pre>
+<p>你可能会得到不同的结果，但根据我的输出，<code>user1</code>继承了<code>user2</code>的值，而<code>user2</code>的值是无意义的。这段代码的关键问题是<code>User.init</code>返回局部<code>user</code>的地址<code>&amp;user</code>。这被称为悬空指针，是指引用无效内存的指针。它是许多段错误（segfaults）的源头。</p><p>当一个栈帧从调用栈中弹出时，我们对该内存的任何引用都是无效的。尝试访问该内存的结果是未定义的。你可能会得到无意义的数据或段错误。我们可以试图理解我的输出，但这不是我们想要或甚至可以依赖的行为。</p><p>这类错误的一个挑战是，在有垃圾回收器的语言中，上述代码完全没有问题。例如，Go 会检测局部变量 <code>user</code> 超出了 init 函数的作用域，并在需要时确保其有效性（Go 如何做到这一点是一个实现细节，但它有几个选项，包括将数据移动到堆中，这就是下一部分要讨论的内容）。</p><p>而另一个问题，很遗憾地说，它是一个难以发现的错误。在我们上面的例子中，我们显然返回了一个局部地址。但这种行为可以隐藏在嵌套函数和复杂数据类型中。你是否看到了以下不完整代码的任何可能问题：</p><pre><code class="zig"><span class="keyword_function">fn</span> <span class="constant variable_builtin type variable function">read</span><span class="punctuation_bracket">(</span><span class="punctuation_bracket">)</span> <span class="operator">!</span><span class="type_builtin">void</span> <span class="punctuation_bracket">{</span>
+	<span class="keyword">const</span> <span class="constant variable_builtin type variable">input</span> <span class="operator">=</span> <span class="keyword_exception">try</span> <span class="constant variable_builtin function_call variable type">readUserInput</span><span class="punctuation_bracket">(</span><span class="punctuation_bracket">)</span><span class="punctuation_delimiter">;</span>
+	<span class="keyword_return">return</span> <span class="constant variable_builtin type variable">Parser</span><span class="punctuation_delimiter">.</span><span class="type constant variable_builtin function_call variable_member variable">parse</span><span class="punctuation_bracket">(</span><span class="constant variable_builtin type variable">input</span><span class="punctuation_bracket">)</span><span class="punctuation_delimiter">;</span>
+<span class="punctuation_bracket">}</span>
+</code></pre>
+<p>无论<code>Parser.parse</code>返回什么，它都将比变量<code>input</code>存在更久。如果<code>Parser</code>持有对 <code>input</code> 的引用，那将是一个悬空指针，等待着让我们的应用程序崩溃。理想情况下，如果 <code>Parser</code> 需要 <code>input</code> 生命周期尽可能长，它将复制 <code>input</code>，并且该复制将与它自己的生命周期绑定（更多内容在下一部分）。但此处没有执行这一步骤。<code>Parser</code> 的文档可能会对它对 <code>input</code> 的期望或它如何使用 <code>input</code> 提供一些说明。缺少这些信息，我们可能需要深入代码来弄清楚。</p><p>为了解决我们上面例子里的错误，有个简单的方法是改变 <code>init</code>，使它返回一个 <code>User</code> 而不是<code>*User</code>（指向 <code>User</code> 的指针）。我们可以使用 <code>return user</code> 而非 <code>return &amp;user</code>。但这并不总是可能的。数据经常需要超越函数作用域的严格界限。为此，我们有了第三个内存区域–堆，这也是下一部分的主题。</p><p>在深入研究堆之前，我们要知道，在本指南结束之前，我们还将看到最后一个关于悬挂指针的示例。到那时，我们已经掌握了足够多的语言知识，可以给出一个不太复杂的示例。我之所以想重提这个话题，是因为对于来自垃圾回收语言的开发人员来说，这很可能会导致错误和挫败感。这一点你会掌握的。归根结底，就是要意识到数据的生命周期。</p></div>
+
+    <footer>
+      <div>
+        <div>
+          <p>&copy; 2022–2025 |
+            <a href="https://github.com/zigcc/zigcc.github.io">Source Code</a>
+            |
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">BY-NC-ND 4.0</a>
+            |
+            <!--TODO <a href="/index.xml">RSS</a> --></p>
+        </div>
+        <div>
+          <a href="https://github.com/orgs/zigcc/discussions">
+            <i class="fab fa-github"></i>
+          </a>
+          <a href="https://discord.gg/UraRxD6WXD">
+            <i class="fab fa-discord"></i>
+          </a>
+          <a href="https://t.me/ZigChinese">
+            <i class="fab fa-telegram"></i>
+          </a>
+          <a href="mailto:hello@ziglang.cc">
+            <i class="fa fa-envelope"></i>
+          </a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

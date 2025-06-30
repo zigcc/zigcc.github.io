@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head id="head">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1">
+    <meta name="description" content="Zig Chinese Community is dedicated to sharing and spreading the use of Zig language among Chinese users.">
+    <title :text="$site.title"></title>
+    <link type="text/css" rel="stylesheet" href="$site.asset('style.css').link()">
+    <link type="text/css" rel="stylesheet" href="$site.asset('highlight.css').link()">
+    <super>
+  </head>
+  <body id="body">
+    <div class="header">
+      <a href="$site.page('').link()" class="site-title"><h1 :text="$site.title"></h1></a>
+      <nav>
+        <a href="$site.page('learn').link()">学习 Zig</a>
+        <a href="$site.page('monthly').link()">月刊</a>
+        <a href="$site.page('post').link()">博客</a>
+        <a href="$site.page('contributing').link()">贡献</a>
+        <a href="$site.page('community').link()">社区</a>
+      </nav>
+    </div>
+    <super>
+    <footer>
+      <div>
+        <div>
+          <p>&copy; 2022–2025 |
+            <a href="https://github.com/zigcc/zigcc.github.io">Source Code</a>
+            |
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">BY-NC-ND 4.0</a>
+            |
+            <!--TODO <a href="/index.xml">RSS</a> --></p>
+        </div>
+        <div>
+          <a
+            href="https://github.com/orgs/zigcc/discussions"
+            target="_blank"
+          >
+            <img src="$site.asset('icons/github.svg').link()" alt="GitHub">
+          </a>
+          <a href="https://discord.gg/UraRxD6WXD" target="_blank">
+            <img src="$site.asset('icons/discord.svg').link()" alt="Discord">
+          </a>
+          <a href="https://t.me/ZigChinese" target="_blank">
+            <img src="$site.asset('icons/telegram.svg').link()" alt="Telegram">
+          </a>
+          <a href="mailto:hello@ziglang.cc" target="_blank">
+            <img src="$site.asset('icons/email.svg').link()" alt="Email">
+          </a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

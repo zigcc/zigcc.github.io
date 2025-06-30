@@ -1,0 +1,45 @@
+---
+.title = "202402 | Zig 2024 Roadmap 新鲜出炉",
+.date = @date("2024-03-04T20:54:50+0800"),
+.author = "ZigCC",
+.layout = "monthly.shtml",
+.draft = false,
+.custom = { .lastmod = "2024-03-06T20:39:20+0800" },
+---
+
+# [重大事件]($section.id('重大事件'))
+Andrew 最近在 zigshow 节目中介绍了 Zig 2024 年的规划，主要有以下几点：
+
+1. 0.12 版本会尽快发布
+2. 编译时间现在太慢，进而导致修 bug 的时间长，因此 core team 会优先解决这个编译时间问题。在这个看板中，有相应的进度，主要是：Ditch LLVM、Incremental Compilation 这两个。
+   - 很多人都对 Ditch LLVM 这个事情嗤之以鼻，认为这是不自量力，[这个 issue](https://github.com/ziglang/zig/issues/16270) 的讨论也比较多，已经有近 200 条回复，最近 Andrew 增加了[一条回复](https://github.com/ziglang/zig/issues/16270#issuecomment-1905107583)，引用了 [In Defense of Not-Invented-Here Syndrome](https://www.joelonsoftware.com/2001/10/14/in-defense-of-not-invented-here-syndrome/)，该文章的核心观点是如果一个技术是一个产品的核心点，那么就应该自己写，因为这样才有核心竞争力，文中的例子是 Excel 团队会自己维护一个 C 编译器。
+3. 异步的支持，目前还有还有不少需要解决的技术难点，比如：
+   - async 函数挂起时，会保存所有上下文，但是在递归函数里，容易 oom
+   - 无法推倒出 函数指针 是不是 async fn 的，async fn 与普通 fn 的调用方式是不一样的
+4. Donor Bounties，捐赠性悬赏，
+5. 工具链，目前还没精力，只能让社区先来做
+
+更多细致总结可以参考：[Zig Roadmap 2024 - Andrew Kelley #91](https://github.com/orgs/zigcc/discussions/91)
+B 站搬运地址：https://www.bilibili.com/video/BV1UC4y167w9/
+# [观点/教程]($section.id('观点/教程'))
+- [Fast-growing Zig tops Stack Overflow survey for highest-paid programming language](https://www.infoworld.com/article/3713082/fast-growing-zig-tops-stack-overflow-survey-for-highest-paid-programming-language.html) :: 估计是 Bun 带动的贫富差距？！
+- [Pool with generational references in Zig](https://text.garden/writings/generationalpool.html) :: 作者在文中介绍了一种有意思的思路：当有很多指针指向同一个对象时，如何不用遍历这些指针就能让其失效，答案是用一个胖指针，包括两部分：真正的数据指针和指向对象的年龄，当指针的年龄和指向对象的年龄不一致时，即认为该指针失效。
+- [TCC RISC-V Compiler runs in the Web Browser (thanks to Zig Compiler)](https://lupyuen.codeberg.page/articles/tcc.html) :: [TCC](https://github.com/sellicott/tcc-riscv32) 是一个 64 位 RISC-V 的编译器，作者在这篇文章里利用 Zig 把它编译成 WebAssembly 放到浏览器里执行。其中的难点在于 TCC 会调用 Posix 的一些函数，比如：fopen、fprintf、strncpy、malloc 等，但是这些在 WebAssembly 里是没有的，因此需要[自己实现](https://github.com/lupyuen/tcc-riscv32-wasm/blob/main/zig/tcc-wasm.zig#L447-L774)，不过幸好 Zig 社区内已经有不少 libc 的实现了：
+  - [marler8997/ziglibc](https://github.com/marler8997/ziglibc)
+  - [ZigEmbeddedGroup/foundation-libc](https://github.com/ZigEmbeddedGroup/foundation-libc)，A libc implementation written in Zig that is designed to be used with freestanding targets.
+- [Building the DirectX shader compiler better than Microsoft?](https://devlog.hexops.com/2024/building-the-directx-shader-compiler-better-than-microsoft/) ::
+- [Porting Zig to NetBSD](http://coypu.sdf.org/porting-zig.html) ::
+- [Sig Engineering - Part 2 - Progress on AccountsDB & more](https://blog.syndica.io/sig-engineering-part-2-accountsdb-more/) :: Syndica 公司的 Sig，这是一款用 Zig 编写的、专注于 RPS 的 Solana 验证器客户端。在这篇文章里，他们分析了如何优化 HashMap 的性能，而且实现了一个基于本地磁盘的 Allocator。而且他们还在招聘 Zig 工程师：
+  - [Senior Software Engineer (Zig/C/Rust) @ Syndica](https://jobs.ashbyhq.com/syndica/15ab4e32-0f32-41a0-b8b0-16b6518158e9)
+
+# [项目/工具]($section.id('项目/工具'))
+- [semickolon/kirei](https://github.com/semickolon/kirei) :: 🌸 The prettiest keyboard software
+- [Dok8tavo/Interfacil](https://github.com/Dok8tavo/Interfacil/) :: Interfacil is a Zig package for making and using interfaces easily in Zig.
+- [kamlesh-nb/azure-sdk-for-zig](https://github.com/kamlesh-nb/azure-sdk-for-zig) :: Azure Sdk for Zig - Experimental
+- [ringtailsoftware/zig-wasm-audio-framebuffer](https://github.com/ringtailsoftware/zig-wasm-audio-framebuffer) :: Examples of integrating Zig and Wasm for audio and graphics on the web
+- [cztomsik/tokamak](https://github.com/cztomsik/tokamak) :: Server-side framework for Zig, relying heavily on dependency injection.
+- [The-Z-Labs/cli4bofs](https://github.com/The-Z-Labs/cli4bofs) :: Command line interface for (running) BOFs
+- [nelipuu/zbind](https://github.com/nelipuu/zbind) :: Zig-TypeScript binding generator 🟦 🦎
+- [sneekyfoxx/ziggy](https://github.com/sneekyfoxx/ziggy) :: 又又一个 Zig 版本管理工具
+# [Zig 语言更新]($section.id('zig-update'))
+[2024-02-01..2024-03-01](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-02-01..2024-03-01)

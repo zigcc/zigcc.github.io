@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head id="head">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1">
+    <meta name="description" content="Zig Chinese Community is dedicated to sharing and spreading the use of Zig language among Chinese users.">
+    <title>Zig 语言中文社区</title>
+    <link type="text/css" rel="stylesheet" href="/style.css">
+    <link type="text/css" rel="stylesheet" href="/highlight.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- TODO replace this -->
+    
+
+  </head>
+  <body id="body">
+    <div class="header">
+      <a href="/" class="site-title"><h1>Zig 语言中文社区</h1></a>
+      <nav>
+        <a href="/learn/">学习 Zig</a>
+         &nbsp; • &nbsp;
+        <a href="/monthly/">月刊</a>
+         &nbsp; • &nbsp;
+        <a href="/post/">博客</a>
+         &nbsp; • &nbsp;
+        <a href="/contributing/">贡献</a>
+         &nbsp; • &nbsp;
+        <a href="/community/">社区</a>
+      </nav>
+    </div>
+    
+  <h1>Learning Zig 中文翻译</h1>
+  <div><div id="table-of-contents"><h2><a class="" href="#table-of-contents">Section Contents</a></h2><ul><li><a href="/learn/preface/">前言</a></li><li><a href="/learn/installing-zig/">安装 Zig</a></li><li><a href="/learn/language-overview-part1/">语言概述 - 第一部分</a></li><li><a href="/learn/language-overview-part2/">语言概述 - 第二部分</a></li><li><a href="/learn/style-guide/">编码风格</a></li><li><a href="/learn/pointers/">指针</a></li><li><a href="/learn/stack-memory/">栈内存</a></li><li><a href="/learn/heap-memory-and-allocator/">堆内存和分配器</a></li><li><a href="/learn/generics/">泛型</a></li><li><a href="/learn/coding-in-zig/">实战</a></li><li><a href="/learn/conclusion/">总结</a></li></ul><h2>牟言</h2><p><a href="https://www.openmymind.net/learning_zig/" target="_blank">《学习 Zig》</a>系列教程最初由 <a href="https://github.com/karlseguin" target="_blank">Karl Seguin</a> 编写，该教程行文流畅，讲述的脉络由浅入深，深入浅出，是入门 Zig 非常不错的选择。因此，<a href="https://ziglang.cc" target="_blank">Zig 中文社区</a>将其翻译成中文，便于在中文用户内阅读与传播。</p><p>初次接触 Zig 的用户可以按序号依次阅读，对于有经验的 Zig 开发者可按需阅读感兴趣的章节。</p><h2>关于原作者</h2><p><a href="https://www.linkedin.com/in/karlseguin/" target="_blank">Karl Seguin</a> 在多个领域有着丰富经验，前微软 MVP，他撰写了大量文章，是多个微软公共新闻组的活跃成员。现居新加坡。他还是以下教程的作者：</p><ul><li><a href="https://github.com/karlseguin/the-little-go-book" target="_blank">The Little Go Book</a></li><li><a href="https://github.com/karlseguin/the-little-redis-book" target="_blank">The Little Redis Book</a></li><li><a href="https://github.com/karlseguin/the-little-mongodb-book" target="_blank">The Little MongoDB Book</a></li></ul><p>可以在 <a href="http://openmymind.net" target="_blank">http://openmymind.net</a> 找到他的博客，或者通过 <a href="http://twitter.com/karlseguin" target="_blank">@karlseguin</a> 在 Twitter 上关注他。</p><h2>翻译原则</h2><p>技术文档的翻译首要原则是准确，但在准确的前提下如何保证『信、达、雅』？这是个挑战，在翻译本教程时，在某些情况下会根据上下文进行意译，便于中文读者阅读。</p><p>最后，感谢翻译者的无私贡献。❤️️</p><h2>离线阅读</h2><p>在本仓库的 <a href="https://github.com/zigcc/zigcc.github.io/releases" target="_blank">release 页面</a>会定期将本教程导出为 PDF 格式，读者可按需下载。</p><pre><code class="html"><span class="comment">&lt;!-- TODO --&gt;</span>
+<span class="comment">&lt;!-- 读者也可以使用右侧导航栏中的『[整节打印](_print)』将当前版本教程保存为 PDF 格式。 --&gt;</span>
+</code></pre>
+<h2>其他学习资料</h2><p>由于 Zig 目前还处于快速迭代，因此最权威的资料无疑是官方的 <a href="https://ziglang.org/documentation/master/" target="_blank">Zig Language Reference</a>，遇到语言的细节问题，基本都可以在这里找到答案。 其次是社区的一些高质量教程，例如：</p><ul><li><strong><a href="https://github.com/zigcc/forum/issues" target="_blank">Zig 日报</a>:</strong></li><li><strong><a href="https://course.ziglang.cc" target="_blank">Zig 语言圣经</a>:</strong> 一份内容全面、深入浅出介绍 Zig 的教程</li><li><strong><a href="https://codeberg.org/ziglings/exercises/" target="_blank">ziglings/exercises</a>:</strong> Learn the Zig programming language by fixing tiny broken programs.</li><li><strong><a href="https://cookbook.ziglang.cc/" target="_blank">Zig Cookbook</a>:</strong> A collection of simple Zig programs that demonstrate good practices to accomplish common programming tasks</li><li><strong><a href="https://github.com/zigcc/awesome-zig" target="_blank">Awesome Zig</a>:</strong> A collection of some awesome public Zig programming language projects.</li><li><strong><a href="https://zig.guide/" target="_blank">Zig Guide</a>:</strong> 英文资料， <a href="https://github.com/Sobeston" target="_blank">Sobeston</a> 编写</li><li><strong><a href="https://gist.github.com/ityonemo/769532c2017ed9143f3571e5ac104e50" target="_blank">Zig in 30 minutes</a>:</strong></li></ul></div></div>
+
+    <footer>
+      <div>
+        <div>
+          <p>&copy; 2022–2025 |
+            <a href="https://github.com/zigcc/zigcc.github.io">Source Code</a>
+            |
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">BY-NC-ND 4.0</a>
+            |
+            <!--TODO <a href="/index.xml">RSS</a> --></p>
+        </div>
+        <div>
+          <a href="https://github.com/orgs/zigcc/discussions">
+            <i class="fab fa-github"></i>
+          </a>
+          <a href="https://discord.gg/UraRxD6WXD">
+            <i class="fab fa-discord"></i>
+          </a>
+          <a href="https://t.me/ZigChinese">
+            <i class="fab fa-telegram"></i>
+          </a>
+          <a href="mailto:hello@ziglang.cc">
+            <i class="fa fa-envelope"></i>
+          </a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

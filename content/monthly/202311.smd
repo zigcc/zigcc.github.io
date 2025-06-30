@@ -1,0 +1,109 @@
+---
+.title = "202311 | 传值或传引用，这是个大问题",
+.date = @date("2023-11-19T18:26:29+0800"),
+.author = "ZigCC",
+.layout = "monthly.shtml",
+.draft = false,
+.custom = { .lastmod = "2023-12-04T09:23:13+0800" },
+---
+
+# [重大事件]($section.id('重大事件'))
+本月讨论比较多的就是 [Zig May Pass Anything By Reference](https://www.1a-insec.net/blog/25-zig-reference-semantics/) 这篇文章了。
+
+它讲述了 Zig 里面一个比较有争议的点，函数的参数到底是传值还是传引用。
+```zig
+const AAAA = struct {
+    foo: [100]u32,
+};
+
+fn aaaaa(a: AAAA, b: *AAAA) void {
+  b.*.foo[0] = 5;
+
+  std.debug.print("wtf: {}", .{ a.foo[0] });
+}
+
+pub fn main() !void {
+    var f: AAAA = undefined;
+
+    f.foo[0] = 0;
+
+    aaaaa(f, &f);
+}
+```
+上面这个例子修改了 `b` 参数的值，但是打印出来的 `a` 的值也被修改了。
+
+传值的好处就是不用担心原值会被修改，传引用的好处就是可以减少数据拷贝的代价。但是 Zig 目前采用的方式是由编译器推导来决定合适的方式。这样的目的是减少程序员负担，但这实际上会给程序带来不确定性，比如上述例子。
+
+Andrew 在 [Lobster](https://lobste.rs/s/et3ivs/zig_may_pass_anything_by_reference#c_yvfrnq) 上回复了这个问题，确实是一个比较严重的问题，一种解法是分析一个变量有多少个 alias，编译器只在确定没问题时才进行优化，但是分析一个变量的 alias 有多少不是件容易的事。
+
+其他语言如 C/C++/Rust 等没有进行这种优化尝试，因此没有这个问题，但是 Zig 作为一个新的语言，想尝试来用一种程序员无感的方式来解决，只是目前还没有想到更完善的方案而已。
+
+一些熟悉 Zig zen 的读者可能会觉得这违背了第一条『Communicate intent precisely』，目前来看确实是这样的，而且 core team 老早就意识到这个问题了，感兴趣的读者可以参考：
+- [Footgun: hidden pass-by-reference #5973](https://github.com/ziglang/zig/issues/5973)
+- [Design flaw: Swapping struct fields yields unexpected value #12064](https://github.com/ziglang/zig/issues/12064)
+# [观点/教程]($section.id('观点/教程'))
+- [Zig's std.json.Parsed(T)](https://www.openmymind.net/Zigs-std-json-Parsed/) :: 老朋友 openmymind 的文章，这篇文章主要讲述了使用 Zig 中的 json 库序列化后，如何更好的使用返回值，由于有一个 allocator 参数，因此比不能简单的返回 ~T~ ，作者这里定义了一个 ~Managed~ 来解决：
+  ```zig
+pub fn Managed(comptime T: type) type {
+	return struct {
+		value: T,
+		arena: *std.heap.ArenaAllocator,
+
+		const Self = @This();
+
+		pub fn fromJson(parsed: std.json.Parsed(T)) Self {
+			return  .{
+				.arena = parsed.arena,
+				.value = parsed.value,
+			};
+		}
+
+		pub fn deinit(self: Self) void {
+			const arena = self.arena;
+			const allocator = arena.child_allocator;
+			arena.deinit();
+			allocator.destroy(arena);
+		}
+	};
+}
+  ```
+- [Factor is faster than Zig!](https://re.factorcode.org/2023/11/factor-is-faster-than-zig.html)  :: 一个有意思的案例分享。
+- [A day with Zig](https://www.pierrebeaucamp.com/a-day-with-zig/) :: 作者把之前一个 Go 的项目转成 Zig，这里介绍了一些感受，
+  - 文档缺乏
+  - 文件级别导入
+- [@fieldParentPtr](https://registerspill.thorstenball.com/p/zig-zaggin) :: 对 ~@fieldParentPtr~ 使用的介绍
+- [Generating documentation from zig build](https://sudw1n.gitlab.io/posts/zig-build-docs/) :: 作者在这篇文章里尝试在 zig build 文件中输出文档，目前步骤略微繁琐。
+  ```zig
+const std = @import("std");
+
+pub fn build(b: *std.Build) void {
+    const exe = b.addExecutable(.{
+        .name = "myprogram",
+        .root_source_file ` .{ .path ` "src/main.zig" },
+        .target = b.standardTargetOptions(.{}),
+        .optimize = b.standardOptimizeOption(.{}),
+    });
+
+    b.installArtifact(exe);
+
+    const install_docs = b.addInstallDirectory(.{
+        .source_dir = exe.getEmittedDocs(),
+        .install_dir = .prefix,
+        .install_subdir = "docs",
+    });
+
+    const docs_step = b.step("docs", "Copy documentation artifacts to prefix path");
+    docs_step.dependOn(&install_docs.step);
+}
+  ```
+- [What's Zig got that C, Rust and Go don't have? (with Loris Cro)](https://www.youtube.com/watch?v=5_oqWE9otaE) :: [视频] Loris 参与的一档播客
+- [A Simple Example of Calling a C Library from Zig](https://mtlynch.io/notes/zig-call-c-simple/) :: 一个简明的教程，演示 Zig 如何引用 C 类库
+- [What is the Zig philosophy on APIs and abstraction?](https://www.reddit.com/r/Zig/comments/17xd46v/what_is_the_zig_philosophy_on_apis_and_abstraction/) :: 一个 Reddit 帖子，讨论 Zig 的在 API 设计上的哲学、理念。一个有意思的点是 Zig 不支持私有的字段，全部都是 public 的。Andrew 在 [Proposal: Private Fields #9909](https://github.com/ziglang/zig/issues/9909#issuecomment-942686366) 这个 issue 里面讨论过原因，主要根据：
+  - 一个结构体的抽象，很难保证不泄漏，比如一个类型的 align、size，一个函数是否可以在 comptime 执行
+  - 一个包的兼容性，应该由文档来解释
+  - 增加私有字段，会增加语言的复杂度，而且这种复杂性本身是完全可以避免的
+# [项目/工具]($section.id('项目/工具'))
+- [zig build explained -- building C/C++ projects](https://zig.news/xq/zig-build-explained-part-2-1850) :: 经典文章回顾，如何使用 Zig 构建系统编译 C/C++ 项目
+- [akhildevelops/cudaz](https://github.com/akhildevelops/cudaz) :: A Zig Cuda wrapper
+# [Zig 语言更新]($section.id('zig-update'))
+[2023-10-01..2023-11-01](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-10-01..2023-11-01)

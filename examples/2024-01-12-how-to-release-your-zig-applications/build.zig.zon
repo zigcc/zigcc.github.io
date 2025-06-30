@@ -1,8 +1,0 @@
-.{
-    .name = "2024-01-12-how-to-release-your-zig-applications",
-    .version = "0.0.0",
-    .dependencies = .{},
-    .paths = .{
-        "",
-    },
-}

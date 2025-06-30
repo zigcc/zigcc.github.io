@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head id="head">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1">
+    <meta name="description" content="Zig Chinese Community is dedicated to sharing and spreading the use of Zig language among Chinese users.">
+    <title>Zig 语言中文社区</title>
+    <link type="text/css" rel="stylesheet" href="/style.css">
+    <link type="text/css" rel="stylesheet" href="/highlight.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- TODO replace this -->
+    
+  <style>
+    #prev-next {
+     display: flex;
+     flex-direction: row;
+     justify-content: space-between;
+     margin-top: 40px;
+    }
+
+    figure {
+      align-self: center;
+      text-align: center;
+      font-style: italic;
+    }
+
+    .post {
+      display:flex;
+      flex-direction: column;
+    }
+  </style>
+
+  </head>
+  <body id="body">
+    <div class="header">
+      <a href="/" class="site-title"><h1>Zig 语言中文社区</h1></a>
+      <nav>
+        <a href="/learn/">学习 Zig</a>
+         &nbsp; • &nbsp;
+        <a href="/monthly/">月刊</a>
+         &nbsp; • &nbsp;
+        <a href="/post/">博客</a>
+         &nbsp; • &nbsp;
+        <a href="/contributing/">贡献</a>
+         &nbsp; • &nbsp;
+        <a href="/community/">社区</a>
+      </nav>
+    </div>
+    
+  <h1>Blog</h1>
+  <div class="post"><p>This page defines the blog section and lists all posts in it.</p><p>A “site section” in Zine is a group of pages that form a logical subtree of the website. It’s related to directory structure, but it’s not an entirely 1:1 mapping.</p><p>What defines a site section in Zine is the presence of <code>index.smd</code> files. You can learn more <a href="https://zine-ssg.io/docs/" target="_blank">in the official Zine docs</a>.</p><p>Take also a look at <code>layouts/blog.shtml</code> to get an idea of how to render a page list in a SuperHTML template.</p><p>The blog section also has an <a href="/post/index.xml">RSS feed</a>.</p><p>In Zine, RSS feeds are considered “alternative” versions of an existing page. In concrete defines the blog section and that lists all pages in it, is rendered in two versions: HTML for human readers, and XML for RSS readers.</p><p>This is the SuperMD frontmatter code that defines the RSS feed:</p><pre><code class="ziggy">.<span class="keyword">alternatives</span> = <span class="punctuation_bracket">[</span><span class="punctuation_bracket">{</span> 
+    .<span class="keyword">name</span> = <span class="string">&quot;rss&quot;</span><span class="punctuation_delimiter">,</span>
+    .<span class="keyword">layout</span> = <span class="string">&quot;rss.xml&quot;</span><span class="punctuation_delimiter">,</span> 
+    .<span class="keyword">output</span> = <span class="string">&quot;index.xml&quot;</span><span class="punctuation_delimiter">,</span>
+<span class="punctuation_bracket">}</span><span class="punctuation_bracket">]</span><span class="punctuation_delimiter">,</span>
+</code></pre>
+<p><span class="small ">(btw syntax highlighting is done statically in Zine, no need for javascript libraries, unless you want to)</span></p></div>
+  <div id="prev-next">
+    <div>
+      <a href="/monthly/">
+        ←
+        <span>About</span>
+      </a>
+    </div>
+    <div>
+      <a href="/learn/">
+        <span>Learning Zig 中文翻译</span>
+        →
+      </a>
+    </div>
+  </div>
+
+    <footer>
+      <div>
+        <div>
+          <p>&copy; 2022–2025 |
+            <a href="https://github.com/zigcc/zigcc.github.io">Source Code</a>
+            |
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">BY-NC-ND 4.0</a>
+            |
+            <!--TODO <a href="/index.xml">RSS</a> --></p>
+        </div>
+        <div>
+          <a href="https://github.com/orgs/zigcc/discussions">
+            <i class="fab fa-github"></i>
+          </a>
+          <a href="https://discord.gg/UraRxD6WXD">
+            <i class="fab fa-discord"></i>
+          </a>
+          <a href="https://t.me/ZigChinese">
+            <i class="fab fa-telegram"></i>
+          </a>
+          <a href="mailto:hello@ziglang.cc">
+            <i class="fa fa-envelope"></i>
+          </a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

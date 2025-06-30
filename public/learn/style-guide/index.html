@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head id="head">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1">
+    <meta name="description" content="Zig Chinese Community is dedicated to sharing and spreading the use of Zig language among Chinese users.">
+    <title>Zig 语言中文社区</title>
+    <link type="text/css" rel="stylesheet" href="/style.css">
+    <link type="text/css" rel="stylesheet" href="/highlight.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- TODO replace this -->
+    
+  <link type="text/css" rel="stylesheet" href="/style.css">
+
+  </head>
+  <body id="body">
+    <div class="header">
+      <a href="/" class="site-title"><h1>Zig 语言中文社区</h1></a>
+      <nav>
+        <a href="/learn/">学习 Zig</a>
+         &nbsp; • &nbsp;
+        <a href="/monthly/">月刊</a>
+         &nbsp; • &nbsp;
+        <a href="/post/">博客</a>
+         &nbsp; • &nbsp;
+        <a href="/contributing/">贡献</a>
+         &nbsp; • &nbsp;
+        <a href="/community/">社区</a>
+      </nav>
+    </div>
+    
+  <!-- TODO: 根据页面内容长度决定是否显示 TOC -->
+  <div class="docs">
+    <!-- TODO: 层级 h1 -->
+    <h1>Table of Contents</h1>
+    <div><ul>
+<li>未使用变量 Unused Variable</li><li>变量覆盖 Variable Shadowing</li><li>命名规范</ul></div>
+  </div>
+  <div class="content"><blockquote><p>原文地址：<a href="https://www.openmymind.net/learning_zig/style_guide" target="_blank">https://www.openmymind.net/learning_zig/style_guide</a></p></blockquote><p>本小节的主要内容是介绍 Zig 编译器强制遵守的 2 条规则，以及 Zig 标准库的命名惯例(naming convention)。</p><h1>未使用变量 Unused Variable</h1><p>Zig 编译器禁止<code>未使用变量</code>，例如以下代码会导致两处编译错误：</p><pre><code class="zig"><span class="keyword">const</span> <span class="module constant variable_builtin type variable">std</span> <span class="operator">=</span> <span class="function_builtin keyword_import">@import</span><span class="punctuation_bracket">(</span><span class="string">&quot;std&quot;</span><span class="punctuation_bracket">)</span><span class="punctuation_delimiter">;</span>
+
+<span class="keyword_modifier">pub</span> <span class="keyword_function">fn</span> <span class="constant variable_builtin type variable function">main</span><span class="punctuation_bracket">(</span><span class="punctuation_bracket">)</span> <span class="type_builtin">void</span> <span class="punctuation_bracket">{</span>
+	<span class="keyword">const</span> <span class="constant variable_builtin type variable">sum</span> <span class="operator">=</span> <span class="constant variable_builtin function_call variable type">add</span><span class="punctuation_bracket">(</span><span class="number">8999</span><span class="punctuation_delimiter">,</span> <span class="number">2</span><span class="punctuation_bracket">)</span><span class="punctuation_delimiter">;</span>
+<span class="punctuation_bracket">}</span>
+
+<span class="keyword_function">fn</span> <span class="constant variable_builtin type variable function">add</span><span class="punctuation_bracket">(</span><span class="constant variable_builtin variable_parameter variable type">a</span><span class="punctuation_delimiter">:</span> <span class="type_builtin">i64</span><span class="punctuation_delimiter">,</span> <span class="constant variable_builtin variable_parameter variable type">b</span><span class="punctuation_delimiter">:</span> <span class="type_builtin">i64</span><span class="punctuation_bracket">)</span> <span class="type_builtin">i64</span> <span class="punctuation_bracket">{</span>
+	<span class="comment_documentation comment spell">// notice this is a + a, not a + b</span>
+	<span class="keyword_return">return</span> <span class="constant variable_builtin type variable">a</span> <span class="operator">+</span> <span class="constant variable_builtin type variable">a</span><span class="punctuation_delimiter">;</span>
+<span class="punctuation_bracket">}</span>
+</code></pre>
+<p>第一个编译错误，源自于<code>sum</code>是一个未使用的本地常量。第二个编译错误，在于在函数<code>add</code>的所有形参中，<code>b</code>是一个未使用的函数参数。对于这段代码来说，它们是比较明显的漏洞。但是在实际编程中，代码中包含未使用变量和函数形参并非完全不合理。在这种情况下，我们可以通过将未使用变量赋值给<code>_</code>（下划线）的方法，避免编译器报错:</p><pre><code class="zig"><span class="keyword">const</span> <span class="module constant variable_builtin type variable">std</span> <span class="operator">=</span> <span class="function_builtin keyword_import">@import</span><span class="punctuation_bracket">(</span><span class="string">&quot;std&quot;</span><span class="punctuation_bracket">)</span><span class="punctuation_delimiter">;</span>
+
+<span class="keyword_modifier">pub</span> <span class="keyword_function">fn</span> <span class="constant variable_builtin type variable function">main</span><span class="punctuation_bracket">(</span><span class="punctuation_bracket">)</span> <span class="type_builtin">void</span> <span class="punctuation_bracket">{</span>
+	<span class="constant variable_builtin type variable">_</span> <span class="operator">=</span> <span class="constant variable_builtin function_call variable type">add</span><span class="punctuation_bracket">(</span><span class="number">8999</span><span class="punctuation_delimiter">,</span> <span class="number">2</span><span class="punctuation_bracket">)</span><span class="punctuation_delimiter">;</span>
+
+	<span class="comment_documentation comment spell">// or</span>
+
+	<span class="keyword">const</span> <span class="constant variable_builtin type variable">sum</span> <span class="operator">=</span> <span class="constant variable_builtin function_call variable type">add</span><span class="punctuation_bracket">(</span><span class="number">8999</span><span class="punctuation_delimiter">,</span> <span class="number">2</span><span class="punctuation_bracket">)</span><span class="punctuation_delimiter">;</span>
+	<span class="constant variable_builtin type variable">_</span> <span class="operator">=</span> <span class="constant variable_builtin type variable">sum</span><span class="punctuation_delimiter">;</span>
+<span class="punctuation_bracket">}</span>
+
+<span class="keyword_function">fn</span> <span class="constant variable_builtin type variable function">add</span><span class="punctuation_bracket">(</span><span class="constant variable_builtin variable_parameter variable type">a</span><span class="punctuation_delimiter">:</span> <span class="type_builtin">i64</span><span class="punctuation_delimiter">,</span> <span class="constant variable_builtin variable_parameter variable type">b</span><span class="punctuation_delimiter">:</span> <span class="type_builtin">i64</span><span class="punctuation_bracket">)</span> <span class="type_builtin">i64</span> <span class="punctuation_bracket">{</span>
+	<span class="constant variable_builtin type variable">_</span> <span class="operator">=</span> <span class="constant variable_builtin type variable">b</span><span class="punctuation_delimiter">;</span>
+	<span class="keyword_return">return</span> <span class="constant variable_builtin type variable">a</span> <span class="operator">+</span> <span class="constant variable_builtin type variable">a</span><span class="punctuation_delimiter">;</span>
+<span class="punctuation_bracket">}</span>
+</code></pre>
+<p>除了使用<code>_ = b</code>之外，我们还可以直接用<code>_</code>来命名函数<code>add</code>的形参。但是，在我看来，这样做会牺牲代码的可读性，读者会猜测，这个未使用的形参到底是什么：</p><pre><code class="zig"><span class="keyword_function">fn</span> <span class="constant variable_builtin type variable">add</span><span class="punctuation_bracket">(</span><span class="constant variable_builtin variable_parameter variable type">a</span><span class="punctuation_delimiter">:</span> <span class="type_builtin">i64</span><span class="punctuation_delimiter">,</span> <span class="constant variable_builtin variable_parameter variable type">_</span><span class="punctuation_delimiter">:</span> <span class="type_builtin">i64</span><span class="punctuation_bracket">)</span> <span class="type_builtin">i64</span> <span class="punctuation_bracket">{</span>
+</code></pre>
+<p>值得注意的是，在上述例子中，<code>std</code>也是一个未使用的符号，但是当前这种用法并不会导致任何编译错误。可能在未来，Zig 编译器也将此视为错误。</p><h1>变量覆盖 Variable Shadowing</h1><p>Zig 不允许使用同名的变量。下面是一个读取 <code>socket</code> 的例子，这个例子包含了一个变量覆盖的编译错误：</p><pre><code class="zig"><span class="keyword_function">fn</span> <span class="constant variable_builtin type variable function">read</span><span class="punctuation_bracket">(</span><span class="constant variable_builtin variable_parameter variable type">stream</span><span class="punctuation_delimiter">:</span> <span class="constant variable_builtin type variable">std</span><span class="punctuation_delimiter">.</span><span class="constant variable_builtin type variable_member variable">net</span><span class="punctuation_delimiter">.</span><span class="constant variable_builtin type variable_member variable">Stream</span><span class="punctuation_bracket">)</span> <span class="operator">!</span><span class="punctuation_bracket">[</span><span class="punctuation_bracket">]</span><span class="keyword">const</span> <span class="type_builtin">u8</span> <span class="punctuation_bracket">{</span>
+	<span class="keyword">var</span> <span class="constant variable_builtin type variable">buf</span><span class="punctuation_delimiter">:</span> <span class="punctuation_bracket">[</span><span class="number">512</span><span class="punctuation_bracket">]</span><span class="type_builtin">u8</span> <span class="operator">=</span> <span class="constant_builtin">undefined</span><span class="punctuation_delimiter">;</span>
+	<span class="keyword">const</span> <span class="constant variable_builtin type variable">read</span> <span class="operator">=</span> <span class="keyword_exception">try</span> <span class="constant variable_builtin type variable">stream</span><span class="punctuation_delimiter">.</span><span class="type constant variable_builtin function_call variable_member variable">read</span><span class="punctuation_bracket">(</span><span class="operator">&amp;</span><span class="constant variable_builtin type variable">buf</span><span class="punctuation_bracket">)</span><span class="punctuation_delimiter">;</span>
+	<span class="keyword_conditional">if</span> <span class="punctuation_bracket">(</span><span class="constant variable_builtin type variable">read</span> <span class="operator">==</span> <span class="number">0</span><span class="punctuation_bracket">)</span> <span class="punctuation_bracket">{</span>
+		<span class="keyword_return">return</span> <span class="keyword">error</span><span class="punctuation_delimiter">.</span><span class="constant variable_builtin type variable">Closed</span><span class="punctuation_delimiter">;</span>
+	<span class="punctuation_bracket">}</span>
+	<span class="keyword_return">return</span> <span class="constant variable_builtin type variable">buf</span><span class="punctuation_bracket">[</span><span class="number">0</span><span class="operator">..</span><span class="constant variable_builtin type variable">read</span><span class="punctuation_bracket">]</span><span class="punctuation_delimiter">;</span>
+<span class="punctuation_bracket">}</span>
+</code></pre>
+<p>上述例子中，<code>read</code>变量覆盖了<code>read</code>函数。我并不太认同这个规范，因为它会导致开发者为了避免覆盖而使用短且无意义的变量名。例如，为了让上述代码通过编译，需要将变量名<code>read</code>改成<code>n</code>。</p><p>我认为，这个规范并不能使代码可读性提高。在这个场景下，应该是开发者，而不是编译器，更有资格选择更有可读性的命名方案。</p><h1>命名规范</h1><p>除了遵守以上这些规则以外，开发者可以自由地选择他们喜欢的命名规范。但是，理解 Zig 自身的命名规范是有益的，因为大部分你需要打交道的代码，如 Zig 标准库，或者其他三方库，都采用了 Zig 的命名规范。</p><p>Zig 代码采用 4 个空格进行缩进。我个人会因为客观上更方便，使用<code>tab</code>键。</p><p>Zig 的函数名采用了驼峰命名法（camelCase），而变量名会采用小写加下划线（snake case）的命名方式。类型则采用的是 PascalCase 风格。除了这三条规则外，一个有趣的交叉规则是，如果一个变量表示一个类型，或者一个函数返回一个类型，那么这个变量或者函数遵循 PascalCase。在之前的章节中，其实已经见到了这个例子，不过，可能你没有注意到：</p><pre><code class="zig"><span class="constant variable_builtin type variable">std</span><span class="punctuation_delimiter">.</span><span class="constant variable_builtin type variable_member variable">debug</span><span class="punctuation_delimiter">.</span><span class="type constant variable_builtin function_call variable_member variable">print</span><span class="punctuation_bracket">(</span><span class="string">&quot;{any}</span><span class="string string_escape">\n</span><span class="string">&quot;</span><span class="punctuation_delimiter">,</span> <span class="punctuation_delimiter">.</span><span class="punctuation_bracket">{</span><span class="function_builtin">@TypeOf</span><span class="punctuation_bracket">(</span><span class="punctuation_delimiter">.</span><span class="punctuation_bracket">{</span><span class="punctuation_delimiter">.</span><span class="constant variable_builtin type variable_member variable">year</span> <span class="operator">=</span> <span class="number">2023</span><span class="punctuation_delimiter">,</span> <span class="punctuation_delimiter">.</span><span class="constant variable_builtin type variable_member variable">month</span> <span class="operator">=</span> <span class="number">8</span><span class="punctuation_bracket">}</span><span class="punctuation_bracket">)</span><span class="punctuation_bracket">}</span><span class="punctuation_bracket">)</span><span class="punctuation_delimiter">;</span>
+</code></pre>
+<p>我们已经看到过一些内置函数：<code>@import</code>，<code>@rem</code>和<code>@intCast</code>。因为这些都是函数，他们的命名遵循驼峰命名法。<code>@TypeOf</code>也是一个内置函数，但是他遵循 PascalCase，为何？因为他返回的是一个类型，因此它的命名采用了类型命名方法。当我们使用一个变量，去接收<code>@TypeOf</code>的返回值，这个变量也需要遵循类型命名规则（即 PascalCase）:</p><pre><code class="zig"><span class="keyword">const</span> <span class="module constant variable_builtin type variable">T</span> <span class="operator">=</span> <span class="function_builtin keyword_import">@TypeOf</span><span class="punctuation_bracket">(</span><span class="number">3</span><span class="punctuation_bracket">)</span><span class="punctuation_delimiter">;</span>
+<span class="constant variable_builtin type variable">std</span><span class="punctuation_delimiter">.</span><span class="constant variable_builtin type variable_member variable">debug</span><span class="punctuation_delimiter">.</span><span class="type constant variable_builtin function_call variable_member variable">print</span><span class="punctuation_bracket">(</span><span class="string">&quot;{any}</span><span class="string string_escape">\n</span><span class="string">&quot;</span><span class="punctuation_delimiter">,</span> <span class="punctuation_delimiter">.</span><span class="punctuation_bracket">{</span><span class="constant variable_builtin type variable">T</span><span class="punctuation_bracket">}</span><span class="punctuation_bracket">)</span><span class="punctuation_delimiter">;</span>
+</code></pre>
+<p><code>zig</code> 命令包含一个 <code>fmt</code> 子命令，在给定一个文件或目录时，它会根据 Zig 的编码风格对文件进行格式化。但它并没有包含所有上述的规则，比如它能够调整缩排，以及花括号<code>{</code>的位置，但是它不会调整标识符的大小写。</p></div>
+
+    <footer>
+      <div>
+        <div>
+          <p>&copy; 2022–2025 |
+            <a href="https://github.com/zigcc/zigcc.github.io">Source Code</a>
+            |
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">BY-NC-ND 4.0</a>
+            |
+            <!--TODO <a href="/index.xml">RSS</a> --></p>
+        </div>
+        <div>
+          <a href="https://github.com/orgs/zigcc/discussions">
+            <i class="fab fa-github"></i>
+          </a>
+          <a href="https://discord.gg/UraRxD6WXD">
+            <i class="fab fa-discord"></i>
+          </a>
+          <a href="https://t.me/ZigChinese">
+            <i class="fab fa-telegram"></i>
+          </a>
+          <a href="mailto:hello@ziglang.cc">
+            <i class="fa fa-envelope"></i>
+          </a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

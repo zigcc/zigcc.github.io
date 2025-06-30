@@ -1,0 +1,25 @@
+<extend template="base.shtml">
+<head id="head">
+</head>
+<body id="body">
+  <h1 :text="$page.title"></h1>
+  <h2 :if="$page.isSection()">Section Contents</h2>
+  <ul :loop="$page.subpages()">
+    <a href="$loop.it.link()"><li :text="$loop.it.title"></li></a>
+  </ul>
+  <div :html="$page.content()"></div>
+  <div id="prev-next">
+    <div :if="$page.prevPage?()">
+      <a href="$if.link()">
+        ←
+        <span :text="$if.title"></span>
+      </a>
+    </div>
+    <div :if="$page.nextPage?()">
+      <a href="$if.link()">
+        <span :text="$if.title"></span>
+        →
+      </a>
+    </div>
+  </div>
+</body>

@@ -1,0 +1,8 @@
+.content{
+  font-size: 1.2rem;
+  display: flex;
+  flex-direction: column;
+}
+#logo{
+  width: 40vw;
+}

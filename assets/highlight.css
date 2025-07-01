@@ -1,5 +1,5 @@
 :root {
-  --fg: #BD976A;
+  --code-fg: #BD976A;
   --keyword: #4D9375;
   --variable: #BD976A;
   --comment: #758575DD;
@@ -11,7 +11,7 @@
 }
 
 .zig{
-  color: var(--fg);
+  color: var(--code-fg);
   .keyword, .keyword_modifier, .type_builtin, .keyword_type, .keyword_return, .keyword_conditional, .keyword_repeat, .keyword_operator, .constant_builtin, .keyword_exception{
     color: var(--keyword);
   }

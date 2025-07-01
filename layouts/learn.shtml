@@ -3,9 +3,7 @@
   <link type="text/css" rel="stylesheet" href="$site.asset('style.css').link()">
 </head>
 <body id="body">
-  <!-- TODO: 根据页面内容长度决定是否显示 TOC -->
   <div class="docs" :if="$page.custom.getOr('toc', $page.toc().len().gt(10))">
-    <!-- TODO: 层级 h1 -->
     <h1>Table of Contents</h1>
     <div :html="$page.toc()"></div>
   </div>

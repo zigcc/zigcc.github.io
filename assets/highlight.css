@@ -10,7 +10,7 @@
   --bracket: #93aa9e;
 }
 
-.zig{
+code.zig, code.javascript{
   color: var(--code-fg);
   .keyword, .keyword_modifier, .type_builtin, .keyword_type, .keyword_return, .keyword_conditional, .keyword_repeat, .keyword_operator, .constant_builtin, .keyword_exception{
     color: var(--keyword);
@@ -35,6 +35,60 @@
   }
   .punctuation_bracket{
     color: var(--bracket);
+  }
+}
+
+code.conf{
+  color: var(--code-fg);
+  .function{
+    color: var(--function);
+  }
+  .punctuation_bracket{
+    color: var(--bracket);
+  }
+}
+
+code.diff{
+  color: var(--code-fg);
+  .addition, .string{
+    color: #4D9375;
+  }
+  .deletion, .keyword{
+    color: #CB7676;
+  }
+}
+
+/* TODO 分词器太烂了 */
+code.bash {
+  color: var(--code-fg);
+  .comment {
+    color: var(--comment);
+    font-style: italic;
+  }
+  span.operator {
+    color: var(--operator);
+  }
+  .constant {
+    color: var(--number);
+  }
+  .string {
+    color: var(--string);
+  }
+  .function {
+    color: var(--function);
+  }
+}
+
+code.json{
+  color: var(--code-fg);
+  .constant_builtin{
+    color: var(--keyword);
+  }
+  span.string_special_key{
+    color: var(--string)
+  }
+  .string{
+    color: var(--function)
   }
 }
 

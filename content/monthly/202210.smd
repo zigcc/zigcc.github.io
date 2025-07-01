@@ -1,6 +1,6 @@
 ---
 .title = "202210 | 0.10 蓄势待发",
-.date = @date("2024-01-01T00:00:00"),
+.date = @date("2022-10-30T10:10:14+0800"),
 .author = "ZigCC",
 .layout = "monthly.shtml",
 .draft = false,
@@ -8,25 +8,51 @@
 
 # 观点/教程
 
-- [Zig Is Self-Hosted Now, What's Next? | Loris Cro's Blog](https://kristoff.it/blog/zig-self-hosted-now-what/) | 0.10 即将在 11-01 号发布，Loris 回顾了目前 stage2 的进展，包管理器是下一个目标，但是不会引入中央仓库
-  - Loris 会在 Twitch 直播这次的 [release party](https://ziggit.dev/t/release-party-and-zig-rush-november-1st/435)
-- [Howto Pair Strings with Enums](https://zig.news/david_vanderson/howto-pair-strings-with-enums-9ce) 利用 Zig comptime 的能力为 enum 增加描述信息
-- [A Database Without Dynamic Memory Allocation](https://tigerbeetle.com/blog/a-database-without-dynamic-memory/) | TigerBeetle 讲述了如何静态内存的优势，如何应用到数据库中，以及 Zig 为实现这种设计方式的优势
-- [That Time I Tried Porting Zig to SerenityOS - sin-ack's writings](https://sin-ack.github.io/posts/sycl-talk-20221007/)
-- [Building a high-performance database buffer pool in Zig using io_uring's new fixed-buffer mode](https://gavinray97.github.io/blog/io-uring-fixed-bufferpool-zig)
-- [Zig-style generics are not well-suited for most languages](https://typesanitizer.com/blog/zig-generics.html)
-- [Zig and WebAssembly are a match made in heaven](https://blog.battlefy.com/zig-and-webassembly-are-a-match-made-in-heaven)
-- [视频] [Stay Together For The Kids - Andrew Kelley - Software You Can Love 2022](https://www.bilibili.com/video/BV1ne411G74c/?share_source`copy_web&vd_source`9191359325bcbfb53bd116d1f5b22175)
-- [视频] [Ziglibc: Sweeping out the rug from underneath C - Jonathan Marler - Software You Can Love 2022](https://www.bilibili.com/video/BV1Td4y1y7U9/?share_source`copy_web&vd_source`9191359325bcbfb53bd116d1f5b22175)
-- [音频] [005. 与 LemonHX 畅聊新一代编程语言 Zig – RustTalk](https://rusttalk.github.io/podcast/005/)
+- [Zig Is Self-Hosted Now, What’s Next? | Loris Cro’s
+  Blog](https://kristoff.it/blog/zig-self-hosted-now-what/) | 0.10
+  即将在 11-01 号发布，Loris 回顾了目前 stage2
+  的进展，包管理器是下一个目标，但是不会引入中央仓库
+  - Loris 会在 Twitch 直播这次的 [release
+    party](https://ziggit.dev/t/release-party-and-zig-rush-november-1st/435)
+- [Howto Pair Strings with
+  Enums](https://zig.news/david_vanderson/howto-pair-strings-with-enums-9ce)
+  利用 Zig comptime 的能力为 enum 增加描述信息
+- [A Database Without Dynamic Memory
+  Allocation](https://tigerbeetle.com/blog/a-database-without-dynamic-memory/)
+  | TigerBeetle 讲述了如何静态内存的优势，如何应用到数据库中，以及 Zig
+  为实现这种设计方式的优势
+- [That Time I Tried Porting Zig to SerenityOS - sin-ack’s
+  writings](https://sin-ack.github.io/posts/sycl-talk-20221007/)
+- [Building a high-performance database buffer pool in Zig using
+  io_uring’s new fixed-buffer
+  mode](https://gavinray97.github.io/blog/io-uring-fixed-bufferpool-zig)
+- [Zig-style generics are not well-suited for most
+  languages](https://typesanitizer.com/blog/zig-generics.html)
+- [Zig and WebAssembly are a match made in
+  heaven](https://blog.battlefy.com/zig-and-webassembly-are-a-match-made-in-heaven)
+- \[视频\] [Stay Together For The Kids - Andrew Kelley - Software You
+  Can Love
+  2022](https://www.bilibili.com/video/BV1ne411G74c/?share_source=copy_web&vd_source=9191359325bcbfb53bd116d1f5b22175)
+- \[视频\] [Ziglibc: Sweeping out the rug from underneath C - Jonathan
+  Marler - Software You Can Love
+  2022](https://www.bilibili.com/video/BV1Td4y1y7U9/?share_source=copy_web&vd_source=9191359325bcbfb53bd116d1f5b22175)
+- \[音频\] [005. 与 LemonHX 畅聊新一代编程语言 Zig –
+  RustTalk](https://rusttalk.github.io/podcast/005/)
 
 # 项目/工具
 
-- [Himujjal/zig-json5](https://github.com/Himujjal/zig-json5): A JSON5 parser/stringifier for Zig resembling the std.json API
-- [hexops/mach-examples](https://github.com/hexops/mach-examples): Mach core & engine examples
-- [sagemathinc/cowasm](https://github.com/sagemathinc/cowasm): CoWasm: Collaborative WebAssembly for Servers and Browsers. Built using Zig. Supports Python with extension modules, including numpy.
-- [loc 使用 mmap 后速度快了 2 倍](https://github.com/jiacai2050/loc/pull/2)
-- 一个 Zig Hackers 的 Twitter 列表：[Zig Hero](https://twitter.com/i/lists/1570249876155568129)
-- [A minimal RocksDB example with Zig](https://notes.eatonphil.com/zigrocks.html)
+- [Himujjal/zig-json5](https://github.com/Himujjal/zig-json5): A JSON5
+  parser/stringifier for Zig resembling the std.json API
+- [hexops/mach-examples](https://github.com/hexops/mach-examples): Mach
+  core & engine examples
+- [sagemathinc/cowasm](https://github.com/sagemathinc/cowasm): CoWasm:
+  Collaborative WebAssembly for Servers and Browsers. Built using Zig.
+  Supports Python with extension modules, including numpy.
+- [loc 使用 mmap 后速度快了 2
+  倍](https://github.com/jiacai2050/loc/pull/2)
+- 一个 Zig Hackers 的 Twitter 列表：[Zig
+  Hero](https://twitter.com/i/lists/1570249876155568129)
+- [A minimal RocksDB example with
+  Zig](https://notes.eatonphil.com/zigrocks.html)
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page`1&q`+is%3Aclosed+is%3Apr+closed%3A2022-10-01..2022-11-01)
+# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2022-10-01..2022-11-01)

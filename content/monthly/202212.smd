@@ -1,6 +1,6 @@
 ---
 .title = "202212 | TBD",
-.date = @date("2024-01-01T00:00:00"),
+.date = @date("2022-12-11T14:11:38+0800"),
 .author = "ZigCC",
 .layout = "monthly.shtml",
 .draft = false,
@@ -8,8 +8,9 @@
 
 # 观点/教程
 
-- [Goodbye to the C++ Implementation of Zig ⚡ Zig Programming Language](https://ziglang.org/news/goodbye-cpp/)
+- [Goodbye to the C++ Implementation of Zig ⚡ Zig Programming
+  Language](https://ziglang.org/news/goodbye-cpp/)
 
 # 项目/工具
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page`1&q`+is%3Aclosed+is%3Apr+closed%3A2022-12-01..2023-01-01)
+# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2022-12-01..2023-01-01)

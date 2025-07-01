@@ -9,11 +9,11 @@
 2023 年 12 月 9 日，Zig 中文社区第一次线上会议隆重召开。共有 8 位 Zig
 爱好者参加，分布在北上杭成、美国等不同地方。
 
-{{\< figure src="/images/first-online-meeting.webp"
-caption="会议参会人员"\>}}
+[会议参会人员]($image.siteAsset('images/first-online-meeting.webp'))
 
-和当年的从仙童半导体出逃的人数一样，不多不少。😄 {{\< figure
-src="/images/fair-children.webp" caption="硅谷八叛徒"\>}}
+
+和当年的从仙童半导体出逃的人数一样，不多不少。😄 [硅谷八叛徒]($image.siteAsset('images/fair-children.webp'))
+
 会议伊始，成员首先进行了个人简介，便于后续开展相应工作。随后，社区成员围绕
 Zig 语言的普及进行了交流讨论。
 

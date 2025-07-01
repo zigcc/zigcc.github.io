@@ -4,29 +4,46 @@
 .author = "ZigCC",
 .layout = "monthly.shtml",
 .draft = false,
-.custom = { .lastmod = "2024-05-03T09:01:56+0800" },
 ---
 
-# [重大事件]($section.id('重大事件'))
-千呼万唤的 0.12.0 版本终于 2024-04-20 正式释出了！这次版本历时 8 个月，有 268 位贡献者，一共进行了 3688 次提交！社区内的一些讨论：[Hacker News](https://news.ycombinator.com/item?id=40096176)、[Lobsters](https://lobste.rs/s/fa4svu)。
-这是它的 [Release notes](https://ziglang.org/download/0.12.0/release-notes.html)。ZigCC 对这个文档进行了翻译、整理，方便大家阅读：
+# 重大事件
+
+千呼万唤的 0.12.0 版本终于 2024-04-20 正式释出了！这次版本历时 8
+个月，有 268 位贡献者，一共进行了 3688 次提交！社区内的一些讨论：[Hacker
+News](https://news.ycombinator.com/item?id=40096176)、[Lobsters](https://lobste.rs/s/fa4svu)。
+这是它的 [Release
+notes](https://ziglang.org/download/0.12.0/release-notes.html)。ZigCC
+对这个文档进行了翻译、整理，方便大家阅读：
+
 - [0.12.0 升级指南](https://course.ziglang.cc/update/upgrade-0.12.0)
 - [0.12.0 版本说明](https://course.ziglang.cc/update/0.12.0-description)
 
-并且还在 2024-04-27 举行了一次线上的 meetup 来庆祝这次发布，这是会议的总结：[0.12.0 Release Party 回顾](https://ziglang.cc/news/2024/04/27/release-party-review/)。
+并且还在 2024-04-27 举行了一次线上的 meetup
+来庆祝这次发布，这是会议的总结：[0.12.0 Release Party
+回顾](https://ziglang.cc/news/2024/04/27/release-party-review/)。
 
-0.12.0 这个版本，对用户来说，最重大的变更就是构建系统的稳定了，这对于 Zig 生态的发展是十分关键的一步，试想一个项目用到的依赖之间版本不兼容，
-这是十分痛苦的事情，毫无疑问这是阻碍 Zig 生态发生的绊脚石，没有之一。好在这一切都在 0.12 这个版本解决了，用户可以基于 Step
-构成的有向无环图来编译自己的项目，不需要再折腾 CMake、Makefile、Vcpkg、Git submodule 等工具，所有的依赖使用 zon 来管理即可。
-读者如果对 Zig 构建系统还不熟悉，可以参考：
+0.12.0 这个版本，对用户来说，最重大的变更就是构建系统的稳定了，这对于
+Zig 生态的发展是十分关键的一步，试想一个项目用到的依赖之间版本不兼容，
+这是十分痛苦的事情，毫无疑问这是阻碍 Zig
+生态发生的绊脚石，没有之一。好在这一切都在 0.12
+这个版本解决了，用户可以基于 Step
+构成的有向无环图来编译自己的项目，不需要再折腾
+CMake、Makefile、Vcpkg、Git submodule 等工具，所有的依赖使用 zon
+来管理即可。 读者如果对 Zig 构建系统还不熟悉，可以参考：
+
 - 官方文档：[Zig Build System](https://ziglang.org/learn/build-system/)
-- Zig 升级： [构建系统](https://course.ziglang.cc/engineering/build-system)
+- Zig 升级：
+  [构建系统](https://course.ziglang.cc/engineering/build-system)
 
 期待一年后 Zig 的生态！
-# [观点/教程]($section.id('观点/教程'))
-- [Zig 中任意精度整数用途与实现](https://github.com/zigcc/forum/issues/112) :: 由于 CPU 在访问内存时，一般都会有对齐的要求，对于这种非常规的数字，在内存中的地址会是怎样的呢？可以做一个简单的实验：
 
-  ```zig
+# 观点/教程
+
+[Zig 中任意精度整数用途与实现](https://github.com/zigcc/forum/issues/112)  
+由于 CPU
+在访问内存时，一般都会有对齐的要求，对于这种非常规的数字，在内存中的地址会是怎样的呢？可以做一个简单的实验：
+
+``` zig
 const std = @import("std");
 
 const Foo = packed struct {
@@ -44,7 +61,7 @@ pub fn main() !void {
     std.debug.print("Foo size: {d}\n", .{@sizeOf(Foo)});
 
     const foos = [_]Foo{
-        .{ .a ` 1, .b ` 3 },
+        .{ .a = 1, .b = 3 },
     };
 
     std.debug.print("foo as bytes: {b}\n", .{std.mem.sliceAsBytes(&foos)});
@@ -53,9 +70,11 @@ pub fn main() !void {
         std.debug.print("{any}-{any}\n", .{ &b.a, &b.b });
     }
 }
-  ```
-  输出：
-  ```bash
+```
+
+输出：
+
+``` bash
 u3@104d11a2c-1
 u3@104d11a2d-10
 u3@104d11a2e-11
@@ -63,21 +82,46 @@ U3 size: 1
 Foo size: 1
 foo as bytes: { 11001 }
 u3@16b196367-u2@16b196367
-  ```
+```
 
-  通过前三个输出可以知道，每个 u3 实际占用一个字节，但当用在 packed 结构中，就会变成 3 个 bit。其中的 11001 就是字段 a b 混合后的值，且 a 是三位，b 是高两位。
-- [Learnings From Building a DB in Zig](https://procmarco.com/blog/learnings-from-building-a-db-in-zig/) :: 作者分享了在一次 3 天的 Hackthon 中，使用 Zig 开发一个数据库的经历。
-- [build.zig.zon dependency hashes](https://zig.news/michalsieron/buildzigzon-dependency-hashes-47kj) :: 讲解了 zon 中依赖的 hash 是怎么计算出来的
-- [play with new comptime var rule of zig 0.12.0](https://zig.news/liyu1981/play-with-new-comptime-var-rule-of-zig-0120-333k) ::
-- [To SIMD and beyond: Optimizing a simple comparison routine](https://zig.news/inspectorboat/to-simd-and-beyond-optimizing-a-simple-comparison-routine-1jkf) :: 作者在这里循序渐进的介绍了几种数字比较的技巧，从基本的方案，到 Vector，到最后利用 bit 的特点，来逐步优化，并用 godbolt 查看生成的汇编代码，是一篇不错的文章。
-- [Documentation takes another step backwards : r/Zig](https://www.reddit.com/r/Zig/comments/1cc1x2v/documentation_takes_another_step_backwards/) :: 一个 Reddit 用户对文档的抱怨
-# [项目/工具]($section.id('项目/工具'))
-- [rofrol/zig-companies](https://github.com/rofrol/zig-companies) :: A list of companies using Zig in production.
-- [akarpovskii/tuile](https://github.com/akarpovskii/tuile) :: A Text UI library for Zig
-- [mntnmntn/zenith](https://codeberg.org/mntnmntn/zenith) :: A very minimal text editor in Zig，支持 0.12.0 版本
-- [chung-leong/zigar](https://github.com/chung-leong/zigar) :: Enable the use of Zig code in JavaScript project
-- [jnordwick/zig-string](https://github.com/jnordwick/zig-string) :: Zig string library that includes small string optimization on the stack
-- [FalsePattern/ZigBrains](https://github.com/FalsePattern/ZigBrains) :: Yet another zig language plugin for intellij
+通过前三个输出可以知道，每个 u3 实际占用一个字节，但当用在 packed
+结构中，就会变成 3 个 bit。其中的 11001 就是字段 a b 混合后的值，且 a
+是三位，b 是高两位。
 
-# [Zig 语言更新]($section.id('zig-update'))
-[2024-04-01..2024-05-01](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-04-01..2024-05-01)
+[Learnings From Building a DB in Zig](https://procmarco.com/blog/learnings-from-building-a-db-in-zig/)  
+作者分享了在一次 3 天的 Hackthon 中，使用 Zig 开发一个数据库的经历。
+
+[build.zig.zon dependency hashes](https://zig.news/michalsieron/buildzigzon-dependency-hashes-47kj)  
+讲解了 zon 中依赖的 hash 是怎么计算出来的
+
+[play with new comptime var rule of zig 0.12.0](https://zig.news/liyu1981/play-with-new-comptime-var-rule-of-zig-0120-333k)  
+
+[To SIMD and beyond: Optimizing a simple comparison routine](https://zig.news/inspectorboat/to-simd-and-beyond-optimizing-a-simple-comparison-routine-1jkf)  
+作者在这里循序渐进的介绍了几种数字比较的技巧，从基本的方案，到
+Vector，到最后利用 bit 的特点，来逐步优化，并用 godbolt
+查看生成的汇编代码，是一篇不错的文章。
+
+[Documentation takes another step backwards : r/Zig](https://www.reddit.com/r/Zig/comments/1cc1x2v/documentation_takes_another_step_backwards/)  
+一个 Reddit 用户对文档的抱怨
+
+# 项目/工具
+
+[rofrol/zig-companies](https://github.com/rofrol/zig-companies)  
+A list of companies using Zig in production.
+
+[akarpovskii/tuile](https://github.com/akarpovskii/tuile)  
+A Text UI library for Zig
+
+[mntnmntn/zenith](https://codeberg.org/mntnmntn/zenith)  
+A very minimal text editor in Zig，支持 0.12.0 版本
+
+[chung-leong/zigar](https://github.com/chung-leong/zigar)  
+Enable the use of Zig code in JavaScript project
+
+[jnordwick/zig-string](https://github.com/jnordwick/zig-string)  
+Zig string library that includes small string optimization on the stack
+
+[FalsePattern/ZigBrains](https://github.com/FalsePattern/ZigBrains)  
+Yet another zig language plugin for intellij
+
+# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-04-01..2024-05-01)

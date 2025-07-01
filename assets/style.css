@@ -95,6 +95,31 @@ li > code {
   }
 }
 
+table{
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+
+blockquote {
+  border-left: 2px solid var(--border);
+  padding-left: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+img {
+  max-width: 100%;
+}
+
+figcaption {
+  font-size: small;
+  text-align: center;
+}
+
 nav {
   display: inline-block;
 }
@@ -142,11 +167,13 @@ footer > div img {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 20px;
+  padding-top: 5px;
+  border-top: 2px solid var(--border);
 }
 
 #prev-next a {
   text-decoration: none;
-  vertical-align: middle;
 }
 
 #prev-next > :first-child span::before{

@@ -10,6 +10,8 @@
 },
 ---
 
+# Bog GC 设计 -- 概念篇
+
 [Bog](https://github.com/Vexu/bog) 是一款基于 Zig 开发的小型脚本语言。它的 GC 设计受到一篇论文[An efficient of Non-Moving GC for Function languages](https://www.pllab.riec.tohoku.ac.jp/papers/icfp2011UenoOhoriOtomoAuthorVersion.pdf)的启发。
 
 ## 梗概

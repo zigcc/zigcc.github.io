@@ -5,10 +5,10 @@ const path = require("path");
 
 // 配置
 const config = {
-  sourceDir: "./content/post/news",
+  sourceDir: "./content/monthly",
   author: "ZigCC",
   time: "2024",
-  layout: "post.shtml",
+  layout: "monthly.shtml",
 };
 
 // 转换 markdown frontmatter 到 smd 格式

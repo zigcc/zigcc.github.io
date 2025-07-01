@@ -4,65 +4,96 @@
 .author = "ZigCC",
 .layout = "monthly.shtml",
 .draft = false,
-.custom = { .lastmod = "2024-06-04T19:26:01+0800" },
 ---
 
-# [观点/教程]($section.id('观点/教程'))
-## [Thoughts on Zig](https://arne.me/blog/thoughts-on-zig)
-又一篇 Zig 初学者的使用体验文档，如果你也在犹豫要不要学 Zig，这是个不错的经验参考。
-## [I'm sold on Zig's simplicity : r/Zig](https://www.reddit.com/r/Zig/comments/1ckstjv/im_sold_on_zigs_simplicity/)
-一个具有资深经验开发者，在这里描述了自己选择业余项目语言的经历：
-  - Rust 越来越复杂，有种发展成 C++ 的趋势
-  - C++ 新版本的特性（比如 module）LSP 支持的不够好，而且历史包袱严重
-  - C 缺少元编程，并且没有命名空间
+# 观点/教程
 
-  最后从 Andrew 的一个播客了解到 Zig，经过自己尝试，发现了 Zig 没有辜负他的期望，尽管是第一次写 Zig，但基本上没有什么难度，
-  每次遇到问题，仔细想几分钟就差不多有答案了。下面是他罗列的 Zig 的一些优势：
-  - 十分简洁，import 返回的是一个 struct，和其他变量一样使用
-  - 与 C 无缝交换，
-  - 具有 Result 效果的错误处理
-  - 唯一缺失的就是『接口』，但这一点并不是很关键，就像在 C里也没有，但是 C 可以做任何事
+## [Thoughts on Zig](https://arne.me/blog/thoughts-on-zig)
+
+又一篇 Zig 初学者的使用体验文档，如果你也在犹豫要不要学
+Zig，这是个不错的经验参考。
+
+## [I'm sold on Zig's simplicity : r/Zig](https://www.reddit.com/r/Zig/comments/1ckstjv/im_sold_on_zigs_simplicity/)
+
+一个具有资深经验开发者，在这里描述了自己选择业余项目语言的经历：
+
+- Rust 越来越复杂，有种发展成 C++ 的趋势
+- C++ 新版本的特性（比如 module）LSP 支持的不够好，而且历史包袱严重
+- C 缺少元编程，并且没有命名空间
+
+最后从 Andrew 的一个播客了解到 Zig，经过自己尝试，发现了 Zig
+没有辜负他的期望，尽管是第一次写 Zig，但基本上没有什么难度，
+每次遇到问题，仔细想几分钟就差不多有答案了。下面是他罗列的 Zig
+的一些优势：
+
+- 十分简洁，import 返回的是一个 struct，和其他变量一样使用
+- 与 C 无缝交换，
+- 具有 Result 效果的错误处理
+- 唯一缺失的就是『接口』，但这一点并不是很关键，就像在 C里也没有，但是 C
+  可以做任何事
+
 # [Zig's New CLI Progress Bar Explained](https://andrewkelley.me/post/zig-new-cli-progress-bar-explained.html)
-Andrew 的一篇文章，讲述了在最新版的 Zig 中，对进度条的改进实现，现在的进度展示更加友好。
+
+Andrew 的一篇文章，讲述了在最新版的 Zig
+中，对进度条的改进实现，现在的进度展示更加友好。
 
 实现的难点在于在多线程环境下，如何保证高性能，文章中大致讲述了其实现：
+
 - 首先通过预先分配好需要使用的结构，保证后续无需在进行 heap 申请
 - 通过 atomic 操作来实现一个无锁的 freelist，用于申请、释放 Node
+
 # [Writing a task scheduler in Zig](https://www.openmymind.net/Writing-a-Task-Scheduler-in-Zig/)
-Openmymind 作者的又一力作，通过编写一个任务调度器，讲述了多线程编程的基本要领：
+
+Openmymind
+作者的又一力作，通过编写一个任务调度器，讲述了多线程编程的基本要领：
+
 - 共享的数据要加锁
+
 - 条件变量要和锁一起使用，会有[虚假唤醒](https://en.wikipedia.org/wiki/Spurious_wakeup)的问题，因此在被唤醒时，需要重新检查状态是否正确。
-  ```zig
-fn run(self: *Self) void {
-  while (true) {
-    self.mutex.lock();
-    while (self.queue.peek() == null) {
-      self.cond.wait(&self.mutex);
+
+  ``` zig
+  fn run(self: *Self) void {
+    while (true) {
+      self.mutex.lock();
+      while (self.queue.peek() == null) {
+        self.cond.wait(&self.mutex);
+      }
+      // TODO
     }
-    // TODO
   }
-}
   ```
+
   它会在 wait 前释放锁，在 wait 返回时先加锁，类似下面的实现：
-  ```zig
-fn wait(c: *std.Thread.Condition, mutex: *std.Thread.Mutex) void {
-  // do some setup
-  // ...
 
-  mutex.unlock();
+  ``` zig
+  fn wait(c: *std.Thread.Condition, mutex: *std.Thread.Mutex) void {
+    // do some setup
+    // ...
 
-  // whatever happens, we'll always return with this locked
-  defer mutex.lock();
+    mutex.unlock();
 
-  // wait for signal
-  // or timeout if calling timedWait
-  // ...
-}
+    // whatever happens, we'll always return with this locked
+    defer mutex.lock();
+
+    // wait for signal
+    // or timeout if calling timedWait
+    // ...
+  }
   ```
-# [项目/工具]($section.id('项目/工具'))
-- [zigar](https://github.com/chung-leong/zigar) :: Enable the use of Zig code in JavaScript project。它可以让你直接在 JS 中调用 zig 代码，背后原理是编译成了 wasm 实现的。
-- [srijan-paul/nez](https://github.com/srijan-paul/nez) :: An emulator for the NES console.
-- [deckarep/ziglang-set](https://github.com/deckarep/ziglang-set) :: A generic and general purpose Set implementation for the Zig language
-- [akarpovskii/tuile](https://github.com/akarpovskii/tuile) :: A Text UI library for Zig
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page`1&q`+is%3Aclosed+is%3Apr+closed%3A2024-05-01..2024-06-01)
+# 项目/工具
+
+[zigar](https://github.com/chung-leong/zigar)  
+Enable the use of Zig code in JavaScript project。它可以让你直接在 JS
+中调用 zig 代码，背后原理是编译成了 wasm 实现的。
+
+[srijan-paul/nez](https://github.com/srijan-paul/nez)  
+An emulator for the NES console.
+
+[deckarep/ziglang-set](https://github.com/deckarep/ziglang-set)  
+A generic and general purpose Set implementation for the Zig language
+
+[akarpovskii/tuile](https://github.com/akarpovskii/tuile)  
+A Text UI library for Zig
+
+# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-05-01..2024-06-01)

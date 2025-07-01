@@ -4,69 +4,110 @@
 .author = "ZigCC",
 .layout = "monthly.shtml",
 .draft = false,
-.custom = { .lastmod = "2023-01-31T20:05:19+0800" },
 ---
 
-# [包管理器进展]($section.id('包管理器进展'))
-包管理器自 [#14265](https://github.com/ziglang/zig/pull/14265) 合并后一直在不断推进，以下两个是最主要的改变：
-- [build system terminology update: package, project, module, dependency](https://github.com/ziglang/zig/issues/14307)
+# 包管理器进展
+
+包管理器自 [\#14265](https://github.com/ziglang/zig/pull/14265)
+合并后一直在不断推进，以下两个是最主要的改变：
+
+- [build system terminology update: package, project, module,
+  dependency](https://github.com/ziglang/zig/issues/14307)
 
   这里重新梳理了现在的术语，主要有以下几个：
-  - `package` 文件的集合，由文件的 hash 值唯一指定，一个 package 可能包含任意数目的 compilation artifacts 与 modules。
-  - `dependency` 不同 package 之间的有向边，一个 package 可以有任意个依赖，一个 package 也可以用作任意项目的依赖
-  - `module` 文件的集合，每一个模块都有一个 root 文件，在被 `@import` 时用到。
-  - `compilation artifact` 编译构建产物，可以是 static library，dynamic library，an executable 或 an object file，对应之前版本的 `LibExeObjStep`
-- [introduce Zig Object Notation and use it for the build manifest file (build.zig.zon)](https://github.com/ziglang/zig/pull/14523)
+
+  - `package` 文件的集合，由文件的 hash 值唯一指定，一个 package
+    可能包含任意数目的 compilation artifacts 与 modules。
+  - `dependency` 不同 package 之间的有向边，一个 package
+    可以有任意个依赖，一个 package 也可以用作任意项目的依赖
+  - `module` 文件的集合，每一个模块都有一个 root 文件，在被 `@import`
+    时用到。
+  - `compilation artifact` 编译构建产物，可以是 static library，dynamic
+    library，an executable 或 an object file，对应之前版本的
+    `LibExeObjStep`
+
+- [introduce Zig Object Notation and use it for the build manifest file
+  (build.zig.zon)](https://github.com/ziglang/zig/pull/14523)
 
   使用 zon 格式替代之前的 ini，格式如下：
-```zig
-.{
-    .name = "awesome-cli",
-    .version = "0.1.0",
-    .dependencies = .{
-        .simargs = .{
-            .url = "https://github.com/jiacai2050/simargs/archive/0a1a2afd072cc915009a063075743192fc6b1fd5.tar.gz",
-            .hash = "1220a6554eccb2e9a9d7d63047e062314851ffd11315b9e6d1b5e06a9dde3275f150",
-        },
-    },
-}
-```
+
+  ``` zig
+  .{
+      .name = "awesome-cli",
+      .version = "0.1.0",
+      .dependencies = .{
+          .simargs = .{
+              .url = "https://github.com/jiacai2050/simargs/archive/0a1a2afd072cc915009a063075743192fc6b1fd5.tar.gz",
+              .hash = "1220a6554eccb2e9a9d7d63047e062314851ffd11315b9e6d1b5e06a9dde3275f150",
+          },
+      },
+  }
+  ```
+
   一些使用了包管理的实际项目：
-  - [andrewrk/ffmpeg: ffmpeg with the build system replaced by zig](https://github.com/andrewrk/ffmpeg)
-  - [jiacai2050/loc: Lines of code in Zig](https://github.com/jiacai2050/loc)，适配包管理的相关 [commit 修改](https://github.com/jiacai2050/loc/commit/7b01c09a4ba9d3ddc3d067cc6af654601a99035a)
-  - [PCRE2Project/pcre2: zig build support](https://github.com/PCRE2Project/pcre2/pull/206)
-  - [nikneym/ws: WebSocket library for Zig](https://github.com/nikneym/ws)
-  - [Zig package manager · Issue #6 · natecraddock/ziglua](https://github.com/natecraddock/ziglua/issues/6)
 
-也欢迎大家给自己熟悉的 C/C++ 项目提 PR 让其支持 zig build，让构建不再那么痛苦。
+  - [andrewrk/ffmpeg: ffmpeg with the build system replaced by
+    zig](https://github.com/andrewrk/ffmpeg)
+  - [jiacai2050/loc: Lines of code in
+    Zig](https://github.com/jiacai2050/loc)，适配包管理的相关 [commit
+    修改](https://github.com/jiacai2050/loc/commit/7b01c09a4ba9d3ddc3d067cc6af654601a99035a)
+  - [PCRE2Project/pcre2: zig build
+    support](https://github.com/PCRE2Project/pcre2/pull/206)
+  - [nikneym/ws: WebSocket library for
+    Zig](https://github.com/nikneym/ws)
+  - [Zig package manager · Issue \#6 ·
+    natecraddock/ziglua](https://github.com/natecraddock/ziglua/issues/6)
 
-# [观点/教程]($section.id('观点/教程'))
-- [How a Zig IDE Could Work](https://matklad.github.io/2023/02/10/how-a-zig-ide-could-work.html)
-- [Zig tips: v0.11 std.build API / package manager changes | Hexops' devlog](https://devlog.hexops.com/2023/zig-0-11-breaking-build-changes/)
-- [pcre2 support zig build](https://lobste.rs/s/zh3ulk/pcre2_support_zig_build)
-- [Multi-Object For Loops + Struct-Of-Arrays](https://zig.news/andrewrk/multi-object-for-loops-data-oriented-design-41ob)
-- [Zig's Curious Multi-Sequence For Loops](https://kristoff.it/blog/zig-multi-sequence-for-loops)，[Lobster 评论](https://lobste.rs/s/ihf30a/zig_s_curious_multi_sequence_for_loops)
+也欢迎大家给自己熟悉的 C/C++ 项目提 PR 让其支持 zig
+build，让构建不再那么痛苦。
+
+# 观点/教程
+
+- [How a Zig IDE Could
+  Work](https://matklad.github.io/2023/02/10/how-a-zig-ide-could-work.html)
+
+- [Zig tips: v0.11 std.build API / package manager changes | Hexops’
+  devlog](https://devlog.hexops.com/2023/zig-0-11-breaking-build-changes/)
+
+- [pcre2 support zig
+  build](https://lobste.rs/s/zh3ulk/pcre2_support_zig_build)
+
+- [Multi-Object For Loops +
+  Struct-Of-Arrays](https://zig.news/andrewrk/multi-object-for-loops-data-oriented-design-41ob)
+
+- [Zig’s Curious Multi-Sequence For
+  Loops](https://kristoff.it/blog/zig-multi-sequence-for-loops/)，[Lobster
+  评论](https://lobste.rs/s/ihf30a/zig_s_curious_multi_sequence_for_loops)
   上面这两篇的文章都是演示了最新的 for 语法，开始支持了 range：
-```zig
-for (0..4) |n| {
-   std.debug.print("{} ", .{n});
-}
-```
+
+  ``` zig
+  for (0..4) |n| {
+     std.debug.print("{} ", .{n});
+  }
+  ```
+
   同时也支持了一次性迭代多个数组的功能：
-```zig
-var elems = [_][]const u8 { "water", "earth", "fire", "wind" };
-var nats = [_][]const u8 { "tribes", "kingdom", "nation", "nomads" };
 
-for (elems, nats) |e, n| {
-   std.debug.print("{s} {s}\n", .{e, n});
-}
-```
-- [Zig Bits 0x1: Returning slices from functions](https://blog.orhun.dev/zig-bits-01/)
+  ``` zig
+
+  var elems = [_][]const u8 { "water", "earth", "fire", "wind" };
+  var nats = [_][]const u8 { "tribes", "kingdom", "nation", "nomads" };
+
+  for (elems, nats) |e, n| {
+     std.debug.print("{s} {s}\n", .{e, n});
+  }
+  ```
+
+- [Zig Bits 0x1: Returning slices from
+  functions](https://blog.orhun.dev/zig-bits-01/)
   这篇文章演示了从一个函数内返回局部变量的问题与解法
-- [Smoking Hot Binary Search In Zig](https://blog.deckc.hair/2023-02-22-smoking-hot-binary-search-in-zig.html)
 
-# [项目/工具]($section.id('项目/工具'))
-- [Writing high-performance clients for TigerBeetle](https://tigerbeetle.com/blog/2023-02-21-writing-high-performance-clients-for-tigerbeetle/)
+- [Smoking Hot Binary Search In
+  Zig](https://blog.deckc.hair/2023-02-22-smoking-hot-binary-search-in-zig.html)
 
-# [Zig 语言更新]($section.id('Zig 语言更新'))
-- [Zig 语言更新](https://github.com/ziglang/zig/pulls?page`1&q`+is%3Aclosed+is%3Apr+closed%3A2023-02-01..2023-03-01)
+# 项目/工具
+
+- [Writing high-performance clients for
+  TigerBeetle](https://tigerbeetle.com/blog/2023-02-21-writing-high-performance-clients-for-tigerbeetle/)
+
+# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-02-01..2023-03-01)

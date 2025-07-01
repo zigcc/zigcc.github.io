@@ -4,37 +4,100 @@
 .author = "ZigCC",
 .layout = "monthly.shtml",
 .draft = false,
-.custom = { .lastmod = "2023-06-17T13:32:13+0800" },
 ---
 
-# [重大事件]($section.id('重大事件'))
-这个月主要的事情就是 HTTP server 在标准库的增加了，具体可参考：
-- [Coming Soon to a Zig Near You: HTTP Client](https://zig.news/nameless/coming-soon-to-a-zig-near-you-http-client-5b81)
-- [http server in the standard library · Issue #910](https://github.com/ziglang/zig/issues/910)
-# [观点/教程]($section.id('观点/教程'))
-- [Integrating Zig and SwiftUI](https://mitchellh.com/writing/zig-and-swiftui) :: Mitchell 在用 Zig 实现了一个终端后，虽然没有把源码放出来，但是有了这个文章总结。
-- [Zig Language Server And Cancellation](https://matklad.github.io/2023/05/06/zig-language-server-and-cancellation.html) :: Matklad 对 ZLS 实现分析：如何快速响应用户的编辑命令，在作者来看，最主要是 server 端要能够及时取消已经过期的操作。
-- [Bootstrapping Uber's Infrastructure on arm64 with Zig](https://www.uber.com/en-IT/blog/bootstrapping-ubers-infrastructure-on-arm64-with-zig/) :: Zig 社区的老朋友 Motiejus Jakštys 在 Uber 的 arm 化过程中，探索了如何使用 Zig 提供对 Go 代码的交叉编译。
-- [The Worst Zig Version Manager](https://matklad.github.io/2023/06/02/the-worst-zig-version-manager.html) :: 在没有 Zig 环境的机器上，如何安装 Zig ？作者的思路是每个项目都附带一个脚本来做这件事，这种方式看似比较笨拙，但很有实用性。
-- [Writing an init system in a language I don't know](https://juliette.page/blog/init.html) :: 作者介绍了使用 Zig 开发一个 init 系统的经历，文中主要吐槽了现在 Zig 的文档严重不足 🙃，但看得出，作者依旧是喜欢 Zig 的。
-- [SIMD with Zig](https://www.openmymind.net/SIMD-With-Zig/) :: 作者演示了如何利用 SIMD 函数来改进 `indexOf` 函数
-- [Anytype Antics](https://zig.news/perky/anytype-antics-2398) :: 作者介绍了如何使用 `anytype` ，一些示例包括：Duck Type、Traits、Comptime Tagged Unions
-- [Using Zig | My Initial Thoughts on Ziglang](https://www.youtube.com/watch?v=VU1h-h9doS8) :: 视频
-- [Zig: First Impressions](https://www.youtube.com/watch?v`kRrxbRLWsBo&feature`youtu.be) :: 视频
-- [(Possibly) LVGL in WebAssembly with Zig Compiler](https://lupyuen.codeberg.page/articles/lvgl3.html) ::
-- [Initial Commit: Zig Build System](https://www.priver.dev/blog/zig/initial-commit-build-system/) ::
-- [Writing DNS resolver in Zig](https://e-aakash.github.io/update/2023/06/04/resolv-dns-resolver-in-zig.html) ::
-# [项目/工具]($section.id('项目/工具'))
-- [Zig by Example](https://zigbyexample.github.io/) :: 非常好的学习资料。Learn How to use Zig's Standard Library, by small examples.
-- [sleibrock/zigtoys](https://github.com/sleibrock/zigtoys) :: All about Zig + WASM and seeing what we can do
-- [Aandreba/zigrc](https://github.com/Aandreba/zigrc) :: Zig reference-counted pointers inspired by Rust's Rc and Arc
-- [Hanaasagi/struct](https://github.com/Hanaasagi/struct-env) :: Deserialize env vars into typesafe structs
-- [tristanisham/minigrep](https://github.com/tristanisham/minigrep-zig) :: A Zig version of the Rust book's minigrep tutorial program
-- [jsomedon/night.zig](https://github.com/jsomedon/night.zig) :: Simple tool that just install & update zig nightly.
-- [4imothy/termy48](https://github.com/4imothy/termy48) :: A 2048 game to run in terminal
-- [zig-html-example](https://github.com/bnl1/zig-html-example/blob/main/html.zig) :: 一个有趣的演示，利用 comptime 来定义 HTML 中的 Tag
-- [KilianVounckx/rayz](https://github.com/KilianVounckx/rayz) :: 另一个 Raylib 的 bindings
-- [mitchellh/zig](https://github.com/mitchellh/zig-objc) :: Objective-C runtime bindings for Zig (Zig calling ObjC).
+# 重大事件
 
-# [Zig 语言更新]($section.id('zig-update'))
-[2023-04-01..2023-05-01](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-04-01..2023-05-01)
+这个月主要的事情就是 HTTP server 在标准库的增加了，具体可参考：
+
+- [Coming Soon to a Zig Near You: HTTP
+  Client](https://zig.news/nameless/coming-soon-to-a-zig-near-you-http-client-5b81)
+- [http server in the standard library · Issue
+  \#910](https://github.com/ziglang/zig/issues/910)
+
+# 观点/教程
+
+[Integrating Zig and
+SwiftUI](https://mitchellh.com/writing/zig-and-swiftui)  
+Mitchell 在用 Zig
+实现了一个终端后，虽然没有把源码放出来，但是有了这个文章总结。
+
+[Zig Language Server And
+Cancellation](https://matklad.github.io/2023/05/06/zig-language-server-and-cancellation.html)  
+Matklad 对 ZLS
+实现分析：如何快速响应用户的编辑命令，在作者来看，最主要是 server
+端要能够及时取消已经过期的操作。
+
+[Bootstrapping Uber’s Infrastructure on arm64 with
+Zig](https://www.uber.com/en-IT/blog/bootstrapping-ubers-infrastructure-on-arm64-with-zig/)  
+Zig 社区的老朋友 Motiejus Jakštys 在 Uber 的 arm
+化过程中，探索了如何使用 Zig 提供对 Go 代码的交叉编译。
+
+[The Worst Zig Version
+Manager](https://matklad.github.io/2023/06/02/the-worst-zig-version-manager.html)  
+在没有 Zig 环境的机器上，如何安装 Zig
+？作者的思路是每个项目都附带一个脚本来做这件事，这种方式看似比较笨拙，但很有实用性。
+
+[Writing an init system in a language I don’t
+know](https://juliette.page/blog/init.html)  
+作者介绍了使用 Zig 开发一个 init 系统的经历，文中主要吐槽了现在 Zig
+的文档严重不足 🙃，但看得出，作者依旧是喜欢 Zig 的。
+
+[SIMD with Zig](https://www.openmymind.net/SIMD-With-Zig/)  
+作者演示了如何利用 SIMD 函数来改进 `indexOf` 函数
+
+[Anytype Antics](https://zig.news/perky/anytype-antics-2398)  
+作者介绍了如何使用 `anytype` ，一些示例包括：Duck Type、Traits、Comptime
+Tagged Unions
+
+[Using Zig | My Initial Thoughts on
+Ziglang](https://www.youtube.com/watch?v=VU1h-h9doS8)  
+视频
+
+[Zig: First
+Impressions](https://www.youtube.com/watch?v=kRrxbRLWsBo&feature=youtu.be)  
+视频
+
+[(Possibly) LVGL in WebAssembly with Zig
+Compiler](https://lupyuen.codeberg.page/articles/lvgl3.html)
+
+[Initial Commit: Zig Build
+System](https://www.priver.dev/blog/zig/initial-commit-build-system/)
+
+[Writing DNS resolver in
+Zig](https://e-aakash.github.io/update/2023/06/04/resolv-dns-resolver-in-zig.html)
+
+# 项目/工具
+
+[Zig by Example](https://zigbyexample.github.io/)  
+非常好的学习资料。Learn How to use Zig’s Standard Library, by small
+examples.
+
+[sleibrock/zigtoys](https://github.com/sleibrock/zigtoys)  
+All about Zig + WASM and seeing what we can do
+
+[Aandreba/zigrc](https://github.com/Aandreba/zigrc)  
+Zig reference-counted pointers inspired by Rust’s Rc and Arc
+
+[Hanaasagi/struct](https://github.com/Hanaasagi/struct-env)  
+Deserialize env vars into typesafe structs
+
+[tristanisham/minigrep](https://github.com/tristanisham/minigrep-zig)  
+A Zig version of the Rust book’s minigrep tutorial program
+
+[jsomedon/night.zig](https://github.com/jsomedon/night.zig)  
+Simple tool that just install & update zig nightly.
+
+[4imothy/termy48](https://github.com/4imothy/termy48)  
+A 2048 game to run in terminal
+
+[zig-html-example](https://github.com/bnl1/zig-html-example/blob/main/html.zig)  
+一个有趣的演示，利用 comptime 来定义 HTML 中的 Tag
+
+[KilianVounckx/rayz](https://github.com/KilianVounckx/rayz)  
+另一个 Raylib 的 bindings
+
+[mitchellh/zig](https://github.com/mitchellh/zig-objc)  
+Objective-C runtime bindings for Zig (Zig calling ObjC).
+
+# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-04-01..2023-05-01)

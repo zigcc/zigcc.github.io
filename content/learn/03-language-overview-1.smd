@@ -443,7 +443,7 @@ pub fn main() void {
 
 会输出：
 
-```
+```zig
 struct{comptime year: comptime_int = 2023, comptime month: comptime_int = 8}
 ```
 

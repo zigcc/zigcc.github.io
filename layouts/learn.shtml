@@ -13,14 +13,12 @@
   <div id="prev-next">
     <div :if="$page.prevPage?()">
       <a href="$if.link()">
-        ←
         <span :text="$if.title"></span>
       </a>
     </div>
     <div :if="$page.nextPage?()">
       <a href="$if.link()">
         <span :text="$if.title"></span>
-        →
       </a>
     </div>
   </div>

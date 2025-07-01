@@ -137,6 +137,15 @@ footer > div img {
 
 #prev-next a {
   text-decoration: none;
+  vertical-align: middle;
+}
+
+#prev-next > :first-child span::before{
+  content: "←";
+}
+
+#prev-next > :last-child span::after{
+  content: "→";
 }
 
 ::-webkit-scrollbar {

@@ -40,6 +40,7 @@ body {
 
 a {
   color: inherit;
+  line-break: anywhere;
 }
 
 p:has(+ pre) {

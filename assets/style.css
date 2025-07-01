@@ -1,4 +1,5 @@
 :root {
+  /* TODO */
   --bg: #fff;
   --fg: #111;
   --border: #aaa;
@@ -27,8 +28,11 @@
 }
 
 body {
-  margin: auto;
+  margin: 20px auto;
   max-width: 60vw;
+  @media screen and (max-width: 800px) {
+    max-width: 93vw;
+  }
   line-height: 1.5;
   background: var(--bg);
   color: var(--fg);
@@ -85,6 +89,9 @@ li > code {
   display: inline-block;
   text-decoration: none;
   color: inherit;
+  @media screen and (max-width: 800px) {
+    display: none;
+  }
 }
 
 nav {
@@ -100,6 +107,7 @@ footer > div {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 footer > div div {

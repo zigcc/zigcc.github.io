@@ -8,7 +8,7 @@
 
 # 1. 简单介绍类型化有限状态机的优势
 
-## 1.1 介绍有限状态机
+# 1.1 介绍有限状态机
 
 有限状态机（FSM，以下简称状态机）是程序中很常见的设计模式。
 
@@ -16,7 +16,7 @@
 
 而状态主要是在代码层面帮助人们理解消息的产生和处理。
 
-## 1.2 [typed-fsm-zig](https://github.com/sdzx-1/typed-fsm-zig)
+# 1.2 [typed-fsm-zig](https://github.com/sdzx-1/typed-fsm-zig)
 
 typed-fsm-zig 是一个利用 zig 类型系统加一些编程规范实现的一个库，用于实现类型安全的有限状态机。
 
@@ -43,7 +43,7 @@ typed-fsm-zig 是一个利用 zig 类型系统加一些编程规范实现的一�
 
 为了简单性，这里我不展示构建 ATM 这个例子的过程，感兴趣的可以在这里看到[代码](https://github.com/sdzx-1/typed-fsm-zig/blob/master/examples/atm-gui.zig)。
 
-## 2.1 介绍 ATM 状态机
+# 2.1 介绍 ATM 状态机
 
 ATM 代表自动取款机，因此它的代码的逻辑就是模拟自动取款机的一些行为：插入银行卡，输入 pin，检查 pin，取钱，修改 pin。
 
@@ -74,7 +74,7 @@ ATM 代表自动取款机，因此它的代码的逻辑就是模拟自动取款�
 
 接下来的文章中我将修改 Update 的行为，并展示在这个过程中类型系统如何帮助我快速调整代码。
 
-## 2.2 修改 Update 消息
+# 2.2 修改 Update 消息
 
 实际的消息 Update 定义代码如下
 
@@ -132,7 +132,7 @@ referenced by:
 
 在这里类型系统精确的告诉了我们需要修改的地方，以及原因。修改完成后程序即能正确运行。
 
-## 2.3 移除 changePin 状态
+# 2.3 移除 changePin 状态
 
 这一节中我们尝试移除 changePin 状态，看看类型系统会给我们什么反馈。
 如果移除 changePin，新的状态图如下：
@@ -175,7 +175,7 @@ examples/atm-gui.zig:296:10: error: no field named 'ChangePin' in enum '@typeInf
 
 在这个过程中类型系统帮助我们找到问题和原因。这非常酷！！！
 
-## 2.4 总结
+# 2.4 总结
 
 以上是一个简单的例子，展示了 typed-fsm-zig 对于提升状态机编程体验的巨大效果。
 

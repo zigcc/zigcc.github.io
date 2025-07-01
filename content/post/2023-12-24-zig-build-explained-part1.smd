@@ -15,11 +15,11 @@ Zig 构建系统仍然缺少文档，对很多人来说，这是不使用它的�
 
 我们将从一个刚刚初始化的 Zig 项目开始，逐步深入到更复杂的项目。在此过程中，我们将学习如何使用库和软件包、添加 C 代码，甚至如何创建自己的构建步骤。
 
-## 免责声明
+# 免责声明
 
 由于我不会解释 Zig 语言的语法或语义，因此我希望你至少已经有了一些使用 Zig 的基本经验。我还将链接到标准库源代码中的几个要点，以便您了解所有这些内容的来源。我建议你阅读编译系统的源代码，因为如果你开始挖掘编译脚本中的函数，大部分内容都不言自明。所有功能都是在标准库中实现的，不存在隐藏的构建魔法。
 
-## 开始
+# 开始
 
 我们通过新建一个文件夹来创建一个新项目，并在该文件夹中调用 zig init-exe。
 
@@ -56,7 +56,7 @@ pub fn build(b: *std.Build) void {
 }
 ```
 
-## 基础知识
+# 基础知识
 
 构建系统的核心理念是，Zig 工具链将编译一个 Zig 程序 (build.zig)，该程序将导出一个特殊的入口点（`pub fn build(b: *std.build.Builder) void`），当我们调用 `zig build` 时，该入口点将被调用。
 
@@ -95,7 +95,7 @@ Step 遵循与 std.mem.Allocator 相同的接口模式，需要实现一个 make
 
 现在，我们需要创建一个稍正式的 Zig 程序：
 
-## 编译 Zig 源代码
+# 编译 Zig 源代码
 
 要使用编译系统编译可执行文件，编译器需要使用函数 Builder.addExecutable，它将为我们创建一个新的 LibExeObjStep。这个步骤实现是 zig build-exe、zig build-lib、zig build-obj 或 zig test 的便捷封装，具体取决于初始化方式。本文稍后将对此进行详细介绍。
 
@@ -118,7 +118,7 @@ pub fn build(b: *std.build.Builder) void {
 
 这将始终在当前机器的调试模式下编译，因此对于初学者来说，这可能就足够了。但如果你想开始发布你的项目，你可能需要启用交叉编译：
 
-## 交叉编译
+# 交叉编译
 
 交叉编译是通过设置程序的目标和编译模式来实现的
 
@@ -163,7 +163,7 @@ pub fn build(b: *std.build.Builder) void {
 
 现在，如果你调用 zig build --help 命令，就会在输出中看到以下部分，而之前这部分是空的：
 
-```
+```bash
 Project-Specific Options:
 -Dtarget=[string]            The CPU architecture, OS, and ABI to build for
 -Dcpu=[string]               Target CPU features to add or subtract
@@ -187,7 +187,7 @@ zig build -Doptimize=ReleaseSmall
 
 但我们仍然必须调用 zig build 编译，因为默认调用仍然没有任何作用。让我们改变一下！
 
-## 安装工件
+# 安装工件
 
 要安装任何东西，我们必须让它依赖于构建器的安装步骤。该步骤是已创建的，可通过 Builder.getInstallStep() 访问。我们还需要创建一个新的 InstallArtifactStep，将我们的 exe 文件复制到安装目录（通常是 zig-out）
 
@@ -254,7 +254,7 @@ pub fn build(b: *std.build.Builder) void {
 
 现在，从理解初始构建脚本到完全扩展，还缺少一个部分：
 
-## 运行已构建的应用程序
+# 运行已构建的应用程序
 
 为了开发用户体验和一般便利性，从构建脚本中直接运行程序是非常实用的。这通常是通过运行步骤实现的，可以通过 zig build run 调用。
 
@@ -324,11 +324,11 @@ pub fn build(b: *std.build.Builder) void {
 
 这样就可以在 cli 上的 -- 后面传递参数：
 
-```
+```bash
 zig build run -- -o foo.bin foo.asm
 ```
 
-## 结论
+# 结论
 
 本系列的第一章应该能让你完全理解本文开头的构建脚本，并能创建自己的构建脚本。
 

@@ -16,7 +16,7 @@ Let us exist。这里稍微整理下这件事情的过程： 本次事件主要�
 - Rust 核心贡献者： Patrick Walton
 - Zig 社区 VP： Loris Cro
 
-### 时间线
+## 时间线
 
 - 8/26 号，一篇关于 wasm 2 Game Jam
   的[分析报告](https://wasm4.org/blog/jam-2-results/)中，使用 Zig
@@ -57,7 +57,7 @@ Let us exist。这里稍微整理下这件事情的过程： 本次事件主要�
   这里[提到的](https://github.com/tigerbeetledb/tigerbeetle/blob/main/docs/DESIGN.md)。而且即便内存安全，也可能发生
   OOM
 
-### 总结
+## 总结
 
 上面的链接比较多，这里稍微总结下这次争论的问题：
 

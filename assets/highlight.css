@@ -10,9 +10,13 @@
   --bracket: #93aa9e;
 }
 
-code.zig, code.javascript{
+code {
   color: var(--code-fg);
-  .keyword, .keyword_modifier, .type_builtin, .keyword_type, .keyword_return, .keyword_conditional, .keyword_repeat, .keyword_operator, .constant_builtin, .keyword_exception{
+}
+
+code.zig, code.javascript, code.c, code.cpp, code.zon, code.go{
+  color: var(--code-fg);
+  .keyword, .keyword_modifier, .type_builtin, .keyword_type, .keyword_return, .keyword_conditional, .keyword_repeat, .keyword_operator, .constant_builtin, .keyword_exception, .type{
     color: var(--keyword);
   }
   .variable, .function_builtin{
@@ -30,7 +34,7 @@ code.zig, code.javascript{
   .number{
     color: var(--number);
   }
-  .keyword_function, .punctuation_delimiter{
+  .keyword_function, .punctuation_delimiter, .function{
     color: var(--function);
   }
   .punctuation_bracket{

@@ -36,7 +36,7 @@ Zig 开发者的一些观点：
 
 # 观点/教程
 
-## [Improving Your Zig Language Server Experience](https://kristoff.it/blog/improving-your-zls-experience/)
+# [Improving Your Zig Language Server Experience](https://kristoff.it/blog/improving-your-zls-experience/)
 
 Loris Cro 的最新文章，介绍了一个改进 Zig
 编码体验的小技巧，十分推荐大家使用。具体来说是这样的： 通过配置
@@ -82,7 +82,7 @@ zls --config-path zls.json
 
 这样不同的项目就可以用不同的检查步骤了。
 
-## [Systems Distributed '24](https://guergabo.substack.com/p/systems-distributed-24)
+# [Systems Distributed '24](https://guergabo.substack.com/p/systems-distributed-24)
 
 作者对这次会议的一个回顾总结，议题主要有如下几个方向：
 
@@ -92,7 +92,7 @@ zls --config-path zls.json
 - Lessons from Building Distributed Databases
 - Notes from Water Cooler Chats
 
-## [C Macro Reflection in Zig – Zig Has Better C Interop Than C Itself](https://jstrieb.github.io/posts/c-reflection-zig/)
+# [C Macro Reflection in Zig – Zig Has Better C Interop Than C Itself](https://jstrieb.github.io/posts/c-reflection-zig/)
 
 该作者分享了利用 typeInfo 来在编译时获取字段名的能力，要知道，在 C
 里面是没有这个功能的。
@@ -135,7 +135,7 @@ fn get_window_messages() [65536][:0]const u8 {
 }
 ```
 
-## [A TypeScripter's Take on Zig (Advent of Code 2023)](https://effectivetypescript.com/2024/07/17/advent2023-zig/)
+# [A TypeScripter's Take on Zig (Advent of Code 2023)](https://effectivetypescript.com/2024/07/17/advent2023-zig/)
 
 以下该作者的一些心得体会：
 

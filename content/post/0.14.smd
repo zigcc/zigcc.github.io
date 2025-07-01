@@ -126,11 +126,11 @@ Zig 0.14.0 版本是经过 **9 个月的工作**，由 **251 位不同的贡献�
 
 # 关于 Zig 0.14.0 版本的常见问题解答
 
-## Zig 0.14.0 版本的主要更新和亮点是什么？
+# Zig 0.14.0 版本的主要更新和亮点是什么？
 
 Zig 0.14.0 版本是长达 9 个月开发工作和 3467 次提交的成果，主要亮点包括：显著增强了对多种目标平台的支持，包括 arm/thumb、mips/mips64、powerpc/powerpc64、riscv32/riscv64 和 s390x 等，许多之前存在工具链问题、标准库支持缺失或崩溃的情况现在应该可以正常工作了。此外，该版本在构建系统方面进行了大量升级，并对语言进行了多项重要改进，例如引入了 Labeled Switch 和 Decl Literals 等新特性。为了缩短编辑/编译/调试周期，版本还迈向了两个长期投资目标：增量编译和快速 x86 后端。
 
-## Zig 如何对不同目标平台的开发支持进行分级？
+# Zig 如何对不同目标平台的开发支持进行分级？
 
 Zig 使用四层系统来对不同目标平台的支持级别进行分类，其中 Tier 1 是最高级别：
 
@@ -139,15 +139,15 @@ Zig 使用四层系统来对不同目标平台的支持级别进行分类，其�
 -   **Tier 3:** 编译器可以依赖外部后端（如 LLVM）为该目标平台生成机器代码。链接器可以为该目标平台生成目标文件、库和可执行文件。
 -   **Tier 4:** 编译器可以依赖外部后端（如 LLVM）为该目标平台生成汇编源代码。如果 LLVM 将此目标平台视为实验性，则需要从源代码构建 LLVM 和 Zig 才能使用它。
 
-## 什么是 Labeled Switch，它有什么优势？
+# 什么是 Labeled Switch，它有什么优势？
 
 Labeled Switch 是 Zig 0.14.0 中引入的一项语言特性，允许 switch 语句被标记，并作为 continue 语句的目标。continue :label value 语句会用 value 替换原始的 switch 表达式操作数，并重新评估 switch。尽管在语义上类似于循环中的 switch，但 Labeled Switch 的关键优势在于其代码生成特性。它可以生成帮助 CPU 更准确预测分支的代码，从而提高热循环中的性能，特别是在处理指令分派、评估有限状态自动机 (FSA) 或执行类似基于 case 的评估时。这有助于 branch predictor 更准确地预测控制流。
 
-## Decl Literals 是什么，它解决了哪些问题？
+# Decl Literals 是什么，它解决了哪些问题？
 
 Decl Literals 是 Zig 0.14.0 扩展 "enum literal" 语法 (.foo) 而引入的新特性。现在，一个枚举字面量 .foo 不仅可以引用枚举变体，还可以使用 Result Location Semantics 引用目标类型上的任何声明（const/var/fn）。这在初始化结构体字段时特别有用，可以避免重复指定类型，并有助于避免 Faulty Default Field Values 的问题，确保数据不变量不会因覆盖单个字段而受到破坏。它也支持直接调用函数来初始化值。
 
-## Zig 0.14.0 版本在内存分配器方面有哪些值得关注的变化？
+# Zig 0.14.0 版本在内存分配器方面有哪些值得关注的变化？
 
 该版本对内存分配器进行了多项改进：
 
@@ -156,7 +156,7 @@ Decl Literals 是 Zig 0.14.0 扩展 "enum literal" 语法 (.foo) 而引入的新
 -   **Allocator API Changes (remap):** std.mem.Allocator.VTable 引入了一个新的 remap 函数，允许尝试扩展或收缩内存并可能重新定位，如果无法在不执行内部 memcpy 的情况下完成，则返回 null，提示调用者自行处理复制。同时，resize 函数保持不变。Allocator.VTable 中的所有函数现在使用 std.mem.Alignment 类型代替 u8，增加了类型安全。
 -   **Runtime Page Size:** 移除了编译时已知的 std.mem.page\_size，代之以编译时已知的页面大小上下界 std.heap.page\_size\_min 和 std.heap.page\_size\_max。运行时获取页面大小可以使用 std.heap.pageSize()，它会优先使用编译时已知的值，否则在运行时查询操作系统并缓存结果。这修复了对 Asahi Linux 等新硬件上运行 Linux 的支持。
 
-## Zig 0.14.0 版本如何改进构建系统，特别是处理模块和依赖关系？
+# Zig 0.14.0 版本如何改进构建系统，特别是处理模块和依赖关系？
 
 Zig 0.14.0 版本在构建系统方面有多项重要改进：
 
@@ -166,7 +166,7 @@ Zig 0.14.0 版本在构建系统方面有多项重要改进：
 -   **addLibrary Function:** 引入 addLibrary 函数作为 addSharedLibrary 和 addStaticLibrary 的替代，允许在 build.zig 中更容易地切换链接模式，并与 linkLibrary 函数名称保持一致。
 -   **Import ZON:** ZON 文件现在可以在编译时通过 @import("foo.zon") 导入，前提是结果类型已知。
 
-## Zig 0.14.0 版本在编译器后端和编译速度方面有哪些进展？
+# Zig 0.14.0 版本在编译器后端和编译速度方面有哪些进展？
 
 该版本在编译器后端和编译速度方面取得了进展：
 
@@ -174,7 +174,7 @@ Zig 0.14.0 版本在构建系统方面有多项重要改进：
 -   **Incremental Compilation:** 引入了增量编译特性，可以通过 -fincremental 标志启用。尽管尚未默认启用，但结合文件系统监听，可以显著缩短修改代码后的重新分析时间，提供快速的编译错误反馈。
 -   **x86 Backend:** x86 后端在行为测试套件中的通过率已接近 LLVM 后端，并且在开发时通常比 LLVM 后端提供更快的编译速度和更好的调试器支持。虽然尚未默认选中，但鼓励用户尝试使用 -fno-llvm 或在构建脚本中设置 use\_llvm = false 来启用。
 
-## Zig 0.14.0 版本在工具链和运行时方面有哪些值得注意的更新？
+# Zig 0.14.0 版本在工具链和运行时方面有哪些值得注意的更新？
 
 该版本在工具链和运行时方面也有多项更新：
 

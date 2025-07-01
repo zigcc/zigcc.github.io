@@ -26,13 +26,13 @@ date: '2023-09-05T16:13:13+0800'
 ---
 ```
 
-## 本地预览
+# 本地预览
 TODO
 ```bash
 zine
 ```
 
-## 发布平台
+# 发布平台
 
 - [ZigCC 网站](https://ziglang.cc)
 - [ZigCC 公众号](https://github.com/zigcc/.github/raw/main/zig_mp.png)

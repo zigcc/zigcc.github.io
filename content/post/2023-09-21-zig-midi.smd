@@ -23,7 +23,7 @@ MIDI 是“乐器数字接口”的缩写，是一种用于音乐设备之间通
 ├── midi.zig
 ```
 
-## 基础
+# 基础
 
 在 MIDI 协议中，`0xFF` 是一个特定的状态字节，用来表示元事件（Meta Event）的开始。元事件是 MIDI 文件结构中的一种特定消息，通常不用于实时音频播放，但它们包含有关 MIDI 序列的元数据，例如序列名称、版权信息、歌词、时间标记、速度（BPM）更改等。
 
@@ -56,7 +56,7 @@ MIDI 是“乐器数字接口”的缩写，是一种用于音乐设备之间通
 
 元事件主要存在于 MIDI 文件中，特别是在标准 MIDI 文件 (SMF) 的上下文中。在实时 MIDI 通信中，元事件通常不会被发送，因为它们通常不会影响音乐的实际播放。
 
-## Midi.zig
+# Midi.zig
 
 本文件主要是处理 MIDI 消息的模块，为处理 MIDI 消息提供了基础结构和函数。
 
@@ -194,7 +194,7 @@ pub const Message = struct {
 - value 和 setValue 函数：用于获取和设置 MIDI 消息的值字段。
 - Kind 枚举：定义了 MIDI 消息的所有可能种类，包括通道事件和系统事件。
 
-### midi 消息结构
+## midi 消息结构
 
 我们需要先了解 MIDI 消息的一些背景。
 
@@ -211,7 +211,7 @@ pub const Message = struct {
 
 4. **设置值**：`message.values = .{ ... }` 将这两个 7 位的值设置到 `message.values` 中。
 
-### 事件
+## 事件
 
 针对事件，我们看 enum。
 
@@ -251,7 +251,7 @@ pub const Message = struct {
 
 以下是对每个枚举成员的简要说明：
 
-#### 频道事件 (Channel events)
+### 频道事件 (Channel events)
 
 1. **NoteOff**：这是一个音符结束事件，表示某个音符不再播放。
 2. **NoteOn**：这是一个音符开始事件，表示开始播放某个音符。
@@ -261,7 +261,7 @@ pub const Message = struct {
 6. **ChannelPressure**：频道压力事件，与多声道键盘压力相似，但它适用于整个频道，而不是特定音符。
 7. **PitchBendChange**：音高弯曲变更事件，表示音符音高的上升或下降。
 
-#### 系统事件 (System events)
+### 系统事件 (System events)
 
 1. **ExclusiveStart**：独占开始事件，标志着一个独占消息序列的开始。
 2. **MidiTimeCodeQuarterFrame**：MIDI 时间码四分之一帧，用于同步与其他设备。
@@ -276,11 +276,11 @@ pub const Message = struct {
 11. **ActiveSensing**：活动感知事件，是一种心跳信号，表示设备仍然在线并工作。
 12. **Reset**：重置事件，用于将设备重置为其初始状态。
 
-#### 其他
+### 其他
 
 1. **Undefined**：未定义事件，可能表示一个未在此枚举中定义的或无效的 MIDI 事件。
 
-## decode.zig
+# decode.zig
 
 本文件是对 MIDI 文件的解码器, 提供了一组工具，可以从不同的输入源解析 MIDI 文件的各个部分。这样可以方便地读取和处理 MIDI 文件。
 
@@ -498,7 +498,7 @@ pub fn file(reader: anytype, allocator: *mem.Allocator) !midi.File {
 8. trackEvent: 从 reader 中解析一个 MIDI 轨道事件。它可以是 MIDI 消息或元事件。
 9. file: 用于从 reader 解码一个完整的 MIDI 文件。它首先解码文件头，然后解码所有的文件块。这个函数会返回一个表示 MIDI 文件的结构体。
 
-### message 解析
+## message 解析
 
 ```zig
 const status_byte = if (statusByte(first_byte.?)) |status_byte| blk: {
@@ -531,7 +531,7 @@ const status_byte = if (statusByte(first_byte.?)) |status_byte| blk: {
 
 4. `else return error.InvalidMessage;`: 如果 `first_byte` 不是状态字节，并且不存在前一个消息，那么返回一个 `InvalidMessage` 错误。
 
-## encode.zig
+# encode.zig
 
 本文件用于将 MIDI 数据结构编码为其对应的二进制形式。具体来说，它是将内存中的 MIDI 数据结构转换为 MIDI 文件格式的二进制数据。
 
@@ -672,7 +672,7 @@ pub fn file(writer: anytype, f: midi.File) !void {
 
 - file 函数：这是主函数，用于将整个 MIDI 文件数据结构编码为其二进制形式。它首先编码文件头，然后循环编码每个块和块中的事件。
 
-### int 函数
+## int 函数
 
 ```zig
 
@@ -731,7 +731,7 @@ pub fn int(writer: anytype, i: u28) !void {
 
 - 使用提供的`writer`将翻转后的字节写入到目标位置。
 
-## file.zig
+# file.zig
 
 主要目的是为了表示和处理 MIDI 文件的不同部分，以及提供了一个迭代器来遍历 MIDI 轨道的事件。
 
@@ -912,7 +912,7 @@ pub const TrackIterator = struct {
 - 定义了一个 Result 结构来返回事件和关联的数据。
 - 提供了一个`next`方法来读取下一个事件。
 
-## Build.zig
+# Build.zig
 
 buid.zig 是一个 Zig 构建脚本（build.zig），用于配置和驱动 Zig 的构建过程。
 

@@ -31,7 +31,7 @@ const map = std.StaticStringMap(T).initComptime(kvs_list);
 
 # 观点/教程
 
-## [Leveraging Zig's Allocators](https://www.openmymind.net/Leveraging-Zigs-Allocators/)
+# [Leveraging Zig's Allocators](https://www.openmymind.net/Leveraging-Zigs-Allocators/)
 
 老朋友 openmymind 的又一篇好文章：如何利用 Zig 的 Allocator
 来实现请求级别的内存分配。 Zig Allocator
@@ -100,7 +100,7 @@ fn run(worker: *Worker) void {
 }
 ```
 
-## [On Zig vs Rust at work and the choice we made](https://ludwigabap.bearblog.dev/zig-vs-rust-at-work-the-choice-we-made/)
+# [On Zig vs Rust at work and the choice we made](https://ludwigabap.bearblog.dev/zig-vs-rust-at-work-the-choice-we-made/)
 
 - <https://news.ycombinator.com/item?id=40735667>
 
@@ -131,14 +131,14 @@ Rust。 重写的项目运行在多个平台上（Web、移动端、VR
 
 相信这也是大部分人选择 Zig 的原因：简洁、高效。
 
-## [Packing some Zig before going for the countryside](https://ludwigabap.bearblog.dev/packing-some-zig-before-going-for-the-countryside/)
+# [Packing some Zig before going for the countryside](https://ludwigabap.bearblog.dev/packing-some-zig-before-going-for-the-countryside/)
 
 作者列举的一些 Zig
 学习资料、常用类库。该作者的另一篇文章也有不少资料：[2024 Collection of
 Zig
 resources](https://ludwigabap.bearblog.dev/2024-collection-of-zig-resources/)
 
-## [Why I am not yet ready to switch to Zig from Rust](https://turso.tech/blog/why-i-am-not-yet-ready-to-switch-to-zig-from-rust)
+# [Why I am not yet ready to switch to Zig from Rust](https://turso.tech/blog/why-i-am-not-yet-ready-to-switch-to-zig-from-rust)
 
 Turso CTO 的一篇文章，他本身是个资深 C 程序员，而且也比较喜欢 C，但 C
 不是一门安全的语言，因此通过 Rust，作者可以避免 写出 SIGSEGVS

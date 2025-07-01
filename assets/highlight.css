@@ -1,28 +1,40 @@
+:root {
+  --fg: #BD976A;
+  --keyword: #4D9375;
+  --variable: #BD976A;
+  --comment: #758575DD;
+  --operator: #666666;
+  --string: #C98A7D;
+  --number: #4C9A91;
+  --function: #CB7676;
+  --bracket: #93aa9e;
+}
+
 .zig{
-  color: #BD976A;
+  color: var(--fg);
   .keyword, .keyword_modifier, .type_builtin, .keyword_type, .keyword_return, .keyword_conditional, .keyword_repeat, .keyword_operator, .constant_builtin, .keyword_exception{
-    color: #4D9375;
+    color: var(--keyword);
   }
   .variable, .function_builtin{
-    color: #BD976A;
+    color: var(--variable);
   }
   .comment{
-    color: #758575DD;
+    color: var(--comment);
   }
   .operator, .punctuation{
-    color: #666666;
+    color: var(--operator);
   }
   .string, .character{
-    color: #C98A7D;
+    color: var(--string);
   }
   .number{
-    color: #4C9A91;
+    color: var(--number);
   }
   .keyword_function, .punctuation_delimiter{
-    color: #CB7676;
+    color: var(--function);
   }
   .punctuation_bracket{
-    color: #93aa9e;
+    color: var(--bracket);
   }
 }
 

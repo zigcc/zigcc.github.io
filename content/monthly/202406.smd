@@ -24,7 +24,7 @@ const map = std.StaticStringMap(T).initComptime(kvs_list);
 - 将并发引入语义分析，进一步提高编译速度。
 
 # [观点/教程]($section.id('观点/教程'))
-## [[Leveraging Zig's Allocators](https://www.openmymind.net/Leveraging-Zigs-Allocators/)]($section.id('[Leveraging Zig\'s Allocators](https://www.openmymind.net/Leveraging-Zigs-Allocators/)'))
+## [Leveraging Zig's Allocators](https://www.openmymind.net/Leveraging-Zigs-Allocators/)
 老朋友 openmymind 的又一篇好文章：如何利用 Zig 的 Allocator 来实现请求级别的内存分配。
 // TODO
 Zig Allocator 的最佳应用。这里(/post/2024/06/16/leveraging-zig-allocator/)它的中文翻译。
@@ -90,7 +90,7 @@ fn run(worker: *Worker) void {
   }
 }
 ```
-## [[On Zig vs Rust at work and the choice we made](https://ludwigabap.bearblog.dev/zig-vs-rust-at-work-the-choice-we-made/)]($section.id('[On Zig vs Rust at work and the choice we made](https://ludwigabap.bearblog.dev/zig-vs-rust-at-work-the-choice-we-made/)'))
+## [On Zig vs Rust at work and the choice we made](https://ludwigabap.bearblog.dev/zig-vs-rust-at-work-the-choice-we-made/)
 - https://news.ycombinator.com/item?id=40735667
 这篇文章作者描述了所在公司在改造老 C/C++ 项目时，为什么选择了 Zig 而不是 Rust。
 重写的项目运行在多个平台上（Web、移动端、VR 设备），因此最靠谱的方案就是暴露一个 C API，然后通过 FFI 来调用。在做决策时，重点关注以下两点：
@@ -111,9 +111,9 @@ fn run(worker: *Worker) void {
 Zig 大大减少了移植现有代码库和确保所有平台兼容性所需的时间和精力。我们的团队无法相信 Rust 能让这一切变得如此简单。
 
 相信这也是大部分人选择 Zig 的原因：简洁、高效。
-## [[Packing some Zig before going for the countryside](https://ludwigabap.bearblog.dev/packing-some-zig-before-going-for-the-countryside/)]($section.id('[Packing some Zig before going for the countryside](https://ludwigabap.bearblog.dev/packing-some-zig-before-going-for-the-countryside/)'))
+## [Packing some Zig before going for the countryside](https://ludwigabap.bearblog.dev/packing-some-zig-before-going-for-the-countryside/)
 作者列举的一些 Zig 学习资料、常用类库。该作者的另一篇文章也有不少资料：[2024 Collection of Zig resources](https://ludwigabap.bearblog.dev/2024-collection-of-zig-resources/)
-## [[Why I am not yet ready to switch to Zig from Rust](https://turso.tech/blog/why-i-am-not-yet-ready-to-switch-to-zig-from-rust)]($section.id('[Why I am not yet ready to switch to Zig from Rust](https://turso.tech/blog/why-i-am-not-yet-ready-to-switch-to-zig-from-rust)'))
+## [Why I am not yet ready to switch to Zig from Rust](https://turso.tech/blog/why-i-am-not-yet-ready-to-switch-to-zig-from-rust)
 Turso CTO 的一篇文章，他本身是个资深 C 程序员，而且也比较喜欢 C，但 C 不是一门安全的语言，因此通过 Rust，作者可以避免
 写出 SIGSEGVS 的代码，尽管 Rust 是门复杂的语言，但是因为它有完善的生态（有大公司如微软、谷歌等做背书）、已经内存安全等特点，
 已经是作者系统编程的首选。

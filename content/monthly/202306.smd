@@ -86,5 +86,5 @@ $ curl http://localhost:8012/api/1/exec \
 - [Rust VS Zig benchmarks](https://programming-language-benchmarks.vercel.app/rust-vs-zig) :: Which programming language or compiler is faster
 - [ziglang/shell](https://github.com/ziglang/shell-completions) :: Shell completions for the Zig compiler.
 - [menduz/zig](https://github.com/menduz/zig-steamworks) :: Steamwork bindings for Zig.
-# [[Zig 语言更新](https://github.com/ziglang/zig/pulls?page`1&q`+is%3Aclosed+is%3Apr+closed%3A2023-05-01..2023-06-01)]($section.id('[Zig 语言更新](https://github.com/ziglang/zig/pulls?page`1&q`+is%3Aclosed+is%3Apr+closed%3A2023-05-01..2023-06-01)'))
+# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page`1&q`+is%3Aclosed+is%3Apr+closed%3A2023-05-01..2023-06-01)
 - [WASI: Implement experimental threading support by Luukdegram · Pull Request #16207 · ziglang/zig](https://github.com/ziglang/zig/pull/16207)

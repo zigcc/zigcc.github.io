@@ -24,7 +24,7 @@ Zig 开发者的一些观点：
   C 和 C++ 是著名的核心编程语言，在这两种语言中，你可以完全控制硬件。 但与此同时，这些语言的工具链却非常糟糕。 Zig 允许用户涉猎这些核心编程语言，但可以使用更好的工具链，兼容各种语言和更丰富的功能。
 
 # [观点/教程]($section.id('观点/教程'))
-## [[Improving Your Zig Language Server Experience](https://kristoff.it/blog/improving-your-zls-experience/)]($section.id('[Improving Your Zig Language Server Experience](https://kristoff.it/blog/improving-your-zls-experience/)'))
+## [Improving Your Zig Language Server Experience](https://kristoff.it/blog/improving-your-zls-experience/)
  Loris Cro 的最新文章，介绍了一个改进 Zig 编码体验的小技巧，十分推荐大家使用。具体来说是这样的：
  通过配置 zls，达到保存文件时，自动进行源码检查，而且速度非常快！
  ```js
@@ -54,14 +54,14 @@ check.dependOn(&exe_check.step);
 zls --config-path zls.json
 ```
 这样不同的项目就可以用不同的检查步骤了。
-## [[Systems Distributed '24](https://guergabo.substack.com/p/systems-distributed-24)]($section.id('[Systems Distributed \'24](https://guergabo.substack.com/p/systems-distributed-24)'))
+## [Systems Distributed '24](https://guergabo.substack.com/p/systems-distributed-24)
 作者对这次会议的一个回顾总结，议题主要有如下几个方向：
 - Systems Thinking and Engineering Culture
 - The Rise of New Software Abstractions
 - Ensuring Safe and Correct Software
 - Lessons from Building Distributed Databases
 - Notes from Water Cooler Chats
-## [[C Macro Reflection in Zig – Zig Has Better C Interop Than C Itself](https://jstrieb.github.io/posts/c-reflection-zig/)]($section.id('[C Macro Reflection in Zig – Zig Has Better C Interop Than C Itself](https://jstrieb.github.io/posts/c-reflection-zig/)'))
+## [C Macro Reflection in Zig – Zig Has Better C Interop Than C Itself](https://jstrieb.github.io/posts/c-reflection-zig/)
 该作者分享了利用 typeInfo 来在编译时获取字段名的能力，要知道，在 C 里面是没有这个功能的。
 ```zig
 pub export fn WindowProc(hwnd: win32.HWND, uMsg: c_uint, wParam: win32.WPARAM, lParam: win32.LPARAM) callconv(windows.WINAPI) win32.LRESULT {
@@ -95,7 +95,7 @@ fn get_window_messages() [65536][:0]const u8 {
     return result;
 }
 ```
-## [[A TypeScripter's Take on Zig (Advent of Code 2023)](https://effectivetypescript.com/2024/07/17/advent2023-zig/)]($section.id('[A TypeScripter\'s Take on Zig (Advent of Code 2023)](https://effectivetypescript.com/2024/07/17/advent2023-zig/)'))
+## [A TypeScripter's Take on Zig (Advent of Code 2023)](https://effectivetypescript.com/2024/07/17/advent2023-zig/)
 以下该作者的一些心得体会：
 
 - Zig 没有 scanf 等价物，正则表达式也不方便。因此，对于解析输入，它是拆分、拆分、拆分。最后，我分解出了一些 splitIntoBuf 和提取 IntsIntoBuf 帮助程序，这些帮助程序可以很快地读取大多数问题的输入。

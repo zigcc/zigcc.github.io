@@ -4,7 +4,14 @@
 </head>
 <body id="body">
   <h1 :text="$page.title"></h1>
-  <div :html="$page.content()"></div>
+  <div id="meta" :if="$page.isSection().not()">
+    <p :text="$page.date.format('January 02, 2006')"></p>
+    <p :text="$page.author" id="author"></p>
+  </div>
+  <ul :loop="$page.subpages()">
+    <a href="$loop.it.link()"><li :text="$loop.it.title"></li></a>
+  </ul>
+  <super>
   <div id="prev-next" :if="$page.isSection().not()">
     <div :if="$page.prevPage?()">
       <a href="$if.link()">

@@ -7,7 +7,7 @@
 .custom = { .lastmod = "2023-09-04T22:05:21+0800" },
 ---
 
-# [[0.11 正式发布](https://ziglang.org/download/0.11.0/release-notes.html#x86-Backend)]($section.id('[0.11 正式发布](https://ziglang.org/download/0.11.0/release-notes.html#x86-Backend)'))
+# [0.11 正式发布](https://ziglang.org/download/0.11.0/release-notes.html#x86-Backend)
 0.11 终于在 8 月 4 号释出了，下面来看看它的一些重要改进吧。[HN 讨论](https://news.ycombinator.com/item?id=36995735)
 ## [Peer Type Resolution Improvements]($section.id('Peer Type Resolution Improvements'))
 对等类型解析算法得到改进，下面是一些在 0.10 中不能解析，但在 0.11 中可以解析的例子：

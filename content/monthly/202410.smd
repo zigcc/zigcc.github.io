@@ -17,7 +17,7 @@ Mitchell 在其最新的博客上宣布：我和我的妻子向 Zig 软件基金
 
 如今，我大部分的编码时间都花在了 Zig 上。 我的家人喜欢支持我们相信的事业2。 作为其中的一部分，我们希望支持那些我们认为可以带来变革和影响的独立软件项目，这既是回馈给我如此之多的社区的一种方式，更重要的是，这也是彰显和鼓励为热爱而构建的文化的一种方式。 Zig 就是这样一个项目。
 # [观点/教程]($section.id('观点/教程'))
-## [[Zig is everything I want C to be](https://mrcat.au/blog/zig_is_cool/)]($section.id('[Zig is everything I want C to be](https://mrcat.au/blog/zig_is_cool/)'))
+## [Zig is everything I want C to be](https://mrcat.au/blog/zig_is_cool/)
 对 Zig 的特色进行了简单扼要的介绍，主要有：
 1. UB 行为检测。
    - Zig 的指针不能是 null，需要用 optional 类型
@@ -39,8 +39,8 @@ const instr: IType = @bitCast(encoded_instr);
    ```
 3. comptime，Zig 进行元编程的基础，类型是一等成员
 4. 与 C 无缝交互， `zig cc` 是交叉编译的首选
-## [[Building Nintendo 3DS Homebrew with Zig](https://blog.erikwastaken.dev/posts/2024-10-27-building-3ds-homebrew-with-zig.html)]($section.id('[Building Nintendo 3DS Homebrew with Zig](https://blog.erikwastaken.dev/posts/2024-10-27-building-3ds-homebrew-with-zig.html)'))
-## [[Critical Social Infrastructure for Zig Communities | Loris Cro's Blog](https://kristoff.it/blog/critical-social-infrastructure/)]($section.id('[Critical Social Infrastructure for Zig Communities | Loris Cro\'s Blog](https://kristoff.it/blog/critical-social-infrastructure/)'))
+## [Building Nintendo 3DS Homebrew with Zig](https://blog.erikwastaken.dev/posts/2024-10-27-building-3ds-homebrew-with-zig.html)
+## [Critical Social Infrastructure for Zig Communities | Loris Cro's Blog](https://kristoff.it/blog/critical-social-infrastructure/)
 对于一个试图共同学习如何制作大家都喜欢的软件的社区来说，能够分享想法并开展合作至关重要，但社交平台的不断起伏会导致连接中断，这对于一个从一开始就希望去中心化的社区来说是个大问题。
 
 我有这种想法已经有一段时间了，但随着时间的推移，我们似乎越来越清楚地认识到，我们需要投资于能够长期保持可靠的交流形式，在这种交流形式中，变化是一种信号，表明社区正在发生转变（因此需要一种新的网络形态），而不是表明所选择的社交平台即将被收购/上市/加入人工智能大战。
@@ -48,15 +48,15 @@ const instr: IType = @bitCast(encoded_instr);
 开发者日志：迈向可靠社会基础设施的第一步
 - https://ziglang.org/devlog/
 - https://zine-ssg.io/log/
-## [[The Zig Website Has Been Re-engineered](https://ziglang.org/news/website-zine/)]($section.id('[The Zig Website Has Been Re-engineered](https://ziglang.org/news/website-zine/)'))
+## [The Zig Website Has Been Re-engineered](https://ziglang.org/news/website-zine/)
 Zig 官网已经用 [Zine](https://zine-ssg.io/) 重写！
-## [[Rust vs. Zig in Reality: A (Somewhat) Friendly Debate](https://thenewstack.io/rust-vs-zig-in-reality-a-somewhat-friendly-debate/)]($section.id('[Rust vs. Zig in Reality: A (Somewhat) Friendly Debate](https://thenewstack.io/rust-vs-zig-in-reality-a-somewhat-friendly-debate/)'))
-## [[Why I rewrote my Rust keyboard firmware in Zig: consistency, mastery, and fun](https://kevinlynagh.com/rust-zig/)]($section.id('[Why I rewrote my Rust keyboard firmware in Zig: consistency, mastery, and fun](https://kevinlynagh.com/rust-zig/)'))
-## [[Why Zig Programmers Are Cashing In: A Deep Dive into the Lucrative World of Zig](https://teckrevie.blogspot.com/2024/09/why-zig-programmers-are-cashing-in-deep.html)]($section.id('[Why Zig Programmers Are Cashing In: A Deep Dive into the Lucrative World of Zig](https://teckrevie.blogspot.com/2024/09/why-zig-programmers-are-cashing-in-deep.html)'))
+## [Rust vs. Zig in Reality: A (Somewhat) Friendly Debate](https://thenewstack.io/rust-vs-zig-in-reality-a-somewhat-friendly-debate/)
+## [Why I rewrote my Rust keyboard firmware in Zig: consistency, mastery, and fun](https://kevinlynagh.com/rust-zig/)
+## [Why Zig Programmers Are Cashing In: A Deep Dive into the Lucrative World of Zig](https://teckrevie.blogspot.com/2024/09/why-zig-programmers-are-cashing-in-deep.html)
 ## [视频]($section.id('视频'))
-### [[I made an operating system that self replicates doom on a network "from scratch"](https://www.youtube.com/watch?v`xOySJpQlmv4&feature`youtu.be)]($section.id('[I made an operating system that self replicates doom on a network "from scratch"](https://www.youtube.com/watch?v`xOySJpQlmv4&feature`youtu.be)'))
-### [[Rust vs Zig vs Go: Performance (Latency - Throughput - Saturation - Availability)](https://www.youtube.com/watch?feature`shared&v`3fWx5BOiUiY)]($section.id('[Rust vs Zig vs Go: Performance (Latency - Throughput - Saturation - Availability)](https://www.youtube.com/watch?feature`shared&v`3fWx5BOiUiY)'))
-### [[Let's explore Vulkan API with Zig programming language from scratch](https://www.youtube.com/live/Kf7BIPUUfsc?t=764)]($section.id('[Let\'s explore Vulkan API with Zig programming language from scratch](https://www.youtube.com/live/Kf7BIPUUfsc?t=764)'))
+### [I made an operating system that self replicates doom on a network "from scratch"](https://www.youtube.com/watch?v`xOySJpQlmv4&feature`youtu.be)
+### [Rust vs Zig vs Go: Performance (Latency - Throughput - Saturation - Availability)](https://www.youtube.com/watch?feature`shared&v`3fWx5BOiUiY)
+### [Let's explore Vulkan API with Zig programming language from scratch](https://www.youtube.com/live/Kf7BIPUUfsc?t=764)
 # [项目/工具]($section.id('项目/工具'))
 - [laohanlinux/boltdb-zig](https://github.com/laohanlinux/boltdb-zig) :: a zig implement kv database
 - [zigler](https://github.com/E-xyza/zigler) :: Zig NIFs in Elixir

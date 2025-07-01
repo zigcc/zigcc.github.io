@@ -8,7 +8,7 @@
 ---
 
 # [观点/教程]($section.id('观点/教程'))
-## [[Why am I writing a JavaScript toolchain in Zig?](https://injuly.in/blog/announcing-jam/index.html)]($section.id('[Why am I writing a JavaScript toolchain in Zig?](https://injuly.in/blog/announcing-jam/index.html)'))
+## [Why am I writing a JavaScript toolchain in Zig?](https://injuly.in/blog/announcing-jam/index.html)
 [JAM](https://github.com/srijan-paul/jam) 作者写的一篇文章，分析里市面上现有的 JS 工具链（bundler、formatter、linter 等），虽然已经很好用，但是不够快。下面是他举的几个例子：
 - Lossless, cache efficient syntax trees，现在通用的 JS 语法树表示是 [ESTree](https://github.com/estree/estree)，尽管设计上很简洁，但在遍历时不够高效，需要有遍历多次
   才能得到有用信息（eslint 里就有四次！），而且都是指针的树结构非常不利用重复利用 CPU，Carbon 编译器就有一种更紧凑的 AST 表示。
@@ -32,7 +32,7 @@ if (matches(
 }
   ```
   esquery 的问题在于执行效率，通过借助于 zig 的 comptime 来在编译器翻译 esquery 就避免了运行时开销。
-## [[Advent of Code in Zig | Loris Cro's Blog](https://kristoff.it/blog/advent-of-code-zig/)]($section.id('[Advent of Code in Zig | Loris Cro\'s Blog](https://kristoff.it/blog/advent-of-code-zig/)'))
+## [Advent of Code in Zig | Loris Cro's Blog](https://kristoff.it/blog/advent-of-code-zig/)
 一年一度的 AoC 又到了，这篇文章里给出了一些使用的技巧来帮助大家用 Zig 来解决 AoC 问题。
 - 工具链，最新的版本 0.13 和 zls
 - 手册，和 [How to read the standard library source code · ziglang/zig Wiki](https://github.com/ziglang/zig/wiki/How-to-read-the-standard-library-source-code)
@@ -65,8 +65,8 @@ pub fn main() !void {
 
 因此，请注意，虽然肯定能用 Zig 解决 AoC 问题，而且 Zig 的某些功能甚至能帮助您取得比其他语言更快的进展，但它最终还是针对软件工程进行了优化，而这并不是您在 AoC 中要做的事情。
 
-## [[Zig and Emulators](https://floooh.github.io/2024/08/24/zig-and-emulators.html)]($section.id('[Zig and Emulators](https://floooh.github.io/2024/08/24/zig-and-emulators.html)'))
-## [[Zig Reproduced Without Binaries](https://jakstys.lt/2024/zig-reproduced-without-binaries/)]($section.id('[Zig Reproduced Without Binaries](https://jakstys.lt/2024/zig-reproduced-without-binaries/)'))
+## [Zig and Emulators](https://floooh.github.io/2024/08/24/zig-and-emulators.html)
+## [Zig Reproduced Without Binaries](https://jakstys.lt/2024/zig-reproduced-without-binaries/)
 一个很有趣的实验，在 0.10 版本中，Zig 编译器实现了自举，即可以用老版本的 Zig 来编译 Zig 源码，生成最新的 Zig 二进制。这里重新复习一下这个复杂的流程：
 
 之所以复杂，问题在于老版本的 Zig 从哪里来呢？对于 Zig 来说就是 [zig1.wasm](https://github.com/ziglang/zig/blob/master/stage1/zig1.wasm)，它是用没自举前的 Zig，利用 LLVM 后端，以 wasm32-wasi 为目标生成的二进制文件。

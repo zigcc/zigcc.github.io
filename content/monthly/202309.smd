@@ -8,7 +8,7 @@
 ---
 
 # [重大事件]($section.id('重大事件'))
-## [[Bounties Damage Open Source Projects](https://ziglang.org/news/bounties-damage-open-source-projects/)]($section.id('[Bounties Damage Open Source Projects](https://ziglang.org/news/bounties-damage-open-source-projects/)'))
+## [Bounties Damage Open Source Projects](https://ziglang.org/news/bounties-damage-open-source-projects/)
 在 2023-09-11 号，Wasmerio CEO 创建了 [Support WASIX · Issue #17115](https://github.com/ziglang/zig/issues/17115)，表示想赞助 Zig 开发者，让其更好地支持 WASIX 平台。
 
 Andrew 与 Loris 在这篇文章中主要阐述了这么做为什么是伤害社区的行为：
@@ -17,7 +17,7 @@ Andrew 与 Loris 在这篇文章中主要阐述了这么做为什么是伤害社
 
 这篇文章其实很符合 Andrew 的理念，不想让过多的热钱涌入 Zig 社区，他更想保证 Zig 的独立性，这也是他们创办 [Software You Can Love](https://kristoff.it/blog/the-open-source-game/) 的初衷。
 
-## [[Bun 1.0](https://bun.sh/blog/bun-v1.0)]($section.id('[Bun 1.0](https://bun.sh/blog/bun-v1.0)'))
+## [Bun 1.0](https://bun.sh/blog/bun-v1.0)
 面包终于出炉了！Bun 毫无疑问是 Zig 的明星项目，它在 2023-09-08 正式发布了 1.0 版本，这对开发者来说可能没什么太大的区别，毕竟就只是个 tag 而已，但是对于广大的用户来说，这无疑意味着可以在生产环境中去使用了。
 
 Bun 并不简单的是个 Node.js 替代品，而是大而全的工具链：

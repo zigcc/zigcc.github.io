@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-## 观点/教程 ($section.id('opinion-tutorial'))
+## [观点/教程 ($section.id('opinion-tutorial'))]($section.id('观点/教程 ($section.id('opinion-tutorial'))'))
 
 ## [Thoughts on Zig](https://arne.me/blog/thoughts-on-zig) ($section.id('thoughts-on-zig'))
 
@@ -81,7 +81,7 @@ Openmymind
   }
   ```
 
-## 项目/工具 ($section.id('projects-tools'))
+## [项目/工具 ($section.id('projects-tools'))]($section.id('项目/工具 ($section.id('projects-tools'))'))
 
 [zigar](https://github.com/chung-leong/zigar)  
 Enable the use of Zig code in JavaScript project。它可以让你直接在 JS

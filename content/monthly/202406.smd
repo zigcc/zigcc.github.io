@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-## 重大事件 ($section.id('major-events'))
+## [重大事件 ($section.id('major-events'))]($section.id('重大事件 ($section.id('major-events'))'))
 
 2024-06-07，0.13.0 发布，历时不足 2 个月，有 73 位贡献者，一共进行了 415
 次提交！ 这是一个相对较短的发布周期，主要原因是工具链升级，例如升级到
@@ -29,7 +29,7 @@ const map = std.StaticStringMap(T).initComptime(kvs_list);
 - 启用增量编译以实现快速重建。
 - 将并发引入语义分析，进一步提高编译速度。
 
-## 观点/教程 ($section.id('opinion-tutorial'))
+## [观点/教程 ($section.id('opinion-tutorial'))]($section.id('观点/教程 ($section.id('opinion-tutorial'))'))
 
 ## [Leveraging Zig's Allocators](https://www.openmymind.net/Leveraging-Zigs-Allocators/) ($section.id('zig-allocators'))
 
@@ -156,7 +156,7 @@ Turso CTO 的一篇文章，他本身是个资深 C 程序员，而且也比较�
 其他社区的一些讨论：[Lobsters](https://lobste.rs/s/0mnhdx)、[Hacker
 News](https://news.ycombinator.com/item?id=40681862)
 
-## 项目/工具 ($section.id('projects-tools'))
+## [项目/工具 ($section.id('projects-tools'))]($section.id('项目/工具 ($section.id('projects-tools'))'))
 
 [malcolmstill/zware](https://github.com/malcolmstill/zware)  
 Zig WebAssembly Runtime Engine

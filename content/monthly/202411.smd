@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-## 观点/教程 ($section.id('opinion-tutorial'))
+## [观点/教程 ($section.id('opinion-tutorial'))]($section.id('观点/教程 ($section.id('opinion-tutorial'))'))
 
 ## [Why am I writing a JavaScript toolchain in Zig?](https://injuly.in/blog/announcing-jam/index.html) ($section.id('js-toolchain-in-zig'))
 
@@ -130,7 +130,7 @@ Zig，利用 LLVM 后端，以 wasm32-wasi 为目标生成的二进制文件。
 - [Why is the bootstrapping process so complicated? :
   r/Zig](https://www.reddit.com/r/Zig/comments/142gwls/why_is_the_bootstrapping_process_so_complicated/)
 
-## 项目/工具 ($section.id('projects-tools'))
+## [项目/工具 ($section.id('projects-tools'))]($section.id('项目/工具 ($section.id('projects-tools'))'))
 
 [Builds (Zig) - GoReleaser](https://goreleaser.com/customization/zig-builds/)  
 版本发布工具 GoReleaser 支持了 Zig

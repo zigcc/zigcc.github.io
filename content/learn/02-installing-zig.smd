@@ -25,7 +25,7 @@ EOF
 
 asdf plugin-add zig https://github.com/zigcc/asdf-zig.git
 
-## 安装最新版
+## [安装最新版]($section.id('安装最新版'))
 asdf install zig latest
 asdf global zig latest
 zig version

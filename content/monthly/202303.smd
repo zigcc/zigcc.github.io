@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-## 观点/教程
+## [观点/教程]($section.id('观点/教程'))
 
 [Creating arbitrary error values by using error.Something
 syntax](https://www.reddit.com/r/zig/comments/11wmoky)  
@@ -61,7 +61,7 @@ Nix](https://flyx.org/cross-packaging/)
 
 [Zig And Rust](https://matklad.github.io/2023/03/26/zig-and-rust.html)
 
-## 项目/工具
+## [项目/工具]($section.id('项目/工具'))
 
 [macovedj/doink](https://github.com/macovedj/doink)  
 Making WebAssembly Components with Zig
@@ -98,7 +98,7 @@ bug，一个影响比较大的是 test 的构建方式不一样了。
 现在 `addTest` 和 `addExecutable` 一样，输出都是 `CompileStep`
 ，它默认不会执行，需要调用 `run()` 拿到 run step 才可以。
 
-## Zig 构建系统介绍
+## [Zig 构建系统介绍]($section.id('Zig 构建系统介绍'))
 
 构建系统其实是 Zig 生态中比较重要的一环，和 Rust 不同，Zig
 即是一门编程语言，也是一系列工具链，比如编译 Zig 时，没有 zigc

@@ -59,7 +59,7 @@ pub fn build(b: *std.build.Builder) void {
   [15.0.7](http://releases.llvm.org/15.0.7/docs/ReleaseNotes.html)
 - 是 0.10.x 的最后一个 release 版本
 
-## 观点/教程
+## [观点/教程]($section.id('观点/教程'))
 
 [Code study: interface idioms/patterns in zig standard
 libraries](https://zig.news/yglcode/code-study-interface-idiomspatterns-in-zig-standard-libraries-4lkj)  
@@ -77,7 +77,7 @@ Beetle](https://datastackshow.com/podcast/why-accounting-needs-its-own-database-
 Zig](https://0110.be/posts/Crossplatform_JNI_builds_with_Zig)  
 又一个使用 Zig 作为交叉编译的例子
 
-## 项目/工具
+## [项目/工具]($section.id('项目/工具'))
 
 [Introducing ⚡zap⚡ - blazingly fast backends in
 zig](https://zig.news/renerocksai/introducing-zap-blazingly-fast-backends-in-zig-3jhh)  

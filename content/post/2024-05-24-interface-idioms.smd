@@ -8,7 +8,7 @@
 
 > 原文链接： https://zig.news/yglcode/code-study-interface-idiomspatterns-in-zig-standard-libraries-4lkj
 
-## 引言
+## [引言]($section.id('引言'))
 
 在 Java 和 Go 中，可以使用“接口”（一组方法或方法集）定义基于行为的抽象。通常接口包含所谓的虚表（`vtable`）
 以实现动态分派。Zig 允许在结构体、枚举、联合和不透明类型中声明函数和方法，尽管 Zig 尚未支持接口作为一种语言特性。
@@ -31,7 +31,7 @@ Zig 标准库应用了一些代码习语或模式以达到类似效果。
 
 完整代码位于[此仓库](https://github.com/yglcode/zig_interfaces)，你可以使用 `zig test interfaces.zig` 运行它。
 
-## 背景设定
+## [背景设定]($section.id('背景设定'))
 
 让我们使用经典的面向对象编程示例，创建一些形状：点（`Point`）、盒子（`Box`）和圆（`Circle`）。
 
@@ -86,7 +86,7 @@ fn init_data() struct { point: Point, box: Box, circle: Circle } {
 }
 ```
 
-## 接口1：枚举标签联合
+## [接口1：枚举标签联合]($section.id('接口1：枚举标签联合'))
 
 Loris Cro 在[“使用 Zig 0.10.0 轻松实现接口”](https://zig.news/kristoff/easy-interfaces-with-zig-0100-2hc5)
 中介绍了使用枚举标签联合作为接口的方法。这是最简单的解决方案，尽管你必须在联合类型中显式列出所有“实现”该接口的变体类型。
@@ -126,7 +126,7 @@ test "union_as_intf" {
 }
 ```
 
-## 接口2：vtable 和动态分派的第一种实现
+## [接口2：vtable 和动态分派的第一种实现]($section.id('接口2：vtable 和动态分派的第一种实现'))
 
 Zig 已从最初基于嵌入式 `vtab` 和 `#fieldParentPtr()` 的动态分派切换到基于“胖指针”接口的以下模式；
 请查阅此文章了解更多细节[“Allocgate 将在 Zig 0.9 中到来...”](https://pithlessly.github.io/allocgate.html)。
@@ -198,7 +198,7 @@ test "vtab1_as_intf" {
 }
 ```
 
-## 接口3：vtable 和动态分派的第二种实现
+## [接口3：vtable 和动态分派的第二种实现]($section.id('接口3：vtable 和动态分派的第二种实现'))
 
 在上述第一种实现中，通过 `Shape2.init()` 将 `Box` “转换”为接口 `Shape2` 时，会对 `box` 实例进行类型检查，
 以确保其实现了 `Shape2` 的方法（包括名称的匹配签名）。第二种实现中有两个变化：
@@ -271,7 +271,7 @@ test "vtab2_as_intf" {
 }
 ```
 
-## 接口4：使用嵌入式 vtab 和 @fieldParentPtr() 的原始动态分派
+## [接口4：使用嵌入式 vtab 和 @fieldParentPtr() 的原始动态分派]($section.id('接口4：使用嵌入式 vtab 和 @fieldParentPtr() 的原始动态分派'))
 
 接口 `std.build.Step` 和所有构建步骤 `std.build.[RunStep, FmtStep, ...]` 仍然使用这种模式。
 
@@ -364,7 +364,7 @@ test "vtab3_embedded_in_struct" {
 }
 ```
 
-## 接口5：编译时的泛型接口
+## [接口5：编译时的泛型接口]($section.id('接口5：编译时的泛型接口'))
 
 所有上述接口都侧重于 `vtab` 和动态分派：接口值将隐藏其持有的具体值的类型。因此，你可以将这些接口值放入数组中并统一处理。
 

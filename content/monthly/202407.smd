@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-## 重大事件 ($section.id('major-events'))
+## [重大事件 ($section.id('major-events'))]($section.id('重大事件 ($section.id('major-events'))'))
 
 在[这篇文章](https://leaddev.com/tech/why-zig-one-hottest-programming-languages-learn)里，作者引用
 Stackoverflow 2024
@@ -34,7 +34,7 @@ Zig 开发者的一些观点：
   但与此同时，这些语言的工具链却非常糟糕。 Zig
   允许用户涉猎这些核心编程语言，但可以使用更好的工具链，兼容各种语言和更丰富的功能。
 
-## 观点/教程 ($section.id('opinion-tutorial'))
+## [观点/教程 ($section.id('opinion-tutorial'))]($section.id('观点/教程 ($section.id('opinion-tutorial'))'))
 
 ## [Improving Your Zig Language Server Experience](https://kristoff.it/blog/improving-your-zls-experience/) ($section.id('improving-zls-experience'))
 
@@ -167,7 +167,7 @@ fn get_window_messages() [65536][:0]const u8 {
 - 在 JavaScript
   允许您内联表达式的某些情况下，您可能需要分解出一个变量来澄清生存期。看看[这个问题](https://github.com/ziglang/zig/issues/12414)。
 
-## 项目/工具 ($section.id('projects-tools'))
+## [项目/工具 ($section.id('projects-tools'))]($section.id('项目/工具 ($section.id('projects-tools'))'))
 
 [18alantom/fex](https://github.com/18alantom/fex)  
 A command-line file explorer prioritizing quick navigation.

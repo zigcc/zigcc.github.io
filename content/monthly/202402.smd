@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-## 重大事件 ($section.id('major-events'))
+## [重大事件 ($section.id('major-events'))]($section.id('重大事件 ($section.id('major-events'))'))
 
 Andrew 最近在 zigshow 节目中介绍了 Zig 2024 年的规划，主要有以下几点：
 
@@ -32,7 +32,7 @@ Andrew 最近在 zigshow 节目中介绍了 Zig 2024 年的规划，主要有以
 \#91](https://github.com/orgs/zigcc/discussions/91) B
 站搬运地址：https://www.bilibili.com/video/BV1UC4y167w9/
 
-## 观点/教程 ($section.id('opinion-tutorial'))
+## [观点/教程 ($section.id('opinion-tutorial'))]($section.id('观点/教程 ($section.id('opinion-tutorial'))'))
 
 [Fast-growing Zig tops Stack Overflow survey for highest-paid programming language](https://www.infoworld.com/article/3713082/fast-growing-zig-tops-stack-overflow-survey-for-highest-paid-programming-language.html)  
 估计是 Bun 带动的贫富差距？！
@@ -67,7 +67,7 @@ Syndica 公司的 Sig，这是一款用 Zig 编写的、专注于 RPS 的 Solana
 - [Senior Software Engineer (Zig/C/Rust) @
   Syndica](https://jobs.ashbyhq.com/syndica/15ab4e32-0f32-41a0-b8b0-16b6518158e9)
 
-## 项目/工具 ($section.id('projects-tools'))
+## [项目/工具 ($section.id('projects-tools'))]($section.id('项目/工具 ($section.id('projects-tools'))'))
 
 [semickolon/kirei](https://github.com/semickolon/kirei)  
 🌸 The prettiest keyboard software

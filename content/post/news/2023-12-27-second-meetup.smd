@@ -18,7 +18,7 @@
 这次会议主要是同步了之前会议落实的
 action，主要是同步了不同项目的进展，由于临近年底，大家进度都不算太大，但还是有所进展，算是开了个好头😄
 
-## 项目进展
+## [项目进展]($section.id('项目进展'))
 
 ## [Zig-OS](https://github.com/zigcc/zig-os)
 
@@ -33,7 +33,7 @@ action，主要是同步了不同项目的进展，由于临近年底，大家�
 - 增加了评论区的功能
 - 待完成：反射（编译期反射和运行时反射）、内建函数说明（包含使用例子）、未定义行为、wasm、原子操作这些边缘部分
 
-## Zig 教学视频
+## [Zig 教学视频]($section.id('Zig 教学视频'))
 
 - 主要参与人员：Lambert
 - <https://github.com/labspc/learn-zig-in-the-style-of-c>
@@ -44,14 +44,14 @@ action，主要是同步了不同项目的进展，由于临近年底，大家�
 - 主要参与人员：夜白、西瓜
 - 已经完成大部分内容 👍
 
-## Zig 构建系统教程
+## [Zig 构建系统教程]($section.id('Zig 构建系统教程'))
 
 - 主要参与人员：Reco
 - 目前主要是对 [zig build
   explained](https://zig.news/xq/zig-build-explained-part-3-1ima)
   系列文章翻译
 
-## 新人介绍
+## [新人介绍]($section.id('新人介绍'))
 
 在第一次会议后，有一些朋友想加入 ZigCC
 社区，经过简单筛选，新增一名成员：Reco，下面是他的一些履历：

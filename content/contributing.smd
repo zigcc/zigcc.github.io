@@ -12,7 +12,7 @@ Zig 中文社区是一个开放的组织，我们致力于推广 Zig 在中文�
 2. 改进 zigcc 组织下的开源项目，这是 [open issues](https://github.com/search?q=state%3Aopen+org%3Azigcc++NOT+%E6%97%A5%E6%8A%A5&type=issues&ref=advsearch)
 3. 参与不定期的线上会议 TODO
 
-## 供稿方式
+## [供稿方式]($section.id('供稿方式'))
 
 1. Fork 仓库 https://github.com/zigcc/zigcc.github.io
 2. 在 `content/post` 内添加自己的文章（md 或 org 格式均可），文件命名为： `${YYYY}-${MM}-${DD}-${SLUG}.md`
@@ -26,13 +26,13 @@ date: '2023-09-05T16:13:13+0800'
 ---
 ```
 
-## 本地预览
+## [本地预览]($section.id('本地预览'))
 TODO
 ```bash
 zine
 ```
 
-## 发布平台
+## [发布平台]($section.id('发布平台'))
 
 - [ZigCC 网站](https://ziglang.cc)
 - [ZigCC 公众号](https://github.com/zigcc/.github/raw/main/zig_mp.png)

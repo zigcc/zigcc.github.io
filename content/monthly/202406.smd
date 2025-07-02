@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-# 重大事件
+## 重大事件 ($section.id('major-events'))
 
 2024-06-07，0.13.0 发布，历时不足 2 个月，有 73 位贡献者，一共进行了 415
 次提交！ 这是一个相对较短的发布周期，主要原因是工具链升级，例如升级到
@@ -29,9 +29,9 @@ const map = std.StaticStringMap(T).initComptime(kvs_list);
 - 启用增量编译以实现快速重建。
 - 将并发引入语义分析，进一步提高编译速度。
 
-# 观点/教程
+## 观点/教程 ($section.id('opinion-tutorial'))
 
-# [Leveraging Zig's Allocators](https://www.openmymind.net/Leveraging-Zigs-Allocators/)
+## [Leveraging Zig's Allocators](https://www.openmymind.net/Leveraging-Zigs-Allocators/) ($section.id('zig-allocators'))
 
 老朋友 openmymind 的又一篇好文章：如何利用 Zig 的 Allocator
 来实现请求级别的内存分配。 Zig Allocator
@@ -98,11 +98,8 @@ fn run(worker: *Worker) void {
     worker.write(conn.res);
   }
 }
-```
 
-# [On Zig vs Rust at work and the choice we made](https://ludwigabap.bearblog.dev/zig-vs-rust-at-work-the-choice-we-made/)
-
-- <https://news.ycombinator.com/item?id=40735667>
+## [On Zig vs Rust at work and the choice we made](https://ludwigabap.bearblog.dev/zig-vs-rust-at-work-the-choice-we-made/) ($section.id('zig-vs-rust-at-work'))
 
 这篇文章作者描述了所在公司在改造老 C/C++ 项目时，为什么选择了 Zig 而不是
 Rust。 重写的项目运行在多个平台上（Web、移动端、VR
@@ -131,14 +128,14 @@ Rust。 重写的项目运行在多个平台上（Web、移动端、VR
 
 相信这也是大部分人选择 Zig 的原因：简洁、高效。
 
-# [Packing some Zig before going for the countryside](https://ludwigabap.bearblog.dev/packing-some-zig-before-going-for-the-countryside/)
+## [Packing some Zig before going for the countryside](https://ludwigabap.bearblog.dev/packing-some-zig-before-going-for-the-countryside/) ($section.id('packing-zig-countryside'))
 
 作者列举的一些 Zig
 学习资料、常用类库。该作者的另一篇文章也有不少资料：[2024 Collection of
 Zig
 resources](https://ludwigabap.bearblog.dev/2024-collection-of-zig-resources/)
 
-# [Why I am not yet ready to switch to Zig from Rust](https://turso.tech/blog/why-i-am-not-yet-ready-to-switch-to-zig-from-rust)
+## [Why I am not yet ready to switch to Zig from Rust](https://turso.tech/blog/why-i-am-not-yet-ready-to-switch-to-zig-from-rust) ($section.id('not-switching-to-zig'))
 
 Turso CTO 的一篇文章，他本身是个资深 C 程序员，而且也比较喜欢 C，但 C
 不是一门安全的语言，因此通过 Rust，作者可以避免 写出 SIGSEGVS
@@ -159,7 +156,7 @@ Turso CTO 的一篇文章，他本身是个资深 C 程序员，而且也比较�
 其他社区的一些讨论：[Lobsters](https://lobste.rs/s/0mnhdx)、[Hacker
 News](https://news.ycombinator.com/item?id=40681862)
 
-# 项目/工具
+## 项目/工具 ($section.id('projects-tools'))
 
 [malcolmstill/zware](https://github.com/malcolmstill/zware)  
 Zig WebAssembly Runtime Engine
@@ -168,4 +165,4 @@ Zig WebAssembly Runtime Engine
 io<sub>uring</sub> like asynchronous API and coroutine powered IO tasks
 for zig
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-06-01..2024-07-01)
+## [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-06-01..2024-07-01) ($section.id('zig-updates-202406'))

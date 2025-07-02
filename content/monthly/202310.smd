@@ -6,9 +6,9 @@
 .draft = false,
 ---
 
-# 重大事件
+## 重大事件
 
-# 观点/教程
+## 观点/教程
 
 [Notes From the Field: Learning Zig](https://registerspill.thorstenball.com/p/notes-from-the-field-learning-zig)  
 Zig 初学者的使用经验分享
@@ -96,7 +96,7 @@ pub fn main() !void {
 由于 Zig 还在快速开发迭代中，因此项目很有可能出现新版本 Zig
 无法编译的情况，这篇文章介绍了一些管理多个 Zig 版本的方式。
 
-# 项目/工具
+## 项目/工具
 
 [zigcli](https://zigcli.liujiacai.net/)  
 a toolkit for building command lines programs in Zig
@@ -115,4 +115,4 @@ Enable the use of Zig code in JavaScript project
 Language server for GLSL (autocomplete, goto-definition, formatter, and
 more)
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-09-01..2023-10-01)
+## [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-09-01..2023-10-01)

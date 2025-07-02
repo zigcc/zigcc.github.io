@@ -6,9 +6,9 @@
 .draft = false,
 ---
 
-# 观点/教程
+## 观点/教程 ($section.id('opinion-tutorial'))
 
-# [Why am I writing a JavaScript toolchain in Zig?](https://injuly.in/blog/announcing-jam/index.html)
+## [Why am I writing a JavaScript toolchain in Zig?](https://injuly.in/blog/announcing-jam/index.html) ($section.id('js-toolchain-in-zig'))
 
 [JAM](https://github.com/srijan-paul/jam)
 作者写的一篇文章，分析里市面上现有的 JS
@@ -48,7 +48,7 @@
   esquery 的问题在于执行效率，通过借助于 zig 的 comptime 来在编译器翻译
   esquery 就避免了运行时开销。
 
-# [Advent of Code in Zig | Loris Cro's Blog](https://kristoff.it/blog/advent-of-code-zig/)
+## [Advent of Code in Zig | Loris Cro's Blog](https://kristoff.it/blog/advent-of-code-zig/) ($section.id('advent-of-code-zig'))
 
 一年一度的 AoC 又到了，这篇文章里给出了一些使用的技巧来帮助大家用 Zig
 来解决 AoC 问题。
@@ -99,9 +99,9 @@
 > 的某些功能甚至能帮助您取得比其他语言更快的进展，但它最终还是针对软件工程进行了优化，而这并不是您在
 > AoC 中要做的事情。
 
-# [Zig and Emulators](https://floooh.github.io/2024/08/24/zig-and-emulators.html)
+## [Zig and Emulators](https://floooh.github.io/2024/08/24/zig-and-emulators.html) ($section.id('zig-and-emulators'))
 
-# [Zig Reproduced Without Binaries](https://jakstys.lt/2024/zig-reproduced-without-binaries/)
+## [Zig Reproduced Without Binaries](https://jakstys.lt/2024/zig-reproduced-without-binaries/) ($section.id('zig-reproduced-without-binaries'))
 
 一个很有趣的实验，在 0.10 版本中，Zig 编译器实现了自举，即可以用老版本的
 Zig 来编译 Zig 源码，生成最新的 Zig
@@ -130,7 +130,7 @@ Zig，利用 LLVM 后端，以 wasm32-wasi 为目标生成的二进制文件。
 - [Why is the bootstrapping process so complicated? :
   r/Zig](https://www.reddit.com/r/Zig/comments/142gwls/why_is_the_bootstrapping_process_so_complicated/)
 
-# 项目/工具
+## 项目/工具 ($section.id('projects-tools'))
 
 [Builds (Zig) - GoReleaser](https://goreleaser.com/customization/zig-builds/)  
 版本发布工具 GoReleaser 支持了 Zig
@@ -151,4 +151,4 @@ PDF reader for terminal emulators using the Kitty image protocol
 [Dr-Nekoma/lyceum](https://github.com/Dr-Nekoma/lyceum)  
 An MMO game written in Erlang (+ PostgreSQL) + Zig (+ Raylib)
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-11-01..2024-12-01)
+## [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-11-01..2024-12-01) ($section.id('zig-updates-202411'))

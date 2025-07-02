@@ -6,9 +6,9 @@
 .draft = false,
 ---
 
-# 重大事件
+## 重大事件
 
-# [Bounties Damage Open Source Projects](https://ziglang.org/news/bounties-damage-open-source-projects/)
+## [Bounties Damage Open Source Projects](https://ziglang.org/news/bounties-damage-open-source-projects/)
 
 在 2023-09-11 号，Wasmerio CEO 创建了 [Support WASIX · Issue
 \#17115](https://github.com/ziglang/zig/issues/17115)，表示想赞助 Zig
@@ -23,7 +23,7 @@ Andrew 与 Loris 在这篇文章中主要阐述了这么做为什么是伤害社
 社区，他更想保证 Zig 的独立性，这也是他们创办 [Software You Can
 Love](https://kristoff.it/blog/the-open-source-game/) 的初衷。
 
-# [Bun 1.0](https://bun.sh/blog/bun-v1.0)
+## [Bun 1.0](https://bun.sh/blog/bun-v1.0)
 
 面包终于出炉了！Bun 毫无疑问是 Zig 的明星项目，它在 2023-09-08
 正式发布了 1.0 版本，这对开发者来说可能没什么太大的区别，毕竟就只是个
@@ -38,7 +38,7 @@ Bun 并不简单的是个 Node.js 替代品，而是大而全的工具链：
 - Testing libraries，内置 test
   runner，支持快照测试、模拟和代码覆盖，可以替代：jest、ts-test
 
-# 观点/教程
+## 观点/教程
 
 [Kiesel Devlog \#1: Now passing 25% of test262](https://linus.dev/posts/kiesel-devlog-1/)  
 另一个 devlog，作者写了一个 JS engine 用来学习 Zig，该作者是 SerenityOS
@@ -85,7 +85,7 @@ Mitchell Hashimoto 在这篇文章里分享了开发终端 Ghostty 时用的 Zig
  [SoA 内存布局]($image.siteAsset('images/soa-layout.webp'))
 
 
-# 项目/工具
+## 项目/工具
 
 [ZigBrains](https://plugins.jetbrains.com/plugin/22456-zigbrains)  
 A multifunctional Zig Programming Language plugin for the IDEA platform.
@@ -114,7 +114,7 @@ Reactive signal/Dependency tracking library in Zig.
 [buzz-language/buzz](https://github.com/buzz-language/buzz)  
 A small/lightweight statically typed scripting language
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-08-01..2023-09-01)
+## [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-08-01..2023-09-01)
 
 [Aro translate](https://github.com/ziglang/zig/pull/17221)  
 用 Zig 写的 [Aro](https://github.com/Vexu/arocc) 来替换 clang，来实现

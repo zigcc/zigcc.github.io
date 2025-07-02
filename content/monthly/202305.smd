@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-# 重大事件
+## 重大事件
 
 这个月主要的事情就是 HTTP server 在标准库的增加了，具体可参考：
 
@@ -15,7 +15,7 @@
 - [http server in the standard library · Issue
   \#910](https://github.com/ziglang/zig/issues/910)
 
-# 观点/教程
+## 观点/教程
 
 [Integrating Zig and
 SwiftUI](https://mitchellh.com/writing/zig-and-swiftui)  
@@ -67,7 +67,7 @@ System](https://www.priver.dev/blog/zig/initial-commit-build-system/)
 [Writing DNS resolver in
 Zig](https://e-aakash.github.io/update/2023/06/04/resolv-dns-resolver-in-zig.html)
 
-# 项目/工具
+## 项目/工具
 
 [Zig by Example](https://zigbyexample.github.io/)  
 非常好的学习资料。Learn How to use Zig’s Standard Library, by small
@@ -100,4 +100,4 @@ A 2048 game to run in terminal
 [mitchellh/zig](https://github.com/mitchellh/zig-objc)  
 Objective-C runtime bindings for Zig (Zig calling ObjC).
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-04-01..2023-05-01)
+## [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-04-01..2023-05-01)

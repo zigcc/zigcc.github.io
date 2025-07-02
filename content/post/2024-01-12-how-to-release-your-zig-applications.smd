@@ -10,84 +10,83 @@
 > - API 适配到 Zig 0.12.0 版本
 > - 本文配套代码在[这里](https://github.com/zigcc/zigcc.github.io/tree/main/examples/20240112)找到
 
-你刚用 Zig 写了一个应用程序，并希望其他人使用它。
-让用户方便使用的一种方式是为他们提供应用程序的预构建可执行文件。
-接下来，我将讨论一个好的发版流程所需要正确处理的两个主要事项。
+You've just written an application in Zig and want others to use it.
+A convenient way for users to use your application is to provide a pre-built executable file.
+Next, I'll discuss the two main things that need to be handled correctly in a good release process.
 
-# 为什么提供预构建的可执行文件？
+## Why provide pre-built executable files?
 
-鉴于 C/C++ 依赖系统如何工作（或者说 _不工作_），对于某些 C/C++ 项目来说，
-提供预编译好的的可执行文件几乎是必须的，
-否则，普通人将陷入构建系统和配置系统的泥潭，
-而这些系统的数量还要乘以项目的依赖数量。
-使用 Zig 的话就不应该这样，因为 Zig 构建系统（加上即将推出的 Zig 包管理器）将能够处理一切，这意味着大多数编写良好的应用程序应该只需运行 `zig build` 即可成功构建。
+Given how C/C++ dependencies work (or don't work), for some C/C++ projects,
+providing pre-compiled executable files is almost a necessity,
+otherwise, ordinary people will get stuck in the build system configuration and
+the number of systems to multiply these by is the number of project dependencies.
+Using Zig shouldn't be like this, because Zig build system (plus the upcoming Zig package manager) will be able to handle everything, meaning most well-written applications should just run `zig build` to succeed.
 
-话虽如此，你的应用程序越受欢迎，用户就越不关心它是用哪种语言编写的。
-你的用户不想安装 Zig 并运行构建过程就能轻松使用应用程序（99%的情况下，稍后会讲到剩下的 1%），
-因此最好还是预先构建你的应用程序。
+That said, the more popular your application is, the less users will care what language it's written in.
+Your users don't want to install Zig and run the build process to easily use your application (99% of the time, the rest 1% will be discussed later),
+so it's still better to pre-build your application.
 
-# `zig build` vs `zig build-exe`
+## `zig build` vs `zig build-exe`
 
-在本文中，我们将看到如何为 Zig 项目制作、发布构建，
-因此值得花一点时间来完全理解 Zig 构建系统和命令行之间的关系。
+In this article, we'll see how to make, release a build for a Zig project,
+so it's worth spending a little time to fully understand the relationship between Zig build system and command line.
 
-如果你有一个非常简单的 Zig 应用程序（例如，单个文件，无任何依赖），
-构建项目最简单的方式是使用 `zig build-exe myapp.zig`，
-这会在当前路径下创建一个可执行文件。
+If you have a very simple Zig application (for example, a single file, no dependencies),
+the simplest way to build a project is to use `zig build-exe myapp.zig`,
+which will create an executable file in the current path.
 
-随着项目的增长，特别是开始有依赖之后，你可能想添加一个 `build.zig` 文件，
-并开始用到 Zig 构建系统。一旦你开始这么做，你就可以完全控制命令行参数来影响构建过程。
+As the project grows, especially when dependencies start, you might want to add a `build.zig` file,
+and start using Zig build system. Once you start doing this, you can completely control command line parameters to affect the build process.
 
-你可以使用 `zig init-exe` 来了解基线 `build.zig` 文件的样子。
-请注意，文件中的每一行代码都是显示定义，从而影响 `zig build` 子命令的行为。
+You can use `zig init-exe` to see what a baseline `build.zig` file looks like.
+Note that every line of code in the file is explicitly defined, thus affecting the behavior of `zig build` subcommand.
 
-最后一点需要注意的是，尽管使用 `zig build` 和 `zig build-exe` 时命令行参数会有所不同，
-但在构建 Zig 代码方面，两者是等价的。更具体地说，尽管 Zig 构建可以调用任意命令，
-并做其他可能根本与 Zig 代码无关的事情，但在构建 Zig 代码方面，
-`zig build` 所做的一切就是为 `build-exe` 准备命令行参数。
-这意味着，在编译 Zig 代码方面，`zig build`（假定 `build.zig` 中的代码是正确的）
-和 `zig build-exe` 之间是一一对应关系。唯一的区别只是便利性。
+The last thing to note is that although command line parameters will be different when using `zig build` and `zig build-exe`,
+in building Zig code, both are equivalent. More specifically, although Zig build can call arbitrary commands,
+and do other things that may have nothing to do with Zig code, in building Zig code,
+what `zig build` does is to prepare command line parameters for `build-exe`.
+This means that in compiling Zig code, `zig build` (assuming the code in `build.zig` is correct)
+and `zig build-exe` are one-to-one correspondence. The only difference is convenience.
 
-# 构建模式
+## Build mode
 
-使用 `zig build` 或 `zig build-exe myapp.zig` 构建一个 Zig 项目时，
-默认得到是一个调试构建的可执行文件。调试构建主要是为了开发方便，因而，通常被认为不适合发版。
-调试构建旨在牺牲运行性能（运行更慢）来提高构建速度（编译更快），
-不久， Zig 编译器将通过引入增量编译和就地二进制补丁（in-place binary patching）
-来让这种权衡变得更加明显。
+When building a Zig project with `zig build` or `zig build-exe myapp.zig`,
+the default is a debug build executable file. Debug build is mainly for development convenience, so it's usually considered unsuitable for release.
+Debug build aims to sacrifice running performance (running slower) for build speed (compiling faster),
+soon, Zig compiler will make this trade-off more obvious by introducing incremental compilation and in-place binary patching.
 
-Zig 目前有三种主要的发版构建模式：`ReleaseSafe`、`ReleaseFast` 和 `ReleaseSmall`。
+Zig currently has three main release build modes: `ReleaseSafe`, `ReleaseFast` and `ReleaseSmall`.
 
-`ReleaseSafe` 应被视为发版时使用的主要模式：尽管使用了优化，
-但仍保留了某些安全检查（例如，溢出和数组越界），
-在发布处理不可控输入源（如互联网）的软件时，这些开销是绝对值得的。
+`ReleaseSafe` should be considered the main mode to use when releasing: although optimizations are used,
+it still retains some safety checks (for example, overflow and array bounds),
+these overheads are absolutely worth it when releasing software that handles uncontrollable input sources (like the internet).
 
-`ReleaseFast` 旨在用于性能是主要关注点的软件，
-例如视频游戏。这种构建模式不仅禁用了上述安全检查，
-而且为了进行更激进的优化，它还假设代码中不存在这类编程错误。
+`ReleaseFast` is intended for software where performance is the main concern,
+for example video games. This build mode not only disables the above safety checks,
+but also assumes that there are no such programming errors in the code.
 
-`ReleaseSmall` 类似于 `ReleaseFast`（即，没有安全检查），
-但它不是优先考虑性能，而是尝试最小化可执行文件大小。
-例如，这是一种对于 WebAssembly 来说非常有意义的构建模式，
-因为你希望可执行文件尽可能小，而沙箱运行环境已经提供了很多安全保障。
+`ReleaseSmall` is similar to `ReleaseFast` (i.e., no safety checks),
+but it's not prioritized for performance, but rather for trying to minimize the executable file size.
+For example, this is a very meaningful build mode for WebAssembly,
+because you want the executable file to be as small as possible, and the sandbox runtime environment has provided a lot of security guarantees.
 
-# 如何设置构建模式
+## How to set build mode
 
-使用 `zig build-exe` 时，你可以添加 `-O ReleaseSafe`
-（或 `ReleaseFast`，或 `ReleaseSmall`）以获得相应的构建模式。
+When using `zig build-exe`, you can add `-O ReleaseSafe`
+(or `ReleaseFast`, or `ReleaseSmall`) to get the corresponding build mode.
 
-使用 `zig build` 时，取决于构建脚本的配置。默认构建脚本将包含以下代码行：
+When using `zig build`, it depends on the configuration of the build script. The default build script will include the following code lines:
 
 ```zig
-// standardReleaseOptions 允许我们在运行 zig build 时，手动选择需要构建的目标平台和架构
-// 默认情况下为本机构建
+// standardReleaseOptions allows us to manually select the target platform and architecture when running zig build
+// Default is for this architecture
 const target = b.standardTargetOptions(.{});
 
-// standardOptimizeOption 允许我们在运行 zig build 时，手动选择构建模式
-// 默认情况下为 Debug
+// standardOptimizeOption allows us to manually select build mode when running zig build
+// Default is Debug
 const optimize = b.standardOptimizeOption(.{});
 
-// 标准构建一个可执行二进制程序的步骤
+// Standard steps to build a executable binary
 const exe = b.addExecutable(.{
     .name = "zig",
     .root_source_file = .{ .path = "src/main.zig" },
@@ -96,47 +95,47 @@ const exe = b.addExecutable(.{
 });
 ```
 
-这是你在命令行中指定发布模式的方式：`zig build -Doptimize=ReleaseSafe`（或
-`-Doptimize=ReleaseFast`，或 `-Doptimize=ReleaseSmall`）。
+This is how you specify release mode in command line: `zig build -Doptimize=ReleaseSafe` (or
+`-Doptimize=ReleaseFast`, or `-Doptimize=ReleaseSmall`).
 
-# 选择正确的构建目标
+## Choose the correct build target
 
-现在，我们已经选择了正确的发版模式，是时候考虑构建目标了。
-显而易见，如果使用的平台和构建平台不相同时，需要指定相应的构建目标，
-但即使只打算为同一平台发版，也还是需要注意。
+Now, we've chosen the correct release mode, it's time to consider build target.
+Obviously, if the platform used and build platform are different, the corresponding build target needs to be specified,
+but even if you just intend to release for the same platform, you still need to pay attention.
 
-为了方便起见，假定你用的是 Windows 10，并试图为使用 Windows 10 的朋友构建可执行文件。
-最想当然的方式是直接调用 `zig build` 或 `zig build-exe`（参见前文关于两个命令之间的差异与相似之处），然后将生成的可执行文件发送给你的朋友。
+For convenience, assume you're using Windows 10 and trying to build an executable file for your friends using Windows 10.
+The most straightforward way is to directly call `zig build` or `zig build-exe` (see the difference and similarity between the two commands above), and then send the generated executable file to your friends.
 
-如果这样做，有时它会工作，但有时它会因`非法指令`（或类似错误）而崩溃。这到底发生了什么？
+If you do this, sometimes it works, but sometimes it crashes due to `illegal instruction` (or similar error). What's happening?
 
-# CPU 特性
+## CPU features
 
-在构建时如果不指定构建目标，Zig 将面向当前的机器进行构建优化，
-这意味着将利用当前 CPU 支持的所有指令集。如果 CPU 支持 AVX 扩展，
-那么 Zig 将使用它来执行 SIMD 操作。但不幸的是，
-这也意味着，如果你朋友的 CPU 没有 AVX 扩展，那么应用程序将崩溃，
-因为这个可执行文件确实包含非法指令。
+If build target is not specified when building, Zig will build for the current machine,
+which means it will use all instruction sets supported by the current CPU. If the CPU supports AVX extension,
+then Zig will use it to perform SIMD operations. But unfortunately,
+this also means that if your friend's CPU doesn't support AVX extension, the application will crash,
+because this executable file indeed contains illegal instructions.
 
-解决这个问题最简单的方法是：始终在进行发布时指定一个构建目标。
-没错，如果你指定你想要为 `x86-64-linux` 构建，
-Zig 将设定一个与该系列所有 CPU 完全兼容的基线 CPU。
+The simplest way to solve this problem is: always specify a build target when releasing.
+Yes, if you specify you want to build for `x86-64-linux`,
+Zig will set a baseline CPU that is fully compatible with all CPUs in that series.
 
-如果你想微调指令集的选择，你可以查看 `zig build` 的 `-Dcpu` 和 `zig build-exe` 的
-`-mcpu`。我不会在这篇文章中更多地涉及这些细节。
+If you want to fine-tune instruction set selection, you can check `zig build`'s `-Dcpu` and `zig build-exe`'s
+`-mcpu`. I won't cover these details more in this article.
 
-实操中，下面的命令行将是你为 Arm macOS 发版时会用到的构建命令：
+In practice, the following command line will be the build command you'll use when releasing for Arm macOS:
 
 ```zig
 $ zig build -Dtarget=aarch64-macos
 $ zig build-exe myapp.zig -target aarch64-macos
 ```
 
-请注意，目前在使用 `zig build` 时 `=` 是必需的，
-而在使用 `build-exe` 时它不起作用（即你必须在 `-target` 及其值之间放一个空格）。
-希望这些怪异的地方在不久将来会得到清理。
+Note that currently `=` is required when using `zig build`,
+while it doesn't work when using `build-exe` (i.e., you must put a space between `-target` and its value).
+I hope these weird places will be cleaned up in the near future.
 
-其它一些相关的构建目标：
+Other related build targets:
 
 ```zig
 x86-64-linux // uses gnu libc
@@ -147,21 +146,22 @@ x86-64-windows-msvc // uses MSVC headers but they need to be present in your sys
 wasm32-freestanding // you will have to use build-obj since wasm modules are not full exes
 ```
 
-你可以通过调用 `zig targets` 看到 Zig 支持的目标 CPU 和
-操作系统（以及 libc 和指令集）的完整列表。温馨提示：这是一个很长的列表。
+You can see the complete list of Zig supported target CPUs and
+operating systems (as well as libc and instruction sets) by calling `zig targets`.
+Reminder: this is a very long list.
 
-最后，别忘了 `build.zig` 里的一切都必须明确定义，因此目标选项可以通过以下几行代码设置：
+Finally, don't forget everything in `build.zig` must be explicitly defined, so target options can be set through the following code lines:
 
 ```zig
-// standardReleaseOptions 允许我们在运行 zig build 时，手动选择需要构建的目标平台和架构
-// 默认情况下为本机构建
+// standardReleaseOptions allows us to manually select the target platform and architecture when running zig build
+// Default is for this architecture
 const target = b.standardTargetOptions(.{});
 
-// standardOptimizeOption 允许我们在运行 zig build 时，手动选择构建模式
-// 默认情况下为 Debug
+// standardOptimizeOption allows us to manually select build mode when running zig build
+// Default is Debug
 const optimize = b.standardOptimizeOption(.{});
 
-// 标准构建一个可执行二进制程序的步骤
+// Standard steps to build a executable binary
 const exe = b.addExecutable(.{
     .name = "zig",
     .root_source_file = .{ .path = "src/main.zig" },
@@ -170,13 +170,13 @@ const exe = b.addExecutable(.{
 });
 ```
 
-这也意味着如果你想添加其他限制或以某种方式改变构建时应该如何指定目标，
-你可以通过添加自己的代码来实现。
+This also means if you want to add other restrictions or change how to specify target when building,
+you can achieve this by adding your own code.
 
-# 结束语
+## Conclusion
 
-现在你已经了解了在进行发布构建时需要确保正确的事项：选择一个发布优化模式并选择正确的构建目标，
-包括为你正在构建的同一系统进行发版构建。
+Now you've learned the things you need to ensure correctly when releasing a build: choose a release optimization mode and choose the correct build target,
+including building for the same system you're building.
 
-这最后一点的一个有趣含义是，对于你的一些用户（通常情况下为 1%，乐观估计），
-从头开始构建程序实际上更为可取，以确保他们充分利用其 CPU 的能力。
+One interesting implication of this last point is that for some of your users (usually 1% on average),
+it's actually more beneficial to start building the program from scratch to ensure they make full use of their CPU capabilities.

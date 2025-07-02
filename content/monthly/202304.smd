@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-# 重大事件
+## 重大事件
 
 在 2023 四月份的 [Tiobe](https://www.tiobe.com/tiobe-index/) 指数上，Zig
 [排名
@@ -29,7 +29,7 @@ Loris 发推表示这个数字对 Zig
 
 \>
 
-# 观点/教程
+## 观点/教程
 
 [When should I use an UNTAGGED
 Union?](https://zig.news/kristoff/when-should-i-use-an-untagged-union-56ek)  
@@ -78,7 +78,7 @@ Systems Distributed 23 视频，[B
 站链接](https://www.bilibili.com/video/BV1gP41117zY/)，作者博客：[Scattered
 Thoughts](https://www.scattered-thoughts.net/)
 
-# 项目/工具
+## 项目/工具
 
 [Coming Soon to a Zig Near You: HTTP
 Client](https://zig.news/nameless/coming-soon-to-a-zig-near-you-http-client-5b81)  
@@ -106,4 +106,4 @@ Zvisor is an open-source hypervisor written in the Zig programming
 language, which provides a modern and efficient approach to systems
 programming.
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-04-01..2023-05-01)
+## [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-04-01..2023-05-01)

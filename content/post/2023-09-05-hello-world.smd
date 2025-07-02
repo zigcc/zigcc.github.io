@@ -11,7 +11,7 @@
 - [ZigCC 网站](https://ziglang.cc)
 - [ZigCC 公众号](https://github.com/zigcc/.github/raw/main/zig_mp.png)
 
-# 供稿方式
+## 供稿方式
 
 TODO
 
@@ -27,6 +27,6 @@ date: '2023-09-05T16:13:13+0800'
 ---
 ```
 
-# 本地预览
+## 本地预览
 
 在写完文章后，可以使用 [Hugo](https://gohugo.io/) 进行本地预览，只需在项目根目录执行 `hugo server`，这会启动一个 HTTP 服务，默认的访问地址是： http://localhost:1313/

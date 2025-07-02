@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-# 重大事件
+## 重大事件
 
 Andrewk 在最新的文章 [The Upcoming Release Postponed Two More Weeks and
 Lacks Async Functions](https://ziglang.org/news/0.11.0-postponed-again/)
@@ -24,7 +24,7 @@ Team](https://ziglang.org/news/welcome-jacob-young/)，Core Team
 
 恭喜 Core Team，又添一虎将！
 
-# 观点/教程
+## 观点/教程
 
 [Copy Hunting | TigerBeetle](https://tigerbeetle.com/blog/2023-07-26-copy-hunting/)  
 比较有意思的文章，通过分析 LLVM 的 IR，来避免程序中不必要的 memcpy
@@ -129,7 +129,7 @@ TigerBeetle 的新花样，把数据库搬到了 Web 上。[HN
 比较有意思的文章，作者比较了 Clang、Zig 对相同逻辑代码生产的 LLVM
 IR，Zig 生成的 IR 更加精简
 
-# 项目/工具
+## 项目/工具
 
 [Zig helped us move data to the Edge. Here are our impressions](https://blog.turso.tech/zig-helped-us-move-data-to-the-edge-here-are-our-impressions-67d3a9c45af4)  
 [Turso](https://turso.tech/)
@@ -147,4 +147,4 @@ Experimental operating system written in Zig
 [EugenHotaj/zig<sub>gpt2</sub>](https://github.com/EugenHotaj/zig_gpt2)  
 GPT-2 inference engine written in Zig
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-06-01..2023-07-01)
+## [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-06-01..2023-07-01)

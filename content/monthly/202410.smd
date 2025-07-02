@@ -6,9 +6,9 @@
 .draft = false,
 ---
 
-# 重大事件
+## 重大事件 ($section.id('major-events'))
 
-# 向 Zig 软件基金会认捐 30 万美元
+## 向 Zig 软件基金会认捐 30 万美元 ($section.id('donation-zsf-300k'))
 
 Mitchell 在其最新的博客上宣布：我和我的妻子向 Zig 软件基金会 (ZSF)
 捐赠了 300,000 美元。
@@ -25,9 +25,9 @@ Mitchell 在其最新的博客上宣布：我和我的妻子向 Zig 软件基金
 作为其中的一部分，我们希望支持那些我们认为可以带来变革和影响的独立软件项目，这既是回馈给我如此之多的社区的一种方式，更重要的是，这也是彰显和鼓励为热爱而构建的文化的一种方式。
 Zig 就是这样一个项目。
 
-# 观点/教程
+## 观点/教程 ($section.id('opinion-tutorial'))
 
-# [Zig is everything I want C to be](https://mrcat.au/blog/zig_is_cool/)
+## [Zig is everything I want C to be](https://mrcat.au/blog/zig_is_cool/) ($section.id('zig-vs-c'))
 
 对 Zig 的特色进行了简单扼要的介绍，主要有：
 
@@ -61,9 +61,9 @@ Zig 就是这样一个项目。
 
 4.  与 C 无缝交互， `zig cc` 是交叉编译的首选
 
-# [Building Nintendo 3DS Homebrew with Zig](https://blog.erikwastaken.dev/posts/2024-10-27-building-3ds-homebrew-with-zig.html)
+## [Building Nintendo 3DS Homebrew with Zig](https://blog.erikwastaken.dev/posts/2024-10-27-building-3ds-homebrew-with-zig.html) ($section.id('3ds-homebrew-zig'))
 
-# [Critical Social Infrastructure for Zig Communities | Loris Cro's Blog](https://kristoff.it/blog/critical-social-infrastructure/)
+## [Critical Social Infrastructure for Zig Communities | Loris Cro's Blog](https://kristoff.it/blog/critical-social-infrastructure/) ($section.id('zig-community-infrastructure'))
 
 对于一个试图共同学习如何制作大家都喜欢的软件的社区来说，能够分享想法并开展合作至关重要，但社交平台的不断起伏会导致连接中断，这对于一个从一开始就希望去中心化的社区来说是个大问题。
 
@@ -74,25 +74,25 @@ Zig 就是这样一个项目。
 - <https://ziglang.org/devlog/>
 - <https://zine-ssg.io/log/>
 
-# [The Zig Website Has Been Re-engineered](https://ziglang.org/news/website-zine/)
+## [The Zig Website Has Been Re-engineered](https://ziglang.org/news/website-zine/) ($section.id('zig-website-reengineered'))
 
 Zig 官网已经用 [Zine](https://zine-ssg.io/) 重写！
 
-# [Rust vs. Zig in Reality: A (Somewhat) Friendly Debate](https://thenewstack.io/rust-vs-zig-in-reality-a-somewhat-friendly-debate/)
+## [Rust vs. Zig in Reality: A (Somewhat) Friendly Debate](https://thenewstack.io/rust-vs-zig-in-reality-a-somewhat-friendly-debate/) ($section.id('rust-vs-zig-debate'))
 
-# [Why I rewrote my Rust keyboard firmware in Zig: consistency, mastery, and fun](https://kevinlynagh.com/rust-zig/)
+## [Why I rewrote my Rust keyboard firmware in Zig: consistency, mastery, and fun](https://kevinlynagh.com/rust-zig/) ($section.id('rust-keyboard-firmware-zig'))
 
-# [Why Zig Programmers Are Cashing In: A Deep Dive into the Lucrative World of Zig](https://teckrevie.blogspot.com/2024/09/why-zig-programmers-are-cashing-in-deep.html)
+## [Why Zig Programmers Are Cashing In: A Deep Dive into the Lucrative World of Zig](https://teckrevie.blogspot.com/2024/09/why-zig-programmers-are-cashing-in-deep.html) ($section.id('zig-programmers-cashing-in'))
 
-# 视频
+## 视频 ($section.id('videos'))
 
-## [I made an operating system that self replicates doom on a network “from scratch”](https://www.youtube.com/watch?v=xOySJpQlmv4&feature=youtu.be)
+### [I made an operating system that self replicates doom on a network "from scratch"](https://www.youtube.com/watch?v=xOySJpQlmv4&feature=youtu.be) ($section.id('os-self-replicates-doom'))
 
-## [Rust vs Zig vs Go: Performance (Latency - Throughput - Saturation - Availability)](https://www.youtube.com/watch?feature=shared&v=3fWx5BOiUiY)
+### [Rust vs Zig vs Go: Performance (Latency - Throughput - Saturation - Availability)](https://www.youtube.com/watch?feature=shared&v=3fWx5BOiUiY) ($section.id('rust-zig-go-performance'))
 
-## [Let's explore Vulkan API with Zig programming language from scratch](https://www.youtube.com/live/Kf7BIPUUfsc?t=764)
+### [Let's explore Vulkan API with Zig programming language from scratch](https://www.youtube.com/live/Kf7BIPUUfsc?t=764) ($section.id('vulkan-api-zig'))
 
-# 项目/工具
+## 项目/工具 ($section.id('projects-tools'))
 
 [laohanlinux/boltdb-zig](https://github.com/laohanlinux/boltdb-zig)  
 a zig implement kv database
@@ -107,7 +107,7 @@ Console Blackjack written in Zig
 Instructions on setting up VSCode to debug Zig on Linux
 
 [lframosferreira/brainzuck](https://github.com/lframosferreira/brainzuck)  
-[Brainf\*ck](https://en.wikipedia.org/wiki/Brainfuck) interpreter
+[Brainf*ck](https://en.wikipedia.org/wiki/Brainfuck) interpreter
 written in Zig 0.12.0! Have fun!
 
 [BitlyTwiser/snek](https://github.com/BitlyTwiser/snek)  
@@ -131,4 +131,4 @@ Video editor 🎬 written in Zig ⚡ using raylib
 [pwbh/ymlz](https://github.com/pwbh/ymlz)  
 Small and convenient yaml parser for Zig
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-10-01..2024-11-01)
+## [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-10-01..2024-11-01) ($section.id('zig-updates-202410'))

@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-## [重大事件 ($section.id('major-events'))]($section.id('重大事件 ($section.id('major-events'))'))
+# [重大事件]($section.id('major-events'))
 
 千呼万唤的 0.12.0 版本终于 2024-04-20 正式释出了！这次版本历时 8
 个月，有 268 位贡献者，一共进行了 3688 次提交！社区内的一些讨论：[Hacker
@@ -37,7 +37,7 @@ CMake、Makefile、Vcpkg、Git submodule 等工具，所有的依赖使用 zon
 
 期待一年后 Zig 的生态！
 
-## [观点/教程 ($section.id('opinion-tutorial'))]($section.id('观点/教程 ($section.id('opinion-tutorial'))'))
+# [观点/教程]($section.id('opinion-tutorial'))
 
 [Zig 中任意精度整数用途与实现](https://github.com/zigcc/forum/issues/112)  
 由于 CPU
@@ -104,7 +104,7 @@ Vector，到最后利用 bit 的特点，来逐步优化，并用 godbolt
 [Documentation takes another step backwards : r/Zig](https://www.reddit.com/r/Zig/comments/1cc1x2v/documentation_takes_another_step_backwards/)  
 一个 Reddit 用户对文档的抱怨
 
-## [项目/工具 ($section.id('projects-tools'))]($section.id('项目/工具 ($section.id('projects-tools'))'))
+# [项目/工具]($section.id('projects-tools'))
 
 [rofrol/zig-companies](https://github.com/rofrol/zig-companies)  
 A list of companies using Zig in production.
@@ -124,4 +124,4 @@ Zig string library that includes small string optimization on the stack
 [FalsePattern/ZigBrains](https://github.com/FalsePattern/ZigBrains)  
 Yet another zig language plugin for intellij
 
-## [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-04-01..2024-05-01) ($section.id('zig-updates-202404'))
+# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-04-01..2024-05-01)

@@ -6,16 +6,16 @@
 .draft = false,
 ---
 
-## [重大事件]($section.id('重大事件'))
+# [重大事件]($section.id('major-events'))
 
-## [观点/教程]($section.id('观点/教程'))
+# [观点/教程]($section.id('opinion-tutorial'))
 
 [Notes From the Field: Learning Zig](https://registerspill.thorstenball.com/p/notes-from-the-field-learning-zig)  
 Zig 初学者的使用经验分享
 
 [Friendly Neighbor: A network service for Linux wake-on-demand, written in Zig](https://dgross.ca/blog/friendly-neighbor-announce/)  
 作者在这篇文章中分享了 用 Zig 重写之前 Ruby
-写的一个网络工具，一方面是减轻资源消耗，另一方面是探索用“低级”语言来写程序。不错的案例分享。
+写的一个网络工具，一方面是减轻资源消耗，另一方面是探索用"低级"语言来写程序。不错的案例分享。
 
 [Zig Interfaces](https://www.openmymind.net/Zig-Interfaces/)  
 作者介绍了 Zig
@@ -96,7 +96,7 @@ pub fn main() !void {
 由于 Zig 还在快速开发迭代中，因此项目很有可能出现新版本 Zig
 无法编译的情况，这篇文章介绍了一些管理多个 Zig 版本的方式。
 
-## [项目/工具]($section.id('项目/工具'))
+# [项目/工具]($section.id('projects-tools'))
 
 [zigcli](https://zigcli.liujiacai.net/)  
 a toolkit for building command lines programs in Zig
@@ -115,4 +115,4 @@ Enable the use of Zig code in JavaScript project
 Language server for GLSL (autocomplete, goto-definition, formatter, and
 more)
 
-## [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-09-01..2023-10-01)
+# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-09-01..2023-10-01)

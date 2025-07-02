@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-## [重大事件]($section.id('重大事件'))
+# [重大事件]($section.id('重大事件'))
 
 一个是这个：[The Zig subreddit has
 closed](https://ziggit.dev/t/the-zig-subreddit-has-closed/679)，现在
@@ -91,7 +91,7 @@ Zig 的各种 backend 进展，能不能给 fix 几个 regression？！
 最后，即便 Zig
 这个项目夭折了，我相信通过这个学习的过程也有助于提高我们对系统编程、编译器的理解，不是吗？
 
-## [观点/教程]($section.id('观点/教程'))
+# [观点/教程]($section.id('观点/教程'))
 
 [A Note About Zig Books for the Zig
 Community](https://kristoff.it/blog/note-about-zig-books/)  
@@ -147,14 +147,14 @@ segfaults](https://www.openmymind.net/Zig-Danling-Pointers/)
 讨论](https://news.ycombinator.com/item?id=36149462)
 <http://ratfactor.com/zig/zighard_700px.jpg>
 
-## [项目/工具]($section.id('项目/工具'))
+# [项目/工具]($section.id('项目/工具'))
 
 [pondzdev/duckdb](https://github.com/pondzdev/duckdb-proxy/)  
 一个将 DuckDB 数据库通过 HTTP API 暴露出来的代理，主要是利用了 [DuckDB C
 API](https://duckdb.org/docs/api/c/api.html)，示例：
 
 ``` bash
-## [open the database in readonly (DB must exist in this case)]($section.id('open the database in readonly (DB must exist in this case)'))
+# [open the database in readonly (DB must exist in this case)]($section.id('open the database in readonly (DB must exist in this case)'))
 $ ./duckdb-proxy --readonly db/mydatabase.duckdb
 
 $ curl http://localhost:8012/api/1/exec \
@@ -184,7 +184,7 @@ Shell completions for the Zig compiler.
 [menduz/zig](https://github.com/menduz/zig-steamworks)  
 Steamwork bindings for Zig.
 
-## [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-05-01..2023-06-01)
+# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-05-01..2023-06-01)
 
 - [WASI: Implement experimental threading support by Luukdegram · Pull
   Request \#16207 ·

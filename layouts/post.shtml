@@ -14,9 +14,5 @@
   </ctx>
 </head>
 <body id="body">
-  <div class="docs" :if="$page.custom.getOr('toc', true).and($page.isSection().not())">
-    <h1>Table of Contents</h1>
-    <div :html="$page.toc()"></div>
-  </div>
   <div :html="$page.content()"></div>
 </body>

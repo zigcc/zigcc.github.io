@@ -1,6 +1,6 @@
 ---
 .title = "安装 Zig",
-.date = @date("2024-01-01T00:00:00"),
+.date = @date("2024-01-02T00:00:00"),
 .author = "Karl Seguin; ZigCC",
 .layout = "learn.shtml",
 .draft = false,
@@ -25,7 +25,7 @@ EOF
 
 asdf plugin-add zig https://github.com/zigcc/asdf-zig.git
 
-## [安装最新版]($section.id('安装最新版'))
+# [安装最新版]($section.id('install-latest-version'))
 asdf install zig latest
 asdf global zig latest
 zig version

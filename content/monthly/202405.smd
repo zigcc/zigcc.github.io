@@ -6,14 +6,14 @@
 .draft = false,
 ---
 
-## [观点/教程 ($section.id('opinion-tutorial'))]($section.id('观点/教程 ($section.id('opinion-tutorial'))'))
+# [观点/教程]($section.id('opinion-tutorial'))
 
-## [Thoughts on Zig](https://arne.me/blog/thoughts-on-zig) ($section.id('thoughts-on-zig'))
+# [Thoughts on Zig](https://arne.me/blog/thoughts-on-zig)
 
 又一篇 Zig 初学者的使用体验文档，如果你也在犹豫要不要学
 Zig，这是个不错的经验参考。
 
-## [I'm sold on Zig's simplicity : r/Zig](https://www.reddit.com/r/Zig/comments/1ckstjv/im_sold_on_zigs_simplicity/) ($section.id('zig-simplicity'))
+# [I'm sold on Zig's simplicity : r/Zig]($section.id('im-sold-on-zigs-simplicity-r-zig'))
 
 一个具有资深经验开发者，在这里描述了自己选择业余项目语言的经历：
 
@@ -32,7 +32,7 @@ Zig，这是个不错的经验参考。
 - 唯一缺失的就是『接口』，但这一点并不是很关键，就像在 C里也没有，但是 C
   可以做任何事
 
-## [Zig's New CLI Progress Bar Explained](https://andrewkelley.me/post/zig-new-cli-progress-bar-explained.html) ($section.id('zig-cli-progress-bar'))
+# [Zig's New CLI Progress Bar Explained]($section.id('zigs-new-cli-progress-bar-explained'))
 
 Andrew 的一篇文章，讲述了在最新版的 Zig
 中，对进度条的改进实现，现在的进度展示更加友好。
@@ -42,7 +42,7 @@ Andrew 的一篇文章，讲述了在最新版的 Zig
 - 首先通过预先分配好需要使用的结构，保证后续无需在进行 heap 申请
 - 通过 atomic 操作来实现一个无锁的 freelist，用于申请、释放 Node
 
-## [Writing a task scheduler in Zig](https://www.openmymind.net/Writing-a-Task-Scheduler-in-Zig/) ($section.id('task-scheduler-zig'))
+# [Writing a task scheduler in Zig](https://www.openmymind.net/Writing-a-Task-Scheduler-in-Zig/)
 
 Openmymind
 作者的又一力作，通过编写一个任务调度器，讲述了多线程编程的基本要领：
@@ -81,7 +81,7 @@ Openmymind
   }
   ```
 
-## [项目/工具 ($section.id('projects-tools'))]($section.id('项目/工具 ($section.id('projects-tools'))'))
+# [项目/工具]($section.id('projects-tools'))
 
 [zigar](https://github.com/chung-leong/zigar)  
 Enable the use of Zig code in JavaScript project。它可以让你直接在 JS
@@ -96,4 +96,4 @@ A generic and general purpose Set implementation for the Zig language
 [akarpovskii/tuile](https://github.com/akarpovskii/tuile)  
 A Text UI library for Zig
 
-## [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-05-01..2024-06-01) ($section.id('zig-updates-202405'))
+# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-05-01..2024-06-01)

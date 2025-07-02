@@ -10,11 +10,11 @@
 },
 ---
 
-## [Bog GC Design]($section.id('bog-gc-design'))
+# [Bog GC Design]($section.id('bog-gc-design'))
 
 Bog is a small scripting language developed using Zig. Its GC design is inspired by a paper titled [An efficient of Non-Moving GC for Function languages](https://www.pllab.riec.tohoku.ac.jp/papers/icfp2011UenoOhoriOtomoAuthorVersion.pdf).
 
-## [Overview]($section.id('bog-gc-design'))
+# [Overview]($section.id('Overview'))
 
 1. Introduction
    - Design of the Heap
@@ -22,7 +22,7 @@ Bog is a small scripting language developed using Zig. Its GC design is inspired
    - Design of Bitmap
 2. Implementation
 
-## [Introduction]($section.id('bog-gc-design'))
+# [Introduction]($section.id('Introduction'))
 
 GC stands for garbage collection, which is primarily a memory management strategy for the `heap` region. Memory allocations in the heap are done in exponentially increasing sizes, with a special sub-heap dedicated solely to very large objects. One advantage of this approach might be its efficiency in handling memory requests of various sizes.
 
@@ -71,13 +71,13 @@ graph TD
 +------------+
 ```
 
-### [Memory Sub-Heap Pool]($section.id('bog-gc-design'))
+## [Memory Sub-Heap Pool]($section.id('Memory Sub-Heap Pool'))
 
 We've designed a memory resource pool. This pool consists of numerous allocation segments of fixed size. It means that, regardless of how much space a sub-heap requests, it will request it in units of these fixed-size "segments". For instance, if the allocation segments in the pool are of size 1MB, then a sub-heap might request space in sizes of 1MB, 2MB, 3MB, etc., rather than requesting non-integer multiples like 1.5MB or 2.5MB.
 
 The dynamic allocation and reclaiming of space by the sub-heaps from a resource pool made up of fixed-size segments provide greater flexibility and may enhance the efficiency of memory utilization.
 
-### [Types of GC]($section.id('bog-gc-design'))
+## [Types of GC]($section.id('Types of GC'))
 
 There are many common types of GC.
 
@@ -136,7 +136,7 @@ However, Non-Moving GC has its disadvantages:
 
 To address these problems requires many complicated steps, which won't be elaborated on here. We'll focus on Bog's GC for the explanation.
 
-### [Meta Bitmap]($section.id('bog-gc-design'))
+## [Meta Bitmap]($section.id('Meta Bitmap'))
 
 "Meta Bitmap" or "meta-level bitmaps". This is a higher-level bitmap that summarizes the contents of the original bitmap. This hierarchical structure is similar to the inode mapping in file systems or the use of multi-level page tables in computer memory management.
 
@@ -150,11 +150,11 @@ Let's design for a 32-bit architecture. A 32-bit architecture means that the com
 
 For example, if a bitmap is 320 bits long, then on a 32-bit architecture, the worst-case scenario might require checking 10 blocks of 32 bits to find a free bit. This can be represented by log32(320), which results in 10.
 
-### [Bitmap]($section.id('bog-gc-design'))
+## [Bitmap]($section.id('Bitmap'))
 
 Since Bog's GC is essentially still based on "Mark-Sweep", using bitmaps to record data is indispensable. In Bog, we adopted the method of "bitmap records data" for GC. And to improve efficiency, we introduced the concept of meta-bitmaps, where every 4 elements correspond to a meta-bitmap, recording the occupancy status of multiple spaces, and increasing the depth based on the object age in the heap.
 
-### [Implementation]($section.id('bog-gc-design'))
+## [Implementation]($section.id('implementation'))
 
 In reality, Bog's design is a bit more complex. Here are sample in practical code:
 

@@ -12,6 +12,10 @@
   <ul :loop="$page.subpages()">
     <a href="$loop.it.link()"><li :text="$loop.it.title"></li></a>
   </ul>
+  <div class="docs" :if="$page.custom.getOr('toc', true).and($page.isSection().not())">
+    <h1>Table of Contents</h1>
+    <div :html="$page.toc()"></div>
+  </div>
   <super>
   <div id="prev-next" :if="$page.isSection().not()">
     <div :if="$page.prevPage?()">

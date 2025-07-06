@@ -5,7 +5,7 @@ const path = require('path');
 
 // 配置
 const config = {
-    sourceDir: './content/learn'
+    sourceDir: './content/'
 };
 
 // 转换链接格式
@@ -56,7 +56,7 @@ function processDirectory(dirPath) {
                 convertedCount += result.converted;
                 totalCount += result.total;
             } else if (item.endsWith('.smd')) {
-                // 处理smd文件
+                // 处理 smd 文件
                 const converted = processFile(fullPath);
                 if (converted) convertedCount++;
                 totalCount++;

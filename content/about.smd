@@ -1,56 +1,58 @@
 ---
-.title = "About",
-.date = @date("1990-01-01T00:00:00"),
+.date = "2024-08-04T08:51:07+0800",
+.title = "学习 Zig",
 .author = "ZigCC",
 .layout = "index.shtml",
 .draft = false,
---- 
+---
 
-# [About Zine]($section.id('About Zine'))
-Zine is an MIT-licensed project created by [Loris Cro](https://kristoff.it) and
-other contributors listed on the [official repository](https://github.com/kristoff-it/zine/contributors).
+# 资料
 
-Zine is inspired by [Hugo](https://gohugo.io) but features an entirely custom set
-of authoring languages:
+由于 Zig 目前还处于快速迭代，因此最权威的资料无疑是官方的 [Zig Language
+Reference](https://ziglang.org/documentation/master/)，遇到语言的细节问题，基本都可以在这里找到答案。
+其次是社区的一些高质量教程，例如：
 
-- [Scripty](https://zine-ssg.io/docs/scripty/) is the small expression
-  language that both SuperHTML and SuperMD share to express templating logic.
+[Zig Guide](https://zig.guide/)  
+英文资料， [Sobeston](https://github.com/Sobeston) 用户编写
 
-- [SuperHTML](https://zine-ssg.io/docs/superhtml/) is the HTML templating
-   language used by Zine. Unlike most `{{curly braced}}` templating languages,
-   SuperHTML uses valid HTML syntax to express the templating logic, adding only
-   minor extensions to normal HTML.  
-   Thanks to this approach, it offers instant
-   syntax checking and autoformatting via [a CLI tool](https://github.com/kristoff-it/superhtml) as well as Language Server support ([VScode Extension](https://marketplace.visualstudio.com/items?itemName=LorisCro.super)).
-  
-  ># [NOTE]($block)
-  >The correct file extension for SuperHTML templates is `.shtml`.
+[Zig in 30 minutes](https://gist.github.com/ityonemo/769532c2017ed9143f3571e5ac104e50)  
 
-- [SuperMD](https://zine-ssg.io/docs/supermd/) is a superset of Markdown
-  that, instead of relying on inline HTML, offers new constructs for expressing
-  content embeds without pulling into your content needless layouting concerns.
-  A CLI tool and language server for SuperMD is in the works.
-  
-  ># [NOTE]($block)
-  >The correct file extension for SuperMD pages is `.smd`.
+[学习 Zig](https://ziglang.cc/learning-zig/)  
+该系列教程最初由 Karl Seguin
+编写，该教程行文流畅，讲述的脉络由浅入深，深入浅出，是入门 Zig
+非常不错的选择
 
-# [Zine is alpha software]($section.id('zine-is-alpha-software'))
+[Zig 语言圣经](https://course.ziglang.cc)  
+一份内容全面、深入浅出介绍 Zig 的教程
 
-Zine is not yet complete. The main functionality is present and you will be able
-to build even moderately complex static websites without issue.
+[ziglings/exercises](https://codeberg.org/ziglings/exercises/)  
+Learn the Zig programming language by fixing tiny broken programs.
 
-That said using Zine today does imply participating in the development process
-to some degree, which usually means inquiring about the development status of
-a feature you need, or reporting a bug.
+[Zig Cookbook](https://cookbook.ziglang.cc/)  
+A collection of simple Zig programs that demonstrate good practices to
+accomplish common programming tasks
 
+[Awesome Zig](https://github.com/zigcc/awesome-zig)  
+A collection of some awesome public Zig programming language projects.
 
-Here are some quicklinks related to Zine:
+# 版本管理
 
-- Official Website: https://zine-ssg.io/
-- Source Code: https://github.com/kristoff-it/zine/
-- Discord: https://discord.com/invite/B73sGxF
-  
+推荐使用版本管理工具
+[asdf](file:///post/2023/10/14/zig-version-manager/) 来安装
+Zig，具体步骤：
 
+``` bash
+git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
+cat <<'EOF' >> $HOME/.bashrc
+source "$HOME/.asdf/asdf.sh"
+source "$HOME/.asdf/completions/asdf.bash"
+EOF
 
+asdf plugin-add zig https://github.com/zigcc/asdf-zig.git
 
+# 安装最新版
+asdf install zig latest
+asdf global zig latest
+zig version
+```
 

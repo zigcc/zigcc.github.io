@@ -14,19 +14,23 @@ Zig 官网的[下载页面](https://ziglang.org/download/)中包含常见平台�
 
 现在，你可以运行 `zig zen` 和 `zig version` 来测试是否安装正确。
 
-> 译者注：建议读者使用版本管理工具来安装 Zig，具体可参考：[《Zig 多版本管理》]({{< ref "/post/2023-10-14-zig-version-manager.org" >}})。
+> 译者注：建议读者使用版本管理工具来安装 Zig。以下是使用 [asdf](https://asdf-vm.com/) 的安装方法：
 
 ```bash
-git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
-cat <<'EOF' >> $HOME/.bashrc
-source "$HOME/.asdf/asdf.sh"
-source "$HOME/.asdf/completions/asdf.bash"
-EOF
+brew install asdf
 
-asdf plugin-add zig https://github.com/zigcc/asdf-zig.git
+asdf plugin add zig https://github.com/zigcc/asdf-zig.git
 
 # [安装最新版]($section.id('install-latest-version'))
 asdf install zig latest
+
+# 设置为全局版本
+# asdf 0.16 之前
 asdf global zig latest
+
+# asdf 0.16 之后
+asdf set --home zig latest
+
+# 验证安装
 zig version
 ```

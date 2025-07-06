@@ -51,7 +51,7 @@
 
 # [其他学习资料]($section.id('other-learning-resources'))
 
-由于 Zig 目前还处于快速迭代，因此最权威的资料无疑是官方的 [Zig Language Reference](https://ziglang.org/documentation/master/)，遇到语言的细节问题，基本都可以在这里找到答案。 其次是社区的一些高质量教程，例如：
+由于 Zig 目前还处于快速迭代，因此最权威的资料无疑是官方的 [Zig Language Reference](https://ziglang.org/documentation/master/)，遇到语言的细节问题，基本都可以在这里找到答案。其次是社区的一些高质量教程，例如：
 
 - **[Zig 日报](https://github.com/zigcc/forum/issues):**
 - **[Zig 语言圣经](https://course.ziglang.cc):** 一份内容全面、深入浅出介绍 Zig 的教程

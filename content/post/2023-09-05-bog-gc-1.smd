@@ -5,7 +5,7 @@
 .layout = "post.shtml",
 .draft = false,
 .custom = {
-  .math = true, // TODO: mathjax
+  .math = true,
   .mermaid = true,
 },
 ---

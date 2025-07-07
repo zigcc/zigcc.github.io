@@ -1,0 +1,10 @@
+*.lock
+.DS_Store
+/public
+/resources
+
+# zig
+zig-cache/
+zig-out/
+
+.cache_ggshield

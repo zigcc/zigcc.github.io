@@ -84,7 +84,10 @@ li > code {
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: baseline;
+  @media screen and (max-width: 800px) {
+    justify-content: center;
+  }
 }
 .site-title {
   display: inline-block;
@@ -127,6 +130,15 @@ nav a {
   text-decoration: none;
   font-size: large;
   margin: 0 10px;
+  @media screen and (max-width: 800px) {  
+    margin: 0 8px;
+  }
+}
+nav a:first-child{
+  margin-left: 0;
+}
+nav a:last-child{
+  margin-right: 0;
 }
 
 footer > div {

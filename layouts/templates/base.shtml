@@ -17,8 +17,6 @@
         <a href="$site.page('monthly').link()">月刊</a>
         <a href="$site.page('post').link()">博客</a>
         <a href="$site.page('contributing').link()">贡献</a>
-        <a href="$site.page('community').link()">社区</a>
-        <a href="$site.page('about').link()">关于</a>
       </nav>
     </div>
     <super>

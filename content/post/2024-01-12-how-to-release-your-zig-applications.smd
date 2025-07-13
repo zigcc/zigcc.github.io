@@ -1,0 +1,182 @@
+---
+.title = "如何发布 Zig 应用程序",
+.date = @date("2024-01-12T12:04:50-0500"),
+.author = "Rui Chen",
+.layout = "post.shtml",
+.draft = false,
+---
+
+> - 原文链接： https://zig.news/kristoff/how-to-release-your-zig-applications-2h90
+> - API 适配到 Zig 0.12.0 版本
+> - 本文配套代码在[这里](https://github.com/zigcc/zigcc.github.io/tree/main/examples/20240112)找到
+
+You've just written an application in Zig and want others to use it.
+A convenient way for users to use your application is to provide a pre-built executable file.
+Next, I'll discuss the two main things that need to be handled correctly in a good release process.
+
+# [Why provide pre-built executable files?]($section.id('Why provide pre-built executable files?'))
+
+Given how C/C++ dependencies work (or don't work), for some C/C++ projects,
+providing pre-compiled executable files is almost a necessity,
+otherwise, ordinary people will get stuck in the build system configuration and
+the number of systems to multiply these by is the number of project dependencies.
+Using Zig shouldn't be like this, because Zig build system (plus the upcoming Zig package manager) will be able to handle everything, meaning most well-written applications should just run `zig build` to succeed.
+
+That said, the more popular your application is, the less users will care what language it's written in.
+Your users don't want to install Zig and run the build process to easily use your application (99% of the time, the rest 1% will be discussed later),
+so it's still better to pre-build your application.
+
+# [`zig build` vs `zig build-exe`]($section.id('`zig build` vs `zig build-exe`'))
+
+In this article, we'll see how to make, release a build for a Zig project,
+so it's worth spending a little time to fully understand the relationship between Zig build system and command line.
+
+If you have a very simple Zig application (for example, a single file, no dependencies),
+the simplest way to build a project is to use `zig build-exe myapp.zig`,
+which will create an executable file in the current path.
+
+As the project grows, especially when dependencies start, you might want to add a `build.zig` file,
+and start using Zig build system. Once you start doing this, you can completely control command line parameters to affect the build process.
+
+You can use `zig init-exe` to see what a baseline `build.zig` file looks like.
+Note that every line of code in the file is explicitly defined, thus affecting the behavior of `zig build` subcommand.
+
+The last thing to note is that although command line parameters will be different when using `zig build` and `zig build-exe`,
+in building Zig code, both are equivalent. More specifically, although Zig build can call arbitrary commands,
+and do other things that may have nothing to do with Zig code, in building Zig code,
+what `zig build` does is to prepare command line parameters for `build-exe`.
+This means that in compiling Zig code, `zig build` (assuming the code in `build.zig` is correct)
+and `zig build-exe` are one-to-one correspondence. The only difference is convenience.
+
+# [Build mode]($section.id('Build mode'))
+
+When building a Zig project with `zig build` or `zig build-exe myapp.zig`,
+the default is a debug build executable file. Debug build is mainly for development convenience, so it's usually considered unsuitable for release.
+Debug build aims to sacrifice running performance (running slower) for build speed (compiling faster),
+soon, Zig compiler will make this trade-off more obvious by introducing incremental compilation and in-place binary patching.
+
+Zig currently has three main release build modes: `ReleaseSafe`, `ReleaseFast` and `ReleaseSmall`.
+
+`ReleaseSafe` should be considered the main mode to use when releasing: although optimizations are used,
+it still retains some safety checks (for example, overflow and array bounds),
+these overheads are absolutely worth it when releasing software that handles uncontrollable input sources (like the internet).
+
+`ReleaseFast` is intended for software where performance is the main concern,
+for example video games. This build mode not only disables the above safety checks,
+but also assumes that there are no such programming errors in the code.
+
+`ReleaseSmall` is similar to `ReleaseFast` (i.e., no safety checks),
+but it's not prioritized for performance, but rather for trying to minimize the executable file size.
+For example, this is a very meaningful build mode for WebAssembly,
+because you want the executable file to be as small as possible, and the sandbox runtime environment has provided a lot of security guarantees.
+
+# [How to set build mode]($section.id('How to set build mode'))
+
+When using `zig build-exe`, you can add `-O ReleaseSafe`
+(or `ReleaseFast`, or `ReleaseSmall`) to get the corresponding build mode.
+
+When using `zig build`, it depends on the configuration of the build script. The default build script will include the following code lines:
+
+```zig
+// standardReleaseOptions allows us to manually select the target platform and architecture when running zig build
+// Default is for this architecture
+const target = b.standardTargetOptions(.{});
+
+// standardOptimizeOption allows us to manually select build mode when running zig build
+// Default is Debug
+const optimize = b.standardOptimizeOption(.{});
+
+// Standard steps to build a executable binary
+const exe = b.addExecutable(.{
+    .name = "zig",
+    .root_source_file = .{ .path = "src/main.zig" },
+    .target = target,
+    .optimize = optimize,
+});
+```
+
+This is how you specify release mode in command line: `zig build -Doptimize=ReleaseSafe` (or
+`-Doptimize=ReleaseFast`, or `-Doptimize=ReleaseSmall`).
+
+# [Choose the correct build target]($section.id('Choose the correct build target'))
+
+Now, we've chosen the correct release mode, it's time to consider build target.
+Obviously, if the platform used and build platform are different, the corresponding build target needs to be specified,
+but even if you just intend to release for the same platform, you still need to pay attention.
+
+For convenience, assume you're using Windows 10 and trying to build an executable file for your friends using Windows 10.
+The most straightforward way is to directly call `zig build` or `zig build-exe` (see the difference and similarity between the two commands above), and then send the generated executable file to your friends.
+
+If you do this, sometimes it works, but sometimes it crashes due to `illegal instruction` (or similar error). What's happening?
+
+# [CPU features]($section.id('CPU features'))
+
+If build target is not specified when building, Zig will build for the current machine,
+which means it will use all instruction sets supported by the current CPU. If the CPU supports AVX extension,
+then Zig will use it to perform SIMD operations. But unfortunately,
+this also means that if your friend's CPU doesn't support AVX extension, the application will crash,
+because this executable file indeed contains illegal instructions.
+
+The simplest way to solve this problem is: always specify a build target when releasing.
+Yes, if you specify you want to build for `x86-64-linux`,
+Zig will set a baseline CPU that is fully compatible with all CPUs in that series.
+
+If you want to fine-tune instruction set selection, you can check `zig build`'s `-Dcpu` and `zig build-exe`'s
+`-mcpu`. I won't cover these details more in this article.
+
+In practice, the following command line will be the build command you'll use when releasing for Arm macOS:
+
+```zig
+$ zig build -Dtarget=aarch64-macos
+$ zig build-exe myapp.zig -target aarch64-macos
+```
+
+Note that currently `=` is required when using `zig build`,
+while it doesn't work when using `build-exe` (i.e., you must put a space between `-target` and its value).
+I hope these weird places will be cleaned up in the near future.
+
+Other related build targets:
+
+```zig
+x86-64-linux // uses gnu libc
+x86-64-linux-gnu // uses glibc
+x86-64-musl // uses musl libc
+x86-64-windows // uses MingW headers
+x86-64-windows-msvc // uses MSVC headers but they need to be present in your system
+wasm32-freestanding // you will have to use build-obj since wasm modules are not full exes
+```
+
+You can see the complete list of Zig supported target CPUs and
+operating systems (as well as libc and instruction sets) by calling `zig targets`.
+Reminder: this is a very long list.
+
+Finally, don't forget everything in `build.zig` must be explicitly defined, so target options can be set through the following code lines:
+
+```zig
+// standardReleaseOptions allows us to manually select the target platform and architecture when running zig build
+// Default is for this architecture
+const target = b.standardTargetOptions(.{});
+
+// standardOptimizeOption allows us to manually select build mode when running zig build
+// Default is Debug
+const optimize = b.standardOptimizeOption(.{});
+
+// Standard steps to build a executable binary
+const exe = b.addExecutable(.{
+    .name = "zig",
+    .root_source_file = .{ .path = "src/main.zig" },
+    .target = target,
+    .optimize = optimize,
+});
+```
+
+This also means if you want to add other restrictions or change how to specify target when building,
+you can achieve this by adding your own code.
+
+# [Conclusion]($section.id('conclusion'))
+
+Now you've learned the things you need to ensure correctly when releasing a build: choose a release optimization mode and choose the correct build target,
+including building for the same system you're building.
+
+One interesting implication of this last point is that for some of your users (usually 1% on average),
+it's actually more beneficial to start building the program from scratch to ensure they make full use of their CPU capabilities.

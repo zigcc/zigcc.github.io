@@ -1,6 +1,6 @@
 
 serve:
-	hugo serve
+	zine
 
 lint:
 	npx @lint-md/cli  **/*

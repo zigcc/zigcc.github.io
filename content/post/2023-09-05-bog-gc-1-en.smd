@@ -1,0 +1,200 @@
+---
+.title = "Bog GC Design",
+.date = @date("2023-09-05T16:40:50+0800"),
+.author = "Feng Wenxuan",
+.layout = "post.shtml",
+.draft = false,
+.custom = {
+  .math = true,
+  .mermaid = true
+},
+---
+
+# [Bog GC Design]($section.id('bog-gc-design'))
+
+Bog is a small scripting language developed using Zig. Its GC design is inspired by a paper titled [An efficient of Non-Moving GC for Function languages](https://www.pllab.riec.tohoku.ac.jp/papers/icfp2011UenoOhoriOtomoAuthorVersion.pdf).
+
+# [Overview]($section.id('Overview'))
+
+1. Introduction
+   - Design of the Heap
+   - Types of GC
+   - Design of Bitmap
+2. Implementation
+
+# [Introduction]($section.id('Introduction'))
+
+GC stands for garbage collection, which is primarily a memory management strategy for the `heap` region. Memory allocations in the heap are done in exponentially increasing sizes, with a special sub-heap dedicated solely to very large objects. One advantage of this approach might be its efficiency in handling memory requests of various sizes.
+
+Represented as a formula:
+
+$$
+Heap = (M, S, (H_3, H_4, ..., H_{12}))
+$$
+
+Where:
+
+1. M: is a special region dedicated to storing large objects.
+2. S: represents the free space.
+3. H: is the sub-heap used for storing smaller objects. $H_i$ represents the sub-heap of size $2^i$, where each addition is twice the size of the previous.
+
+```=html
+<pre class="mermaid">
+graph TD
+  A[Heap]
+  B[M]
+  C[S]
+  D[H:Sub Heap]
+
+  A --> B
+  A --> C
+  A --> D
+  D --> H3
+  D --> H4
+  D --> H5
+  D --> Hi
+</pre>
+```
+
+```bash
++------------+
+|  Container |
+|  +------+  |
+|  |Box 1|  |
+|  +------+  |
+|  +------+  |
+|  |Box 2|  |
+|  +------+  |
+|  +------+  |
+|  |Box 3|  |
+|  +------+  |
++------------+
+```
+
+## [Memory Sub-Heap Pool]($section.id('Memory Sub-Heap Pool'))
+
+We've designed a memory resource pool. This pool consists of numerous allocation segments of fixed size. It means that, regardless of how much space a sub-heap requests, it will request it in units of these fixed-size "segments". For instance, if the allocation segments in the pool are of size 1MB, then a sub-heap might request space in sizes of 1MB, 2MB, 3MB, etc., rather than requesting non-integer multiples like 1.5MB or 2.5MB.
+
+The dynamic allocation and reclaiming of space by the sub-heaps from a resource pool made up of fixed-size segments provide greater flexibility and may enhance the efficiency of memory utilization.
+
+## [Types of GC]($section.id('Types of GC'))
+
+There are many common types of GC.
+
+In terms of **bitmap recorded data**, there exists "Generational Garbage Collection". In Generational Garbage Collection, "generations" or "ages" do not refer to the bitmap. They actually denote portions of the memory used to store objects. Based on the lifespan of objects, GC categorizes them into different generations. The fundamental idea behind this strategy is that newly created objects will become garbage sooner, whereas older objects might live longer.
+
+Generally, in Generational GC, there are two primary generations:
+
+1. **Young Generation**: Newly created objects are initially placed here. The Young Generation space is usually smaller and is garbage collected frequently.
+
+2. **Old or Tenured Generation**: After objects have lived in the Young Generation for a sufficient amount of time and have survived several garbage collections, they are moved to the Old Generation. The Old Generation space is typically larger than the Young Generation, and garbage collection occurs less frequently since objects in the Old Generation are expected to have a longer lifespan.
+
+Bitmaps serve as a tool here, used to track and manage which objects in each generation are active (i.e., still in use) and which are garbage. When the algorithm extends to Generational GC, multiple bitmaps can be maintained for different generations within the same heap space. In this way, active and inactive objects of each generation can be tracked individually.
+
+"Maintain one bitmap for the Young Generation and another for the Old Generation." This allows us to consider each generation separately during garbage collection, optimizing the efficiency and performance of the collection process.
+
+In terms of **moving existing data**, there are "Moving GC" and "Non-Moving GC". Moving GC relocates living objects to new memory addresses and compresses memory, while Non-Moving GC doesn't move living objects, allowing other languages to seamlessly call data in memory.
+
+Within this Moving GC category, there are "Generational Copying Collectors" and "Cheney's Copying Collector".
+
+Generational Copying Collector: It is a common method of garbage collection, especially in functional programming languages. It assumes that newly created objects will soon become unreachable (i.e., "die"), whereas older objects are more likely to persist. Thus, memory is divided into two or more "generations". New objects are created in the "Young Generation", and when they live long enough, they are moved to the "Old Generation".
+
+Cheney's Copying Collector: This is a garbage collector used for semi-space. It works by dividing the available memory in half and only allocating objects in one half. When this half is exhausted, the collector performs garbage collection by copying active objects to the other half. The original half is then completely emptied, becoming the new available space. Cheney's collector is particularly suited for handling data with short lifespans because it quickly copies only the active data while ignoring the dead data. This makes it highly efficient for its "minor collections" (collections that only reclaim Young Generation data) when dealing with programs that handle a large amount of short-lifetime data, such as functional programs. **The advantage of this method is that it can efficiently handle memory fragmentation since memory becomes continuously occupied by copying active objects to new locations.**
+
+Characteristics:
+
+- **Any precise copy gc requires the runtime system to locate and update all pointers of every heap-allocated data.**
+- In traditional garbage collection strategies (Moving GC), compaction is a commonly used technique, moving active objects into a contiguous region of memory, thereby freeing up unused memory. In other words, it consolidates memory fragmentation.
+
+In Non-Moving GC, there's "Mark-Sweep".
+
+**The absence of compaction and object movement is very important**, as the value of a pointer (i.e., the memory address of an object) remains fixed and there's no time spent updating moved addresses. This makes Non-Moving GC highly suitable for languages that need to interact with other languages, as they can access objects in memory without the need for extra work. Moreover, the feature of not moving objects is beneficial for supporting multiple native threads. In a multi-threaded environment, if the location of an object in memory keeps shifting, coordination and synchronization between threads become more complicated. Therefore, avoiding object movement simplifies multithreaded programming.
+
+The benefits are as follows:
+
+1. **Lock Simplification**: In a multi-threaded environment, if an object needs to be moved (e.g., during the compaction phase of garbage collection), we need to ensure other threads cannot access this object while it's moving. This might require complex locking strategies and synchronization mechanisms. However, if objects never move, this synchronization need is reduced, making locking strategies simpler.
+
+2. **Pointer Stability**: In multi-threaded programs, threads might share pointers or references to objects. If an object moves in memory, all threads sharing that object would need to update their pointers or references. This not only adds synchronization complexity but might also introduce errors, like dangling pointers. If objects don't move, these pointers remain consistently valid.
+
+3. **Predictability and Performance**: Not having to move objects means memory access patterns are more stable and predictable. In multi-threaded programs, predictability is a valuable trait as it can reduce contention between threads, improving overall program performance.
+
+4. **Reduced Pause Times**: Object movement in garbage collection can lead to noticeable pauses in an application because all threads must be paused to move objects safely. In a multi-threaded environment, this pause might be more pronounced as more threads might actively use objects. Not moving objects reduces such pauses.
+
+5. **Interoperability with Other Languages or Systems**: If your multi-threaded application interoperates with other languages (like C or C++) or systems, having objects in stable locations becomes even more crucial since external code might rely on the fact that objects aren't moving.
+
+However, Non-Moving GC has its disadvantages:
+
+1. **Memory Fragmentation**: Since objects don't move, spaces in memory might become non-contiguous. This could lead to memory fragmentation, decreasing memory usage efficiency.
+
+2. **Memory Allocation**: Due to fragmentation, memory allocation can become more complicated. For instance, if there isn't enough contiguous space to meet an allocation request, the allocator might need to do more work to find available space. This might decrease allocation performance.
+
+3. **Memory Usage**: Due to fragmentation, memory usage can become less efficient. For instance, if there's a large object without enough contiguous space to store it, it might get split into multiple fragments which could be assigned to different contiguous spaces, potentially decreasing memory utilization.
+
+4. **Memory Overhead**: Due to fragmentation, memory overhead can become less efficient. For instance, if there's a large object without enough contiguous space to store it, it might get split into multiple fragments which could be assigned to different contiguous spaces, potentially decreasing memory utilization.
+
+……
+
+To address these problems requires many complicated steps, which won't be elaborated on here. We'll focus on Bog's GC for the explanation.
+
+## [Meta Bitmap]($section.id('Meta Bitmap'))
+
+"Meta Bitmap" or "meta-level bitmaps". This is a higher-level bitmap that summarizes the contents of the original bitmap. This hierarchical structure is similar to the inode mapping in file systems or the use of multi-level page tables in computer memory management.
+
+For instance, consider a simple bitmap: `1100 1100`. A meta-level bitmap might represent how many free blocks are in every 4 bits. In this scenario, the meta-level bitmap could be `1021` (indicating there's 1 free block in the first 4 bits, 2 free blocks in the second 4 bits, and so on).
+
+The system doesn't just blindly start searching from the beginning of the bitmap for a free bit; it remembers the last-found position. This way, the next search can begin from this position, speeding up the search process further. This means that the time needed to find the next free bit remains approximately the same, regardless of memory size, which is a very efficient performance characteristic.
+
+What about the worst-case scenario?
+
+Let's design for a 32-bit architecture. A 32-bit architecture means that the computer's instruction set and data path are designed to handle data units 32 bits wide. Therefore, when operating on 32-bit data units (like an integer or part of a bitmap), such an architecture can typically process all 32 bits at once. This results in logarithmic operations based on 32, because for larger data sections (like a bitmap), operations might need to proceed in blocks/chunks of 32 bits. **The search time is logarithmically related to the size of segmentSize**.
+
+For example, if a bitmap is 320 bits long, then on a 32-bit architecture, the worst-case scenario might require checking 10 blocks of 32 bits to find a free bit. This can be represented by log32(320), which results in 10.
+
+## [Bitmap]($section.id('Bitmap'))
+
+Since Bog's GC is essentially still based on "Mark-Sweep", using bitmaps to record data is indispensable. In Bog, we adopted the method of "bitmap records data" for GC. And to improve efficiency, we introduced the concept of meta-bitmaps, where every 4 elements correspond to a meta-bitmap, recording the occupancy status of multiple spaces, and increasing the depth based on the object age in the heap.
+
+## [Implementation]($section.id('implementation'))
+
+In reality, Bog's design is a bit more complex. Here are sample in practical code:
+
+```zig
+const Page = struct {
+    const max_size = 1_048_576;
+    comptime {
+        // 2^20, 1MiB
+        assert(@sizeOf(Page) == max_size);
+    }
+    const val_count = @divFloor(max_size - @sizeOf(u32) * 2, (@sizeOf(Value) + @sizeOf(State)));
+    const pad_size = max_size - @sizeOf(u32) * 2 - (@sizeOf(Value) + @sizeOf(State)) * val_count;
+    ...
+}
+```
+
+1. `max_size`: Represents the maximum number of bytes a Page can store. We have defined a constant to represent the size of 1 MiB and ensure at compile time that the size of the Page type is exactly 1 MiB. Otherwise, a compile-time error will be triggered.
+2. `val_count`: Represents the number of Value objects a Page can store.
+3. `pad_size`: Represents the size of the unused space remaining in the Page after storing the maximum number of Value objects.
+
+```zig
+    const State = enum {
+        empty,
+        white,
+        gray,
+        black,
+    };
+    const List = std.ArrayListUnmanaged(*Page);
+    meta: [val_count]State,
+    __padding: [pad_size]u8,
+    free: u32,
+    marked: u32,
+    values: [val_count]Value,
+```
+
+1. An enumeration type named `State` is defined, which has four possible values: empty, white, gray, and black.
+   - In the context of Garbage Collection (GC), these states are typically related to the status of objects during the GC process. For instance, in generational garbage collection, an object might be marked as "white" (unvisited/pending), "gray" (visited but its references not yet processed), or "black" (processed).
+2. `List`: Stores pointers of the Page type.
+3. `meta`: Represents the state of each Value object within a Page. Here, we use an enum type to represent the state, and since there are only 4 states, they can be represented using 2 bits. Thus, we can use a u32 to represent the state of all Value objects within a Page. Each State potentially corresponds to the status of a Value object in the `values` field.
+4. A `__padding` field, used to pad extra memory space. Its size is determined by the previously mentioned `pad_size` and is an array of bytes (u8). This is commonly used to ensure memory alignment of data structures.
+5. `free`: Represents the number, index, or other information related to free or available spaces concerning memory management.
+6. `marked`: Represents the number, index, or other information about marked spaces, used during the garbage collection process to determine whether to continue checking values on this page.
+7. `values`: Represents the Value objects in a Page. It's an array of Value objects, the size of which is determined by `val_count`.

@@ -1,0 +1,32 @@
+<extend template="base.shtml">
+<head id="head">
+  <link rel="stylesheet" href="$site.asset('style.css').link()">
+  <super>
+</head>
+<body id="body">
+  <h1 :text="$page.title"></h1>
+  <div id="meta" :if="$page.isSection().not()">
+    <p :text="$page.date.format('January 02, 2006')"></p>
+    <p :text="$page.author" id="author"></p>
+  </div>
+  <ul :loop="$page.subpages()">
+    <a href="$loop.it.link()"><li :text="$loop.it.title"></li></a>
+  </ul>
+  <div class="docs" :if="$page.custom.getOr('toc', true).and($page.isSection().not())">
+    <h1>Table of Contents</h1>
+    <div :html="$page.toc()"></div>
+  </div>
+  <super>
+  <div id="prev-next" :if="$page.isSection().not()">
+    <div :if="$page.prevPage?()">
+      <a href="$if.link()">
+        <span :text="$if.title"></span>
+      </a>
+    </div>
+    <div :if="$page.nextPage?()">
+      <a href="$if.link()">
+        <span :text="$if.title"></span>
+      </a>
+    </div>
+  </div>
+</body>

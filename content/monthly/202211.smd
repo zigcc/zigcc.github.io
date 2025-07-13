@@ -1,0 +1,117 @@
+---
+.title = "202211 | 0.10 横空出世",
+.date = @date("2022-12-04T18:45:34+0800"),
+.author = "ZigCC",
+.layout = "monthly.shtml",
+.draft = false,
+---
+
+# [0.10.0 Release Notes](https://ziglang.org/download/0.10.0/release-notes.html)
+
+本月最大的事情就是 0.10 版本发布了，主要功能就是 self-hosted
+compiler，也称为『自举』，即可以用 Zig 来写 Zig
+编译器，自举之所以对于一门语言如此重要，主要在于，这说明了该语言可以处理足够复杂的系统，不再只是玩具而已。编译的提升：
+
+- Wall Clock Time: 43 seconds to 40 seconds (7% faster)
+- Peak RSS: 9.6 GiB to 2.8 GiB (3.5x less memory used)
+
+赶紧升级吧，少年！
+
+# [zigcc 中文社区微信群]($section.id('zigcc 中文社区微信群'))
+
+欢迎喜欢 Zig 的小伙伴加入！ {{\< figure
+src=“https://github.com/zigcc/.github/raw/main/weixin.jpg” width=“200”
+title=“ZigCC 微信群二维码” \>}}
+
+# [观点/教程]($section.id('观点/教程'))
+
+- [Wasmer 3.0 使用 Zig 进行跨平台编译 · Discussion \#35 ·
+  zigcc/forum](https://github.com/zigcc/forum/discussions/35)
+- [Easy Interfaces with Zig
+  0.10.0](https://zig.news/kristoff/easy-interfaces-with-zig-0100-2hc5)。由于
+  Zig 中没有 interface/trait 这种抽象类型，作者这里通过 0.10
+  提供的一个新功能（inline else）来实现类似效果：
+
+``` zig
+const Animal = union(enum){
+   cat: Cat,
+   dog: Dog,
+   snake: Snake,
+
+   pub fn talk(self: Animal) void {
+      switch (self) {
+         .snake => std.debug.print("Ssss~~~", .{}),
+         inline else => |case| case.talk(),
+      }
+   }
+};
+```
+
+- [My hopes and dreams for ‘zig
+  test’](https://zig.news/slimsag/my-hopes-and-dreams-for-zig-test-2pkh)。作者对
+  `zig test`
+  一些不满意的地方，这里面有个词比较有意思：[paper-cuts](https://en.wikipedia.org/wiki/Paper_cut_bug)，中文直接翻译就是“被纸张划的伤痕”，在软件领域特指：影响用户体验的小缺陷，虽然不严重，但是比较烦人。
+
+```=html
+  <figure>
+
+  <img src="/images/paper-cuts.webp" alt="paper-cuts" >
+
+  <figcaption aria-hidden="true">
+
+  paper-cuts
+
+  </figcaption>
+  </figure>
+```
+
+- \[视频\]\[memory safety in c++, zig, & rust (part 1) -
+  youtube\](https://www.youtube.com/watch?v=qeiRGbYCD-0)
+
+- [Writing a SQL database, take two: Zig and
+  RocksDB](https://notes.eatonphil.com/zigrocks-sql.html) 。本文作者是
+  TigerBeetle 的联合创始人 Phil，这篇文章主要演示了基于 Zig 做 RocksDB
+  的 binding，并在此基础上，增加 SQL 层，实现简单的 CRUD
+  功能。代码地址：[eatonphil/zigrocks](https://github.com/eatonphil/zigrocks)
+
+- [Debugging undefined behavior caught by
+  Zig](https://devlog.hexops.com/2022/debugging-undefined-behavior/)。Hexops
+  官博，本文讨论了一个有意思的问题：UBSan 的一个 bug 导致 [Mach
+  engine](https://machengine.org/) 的测试失败，更准确说是 UBSan
+  需要内存地址对齐来工作，但是现在主流的处理器（x86、ARM、RISC-V
+  等）都可以处理非对齐的地址访问。
+
+- [packed struct field order reversed? :
+  Zig](https://www.reddit.com/r/Zig/comments/yvl60t/packed_struct_field_order_reversed/)
+
+- [Using rr to quickly debug memory
+  corruption](https://zig.news/david_vanderson/using-rr-to-quickly-debug-memory-corruption-2539)，本文作者通过使用
+  [rr](https://rr-project.org/) 这个工具来排查内存损坏的问题
+
+- [A Programmer-Friendly I/O Abstraction Over io_uring and
+  kqueue](https://tigerbeetle.com/blog/a-friendly-abstraction-over-iouring-and-kqueue/)。
+  TigerBeetle 官博，[HN
+  讨论](https://news.ycombinator.com/item?id=33721075)
+
+- [How zig-spoon (and lots of coffee) helped me sort thousands of
+  pictures](https://zig.news/lhp/how-zig-spoon-and-lots-of-coffee-helped-me-sort-thousands-of-pictures-4gkj)。本文作者通过
+  [spoon](https://sr.ht/~leon_plickat/zig-spoon/)
+  这个库开发了一个帮助自己进行图片打标的 UI 工具，
+
+# [项目/工具]($section.id('项目/工具'))
+
+- [Zig
+  程序设计语言中文手册](https://sxwangzhiwen.github.io/zigcndoc/zigcndoc.html)
+  GitHub 用户 [@sxwangzhiwen](https://github.com/sxwangzhiwen)
+  制作，论坛[相关讨论](https://github.com/zigcc/forum/discussions/36)。
+- [dantecatalfamo/zig-dns: Experimental DNS library implemented in
+  zig](https://github.com/dantecatalfamo/zig-dns)
+- [Neovim Zig Plugin written in
+  Lua](https://github.com/CadeMichael/zig.nvim)
+- [trace.zig: A small and simple tracing client
+  library](https://zig.news/huntrss/tracezig-a-small-and-simple-tracing-client-library-2ffj)，项目地址：[Zig
+  tracing / trace.zig](https://gitlab.com/zig_tracing/trace.zig)
+- [Zig Support plugin for IntelliJ and CLion version 0.2.0
+  released](https://zig.news/marioariasc/zig-support-plugin-for-intellij-and-clion-version-020-released-3g06)
+
+# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2022-11-01..2022-12-01)

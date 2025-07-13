@@ -1,0 +1,118 @@
+---
+.title = "202310",
+.date = @date("2023-10-13T07:53:24+0800"),
+.author = "ZigCC",
+.layout = "monthly.shtml",
+.draft = false,
+---
+
+# [重大事件]($section.id('major-events'))
+
+# [观点/教程]($section.id('opinion-tutorial'))
+
+[Notes From the Field: Learning Zig](https://registerspill.thorstenball.com/p/notes-from-the-field-learning-zig)  
+Zig 初学者的使用经验分享
+
+[Friendly Neighbor: A network service for Linux wake-on-demand, written in Zig](https://dgross.ca/blog/friendly-neighbor-announce/)  
+作者在这篇文章中分享了 用 Zig 重写之前 Ruby
+写的一个网络工具，一方面是减轻资源消耗，另一方面是探索用"低级"语言来写程序。不错的案例分享。
+
+[Zig Interfaces](https://www.openmymind.net/Zig-Interfaces/)  
+作者介绍了 Zig
+中如何实现接口这个经常需要用到的功能。最后的实现也比较巧妙，结合
+`anytype` 与 `*anyopaque`
+
+``` zig
+const std = @import("std");
+
+const Writer = struct {
+    // These two fields are the same as before
+    ptr: *anyopaque,
+    writeAllFn: *const fn (ptr: *anyopaque, data: []const u8) anyerror!void,
+
+    // This is new
+    fn init(ptr: anytype) Writer {
+        const T = @TypeOf(ptr);
+        const ptr_info = @typeInfo(T);
+
+        const gen = struct {
+            pub fn writeAll(pointer: *anyopaque, data: []const u8) anyerror!void {
+                const self: T = @ptrCast(@alignCast(pointer));
+                return ptr_info.Pointer.child.writeAll(self, data);
+            }
+        };
+
+        return .{
+            .ptr = ptr,
+            .writeAllFn = gen.writeAll,
+        };
+    }
+
+    // This is the same as before
+    pub fn writeAll(self: Writer, data: []const u8) !void {
+        return self.writeAllFn(self.ptr, data);
+    }
+};
+
+const File = struct {
+    fd: std.os.fd_t,
+
+    fn writeAll(ptr: *anyopaque, data: []const u8) !void {
+        const self: *File = @ptrCast(@alignCast(ptr));
+        // os.write might not write all of `data`, we should really look at the
+        // returned value, the number of bytes written, and handle cases where data
+        // wasn't all written.
+        _ = try std.os.write(self.fd, data);
+    }
+
+    fn writer(self: *File) Writer {
+        return Writer.init(self);
+    }
+};
+
+pub fn main() !void {
+    var file = try std.fs.createFileAbsolute("/tmp/demo.txt", .{});
+    var my_file = File{ .fd = file.handle };
+    const writer = my_file.writer();
+    try writer.writeAll("hello world");
+}
+```
+
+[io<sub>uring</sub> basics: Writing a file to disk](https://notes.eatonphil.com/2023-10-19-write-file-to-disk-with-io_uring.html)  
+作者演示了 io<sub>uring</sub> 在 Go 与 Zig
+中的基本使用，下面表格是一些测试数据
+
+| method                       | avg<sub>time</sub>   | avg<sub>throughput</sub> |
+|------------------------------|----------------------|--------------------------|
+| iouring<sub>128entries</sub> | 0.2756831357s        | 3.8GB/s                  |
+| iouring<sub>1entries</sub>   | 0.27575404880000004s | 3.8GB/s                  |
+| blocking                     | 0.2833337046s        | 3.7GB/s                  |
+
+[Zig is now also a Windows resource compiler](https://www.ryanliptak.com/blog/zig-is-a-windows-resource-compiler/)  
+相当硬核的文章，作者最近给 Zig 贡献了一个大功能：支持 Windows
+资源定义文件的编译，用户可以通过 `zig rc` 子命令来使用。
+
+[Zig 多版本管理](https://zigcc.github.io/post/2023/10/14/zig-version-manager/)  
+由于 Zig 还在快速开发迭代中，因此项目很有可能出现新版本 Zig
+无法编译的情况，这篇文章介绍了一些管理多个 Zig 版本的方式。
+
+# [项目/工具]($section.id('projects-tools'))
+
+[zigcli](https://zigcli.liujiacai.net/)  
+a toolkit for building command lines programs in Zig
+
+[pb2zig](https://github.com/chung-leong/pb2zig)  
+Pixel Bender to Zig code translator
+
+[zigar](https://github.com/chung-leong/zigar)  
+Enable the use of Zig code in JavaScript project
+
+[jinyus/related<sub>postgen</sub>](https://github.com/jinyus/related_post_gen)  
+一个对常见语言进行压测的项目，项目里面有几种纯 CPU
+的操作，看看哪个语言最快。
+
+[nolanderc/glsl<sub>analyzer</sub>](https://github.com/nolanderc/glsl_analyzer)  
+Language server for GLSL (autocomplete, goto-definition, formatter, and
+more)
+
+# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-09-01..2023-10-01)

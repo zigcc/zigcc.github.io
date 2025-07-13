@@ -1,0 +1,106 @@
+---
+.title = "202208 | stage2 默认开启",
+.date = @date("2022-08-28T16:03:12+0800"),
+.author = "ZigCC",
+.layout = "monthly.shtml",
+.draft = false,
+---
+
+# [观点/教程]($section.id('观点/教程'))
+
+- [Growing a {{mustache}} with
+  Zig](https://zig.news/batiati/growing-a-mustache-with-zig-di4)
+  作者使用 Zig 开发时的目标：
+  1.  Robost，test 代码快
+  2.  Optimal，Zig 语言本身就要求开发者去考虑堆分配
+  3.  Reusable，用户可以在高性能（better performance）与低内存（minimal
+      memory footprint）使用之间做取舍，以满足不同的场景
+- [Will Bun JavaScript Take Node’s
+  Crown](https://semaphoreci.com/blog/javascript-bun) Hacker News
+  上的[评论](https://news.ycombinator.com/item?id=32457587)。作者从多个方面对比了
+  Node 与 Bun，Bun 均胜出
+- [Looking into Zig - Ayende @
+  Rahien](https://ayende.com/blog/194404-A/looking-into-zig)。作者对比了
+  Zig 与 Rust/C 的区别
+- [Cool Zig Patterns - Gotta alloc
+  fast](https://zig.news/xq/cool-zig-patterns-gotta-alloc-fast-23h)。如果需要分配的对象只有一个，如何优化
+  Allocator 呢？作者给出了一个 memory pool 的实现，23 行代码
+- [Packed structs in Zig make bit/flag sets trivial | Hexops’
+  devlog](https://devlog.hexops.com/2022/packed-structs-in-zig/)。使用
+  Zig 的 `packet struct` 实现 bit set 功能
+
+# [项目/工具]($section.id('项目/工具'))
+
+- [Virtual tables by vrischmann · Pull Request \#100 ·
+  vrischmann/zig-sqlite](https://github.com/vrischmann/zig-sqlite/pull/100)。zig-sqlite
+  作者正常尝试封装 virtual table 的 API，这样就可以用 Zig 写 SQLite
+  模块了。
+
+- [Zig Support plugin for IntelliJ and CLion version 0.1.0
+  released](https://zig.news/marioariasc/zig-support-plugin-for-intellij-and-clion-version-010-released-pd0)
+
+- [How to walk directories? - Help -
+  Ziggit](https://ziggit.dev/t/how-to-walk-directories/260)
+
+- [Zig Visual Programming with
+  Blockly](https://zig.news/lupyuen/zig-visual-programming-with-blockly-3pbg)
+
+  ![](/images/blockly.webp)
+
+# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2022-08-01..2022-09-01)
+
+- [make self-hosted the default compiler by andrewrk · Pull Request
+  \#12368](https://github.com/ziglang/zig/pull/12368) Master
+  分支默认已经是
+  stage2，这是个里程碑的事情，作者为了用户平滑升级，还写了份[升级指南](https://github.com/ziglang/zig/wiki/Self-Hosted-Compiler-Upgrade-Guide)。优势就是：速度更快、内存占用更少、错误信息更加友好。其他相关改动：
+  - [stage2+stage1: remove type parameter from bit builtins by Vexu ·
+    Pull Request \#12574 ·
+    ziglang/zig](https://github.com/ziglang/zig/pull/12574/files)
+  - [Adds std.meta.FnPtr for easier stage1/stage2 compatibility by
+    MasterQ32 · Pull Request \#12613 ·
+    ziglang/zig](https://github.com/ziglang/zig/pull/12613/files)
+  - [Stage2 fixes by Vexu · Pull Request \#12563 ·
+    ziglang/zig](https://github.com/ziglang/zig/pull/12563/files)
+  - [stage2: add note about function call being comptime because of
+    comptime only return type by Vexu · Pull Request \#12499 ·
+    ziglang/zig](https://github.com/ziglang/zig/pull/12499/files)
+  - [stage2: implement stack protectors by andrewrk · Pull Request
+    \#12472 · ziglang/zig](https://github.com/ziglang/zig/pull/12472)
+  - [Stage2 error set safety improvements by Vexu · Pull Request \#12416
+    · ziglang/zig](https://github.com/ziglang/zig/pull/12416/files)
+  - [stage2 llvm: implement more C ABI by Vexu · Pull Request \#12395 ·
+    ziglang/zig](https://github.com/ziglang/zig/pull/12395/files)
+- [coff: improve default COFF/PE object parser by kubkon · Pull Request
+  \#12575 · ziglang/zig](https://github.com/ziglang/zig/pull/12575)
+- [autodoc: error sets now display all their members by
+  der-teufel-programming · Pull Request \#12583 ·
+  ziglang/zig](https://github.com/ziglang/zig/pull/12583)
+- [Autodoc: anon_init_struct support by kristoff-it · Pull Request
+  \#12598 ·
+  ziglang/zig](https://github.com/ziglang/zig/pull/12598/files)
+- [compilation: avoid pointless caching by kristoff-it · Pull Request
+  \#12605 · ziglang/zig](https://github.com/ziglang/zig/pull/12605)
+- [translate-c: Don’t add self-defined macros to global name table by
+  ehaas · Pull Request \#12562 ·
+  ziglang/zig](https://github.com/ziglang/zig/pull/12562/files)
+- [fix(translate-c): fix off-by-one for leading zeroes by r00ster91 ·
+  Pull Request \#12490 ·
+  ziglang/zig](https://github.com/ziglang/zig/pull/12490/files)
+- [libstd: fix off-by-one error in def of ProcSym in pdb.zig by kubkon ·
+  Pull Request \#12464 ·
+  ziglang/zig](https://github.com/ziglang/zig/pull/12464/files)
+- [fix memory leak in NativePaths.zig by Techatrix · Pull Request
+  \#12469 ·
+  ziglang/zig](https://github.com/ziglang/zig/pull/12469/files)
+- [std.fs: Fix `WalkerEntry.dir` not always being the containing dir by
+  squeek502 · Pull Request \#12444 ·
+  ziglang/zig](https://github.com/ziglang/zig/pull/12444/files)
+- [std.mem.zeroes: Zero sized structs with uninitialized members by
+  N00byEdge · Pull Request \#12246 ·
+  ziglang/zig](https://github.com/ziglang/zig/pull/12246/files)
+- [stage2: Implement explicit backing integers for packed structs by
+  ifreund · Pull Request \#12379 ·
+  ziglang/zig](https://github.com/ziglang/zig/pull/12379)
+- [std.io.Reader: bounded array functions by InKryption · Pull Request
+  \#12351 ·
+  ziglang/zig](https://github.com/ziglang/zig/pull/12351/files)

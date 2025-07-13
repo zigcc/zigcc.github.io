@@ -1,0 +1,374 @@
+---
+.title = "HashMap 原理介绍下篇",
+.date = @date("2024-06-11T07:57:06.138Z"),
+.author = "Wenxuan Feng",
+.layout = "post.shtml",
+.draft = false,
+---
+
+在[第一部分](2024-06-10-zig-hashmap-1)中，我们探讨了六种 `HashMap` 变体之间的关系以及每种变体为开发人员提供的不同功能。我们主要关注如何为各种数据类型定义和初始化 `HashMap`，并讨论了当 `StringHashMap` 或 `AutoHashMap` 不支持的类型时使用自定义 `hash` 和 `eql` 函数的重要性。在这篇文章中，我们将更深入地研究键和值的存储、访问方式以及我们在它们生命周期管理中的责任。
+
+Zig 的哈希表内部采用两个切片结构：一个用于存放键（key），另一个用于存储对应的值（value）。通过应用哈希函数计算得到的哈希码被用来在这些数组中定位条目。从基础代码出发，比如：
+
+```zig
+var lookup = std.StringHashMap(i32).init(allocator);
+defer lookup.deinit();
+
+try lookup.put("Goku", 9001);
+try lookup.put("Paul", 1234);
+```
+
+这样的操作在哈希表中形成了一个类似如下的可视化表示：
+
+```
+keys:               values:
+       --------          --------
+       | Paul |          | 1234 |     @mod(hash("Paul"), 5) == 0
+       --------          --------
+       |      |          |      |
+       --------          --------
+       |      |          |      |
+       --------          --------
+       | Goku |          | 9001 |    @mod(hash("Goku"), 5) == 3
+       --------          --------
+       |      |          |      |
+       --------          --------
+```
+
+当我们使用模运算（如 `@mod`）将哈希码映射到数组中一个固定数量的槽位上时，我们就有了条目的理想位置。这里的"理想"是指哈希函数可能会为不同的键生成相同的哈希值；在计算时，通过数组大小进行取模有助于处理这种碰撞情况。然而，在忽略可能的冲突前提下，以上就是我们当前哈希表的基本视图。
+
+一旦哈希表被填满到一定程度（如第一部分中提到，Zig 的默认填充因子为 80%），它就需要进行扩展来容纳更多值，同时保持常数时间性能的查找操作。哈希表的扩展过程类似于动态数组的扩容，我们分配一个新数组，并将原始数组中的值复制到新数组（通常会增加原数组大小的两倍作为简单算法）。然而，在处理哈希表时，简单的键值对复制是不够的。因为我们不能使用一种哈希方法如 `@mod(hash("Goku"), 5)` 并期望在另一个不同的哈希方法下找到相同的条目如 `@mod(hash("Goku"), 10)`（请注意，因为数组大小已增加，5 变成了 10）。
+
+这个基本的可视化表示将贯穿本文大部分内容，并且不断强调条目的位置需要保持一致性和可预测性。即使哈希表需要在增长时从一个底层数组移动到另一个（即当填充因子达到一定阈值并要求扩大以容纳更多数据时），这一事实是我们将反复回顾的主题。
+
+# [值管理]($section.id('值管理'))
+
+如果我们对上述代码片段进行扩展，并调用 `lookup.get("Paul")`，返回的值将是 `1234`。在处理像 `i32` 这样的原始类型时，很难直观地理解 `get` 方法和它的可选返回类型 `?i32` 或更通用的 `?V`（其中 `V` 表示任何值类型）之间的区别。考虑到这一点，让我们通过替换 `i32` 为一个封装了更多信息的 `User` 类型来展示这一概念：
+
+```zig
+// 示例：如果 i32 被替换为一个 User 类型，则会涉及更复杂的数据结构和访问逻辑。
+```
+
+在上述场景中，我们引入了一个新的类型 `User`，用于演示 `get` 方法返回可选值的概念。通过这种方式，我们可以直观地理解 `get` 和 `getPtr` 方法之间的区别，并根据实际需要选择合适的方法来处理不同的数据访问需求。
+
+```zig
+const std = @import("std");
+
+pub fn main() !void {
+	var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+	const allocator = gpa.allocator();
+
+	var lookup = std.StringHashMap(User).init(allocator);
+	defer lookup.deinit();
+
+	try lookup.put("Goku", .{
+		.id = 9000,
+		.name = "Goku",
+		.super = false,
+	});
+
+	var user = lookup.get("Goku").?;
+
+	user.super = true;
+	std.debug.print("{any}\n", .{lookup.get("Goku").?.super});
+}
+
+const User = struct {
+	id: i32,
+	name: []const u8,
+	super: bool,
+};
+```
+
+即使我们设置了 `user.super = true`，在 `lookup` 中的 `User` 的值仍然是 `false`。这是因为在 Zig 中，赋值是通过复制完成的。如果我们保持代码不变，但将 `lookup.get` 改为 `lookup.getPtr`，它将起作用。我们仍然在做赋值，因此仍然在复制一个值，但我们复制的值是哈希表中 `User` 的地址，而不是 `user` 本身。
+
+`getPtr` 允许我们获取哈希表中值的引用。如上所示，这具有行为意义；我们可以直接修改存储在哈希表中的值。这也具有性能意义，因为复制大值可能会很昂贵。但是考虑我们上面的可视化，并记住，随着哈希表的填满，值可能会重新定位。考虑到这一点，你能解释为什么这段代码会崩溃吗？：
+
+```zig
+const std = @import("std");
+
+pub fn main() !void {
+	var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+	const allocator = gpa.allocator();
+
+	// change the type, just to make it easier to write this snippet
+	// the same would happen with our above StringHashMap(User)
+	var lookup = std.AutoHashMap(usize, usize).init(allocator);
+	defer lookup.deinit();
+
+	try lookup.put(100, 100);
+	const first = lookup.getPtr(100).?;
+
+	for (0..50) |i| {
+		try lookup.put(i, i);
+	}
+	first.* = 200;
+}
+```
+
+如果 `first.* = 200;` 的语法让您感到困惑，那么我们在操作指针，并向其指定的地址写入一个值。这里的指针指向了值数组中某个索引的位置，因此这种语法实际上是在数组内部直接设置了一个值。问题在于，在我们的插入循环过程中，哈希表正在增长，导致底层键和值被重新分配并移动。`getPtr` 函数返回的指针不再有效。在撰写本文时，哈希表默认大小为 8，填充因子是 80%。如果我们在遍历范围 `0..5` 时运行代码一切正常，但当增加一次迭代至 `0..6`（即尝试访问 `array[6]`）时，由于增长操作导致崩溃。在常规使用场景中，此问题通常不构成问题；您不太可能在修改哈希表时持有对某个条目的引用。但是，理解这种情况的发生以及其原因将帮助我们更好地利用其他返回值和键指针的哈希表功能。
+
+回到我们的 `User` 示例，如果我们将 `lookup` 的类型从 `std.StringHashMap(User)` 改为 `std.StringHashMap(*User)` 会怎样？最大的影响将是值的生命周期。使用原来的 `std.StringHashMap(User)`，我们可以说 `lookup` 拥有这些值——我们插入的用户嵌入在哈希表的值数组中。这使得生命周期管理变得容易，当我们 `deinit` 我们的 `lookup` 时，底层的键和值数组会被释放。
+
+我们的 `User` 有一个 `name: []const u8` 字段。我们的示例使用字符串字面量，它在程序的生命周期中静态存在。然而，如果我们的 `name` 是动态分配的，我们必须显式地释放它。我们将在更详细地探讨指针值时涵盖这一点。
+
+使用 `*User` 打破了这种所有权。我们的哈希表存储指针，但它不拥有指针所指向的内容。尽管调用了 `lookup.deinit`，这段代码会导致用户泄漏：
+
+```zig
+const std = @import("std");
+
+pub fn main() !void {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    const allocator = gpa.allocator();
+
+    var lookup = std.StringHashMap(*User).init(allocator);
+    defer lookup.deinit();
+
+    const goku = try allocator.create(User);
+    goku.* = .{
+        .id = 9000,
+        .name = "Goku",
+        .super = false,
+    };
+    try lookup.put("Goku", &goku.address);
+}
+
+const User = struct {
+    id: i32,
+    name: []const u8,
+    super: bool,
+};
+```
+
+让我们将其可视化：
+
+```
+lookup
+ ===============================
+ ║  keys:       values:        ║
+ ║  --------    -------------  ║
+ ║  | Goku* |   | 1024d4000 | ----> -------------
+ ║  --------    -------------  ║    |   9000    |
+ ║  |       |   |           |  ║    -------------
+ ║  --------    -------------  ║    | 1047300e4 |---> -----------------
+ ===============================    -------------     | G | o | k | u |
+                                    |    4      |     -----------------
+                                    -------------
+                                    |   false   |
+                                    -------------
+```
+
+我们将会在下一节讨论键，现在为了简单起见我们使用“Goku”。
+
+双线框是我们的 `lookup`，表示它拥有并负责的内存。我们放入哈希表的引用将指向框外的值。这有许多含义。最重要的是，这意味着值的生命周期与哈希表的生命周期分离，调用 `lookup.deinit` 不会释放它们。
+
+有一种常见情况是我们想使用指针并将值的生命周期与哈希表相关联。回想我们崩溃的程序，当对哈希表值的指针变得无效时。正如我所说，这通常不是问题，但在更高级的场景中，你可能希望不同部分的代码引用也存在于哈希表中的值。让我们重新审视上面的可视化，并思考如果我们的哈希表增长并重新定位键和值数组会发生什么：
+
+```zig
+lookup
+ ===============================
+ ║  keys:       values:        ║
+ ║  --------    -------------  ║
+ ║  |       |   |           |  ║
+ ║  --------    -------------  ║
+ ║  --------    -------------  ║
+ ║  |       |   |           |  ║
+ ║  --------    -------------  ║
+ ║  --------    -------------  ║
+ ║  | Goku* |   | 1024d4000 | ----> -------------
+ ║  --------    -------------  ║    |   9000    |
+ ║  |       |   |           |  ║    -------------
+ ║  --------    -------------  ║    | 1047300e4 |---> -----------------
+ ===============================    -------------     | G | o | k | u |
+                                    |    4      |     -----------------
+                                    -------------
+                                    |   false   |
+                                    -------------
+```
+
+这两个数组已经增长、重新分配，并且我们的条目索引已重新计算，但我们实际的 `User`（也就是 `Goku`）仍然驻留在堆中的同一位置（内存位置 1047300e4）。就像 `deinit` 不会改变双线框外的任何内容一样，其他变化（如增长）也不会改变它们。
+
+一般来说，你是否应该存储值或指向值的指针将是显而易见的。这主要是因为像 `getPtr` 这样的方法使我们能够直接从哈希表中高效地检索和修改值。无论哪种方式，我们都可以获得性能上的好处，所以性能不是主要考虑因素。重要的是值是否需要比哈希表存活更久和/或在哈希表发生变化时对值的引用是否需要存在（并因此保持有效）。
+
+在哈希表和引用的值应该链接的情况下，我们需要在调用 `lookup.deinit` 之前遍历这些值并清理它们：
+
+```zig
+defer {
+    var it = lookup.valueIterator();
+    while (it.next()) |value_ptr| {
+        allocator.destroy(value_ptr.*);
+    }
+    lookup.deinit();
+}
+```
+
+如果解引用 (`value_ptr.*`) 看起来不对劲，请回到可视化。我们的 `valueIterator` 给我们数组中值的指针，而数组中的值是 `*User`。因此，`value_ptr` 是 `**User`。
+
+无论我们是存储 `User` 还是 `*User`，值中任何已分配的字段始终是我们的责任。在一个真实的应用程序中，你的用户名称不会是字符串字面量，它们会是动态分配的。在这种情况下，我们上面的 while 循环需要改为：
+
+```zig
+while (it.next()) |value_ptr| {
+    const user = value_ptr.*;
+    allocator.free(user.name);
+    allocator.destroy(user);
+}
+```
+
+即使我们的值是 `User`，其字段也是我们的责任（认为 `lookup.deinit` 会知道如何/需要释放什么有点荒谬）：
+
+```zig
+while (it.next()) |value_ptr| {
+    allocator.free(value_ptr.name);
+}
+```
+
+在最后一种情况下，由于我们存储的是 `User` 而不是 `*User`，我们的 `value_ptr` 是指向 `User` 的指针（不像之前那样是指向指针的指针）。
+
+# [Keys]($section.id('Keys'))
+
+我们可以开始和结束这一节：我们关于值的所有内容同样适用于键。这是100%正确的，但这在某种程度上不太直观。大多数开发人员很快就能理解，存储在哈希表中的堆分配的 `User` 实例有其自身的生命周期，需要显式管理/释放。但由于某些原因，这对于键来说并不那么明显。
+
+像值一样，如果我们的键是原始类型（例如整数），我们不必做任何特别的事情。原始类型的键直接存储在哈希表的键数组中，因此其生命周期和内存与哈希表绑定。这是一种非常常见的情况。但另一种常见情况是使用 `std.StringHashMap` 的字符串键。这常常让刚接触 Zig 的开发人员感到困惑，但你需要保证字符串键在哈希表使用它们期间始终有效。而且，如果这些键是动态分配的，你需要确保在不再使用时释放它们。这意味着对键进行与值相同的处理。
+
+让我们再次可视化我们的哈希表，但这次正确表示一个字符串键：
+
+```
+lookup
+ ===================================
+ ║  keys:       values:            ║
+ ║  -------------    ------------  ║
+ ║  | 1047300e4 |   | 1024d4000 | ----> -------------
+ ║  -------------   -------------  ║    |   9000    |
+ ║  |           |   |           |  ║    -------------
+ ║  -------------   -------------  ║    | 1047300e4 |---> -----------------
+ ===================================    -------------     | G | o | k | u |
+                                        |    4      |     -----------------
+                                        -------------
+                                        |   false   |
+                                        -------------
+```
+
+在这个例子中，我们的键实际上是 `user.name`。将键作为值的一部分是非常常见的。这里是它可能的样子：
+
+```zig
+const user = try allocator.create(User);
+user.* = .{
+    .id = 9000,
+    .super = false,
+    // 模拟来自动态源（如数据库）的名称
+    .name = try allocator.dupe(u8, "Goku"),
+};
+try lookup.put(user.name, user);
+```
+
+在这种情况下，我们之前的清理代码是足够的，因为我们已经在释放作为我们键的 `user.name`：
+
+```zig
+defer {
+    var it = lookup.iterator();
+    while (it.next()) |value_ptr| {
+        const user = value_ptr.*;
+        allocator.free(user.name);
+        allocator.destroy(user);
+    }
+    lookup.deinit();
+}
+```
+
+但在键不是值的一部分的情况下，我们需要迭代并释放这些键。在许多情况下，你需要同时迭代键和值并释放它们。我们可以通过释放键引用的名称而不是用户来模拟这一点：
+
+```zig
+defer {
+    var it = lookup.iterator();
+    while (it.next()) |kv| {
+        // 这个..
+        allocator.free(kv.key_ptr.*);
+
+        // 和下面的是一样的，但仅仅因为 user.name 是我们的键
+        // allocator.free(user.name);
+
+        allocator.destroy(kv.value_ptr.*);
+    }
+    lookup.deinit();
+}
+```
+
+我们使用 `iterator()` 而不是 `iteratorValue()` 来访问 `key_ptr` 和 `value_ptr`。
+
+最后要考虑的是如何从我们的 `lookup` 中移除值。尽管使用了改进的清理逻辑，这段代码仍会导致键和堆分配的 `User` 泄漏：
+
+```zig
+var lookup = std.StringHashMap(*User).init(allocator);
+
+defer {
+    var it = lookup.iterator();
+    while (it.next()) |kv| {
+        allocator.free(kv.key_ptr.*);
+        allocator.destroy(kv.value_ptr.*);
+    }
+    lookup.deinit();
+}
+
+const user = try allocator.create(User);
+user.* = .{
+    .id = 9000,
+    .super = false,
+    // 模拟来自动态源（如数据库）的名称
+    .name = try allocator.dupe(u8, "Goku"),
+};
+try lookup.put(user.name, user);
+
+// 我们加上了这行！
+_ = lookup.remove(user.name);
+```
+
+最后一行从我们的哈希表中移除了条目，所以我们的清理例程不再迭代它，也不会释放名称或用户。我们需要使用 `fetchRemove` 而不是 `remove` 来获取被移除的键和值：
+
+```zig
+if (lookup.fetchRemove(user.name)) |kv| {
+    allocator.free(kv.key);
+    allocator.destroy(kv.value);
+}
+```
+
+`fetchRemove` 不返回键和值的指针，而是返回实际的键和值。这并不会改变我们的使用方式，但显然为什么返回键和值而不是指针是很明显的，因为从哈希表中移除的条目，不再有指向哈希表中键和值的有效指针——它们已经被移除了。
+
+所有这些都假设你的值和键在从哈希表中移除时需要被释放/失效。有些情况下，你的值（更少见的是键）的生命周期与它们在哈希表中的存在完全无关。在这些情况下，你需要在适合你的应用程序的情况下释放内存。没有通用的模式或指导适用。
+
+对于大多数情况，在处理非原始键或值时，关键是当你调用哈希表的 `deinit` 时，你为键和值分配的任何内存不会被自动释放；你需要自己处理。
+
+# [getOrPut]($section.id('getOrPut'))
+
+虽然我们已经讨论过的内容有很多含义，但对我来说，直接暴露键和值指针的最大好处之一是 `getOrPut` 方法。
+
+如果我让你在 Go 或大多数语言中存储带名称的计数器，你会写出类似这样的代码：
+
+```go
+count, exists := counters[name]
+if exists == false {
+    counters[name] = 1
+} else {
+    counters[name] = count + 1;
+}
+```
+
+这段代码需要两次查找。尽管我们被训练成不考虑哈希表访问通常为 O(1)，实际情况是操作次数越少运行速度越快；而计算哈希码并非最经济的操作（其性能取决于键的类型和长度），碰撞还会增加额外开销。「getOrPut」方法通过返回一个值指针和一个指示是否找到该值的布尔值来解决这个问题。
+
+换句话说，使用 `getOrPut` 我们要么获得一个指向找到的值的指针，要么获得一个指向应放置项位置的指针。我们还得到一个布尔值，用于指示是哪种情况。这使得上述插入或更新操作仅需一次查找：
+
+```zig
+const gop = try counters.getOrPut(name);
+if (gop.found_existing) {
+    gop.value_ptr.* += 1;
+} else {
+    gop.value_ptr.* = 1;
+}
+```
+
+当然，只要不对哈希表进行修改，`value_ptr` 就应被视为有效。顺便提一句，这同样适用于我们通过 `iterator()`、`valueIterator` 和 `keyIterator` 获取的迭代键和值，原因相同。
+
+# [结论]($section.id('conclusion'))
+
+希望你现在对使用「std.HashMap」、「std.AutoHashMap」和「std.StringHashMap」以及它们的「unmanaged」变体感到更加得心应手。虽然你可能永远不需要提供自己的上下文（例如「hash」和「eql」函数），但了解这是一个选项是有益的。在日常编程中，可视化数据尤其有用，尤其是在使用指针和添加间接层次时。每当我处理 `value_ptr` 或 `key_ptr` 时，我都会想到这些切片以及值或键与这些切片中值或键的实际地址之间的区别。
+
+> 原文地址: https://www.openmymind.net/Zigs-HashMap-Part-2/

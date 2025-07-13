@@ -1,0 +1,11 @@
+---
+.title = "博客",
+.date = @date("2024"),
+.author = "ZigCC",
+.layout = "post.shtml",
+.draft = false,
+---
+
+欢迎大家向我们投稿，会同步到微信公众号，投稿方式见[这里](./2023-09-05-hello-world)。
+
+[社区新闻](./news)

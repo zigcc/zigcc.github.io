@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Arrow-Right</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Arrow-Right">
+            <rect id="Rectangle" fill-rule="nonzero" x="0" y="0" width="24" height="24">
+
+</rect>
+            <line x1="6.5" y1="12" x2="18" y2="12" id="Path" stroke="#0C0310" stroke-width="2" stroke-linecap="round">
+
+</line>
+            <path d="M10,8 L6.70711,11.2929 C6.31658,11.6834 6.31658,12.3166 6.70711,12.7071 L10,16" id="Path" stroke="#0C0310" stroke-width="2" stroke-linecap="round">
+
+</path>
+        </g>
+    </g>
+</svg>

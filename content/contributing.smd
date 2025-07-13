@@ -1,0 +1,45 @@
+---
+.title = "About",
+.date = @date("1990-01-01T00:00:00"),
+.author = "ZigCC",
+.layout = "index.shtml",
+.draft = false,
+---
+
+Zig 中文社区是一个开放的组织，我们致力于推广 Zig 在中文群体中的使用，有多种方式可以参与进来：
+
+1. 供稿，分享自己使用 Zig 的心得，方式见下文
+2. 改进 zigcc 组织下的开源项目，这是 [open issues](https://ask.ziglang.cc/github)
+
+# [供稿方式]($section.id('contribute'))
+
+1. Fork 仓库 https://github.com/zigcc/zigcc.github.io
+2. 在 `content/post` 内添加自己的文章（smd格式），文件命名为： `${YYYY}-${MM}-${DD}-${SLUG}.smd`
+3. 文件开始需要包含一些描述信息，例如：
+
+```
+---
+.title = "文章标题",
+.date = @date("2025-06-05T16:00:00+0800"),
+.author = "刘家财",
+.layout = "post.shtml",
+.draft = false,
+.custom = {
+  .math = true, // 如果你要用到数学公式，请 设置 math 为 true; 否则可以忽略
+  .mermaid = true, // 如果你要用到 mermaid 图表，请设置 mermaid 为 true; 否则可以忽略
+},
+---
+```
+
+# [本地预览]($section.id('本地预览'))
+
+首先你得安装 `zine`，安装方法见 [Quick Start](https://zine-ssg.io/quickstart/)，之后就可以通过执行 `zine` 命令来预览你的文章。
+
+```bash
+zine
+```
+
+# [发布平台]($section.id('publishing-platform'))
+
+- [ZigCC 网站](https://ziglang.cc)
+- [ZigCC 公众号](https://github.com/zigcc/.github/raw/main/zig_mp.png)

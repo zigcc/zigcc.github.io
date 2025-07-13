@@ -1,0 +1,61 @@
+---
+.title = "202207 | 开刊 HelloWorld",
+.date = @date("2022-07-30T14:08:15+0800"),
+.author = "ZigCC",
+.layout = "monthly.shtml",
+.draft = false,
+---
+
+# [观点/教程]($section.id('观点/教程'))
+
+- [Zig 初体验 - Keep
+  Coding](https://liujiacai.net/blog/2022/07/16/zig-intro/)
+- [undefined 值的作用](https://github.com/zigcc/forum/discussions/8)
+- [用 Zig 优化 yes 命令](https://github.com/zigcc/forum/discussions/4)
+- [Some Thoughts on Zig — Sympolymathesy, by Chris
+  Krycho](https://v5.chriskrycho.com/journal/some-thoughts-on-zig/)
+  - Zig 语言最吸引人的一点：小巧
+- [ziglings-solutions
+  题解](https://github.com/better-zig/ziglings-solutions)
+- [“these are some really impressively bad semantics to choose for your
+  programming language” /
+  Twitter](https://twitter.com/lexi_lambda/status/1551607005026074624)
+- [How to Release your Zig
+  Applications](https://zig.news/kristoff/how-to-release-your-zig-applications-2h90)
+- [Zig files are structs - Zig NEWS
+  ⚡](https://zig.news/gowind/zig-files-are-structs-288j)
+- [Is it necessary to know C (or another systems programming language)
+  before starting with Zig? :
+  Zig](https://www.reddit.com/r/Zig/comments/w63x6r/is_it_necessary_to_know_c_or_another_systems/)
+
+# [项目/工具]($section.id('项目/工具'))
+
+- [Release bun v0.1.5 ·
+  oven-sh/bun](https://github.com/oven-sh/bun/releases/tag/bun-v0.1.5)
+- [zls 可以解析 build addPackage
+  的包](https://github.com/zigcc/forum/discussions/7)
+- [natecraddock/ziglua: Zig bindings for the Lua C
+  API](https://github.com/natecraddock/ziglua)
+- [Easily create TUI programs with
+  zig-spoon!](https://zig.news/lhp/easily-create-tui-programs-with-zig-spoon-project-demonstration-4k33)
+- [Zig Support plugin for IntelliJ and CLion version 0.0.6
+  released](https://zig.news/marioariasc/zig-support-plugin-for-intellij-and-clion-version-006-released-o68)
+- [r4gus/zbor: CBOR parser written in
+  Zig](https://github.com/r4gus/zbor)
+  - [zbor - a CBOR en-/ decoder - Zig NEWS
+    ⚡](https://zig.news/r4gus/zbor-a-cbor-en-decoder-2di0)
+- [How I built
+  zig-sqlite](https://rischmann.fr/blog/how-i-built-zig-sqlite)
+
+# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2022-07-01..2022-08-01)
+
+- [std
+  文档展示更全面](https://twitter.com/croloris/status/1550955321694330880)
+  - [New Autodocs! by kristoff-it · Pull Request \#12173 ·
+    ziglang/zig](https://github.com/ziglang/zig/pull/12173)
+- [SIMD size suggestions: suggestions code now compiles, added more
+  architectures by Deecellar · Pull Request \#12149 ·
+  ziglang/zig](https://github.com/ziglang/zig/pull/12149)
+- [std.fmt: require specifier for unwrapping ?T and E!T by Vexu · Pull
+  Request \#12232 ·
+  ziglang/zig](https://github.com/ziglang/zig/pull/12232)

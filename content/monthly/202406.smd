@@ -35,7 +35,7 @@ const map = std.StaticStringMap(T).initComptime(kvs_list);
 
 老朋友 openmymind 的又一篇好文章：如何利用 Zig 的 Allocator
 来实现请求级别的内存分配。 Zig Allocator
-的最佳应用。[这里](file:///post/2024/06/16/leveraging-zig-allocator/)它的中文翻译。
+的最佳应用。[这里](/post/2024-06-16-leveraging-zig-allocator/)它的中文翻译。
 
 ``` zig
 const FallbackAllocator = struct {
@@ -98,6 +98,7 @@ fn run(worker: *Worker) void {
     worker.write(conn.res);
   }
 }
+```
 
 # [On Zig vs Rust at work and the choice we made](https://ludwigabap.bearblog.dev/zig-vs-rust-at-work-the-choice-we-made/)
 
@@ -158,11 +159,11 @@ News](https://news.ycombinator.com/item?id=40681862)
 
 # [项目/工具]($section.id('projects-tools'))
 
-[malcolmstill/zware](https://github.com/malcolmstill/zware)  
+[malcolmstill/zware](https://github.com/malcolmstill/zware)
 Zig WebAssembly Runtime Engine
 
-[Cloudef/zig-aio](https://github.com/Cloudef/zig-aio)  
-io<sub>uring</sub> like asynchronous API and coroutine powered IO tasks
+[Cloudef/zig-aio](https://github.com/Cloudef/zig-aio)
+io_uring like asynchronous API and coroutine powered IO tasks
 for zig
 
 # [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-06-01..2024-07-01)

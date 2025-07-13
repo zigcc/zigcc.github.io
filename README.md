@@ -22,21 +22,9 @@
 > Zig Chinese Community is dedicated to sharing and spreading the use of
 > Zig language among Chinese users.
 
-本网站使用 [zine](https://zine-ssg.io/) 进行构建。
-
-参考 [quickstart](https://zine-ssg.io/quickstart/) 进行安装：
+本网站使用 [zine](https://zine-ssg.io/) 进行构建，可参考 [quickstart](https://zine-ssg.io/quickstart/) 进行安装，网站预览命令：
 
 ``` bash
-# aur
-yay -S zine
-
-# zig build install
-git clone https://github.com/kristoff-it/zine.git
-cd zine
-zig build install --release=safe
-```
-
-``` bash
-# run server
+# Serve the site
 zine
 ```

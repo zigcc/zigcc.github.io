@@ -21,7 +21,7 @@ brew install asdf
 
 asdf plugin add zig https://github.com/zigcc/asdf-zig.git
 
-# [安装最新版]($section.id('install-latest-version'))
+# 安装最新稳定版
 asdf install zig latest
 
 # 设置为全局版本

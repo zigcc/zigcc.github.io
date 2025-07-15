@@ -10,7 +10,15 @@
     <p :text="$page.author" id="author"></p>
   </div>
   <ul :loop="$page.subpages()">
-    <a href="$loop.it.link()"><li :text="$loop.it.title"></li></a>
+    <a href="$loop.it.link()">
+      <li>
+        <span :if="$page.custom.getOr('showTocDate', true)">
+          <span :text="$loop.it.date.format('06-01-03')"></span>
+           &nbsp;
+        </span>
+        <span :text="$loop.it.title"></span>
+      </li>
+    </a>
   </ul>
   <div class="docs" :if="$page.custom.getOr('toc', true).and($page.isSection().not())">
     <h1>Table of Contents</h1>

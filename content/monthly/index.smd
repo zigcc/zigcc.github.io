@@ -4,6 +4,9 @@
 .author = "ZigCC",
 .layout = "monthly.shtml",
 .draft = false,
+.custom = {
+  .showTocDate = false
+}
 ---
 
 社区内的最新进展，信息来源：[Zig NEWS](https://zig.news/top/month)、[Zig

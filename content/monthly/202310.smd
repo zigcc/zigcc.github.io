@@ -78,14 +78,14 @@ pub fn main() !void {
 }
 ```
 
-[io<sub>uring</sub> basics: Writing a file to disk](https://notes.eatonphil.com/2023-10-19-write-file-to-disk-with-io_uring.html)  
-作者演示了 io<sub>uring</sub> 在 Go 与 Zig
+[io_uring basics: Writing a file to disk](https://notes.eatonphil.com/2023-10-19-write-file-to-disk-with-io_uring.html)  
+作者演示了 io_uring 在 Go 与 Zig
 中的基本使用，下面表格是一些测试数据
 
-| method                       | avg<sub>time</sub>   | avg<sub>throughput</sub> |
+| method                       | avg_time             | avg_throughput           |
 |------------------------------|----------------------|--------------------------|
-| iouring<sub>128entries</sub> | 0.2756831357s        | 3.8GB/s                  |
-| iouring<sub>1entries</sub>   | 0.27575404880000004s | 3.8GB/s                  |
+| iouring_128_entries          | 0.2756831357s        | 3.8GB/s                  |
+| iouring_1_entries            | 0.27575404880000004s | 3.8GB/s                  |
 | blocking                     | 0.2833337046s        | 3.7GB/s                  |
 
 [Zig is now also a Windows resource compiler](https://www.ryanliptak.com/blog/zig-is-a-windows-resource-compiler/)  
@@ -107,11 +107,11 @@ Pixel Bender to Zig code translator
 [zigar](https://github.com/chung-leong/zigar)  
 Enable the use of Zig code in JavaScript project
 
-[jinyus/related<sub>postgen</sub>](https://github.com/jinyus/related_post_gen)  
+[jinyus/related_post_gen](https://github.com/jinyus/related_post_gen)  
 一个对常见语言进行压测的项目，项目里面有几种纯 CPU
 的操作，看看哪个语言最快。
 
-[nolanderc/glsl<sub>analyzer</sub>](https://github.com/nolanderc/glsl_analyzer)  
+[nolanderc/glsl_analyzer](https://github.com/nolanderc/glsl_analyzer)  
 Language server for GLSL (autocomplete, goto-definition, formatter, and
 more)
 

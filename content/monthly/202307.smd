@@ -136,7 +136,7 @@ IR，Zig 生成的 IR 更加精简
 公司的官博，它们公司的产品时边缘数据库，自动同步 PG 的表到 Edge
 端，减少访问的时延。在这篇文章里他们介绍了使用 Zig 编写 PostgreSQL
 插件的经历，得益于 `translate-c` ，他们可以直接从已有的 C
-代码开始构建他们的产品。插件地址：[pg<sub>turso</sub>](https://github.com/turso-extended/pg_turso)
+代码开始构建他们的产品。插件地址：[pg_turso](https://github.com/turso-extended/pg_turso)
 
 [tensorush/meduza](https://github.com/tensorush/meduza)  
 🦎 🧜‍♀️ Zig codebase graph generator that emits a Mermaid class diagram
@@ -144,7 +144,7 @@ IR，Zig 生成的 IR 更加精简
 [AndreaOrru/zen](https://github.com/AndreaOrru/zen)  
 Experimental operating system written in Zig
 
-[EugenHotaj/zig<sub>gpt2</sub>](https://github.com/EugenHotaj/zig_gpt2)  
+[EugenHotaj/zig_gpt2](https://github.com/EugenHotaj/zig_gpt2)  
 GPT-2 inference engine written in Zig
 
 # [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-06-01..2023-07-01)

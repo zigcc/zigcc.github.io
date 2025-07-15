@@ -98,6 +98,6 @@ code.json{
 
 @media (prefers-color-scheme: light) {
   code{
-    filter: brightness(0.9) contrast(1.3);
+    filter: brightness(0.8) contrast(1.5);
   }
 }

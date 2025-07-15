@@ -185,7 +185,7 @@ test.zig:4:23: error: reached unreachable code
 编译就会报错，去掉上面的 if
 代码块后，测试就可以正常执行。一个实际的例子：
 
-- [std.hash<sub>map</sub>: fix pointer lock safety false positive by
+- [std.hash_map: fix pointer lock safety false positive by
   andrewrk · Pull Request \#19364 ·
   ziglang/zig](https://github.com/ziglang/zig/pull/19364/files)
 

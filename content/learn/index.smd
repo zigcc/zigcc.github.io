@@ -44,11 +44,6 @@
 
 在本仓库的 [release 页面](https://github.com/zigcc/zigcc.github.io/releases)会定期将本教程导出为 PDF 格式，读者可按需下载。
 
-```html
-<!-- TODO -->
-<!-- 读者也可以使用右侧导航栏中的『[整节打印](_print)』将当前版本教程保存为 PDF 格式。 -->
-```
-
 # [其他学习资料]($section.id('other-learning-resources'))
 
 由于 Zig 目前还处于快速迭代，因此最权威的资料无疑是官方的 [Zig Language Reference](https://ziglang.org/documentation/master/)，遇到语言的细节问题，基本都可以在这里找到答案。其次是社区的一些高质量教程，例如：

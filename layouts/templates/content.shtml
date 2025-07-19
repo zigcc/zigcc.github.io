@@ -6,22 +6,22 @@
 <body id="body">
   <h1 :text="$page.title"></h1>
   <div id="meta" :if="$page.isSection().not()">
-    <p :text="$page.date.format('January 02, 2006')"></p>
+    <p :text="$page.date.format('2006-01-03')"></p>
     <p :text="$page.author" id="author"></p>
   </div>
   <ul :loop="$page.subpages()">
-    <a href="$loop.it.link()">
-      <li>
-        <span :if="$page.custom.getOr('showTocDate', true)">
-          <span :text="$loop.it.date.format('06-01-03')"></span>
-           &nbsp;
-        </span>
+    <li>
+      <i :if="$page.custom.getOr('showTocDate', true)">
+        <time datetime="$loop.it.date.format('2006-01-03')" :text="$loop.it.date.format('2006-01-03')"></time>
+        &nbsp;
+      </i>
+      <a href="$loop.it.link()">
         <span :text="$loop.it.title"></span>
-      </li>
-    </a>
+      </a>
+    </li>
   </ul>
   <div class="docs" :if="$page.custom.getOr('toc', true).and($page.isSection().not())">
-    <h1>Table of Contents</h1>
+    <h1>TOC</h1>
     <div :html="$page.toc()"></div>
   </div>
   <super>

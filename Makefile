@@ -1,6 +1,6 @@
 
 serve:
-	zine
+	zine --port 1313
 
 lint:
 	npx @lint-md/cli  **/*

@@ -1,0 +1,215 @@
+---
+.title = "ZigCC 网站迁移至 Zine 实战复盘",
+.date = @date("2025-07-19"),
+.author = "xihale",
+.layout = "post.shtml",
+---
+
+本文复盘了 ZigCC 社区网站从 Hugo 迁移至 Zine 的全过程，旨在分享其中的经验与思考，为有类似需求的朋友提供参考。
+
+# [一、为何选择 Zine？]($section.id("为何选择-Zine"))
+
+我们最初使用 Hugo 及其 Docsy 主题搭建网站，但在使用过程中遇到了一些痛点，促使我们寻找新的解决方案。选择迁移至 Zine 主要基于以下几点考量：
+
+1.  **解决 Hugo 的既有问题**：Hugo 本身非常强大，但在某些细节上存在问题，例如 Markdown 在页脚（footer）中的解析行为不符合预期。
+2.  **追求现代设计美学**：Docsy 主题乃至 Hugo 的部分生态，在技术和审美上略显陈旧。我们希望网站风格更加现代化、简约。
+3.  **更精细的代码高亮**：主流高亮库如 `highlight.js`, `prism.js` 和 `shiki.js` 中，`shiki.js` 效果最佳。然而，Zine 对 Zig 代码的语法高亮比它们更为细致，提供了更强的自定义控制能力。（代价是 Zine 对其他语言的解析支持尚不完善，其底层似乎是调用 tree-sitter 实现的）。
+4.  **灵活的内容格式生成**：Zine 的布局（Layout）和 Scripty API 赋予了项目结构极大的灵活性，使得未来生成 PDF 或其他格式的文档变得可行，RSS Feed 的生成也同样受益。
+5.  **显著的性能提升**：迁移后，无论是后端的构建速度还是前端的渲染性能都有了明显提升。这部分也得益于 Zine 架构带来的项目结构简化。
+
+当然，还有一个至关重要的原因：**拥抱并反哺 Zig 生态**。正如 ZigCC 发起者刘家财所说：
+> “如果我们自己都不用，那更不会有别人用了。”
+
+作为 Zig 社区的一份子，我们有责任参与到生态建设中。果不其然，这次迁移过程也让我们发现了 Zine 的一些待解决问题和潜在的改进点。
+
+# [二、Zine 核心概念解读]($section.id("Zine核心概念解读"))
+
+Zine 是一个现代、高效的静态网站生成器。要理解它，首先要掌握其核心设计理念和文件结构。
+
+## [项目结构与配置]($section.id("项目结构与配置"))
+
+一个基础的 Zine 项目结构与 Hugo 等主流生成器类似，主要包含内容、布局和静态资源目录：
+
+```sh
+.
+├── assets/      # 存放 CSS、图片等静态资源
+├── content/     # 存放网站内容，通常是 smd 文件
+│   ├── about.smd
+│   └── index.smd
+├── layouts/     # 存放布局模板，每个 smd 文件都对应一个 shtml 布局
+│   ├── index.shtml
+│   ├── page.shtml
+│   └── templates/ # 模板可以被其他布局继承，以实现代码复用
+│       └── base.shtml
+└── zine.ziggy   # Zine 项目的全局配置文件
+```
+
+项目的核心是 `zine.ziggy` 配置文件，它定义了网站的元数据和目录路径。以 ZigCC 的配置为例：
+```zig
+Site {
+    .title = "Zig 语言中文社区",
+    .host_url = "https://ziglang.cc",
+    .content_dir_path = "content",
+    .layouts_dir_path = "layouts",
+    .assets_dir_path = "assets",
+    .static_assets = [],
+}
+```
+
+## [内容渲染：SuperMD、SuperHTML 与 Scripty]($section.id("内容渲染"))
+
+Zine 在内容渲染上采用了与 Hugo 截然不同的哲学。它没有直接使用标准的 Markdown 和 HTML，而是引入了三个核心概念：
+
+-   **[SuperMD](https://zine-ssg.io/docs/supermd/)**: 一种扩展版的 Markdown。它解决了原生 Markdown 难以表达复杂结构（需内联 HTML）的痛点，允许开发者嵌入资源和定义更丰富的语义结构。
+-   **[SuperHTML](https://zine-ssg.io/docs/superhtml)**: 一种专为模板设计的扩展版 HTML。其设计目标是“从根本上杜绝生成语法错误的 HTML”，将大量潜在的运行时错误提前到构建时发现。
+-   **[Scripty](https://zine-ssg.io/docs/scripty/)**: 驱动前两者的微型表达式语言。
+
+本质上，SuperMD 和 SuperHTML 就是内嵌了 Scripty 动态能力的 Markdown 和 HTML。Scripty 的语法简洁，专为字符串嵌入而设计，是实现 Zine 动态内容的关键。
+
+### Scripty 快速入门
+
+-   所有表达式都以 ` 符号开头。
+-   支持链式字段访问：`$foo.bar.baz`
+-   支持函数调用：`$foo.bar.qux('arg1', "arg2")`
+-   支持字符串、数字、布尔等基本字面量。
+
+下面是一个简单的示例，展示 Scripty 如何在 SuperHTML 和 SuperMD 中工作：
+
+**SuperHTML 示例：**
+```html
+<ctx about="$site.page('about')">
+  <a href="$ctx.about.link()" text="$ctx.about.title"></a>
+</ctx>
+```
+
+**SuperMD 示例：**
+```markdown
+Check out our [about page]($link.page('about')).
+```
+
+Scripty 作为表达式语言，其威力在条件和嵌套逻辑中得以体现：
+
+```html
+<h1 class="{$page.title.len().gt(25).then('long-title')}">...</h1>
+```
+在上述代码中，如果页面标题长度大于25个字符，`<h1>` 标签就会被赋予 `long-title` 这个 class。
+
+通过这三者的结合，Zine 在保证内容与布局分离的同时，提供了高度的灵活性和安全性。更详细的用法，推荐阅读 Zine 官方文档。
+
+# [三、迁移步骤详解]($section.id("迁移步骤详解"))
+
+整个迁移过程可以分为内容转换、布局设计、预览调试和最终部署几个关键步骤。
+
+## [内容格式转换]($section.id("内容格式转换"))
+
+迁移的核心工作是将原有内容（本文中主要是 Markdown 和 Org Mode 文件）转换为 Zine 支持的 SuperMarkdown (`.smd`) 格式。
+
+起初，我尝试让 AI 编写 `md` 到 `smd` 的转换脚本，效果尚可。但对于结构更复杂的 Org Mode 文件，脚本难以胜任，因此最终转向使用 Pandoc。
+
+以下是使用 Pandoc 将 `.org` 文件批量转换为 Markdown 格式（并重命名为 `.smd`）的 Fish 脚本，此方法同样适用于 `.md` 文件：
+
+```fish
+# 注意：这里实际上是转换到了 GitHub Flavored Markdown (gfm) 格式
+# 后续仍需手动调整以完全适配 smd 语法
+for f in *.org
+  pandoc -s $f -t gfm -o (path change-extension "smd" $f)
+end
+```
+
+**手动适配要点**：
+
+Pandoc 完成初步转换后，仍需手动调整以适配 `.smd` 和 `.shtml` 的专属语法。常见差异包括：
+
+1.  **HTML 嵌入**：`.smd` 不推荐直接嵌入 HTML。相关代码需要用 ` ```=html` 代码块包裹。
+2.  **章节标题链接**：标题不会自动生成 ID 和锚点链接，需要手动使用 `$section.id("custom-id")` 添加（注意 ID 不能包含空格）。
+3.  **资源引用**：可以使用 Scripty API 或将资源放在 `public` 目录下通过绝对路径 (`/path/to/resource`) 引用。
+
+建议先完成布局文件的编写，在实时预览的环境下再进行这些细致的手动适配，效率更高。
+
+## [处理 Frontmatter]($section.id("处理-Frontmatter"))
+
+Zine 使用 Ziggy 语法作为 Frontmatter 的格式，它与 Zig 语法高度相似。
+
+> [Ziggy 官网](https://ziggy-lang.io/) 提供了一个方便的 [在线转换器](https://ziggy-lang.io/documentation/ziggy-convert/)，可以将 YAML、TOML 或 JSON 格式的 Frontmatter 转换为 Ziggy。
+
+一个典型的 `.smd` 文件 Frontmatter 如下：
+
+```zig
+---
+.title = "Zig comptime",
+.date = @date("2025-01-23T12:00:00+08:00"),
+.author = "xihale",
+.layout = "post.shtml",
+.draft = false,
+---
+```
+
+## [设计布局]($section.id("设计布局"))
+
+由于我们希望采用全新的简约风格，因此我没有沿用 Docsy 的样式，而是重新设计了一套布局。目前的版本虽已上线，但在目录（TOC）等细节上仍有优化空间。
+
+Zine 布局有几个关键特性：
+
+1.  **ID Slot**：Zine 采用 [ID Slot](https://zine-ssg.io/docs/superhtml/#super) 机制，比传统的 Slot 更灵活。例如，你可以将 `<head>` 和内容区的 Slot 分开处理，从而实现对资源加载等操作的精细控制。
+2.  **`<ctx>` 标签**：合理使用 `<ctx>` 标签可以简化模板的逻辑和组织结构。
+
+此外，你还可以通过在 `.smd` 的 Frontmatter 中定义 `.custom` 字段，向布局传递自定义参数，实现更细粒度的控制。
+
+例如，在 `.smd` 中启用数学公式支持：
+
+```zig
+// file: content/your-post.smd
+.custom = .{
+  .math = true,
+},
+```
+
+然后在布局文件中根据此标志加载 KaTeX 库：
+
+```html
+// file: layouts/post.shtml
+<ctx :if="$page.custom.getOr('math', false)">
+  <link
+    href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.15.2/katex.min.css"
+    crossorigin="anonymous"
+    rel="stylesheet"
+  />
+  <script
+    defer
+    src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.15.2/katex.min.js"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    defer
+    src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.15.2/contrib/auto-render.min.js"
+    crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"
+  ></script>
+</ctx>
+```
+
+## [预览与调试]($section.id("预览与调试"))
+
+完成布局和初步内容转换后，就进入了最繁琐的环节：预览、检查和修正。
+
+运行 `zine` 命令启动本地服务器，实时预览网站效果。逐一检查每篇文章的渲染情况，发现格式错误或显示异常的地方，返回 `.smd` 文件进行修改。
+
+这一步需要极大的耐心，几乎等同于重新校对所有文章。需要注意的是，Zine 目前仍在快速发展中，部分功能的报错信息可能不够明确，需要结合文档和实践耐心排查。
+
+## [部署]($section.id("部署"))
+
+Zine 官方文档提供了详细的部署指南：
+
+-   [Deploying to GitHub Pages](https://zine-ssg.io/docs/deploying/github-pages/)
+-   [Deploying to Cloudflare Pages](https://zine-ssg.io/docs/deploying/cloudflare-pages/)
+
+你可以参考 zine-ssg 或本站（ZigCC）仓库中的 GitHub Actions 配置来设置自己的自动化部署流程。
+
+# [四、总结与经验分享]($section.id("总结与经验分享"))
+
+最后，分享几点额外的经验：
+
+1.  SuperHTML (`.shtml`) 对 HTML 语法有严格的要求，它不仅仅是 HTML 的超集。某些写法可能与个人习惯冲突，需要适应其规范。
+2.  Scripty API 采用链式调用语法，非常灵活。
+
+迁移过程中遇到问题时，不要慌张。首先仔细查看终端的报错信息，然后查阅官方文档，最后可以多翻阅 zine-ssg 和 ziglang.org 等同样使用 Zine 构建的网站源码，它们是最好的学习范例。

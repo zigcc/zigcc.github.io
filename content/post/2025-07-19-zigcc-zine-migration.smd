@@ -1,0 +1,166 @@
+---
+.title = "迁移 zigcc 主页到 zine",
+.date = @date("2025-07-19"),
+.author = "xihale",
+.layout = "post.shtml",
+---
+
+# [为什么要迁移]($section.id("为什么要迁移"))
+
+原先是基于 hugo 和 docsy 主题搭建的。
+
+1. hugo 有一些小问题（比如 footer 里 md 解析得有些 奇怪的行为）
+2. docsy 主题不好看（Hugo 确实很强大，但是 Hugo 给我的初步印象是：生态太老了，无论是技术上和审美上。）
+3. 代码高亮难看
+   主流的代码高亮库有 `highlight.js` `prime.js` `shiki.js`，效果最好的是 `shiki.js`，然而，zine 对于 zig 的高亮比他们都要更加细致，由此我可以做更多细粒控制。（代价是，对其他语言的 parse 做得很烂，这里我暂时也不清楚究竟是怎么回事，上有应该是调用 tree-sitter 来解析的）
+4. 生成到其他格式（比如 pdf ）比较不方便
+   但是 zine 的 layout 和 scripty 等支持天然让我们的组织结构具有了极大的灵活性，相信在不远的将来我们便可以实现 pdf generation！（RSS 生成也是同理）
+5. 迁移后，后端 build 性能和前端 render 性能都显著提高。（当然，这也是因为 组织结构的简化带来的好处，毕竟基于 zine 的架构，结构比较简单。
+
+当然，还有一个很重要的原因是：使用 zine 可以反哺 zig 生态的发展，我觉得这是我们这些做社区的人应该背负的责任，正如 刘家财 对我说的一句话：“如果我们都不用，那更不会有别人用了。”  
+不出意料，本次 迁移 就发现了很多 zine 的问题和可以改进的点子。
+
+# [什么是 zine（zine 的组织结构）]($section.id("什么是zine"))
+
+首先我们看看 最简 sample 的 tree （基于 `zine init` 删减而来）
+
+```sh
+.
+├── assets # 资源文件
+├── content # 内容文件
+│   ├── about.smd
+│   ├── blog
+│   │   ├── first-post
+│   │   │   ├── fanzine.jpg
+│   │   │   └── index.smd
+│   │   ├── index.smd
+│   │   └── second-post.smd
+│   ├── devlog
+│   │   ├── 1989.smd
+│   │   ├── 1990.smd
+│   │   └── index.smd
+│   └── index.smd
+├── layouts # 所有的 smd 必须对应且只对应 一个 layout 文件
+│   ├── blog.shtml
+│   ├── blog.xml # RSS 支持
+│   ├── devlog-archive.shtml
+│   ├── devlog.shtml
+│   ├── devlog.xml # RSS 支持
+│   ├── index.shtml
+│   ├── page.shtml
+│   ├── post.shtml
+│   └── templates # templates 可以被其他 layout 文件 extend 以达到代码复用的目的
+│       └── base.shtml
+└── zine.ziggy # zine 配置文件
+```
+
+<https://zine-ssg.io/>
+一定要看一下官网文档。
+
+content 和 layout 这个结构非常平凡，前端框架一般都会采用这种结构，而像 hexo, hugo 等则是已经帮你写好了 theme 文件，然后暴露配置来做细粒度控制。
+
+# [如何迁移]($section.id("如何迁移"))
+
+最基本也是最重要的是：你需要将你的文件转换到 smd 和 shtml 的专属语法，他们很像，但还是有很多不一样的。
+比如：
+
+1. smd 不推荐直接嵌入 html 代码，所以你的 html 代码要用 ` ```=html` 包裹
+2. 小标题不会自动办理 warp 并且生成 id 和 hash 链接，要用 `$Section.id` (id 不能包含空格)
+3. 资源引入可以用 scripty api，也可以放在 public 下面再引用 `/xxx`
+
+下面是此次 zigcc 主页的迁移日志（大概版）
+
+由于本项目不涉及 Hugo 的专有语法（`{% ... %}`），所以此处不包括此内容的处理
+
+# [转换文件到 smd]($section.id("content2smd"))
+
+一开始我没有考虑到 org 的复杂性，让 AI 帮忙写了 md to smd 的脚本，运作良好，但是 org 的脚本就不太行，所以改用 pandoc。
+最终效果很好，但还是有一些东西要手动改，比如资源引入，html 代码块的嵌入等等。
+
+以下是用来转换 org 到 smd 的 fish 脚本，理论来说 md 也可以这么做。
+
+注意，这里其实是转换到了 md 格式。
+
+```fish
+for f in *.org
+  pandoc -s $f -t gfm -o (path change-extension "smd" $f)
+end
+```
+
+暂时可以先不去手动去做 smd 适配，先把 layout 写好再搞要方便些（可以实时预览）。
+
+# [frontmatter]($section.id("frontmatter"))
+
+zine 的 frontmatter 采用 `ziggy` 语法
+
+ziggy 很简单，基本上是对标 zig 语法（某些细微处有些不一样）
+
+[ziggy 官网](https://ziggy-lang.io/) 提供了一个 [convertor](https://ziggy-lang.io/documentation/ziggy-convert/) ，可以将 YAML/TOML/JSON 转换到 ziggy 格式
+
+```zig
+---
+.title = "Zig comptime",
+.date = @date("2025-01-23T12:00:00+08:00"),
+.author = "xihale",
+.layout = "post.shtml",
+.draft = false,
+---
+```
+
+# [layout]($section.id("layout"))
+
+由于我不喜欢 docsy 的样式，所以我选择重新设计一套 layout，采用简约风格，也就是目前这个样子，有很多地方还是有点丑，toc 以后可能还要改。
+
+1. zine 采用 [id Slot](https://zine-ssg.io/docs/superhtml/#super), 灵活性比普通的 Slot 要强一些，可以分开 head Slot 和 content Slot, 这样就很方便资源引用等操作的细粒度控制。
+2. 需要注意的是，可以使用 `<ctx>` 来简化代码组织结构
+
+更加细粒度的控制可以在 `smd` 文件中通过 ziggy frontmatter `.custom` 字段实现
+
+比如这样：
+
+```zig
+.custom{
+  .math = true,
+}
+```
+
+```html
+<ctx :if="$page.custom.getOr('math', false)">
+  <link
+    href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.15.2/katex.min.css"
+    crossorigin="anonymous"
+    rel="stylesheet"
+  />
+  <script
+    defer
+    src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.15.2/katex.min.js"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    defer
+    src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.15.2/contrib/auto-render.min.js"
+    crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"
+  ></script>
+</ctx>
+```
+
+# [预览+检查]($section.id("预览+检查"))
+
+这时候就要手动修改那些不合格的格式，通过 `zine` 预览，查看效果之后看看什么地方渲染不对，然后回到 smd 中修改即可！
+
+这一步骤比较繁琐，几乎相当于需要重新审一遍所有的文章，然后还要根据具体问题进行具体修改。（需要注意的是， zine 目前还不是很完善，很多东西的报错是有问题的，需要有点耐心）
+
+# [deploying]($section.id("deploying"))
+
+https://zine-ssg.io/docs/deploying/github-pages/
+https://zine-ssg.io/docs/deploying/cloudflare-pages/
+
+Actions 可以参考 zine-ssg 或者 zigcc 主页。
+
+# [其他经验]($section.id("其他经验"))
+
+1. shtml 并非是只是基于 html 加东西，他对于 html 的语法有严苛的要求（某些要求可能会与编码者本身的习惯相冲突）。
+2. scripty 采用链式语法。
+
+遇到问题不要慌张，看看报错，看看文档，多翻翻 zine-ssg 和 ziglang 主页 的源码。

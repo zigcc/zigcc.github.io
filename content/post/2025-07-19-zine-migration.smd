@@ -7,7 +7,7 @@
 
 本文复盘了 ZigCC 社区网站从 Hugo 迁移至 Zine 的全过程，旨在分享其中的经验与思考，为有类似需求的朋友提供参考。
 
-# [为何选择 Zine？]($section.id("为何选择-Zine"))
+# [一、为何选择 Zine？]($section.id("为何选择-Zine"))
 
 我们最初使用 Hugo 及其 Docsy 主题搭建网站，但在使用过程中遇到了一些痛点，促使我们寻找新的解决方案。选择迁移至 Zine 主要基于以下几点考量：
 
@@ -22,9 +22,13 @@
 
 作为 Zig 社区的一份子，我们有责任参与到生态建设中。果不其然，这次迁移过程也让我们发现了 Zine 的一些待解决问题和潜在的改进点。
 
-# [Zine 简介]($section.id("Zine简介"))
+# [二、Zine 核心概念解读]($section.id("Zine核心概念解读"))
 
-Zine 是一个现代、高效的静态网站生成器。理解其核心组织结构是上手的第一步。一个最简化的 Zine 项目（通过 `zine init` 创建并删减后）目录结构如下：
+Zine 是一个现代、高效的静态网站生成器。要理解它，首先要掌握其核心设计理念和文件结构。
+
+## [项目结构与配置]($section.id("项目结构与配置"))
+
+一个基础的 Zine 项目结构与 Hugo 等主流生成器类似，主要包含内容、布局和静态资源目录：
 
 ```sh
 .
@@ -40,7 +44,7 @@ Zine 是一个现代、高效的静态网站生成器。理解其核心组织结
 └── zine.ziggy   # Zine 项目的全局配置文件
 ```
 
-上面的目录结构和 Hugo 类似， `zine.ziggy` 是网站的配置文件，ZigCC 的配置如下：
+项目的核心是 `zine.ziggy` 配置文件，它定义了网站的元数据和目录路径。以 ZigCC 的配置为例：
 ```zig
 Site {
     .title = "Zig 语言中文社区",
@@ -52,47 +56,47 @@ Site {
 }
 ```
 
-在 HTML 渲染方面，Zine 与 Hugo 相差甚远，Zine 自创了两种新格式来进行数据的组织：
-- [SuperMD](https://zine-ssg.io/docs/supermd/) 格式 - 扩展了标准 Markdown，允许定义嵌入式资源和语义结构，解决了传统 Markdown 无法表达复杂内容而不使用内联 HTML 的局限性。
-- [SuperHTML](https://zine-ssg.io/docs/superhtml) 模板系统 - 扩展的 HTML 格式专注于正确的模板逻辑表达。设计确保“不可能生成语法错误的 HTML，大多数错误会在构建时被发现”。
+## [内容渲染：SuperMD、SuperHTML 与 Scripty]($section.id("内容渲染"))
 
-这两者本质上就是 markdown 与 html，Zine 做的增强是为它们实现了其自创的表达式语言 [scripty](https://zine-ssg.io/docs/scripty/)。因此下面重点介绍 Scripty 的用法。
+Zine 在内容渲染上采用了与 Hugo 截然不同的哲学。它没有直接使用标准的 Markdown 和 HTML，而是引入了三个核心概念：
 
-## [Scripty]($section.id('scripty'))
+-   **[SuperMD](https://zine-ssg.io/docs/supermd/)**: 一种扩展版的 Markdown。它解决了原生 Markdown 难以表达复杂结构（需内联 HTML）的痛点，允许开发者嵌入资源和定义更丰富的语义结构。
+-   **[SuperHTML](https://zine-ssg.io/docs/superhtml)**: 一种专为模板设计的扩展版 HTML。其设计目标是“从根本上杜绝生成语法错误的 HTML”，将大量潜在的运行时错误提前到构建时发现。
+-   **[Scripty](https://zine-ssg.io/docs/scripty/)**: 驱动前两者的微型表达式语言。
 
-Scripty 是一个非常小的语言， 专门用于嵌入到字符串中，为 SuperMD 和 SuperHTML 提供动态内容生成能力。 因此 Scripty 没有任何类型的语句或代码块，只能用于构建表达式。
-- 所有表达式都以 `$` 开头
-- 支持字段导航： `$foo.bar.baz`
-- 支持函数调用： `$foo.bar.qux('arg1', "arg2")`
-- 支持基本字面量：字符串、整数、浮点数、布尔值
+本质上，SuperMD 和 SuperHTML 就是内嵌了 Scripty 动态能力的 Markdown 和 HTML。Scripty 的语法简洁，专为字符串嵌入而设计，是实现 Zine 动态内容的关键。
 
-这里举一示例来说明 Scripty 在 SuperMD 和 SuperHTML 中的写法：
+### Scripty 快速入门
 
+-   所有表达式都以 ` 符号开头。
+-   支持链式字段访问：`$foo.bar.baz`
+-   支持函数调用：`$foo.bar.qux('arg1', "arg2")`
+-   支持字符串、数字、布尔等基本字面量。
+
+下面是一个简单的示例，展示 Scripty 如何在 SuperHTML 和 SuperMD 中工作：
+
+**SuperHTML 示例：**
 ```html
 <ctx about="$site.page('about')">
   <a href="$ctx.about.link()" text="$ctx.about.title"></a>
 </ctx>
 ```
 
+**SuperMD 示例：**
 ```markdown
 Check out our [about page]($link.page('about')).
 ```
 
-既然是表达式语言，scripty 在多层嵌套时才能体现其威力：
+Scripty 作为表达式语言，其威力在条件和嵌套逻辑中得以体现：
 
 ```html
-<h1 class="$page.title.len().gt(25).then('long')">...</h1>
+<h1 class="{$page.title.len().gt(25).then('long-title')}">...</h1>
 ```
+在上述代码中，如果页面标题长度大于25个字符，`<h1>` 标签就会被赋予 `long-title` 这个 class。
 
-如果当前页面标题长度小于 25 时，就有输出：
+通过这三者的结合，Zine 在保证内容与布局分离的同时，提供了高度的灵活性和安全性。更详细的用法，推荐阅读 Zine 官方文档。
 
-```html
-<h1 class="long">...</h1>
-```
-
-关于 SuperMD 和 SuperHTML 的用法这里不再赘述，推荐大家去阅读 Zine 的官方文章。
-
-# [迁移步骤详解]($section.id("迁移步骤详解"))
+# [三、迁移步骤详解]($section.id("迁移步骤详解"))
 
 整个迁移过程可以分为内容转换、布局设计、预览调试和最终部署几个关键步骤。
 

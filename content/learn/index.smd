@@ -3,6 +3,11 @@
 .date = @date("2024-01-01T00:00:00"),
 .author = "Karl Seguin; ZigCC",
 .layout = "learn.shtml",
+.alternatives = [{
+  .name = "rss",
+  .layout = "rss.xml",
+  .output = "/learn/index.xml",
+}],
 .draft = false,
 ---
 

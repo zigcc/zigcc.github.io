@@ -4,6 +4,11 @@
 .author = "ZigCC",
 .layout = "monthly.shtml",
 .draft = false,
+.alternatives = [{
+  .name = "rss",
+  .layout = "rss.xml",
+  .output = "/monthly/index.xml",
+}],
 .custom = {
   .showTocDate = false
 }

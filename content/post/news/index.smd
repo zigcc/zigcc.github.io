@@ -3,6 +3,11 @@
 .date = @date("2024-08-03T16:43:51+0800"),
 .author = "ZigCC",
 .layout = "post.shtml",
+.alternatives = [{
+  .name = "rss",
+  .layout = "rss.xml",
+  .output = "/post/news/index.xml",
+}],
 .draft = false,
 ---
 

@@ -2,7 +2,7 @@
   <channel>
     <title :text="$site.title"></title>
     <link :text="$site.host_url"></link>
-    <description :text="$site.title.suffix(' - Blog')"></description>
+    <description :text="$site.title"></description>
     <generator>Zine -- https://zine-ssg.io</generator>
     <language>en-US</language>
     <lastBuildDate :text="$build.generated.formatHTTP()"></lastBuildDate>

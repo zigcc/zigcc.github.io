@@ -10,7 +10,7 @@
 
 > 原文地址：[build.zig.zon dependency hashes](https://zig.news/michalsieron/buildzigzon-dependency-hashes-47kj)
 
-# [引言]($section.id('引言'))
+# [引言]($section.id('introduction'))
 
 作者 Michał Sieroń 最近在思考 `build.zig.zon` 中的依赖项哈希值的问题。这些哈希值都有相同的前缀，而这对加密哈希函数来说极其不同寻常。习惯性使用 Conda 和 Yocto 对下载的压缩包运行 sha256sum，但生成的摘要与 `build.zig.zon` 中的哈希值完全不同。
 
@@ -34,7 +34,7 @@
 
 以上摘取自 [hexops/mach](https://github.com/hexops/mach/blob/bffc66800584123e2844c4bc4b577940806f9088/build.zig.zon#L13-L26) 项目。
 
-# [初步探索]($section.id('初步探索'))
+# [初步探索]($section.id('initial-investigation'))
 
 经过一番探索，我找到了一个文档：[doc/build.zig.zon.md](https://github.com/ziglang/zig/blob/1a6485d111d270014f57c46c53597a516a24dc47/doc/build.zig.zon.md)，似乎没有任何线索指向它。而文档中对哈希有段简短的描述。
 
@@ -44,7 +44,7 @@
   该哈希值是基于一系列文件内容计算得出的，这些文件是在获取URL后并应用了路径规则后得到的。
   这个字段是最重要的；一个包是的唯一性是由它的哈希值确定的，不同的 URL 可能对应同一个包。
 
-# [多重哈希]($section.id('多重哈希'))
+# [多重哈希]($section.id('multihash'))
 
 在他们的网站上有一个很好的可视化展示，说明了这一过程: [多重哈希](https://multiformats.io/multihash/)。
 
@@ -52,7 +52,7 @@
 
 因此 `build.zig.zon` 中的哈希字段不仅包含了摘要(digest)，还包含了一些元数据(metadata)。但即使我们丢弃了头部信息，得到的结果仍与下载的 `tar` 包的 `sha256` 摘要不相符。而这就涉及到了包含规则的问题。
 
-# [包含规则(inclusion rules)]($section.id('包含规则(inclusion rules)'))
+# [包含规则(inclusion rules)]($section.id('inclusion-rules'))
 
 回到 [doc/build.zig.zon.md](https://github.com/ziglang/zig/blob/1a6485d111d270014f57c46c53597a516a24dc47/doc/build.zig.zon.md) 文件，我们看到：
 
@@ -93,7 +93,7 @@ pub fn includePath(self: Filter, sub_path: []const u8) bool {
 
 除此之外，这个函数会检查 `sub_path` 是否被明确列出，或者是已明确列出的目录的子目录。
 
-# [计算哈希]($section.id('计算哈希'))
+# [计算哈希]($section.id('compute-hash'))
 
 现在我们知道了 `build.zig.zon` 的包含规则，也知道使用了 `SHA256` 算法。但我们仍然不知道实际的哈希结果是如何得到的。例如，它可能是通过将所有包含的文件内容输入哈希器来计算的。所以让我们再仔细看看，也许我们可以找到答案。
 
@@ -121,7 +121,7 @@ try all_files.append(hashed_file);
 
 跟踪 `workerHashFile`，我们看到它是 `hashFileFallible` 的一个简单包装，而后者看起来相当复杂。让我们来分解一下。
 
-# [单个文件的哈希计算]($section.id('单个文件的哈希计算'))
+# [单个文件的哈希计算]($section.id('single-file-hash'))
 
 首先，会进行一些初始化设置，其中创建并用规整后的文件路径初始化了一个新的哈希器实例：
 
@@ -169,7 +169,7 @@ hasher.update(link_name);
 
 首先进行路径分隔符的规整，保证不同平台一致，之后将符号链接的目标路径输入 `hasher`。在 `hashFileFallible` 函数最后，把计算出的哈希值赋值给 `HashedFile` 对象的 `hash` 字段。
 
-# [组合哈希]($section.id('组合哈希'))
+# [组合哈希]($section.id('combining-hashes'))
 
 尽管有了单个文件的哈希值，但我们仍不知道如何得到最终的哈希。幸运的是，曙光就在眼前。
 
@@ -199,13 +199,13 @@ for (all_files.items) |hashed_file| {
 
 在这里我们看到所有计算出的哈希被一个接一个地输入到一个新的哈希器中。在 `computeHash` 的最后，我们返回 `hasher.finalResult()`，现在我们明白哈希值是如何获得的了。
 
-# [最终多哈希值]($section.id('最终多哈希值'))
+# [最终多哈希值]($section.id('final-multi-hash'))
 
 现在我们有了一个 `SHA256` 摘要，可以最终返回到 `main.zig`，在那里我们调用 [`Package.Manifest.hexDigest(fetch.actual_hash)`](https://github.com/ziglang/zig/blob/9d64332a5959b4955fe1a1eac793b48932b4a8a8/src/Package/Manifest.zig#L174)。在那里，我们将多哈希头写入缓冲区，之后是我们的组合摘要。
 
 顺便说一下，我们看到所有哈希头都是 `1220` 并非巧合。这是因为 `Zig` [硬编码了 SHA256](https://github.com/ziglang/zig/blob/1a6485d111d270014f57c46c53597a516a24dc47/src/Package/Manifest.zig#L3) - 0x12，它有 32 字节的摘要 - 0x20。
 
-# [总结]($section.id('总结'))
+# [总结]($section.id('summary'))
 
 总结一下：最终哈希值是一个多哈希头 + `SHA256` 摘要。
 

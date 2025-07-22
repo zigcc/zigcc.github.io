@@ -194,7 +194,7 @@ pub const Message = struct {
 - value 和 setValue 函数：用于获取和设置 MIDI 消息的值字段。
 - Kind 枚举：定义了 MIDI 消息的所有可能种类，包括通道事件和系统事件。
 
-## [midi 消息结构]($section.id('midi 消息结构'))
+## [midi 消息结构]($section.id('midi-message-structure'))
 
 我们需要先了解 MIDI 消息的一些背景。
 

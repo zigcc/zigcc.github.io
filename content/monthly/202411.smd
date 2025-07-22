@@ -151,4 +151,4 @@ PDF reader for terminal emulators using the Kitty image protocol
 [Dr-Nekoma/lyceum](https://github.com/Dr-Nekoma/lyceum)  
 An MMO game written in Erlang (+ PostgreSQL) + Zig (+ Raylib)
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-11-01..2024-12-01)
+# [Zig 语言更新]($section.id('zig-language-updates'))

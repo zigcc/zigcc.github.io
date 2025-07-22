@@ -184,7 +184,7 @@ Shell completions for the Zig compiler.
 [menduz/zig](https://github.com/menduz/zig-steamworks)  
 Steamwork bindings for Zig.
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-05-01..2023-06-01)
+# [[Zig 语言更新]($section.id('zig-language-updates'))](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-05-01..2023-06-01)
 
 - [WASI: Implement experimental threading support by Luukdegram · Pull
   Request \#16207 ·

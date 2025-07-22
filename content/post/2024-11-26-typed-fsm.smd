@@ -548,7 +548,7 @@ pub fn readyHandler(comptime w: AtmSt.EWitness(.ready), ist: *InternalState) voi
 
 遵循这四点要求，就能获得强大的类型安全保证，足以让你愉快的使用状态机！
 
-# [5. 接下来能够增强的功能]($section.id('5-future-enhancements'))
+# [5. 接下来能够增强的功能]($section.id('future-enhancements'))
 
 暂时我能想到的有如下几点：
 

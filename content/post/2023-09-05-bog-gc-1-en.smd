@@ -14,7 +14,7 @@
 
 Bog is a small scripting language developed using Zig. Its GC design is inspired by a paper titled [An efficient of Non-Moving GC for Function languages](https://www.pllab.riec.tohoku.ac.jp/papers/icfp2011UenoOhoriOtomoAuthorVersion.pdf).
 
-# [Overview]($section.id('Overview'))
+# [Overview]($section.id('overview'))
 
 1. Introduction
    - Design of the Heap

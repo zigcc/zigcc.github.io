@@ -205,7 +205,7 @@ Zine 官方文档提供了详细的部署指南：
 
 你可以参考 zine-ssg 或本站（ZigCC）仓库中的 GitHub Actions 配置来设置自己的自动化部署流程。
 
-# [四、总结与经验分享]($section.id("总结与经验分享"))
+# [四、总结与经验分享]($section.id('summary-and-experience-sharing'))
 
 最后，分享几点额外的经验：
 

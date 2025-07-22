@@ -126,4 +126,4 @@ Zig，笔者觉得大概率就是本次争论的观点，Rust
 - [stm32f4.zig](https://github.com/moonxraccoon/stm32f4.zig) STM32F4(ARM
   Cortex M4 的高性能 32 位微控制器) 固件抽象层
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?q=+is%3Aclosed+is%3Apr+closed%3A2022-09-01..2022-10-01+)
+# [Zig 语言更新]($section.id('zig-language-updates'))

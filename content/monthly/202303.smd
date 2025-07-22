@@ -80,7 +80,7 @@ Tiny desktop utility to keep notes
 [ringtailsoftware/zig-wasm-audio-framebuffer](https://github.com/ringtailsoftware/zig-wasm-audio-framebuffer)  
 Examples of integrating Zig and Wasm for audio and graphics on the web
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-03-01..2023-04-01)
+# [[Zig 语言更新]($section.id('zig-language-updates'))](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-03-01..2023-04-01)
 
 [zig build: run steps in parallel
 \#14647](https://github.com/ziglang/zig/pull/14647)  

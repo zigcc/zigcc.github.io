@@ -106,4 +106,4 @@ Zvisor is an open-source hypervisor written in the Zig programming
 language, which provides a modern and efficient approach to systems
 programming.
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-04-01..2023-05-01)
+# [[Zig 语言更新]($section.id('zig-language-updates'))](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-04-01..2023-05-01)

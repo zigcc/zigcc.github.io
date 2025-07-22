@@ -178,7 +178,7 @@ pub fn main() !void {
 
 comptime 和运行时之间有一些小的区别。比如，只有 comptime 可以访问类型为 comptime_int、comptime_float 或 type 的变量。此外，一些函数只有 comptime 参数，这使它们仅限于编译时环境。相对的，只有运行时才能进行系统调用和那些依赖系统调用的函数。如果你的代码不使用这些特性，那么它在编译时和运行时中的表现将是一样的。
 
-# [视角3：[程序特化](https://en.wikipedia.org/wiki/Partial_application)
+# [视角3：[程序特化]($section.id('perspective-3-partial-evaluation'))
 
 > 译者注：程序特化（Partial Evaluation）是一种编译优化技术，主要是：在编译期预先计算部分表达式或代码路径，以减少运行时计算开销，提前生成更具体的代码实现。
 

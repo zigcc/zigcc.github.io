@@ -44,7 +44,7 @@ zine
 - [ZigCC 网站](https://ziglang.cc)
 - [ZigCC 公众号](https://github.com/zigcc/.github/raw/main/zig_mp.png)
 
-# [网站更新日志]($section.id('changelog'))
+# [网站更新日志]($section.id('website-changelog'))
 
 - **2025-06-30:** 切换到 [zine](https://zine-ssg.io/)
 - **2024-08-18:** 切换主题 [docsy](https://github.com/google/docsy)

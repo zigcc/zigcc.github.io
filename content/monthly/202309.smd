@@ -114,7 +114,7 @@ Reactive signal/Dependency tracking library in Zig.
 [buzz-language/buzz](https://github.com/buzz-language/buzz)  
 A small/lightweight statically typed scripting language
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-08-01..2023-09-01)
+# [Zig 语言更新]($section.id('zig-language-updates'))
 
 [Aro translate](https://github.com/ziglang/zig/pull/17221)  
 用 Zig 写的 [Aro](https://github.com/Vexu/arocc) 来替换 clang，来实现

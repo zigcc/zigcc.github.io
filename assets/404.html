@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>404 - Page Not Found</title>
+
+    <!-- Custom styles for this template -->
+    <link href="/style.css" rel="stylesheet" />
+
+    <style>
+      h1 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 3rem;
+      }
+    </style>
+
+    <script>
+      if (location.pathname.match(/\/\d{4}\/\d{2}\/\d{2}\//)) {
+        location.pathname = location.pathname.replace(
+          /\/(\d{4})\/(\d{2})\/(\d{2})\//,
+          "/$1-$2-$3-"
+        );
+      }
+    </script>
+  </head>
+
+  <body>
+    <h1>404 - Page Not Found</h1>
+  </body>
+</html>

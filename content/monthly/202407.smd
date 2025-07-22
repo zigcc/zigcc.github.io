@@ -167,7 +167,7 @@ fn get_window_messages() [65536][:0]const u8 {
 - 在 JavaScript
   允许您内联表达式的某些情况下，您可能需要分解出一个变量来澄清生存期。看看[这个问题](https://github.com/ziglang/zig/issues/12414)。
 
-# [项目/工具]($section.id('projects-tools'))
+# [项目/工具]($section.id('projects-and-tools'))
 
 [18alantom/fex](https://github.com/18alantom/fex)  
 A command-line file explorer prioritizing quick navigation.

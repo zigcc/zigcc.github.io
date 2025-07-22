@@ -98,4 +98,4 @@ Zig library for HyperLogLog estimation
 [This Week In Zig](https://thisweekinzig.mataroa.blog/)  
 一个介绍 Zig 的周刊，主要是 master 分支上的改动
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-01-01..2023-02-01)
+# [[Zig 语言更新]($section.id('zig-language-updates'))](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-01-01..2023-02-01)

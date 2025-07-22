@@ -114,4 +114,4 @@ const Animal = union(enum){
 - [Zig Support plugin for IntelliJ and CLion version 0.2.0
   released](https://zig.news/marioariasc/zig-support-plugin-for-intellij-and-clion-version-020-released-3g06)
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2022-11-01..2022-12-01)
+# [Zig 语言更新]($section.id('zig-language-updates'))

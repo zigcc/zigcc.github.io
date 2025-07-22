@@ -74,7 +74,7 @@ fn read(stream: std.net.Stream) ![]const u8 {
 
 我认为，这个规范并不能使代码可读性提高。在这个场景下，应该是开发者，而不是编译器，更有资格选择更有可读性的命名方案。
 
-# [命名规范]($section.id('naming-convention'))
+# [命名规范]($section.id('naming-conventions'))
 
 除了遵守以上这些规则以外，开发者可以自由地选择他们喜欢的命名规范。但是，理解 Zig 自身的命名规范是有益的，因为大部分你需要打交道的代码，如 Zig 标准库，或者其他三方库，都采用了 Zig 的命名规范。
 

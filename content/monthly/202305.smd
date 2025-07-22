@@ -100,4 +100,4 @@ A 2048 game to run in terminal
 [mitchellh/zig](https://github.com/mitchellh/zig-objc)  
 Objective-C runtime bindings for Zig (Zig calling ObjC).
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-04-01..2023-05-01)
+# [Zig 语言更新]($section.id('zig-language-updates'))

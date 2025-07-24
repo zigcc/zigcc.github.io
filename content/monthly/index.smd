@@ -7,7 +7,7 @@
 .alternatives = [{
   .name = "rss",
   .layout = "rss.xml",
-  .output = "/monthly/index.xml",
+  .output = "index.xml",
 }],
 .custom = {
   .showTocDate = false

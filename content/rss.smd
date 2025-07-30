@@ -1,6 +1,6 @@
 ---
-.title = "",
-.date = @date("1990-01-01T00:00:00"),
+.title = "RSS Feeds Overview",
+.date = @date("2025-7-27"),
 .author = "ZigCC",
 .layout = "index.shtml",
 .draft = false,

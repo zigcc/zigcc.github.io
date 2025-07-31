@@ -9,7 +9,9 @@
 本站一共有 3 个 RSS 索引，分别索引了 学习、月刊和博客，便于满足不同读者的需求。
 
 他们的链接分别是：  
-[/learn/index.xml]($link.page("learn").alternative('rss'))  
+- [/learn/index.xml]($link.page("learn").alternative('rss'))  
+- [/monthly/index.xml]($link.page("monthly").alternative('rss'))  
+- [/post/index.xml]($link.page("post").alternative('rss'))  
 [/monthly/index.xml]($link.page("monthly").alternative('rss'))  
 [/post/index.xml]($link.page("post").alternative('rss'))  
 

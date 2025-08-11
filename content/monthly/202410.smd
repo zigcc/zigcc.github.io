@@ -6,9 +6,9 @@
 .draft = false,
 ---
 
-# [重大事件]($section.id('major-events'))
+# [重大事件]($heading.id('major-events'))
 
-# [向 Zig 软件基金会认捐 30 万美元]($section.id('donation-zsf-300k'))
+# [向 Zig 软件基金会认捐 30 万美元]($heading.id('donation-zsf-300k'))
 
 Mitchell 在其最新的博客上宣布：我和我的妻子向 Zig 软件基金会 (ZSF)
 捐赠了 300,000 美元。
@@ -25,7 +25,7 @@ Mitchell 在其最新的博客上宣布：我和我的妻子向 Zig 软件基金
 作为其中的一部分，我们希望支持那些我们认为可以带来变革和影响的独立软件项目，这既是回馈给我如此之多的社区的一种方式，更重要的是，这也是彰显和鼓励为热爱而构建的文化的一种方式。
 Zig 就是这样一个项目。
 
-# [观点/教程]($section.id('opinion-tutorial'))
+# [观点/教程]($heading.id('opinion-tutorial'))
 
 # [Zig is everything I want C to be](https://mrcat.au/blog/zig_is_cool/)
 
@@ -74,15 +74,15 @@ Zig 就是这样一个项目。
 - <https://ziglang.org/devlog/>
 - <https://zine-ssg.io/log/>
 
-# [The Zig Website Has Been Re-engineered]($section.id('the-zig-website-has-been-re-engineered'))
+# [The Zig Website Has Been Re-engineered](https://ziglang.org/news/website-zine)
 
 Zig 官网已经用 [Zine](https://zine-ssg.io/) 重写！
 
 # [Rust vs. Zig in Reality: A (Somewhat) Friendly Debate](https://thenewstack.io/rust-vs-zig-in-reality-a-somewhat-friendly-debate/)
 
-# [Why I rewrote my Rust keyboard firmware in Zig: consistency, mastery, and fun]($section.id('why-i-rewrote-my-rust-keyboard-firmware-in-zig-consistency-mastery-and-fun'))
+# [Why I rewrote my Rust keyboard firmware in Zig: consistency, mastery, and fun](https://teckrevie.blogspot.com/2024/09/why-zig-programmers-are-cashing-in-deep.html)
 
-# [视频]($section.id('videos'))
+# [视频]($heading.id('videos'))
 
 ## [I made an operating system that self replicates doom on a network "from scratch"](https://www.youtube.com/watch?v=xOySJpQlmv4&feature=youtu.be)
 
@@ -90,7 +90,7 @@ Zig 官网已经用 [Zine](https://zine-ssg.io/) 重写！
 
 ## [Let's explore Vulkan API with Zig programming language from scratch](https://www.youtube.com/live/Kf7BIPUUfsc?t=764)
 
-# [项目/工具]($section.id('projects-tools'))
+# [项目/工具]($heading.id('projects-tools'))
 
 [laohanlinux/boltdb-zig](https://github.com/laohanlinux/boltdb-zig)  
 a zig implement kv database

@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-# [重大事件]($section.id('major-events'))
+# [重大事件]($heading.id('major-events'))
 
 本月讨论比较多的就是 [Zig May Pass Anything By
 Reference](https://www.1a-insec.net/blog/25-zig-reference-semantics/)
@@ -58,7 +58,7 @@ precisely』，目前来看确实是这样的，而且 core team
 - [Design flaw: Swapping struct fields yields unexpected value
   \#12064](https://github.com/ziglang/zig/issues/12064)
 
-# [观点/教程]($section.id('opinion-tutorial'))
+# [观点/教程]($heading.id('opinion-tutorial'))
 
 [Zig's std.json.Parsed(T)](https://www.openmymind.net/Zigs-std-json-Parsed/)  
 老朋友 openmymind 的文章，这篇文章主要讲述了使用 Zig 中的 json
@@ -147,7 +147,7 @@ Fields
 - 一个包的兼容性，应该由文档来解释
 - 增加私有字段，会增加语言的复杂度，而且这种复杂性本身是完全可以避免的
 
-# [项目/工具]($section.id('projects-tools'))
+# [项目/工具]($heading.id('projects-tools'))
 
 [zig build explained – building C/C++ projects](https://zig.news/xq/zig-build-explained-part-2-1850)  
 经典文章回顾，如何使用 Zig 构建系统编译 C/C++ 项目

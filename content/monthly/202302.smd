@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-# [包管理器进展]($section.id('包管理器进展'))
+# [包管理器进展]($heading.id('package-manager-progress'))
 
 包管理器自 [\#14265](https://github.com/ziglang/zig/pull/14265)
 合并后一直在不断推进，以下两个是最主要的改变：
@@ -61,7 +61,7 @@
 也欢迎大家给自己熟悉的 C/C++ 项目提 PR 让其支持 zig
 build，让构建不再那么痛苦。
 
-# [观点/教程]($section.id('观点/教程'))
+# [观点/教程]($heading.id('viewstutorials'))
 
 - [How a Zig IDE Could
   Work](https://matklad.github.io/2023/02/10/how-a-zig-ide-could-work.html)
@@ -105,7 +105,7 @@ build，让构建不再那么痛苦。
 - [Smoking Hot Binary Search In
   Zig](https://blog.deckc.hair/2023-02-22-smoking-hot-binary-search-in-zig.html)
 
-# [项目/工具]($section.id('项目/工具'))
+# [项目/工具]($heading.id('projectstools'))
 
 - [Writing high-performance clients for
   TigerBeetle](https://tigerbeetle.com/blog/2023-02-21-writing-high-performance-clients-for-tigerbeetle/)

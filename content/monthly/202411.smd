@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-# [观点/教程]($section.id('opinion-tutorial'))
+# [观点/教程]($heading.id('opinion-tutorial'))
 
 # [Why am I writing a JavaScript toolchain in Zig?](https://injuly.in/blog/announcing-jam/index.html)
 
@@ -48,7 +48,7 @@
   esquery 的问题在于执行效率，通过借助于 zig 的 comptime 来在编译器翻译
   esquery 就避免了运行时开销。
 
-# [Advent of Code in Zig | Loris Cro's Blog]($section.id('advent-of-code-in-zig-loris-cros-blog'))
+# [Advent of Code in Zig | Loris Cro's Blog](https://kristoff.it/blog/advent-of-code-zig/)
 
 一年一度的 AoC 又到了，这篇文章里给出了一些使用的技巧来帮助大家用 Zig
 来解决 AoC 问题。
@@ -99,7 +99,7 @@
 > 的某些功能甚至能帮助您取得比其他语言更快的进展，但它最终还是针对软件工程进行了优化，而这并不是您在
 > AoC 中要做的事情。
 
-# [Zig and Emulators]($section.id('zig-and-emulators'))
+# [Zig and Emulators](https://floooh.github.io/2024/08/24/zig-and-emulators.html)
 
 # [Zig Reproduced Without Binaries](https://jakstys.lt/2024/zig-reproduced-without-binaries/)
 
@@ -130,7 +130,7 @@ Zig，利用 LLVM 后端，以 wasm32-wasi 为目标生成的二进制文件。
 - [Why is the bootstrapping process so complicated? :
   r/Zig](https://www.reddit.com/r/Zig/comments/142gwls/why_is_the_bootstrapping_process_so_complicated/)
 
-# [项目/工具]($section.id('projects-tools'))
+# [项目/工具]($heading.id('projects-tools'))
 
 [Builds (Zig) - GoReleaser](https://goreleaser.com/customization/zig-builds/)  
 版本发布工具 GoReleaser 支持了 Zig

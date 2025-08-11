@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-# [观点/教程]($section.id('观点/教程'))
+# [观点/教程]($heading.id('viewstutorials'))
 
 - [Zig Is Self-Hosted Now, What’s Next? | Loris Cro’s
   Blog](https://kristoff.it/blog/zig-self-hosted-now-what/) | 0.10
@@ -39,7 +39,7 @@
 - \[音频\] [005. 与 LemonHX 畅聊新一代编程语言 Zig –
   RustTalk](https://rusttalk.github.io/podcast/005/)
 
-# [项目/工具]($section.id('项目/工具'))
+# [项目/工具]($heading.id('projectstools'))
 
 - [Himujjal/zig-json5](https://github.com/Himujjal/zig-json5): A JSON5
   parser/stringifier for Zig resembling the std.json API

@@ -6,14 +6,14 @@
 .draft = false,
 ---
 
-# [观点/教程]($section.id('opinion-tutorial'))
+# [观点/教程]($heading.id('opinion-tutorial'))
 
 # [Thoughts on Zig](https://arne.me/blog/thoughts-on-zig)
 
 又一篇 Zig 初学者的使用体验文档，如果你也在犹豫要不要学
 Zig，这是个不错的经验参考。
 
-# [I'm sold on Zig's simplicity : r/Zig]($section.id('im-sold-on-zigs-simplicity-r-zig'))
+# [I'm sold on Zig's simplicity : r/Zig]($heading.id('im-sold-on-zigs-simplicity-r-zig'))
 
 一个具有资深经验开发者，在这里描述了自己选择业余项目语言的经历：
 
@@ -32,7 +32,7 @@ Zig，这是个不错的经验参考。
 - 唯一缺失的就是『接口』，但这一点并不是很关键，就像在 C里也没有，但是 C
   可以做任何事
 
-# [Zig's New CLI Progress Bar Explained]($section.id('zigs-new-cli-progress-bar-explained'))
+# [Zig's New CLI Progress Bar Explained]($heading.id('zigs-new-cli-progress-bar-explained'))
 
 Andrew 的一篇文章，讲述了在最新版的 Zig
 中，对进度条的改进实现，现在的进度展示更加友好。
@@ -81,7 +81,7 @@ Openmymind
   }
   ```
 
-# [项目/工具]($section.id('projects-tools'))
+# [项目/工具]($heading.id('projects-tools'))
 
 [zigar](https://github.com/chung-leong/zigar)  
 Enable the use of Zig code in JavaScript project。它可以让你直接在 JS

@@ -6,9 +6,9 @@
 .draft = false,
 ---
 
-# [重大事件]($section.id('重大事件'))
+# [重大事件]($heading.id('major-events'))
 
-# [Bounties Damage Open Source Projects]($section.id('bounties-damage-open-source-projects'))
+# [Bounties Damage Open Source Projects](https://ziglang.org/news/bounties-damage-open-source-projects)
 
 在 2023-09-11 号，Wasmerio CEO 创建了 [Support WASIX · Issue
 \#17115](https://github.com/ziglang/zig/issues/17115)，表示想赞助 Zig
@@ -38,7 +38,7 @@ Bun 并不简单的是个 Node.js 替代品，而是大而全的工具链：
 - Testing libraries，内置 test
   runner，支持快照测试、模拟和代码覆盖，可以替代：jest、ts-test
 
-# [观点/教程]($section.id('观点/教程'))
+# [观点/教程]($heading.id('viewstutorials'))
 
 [Kiesel Devlog \#1: Now passing 25% of test262](https://linus.dev/posts/kiesel-devlog-1/)  
 另一个 devlog，作者写了一个 JS engine 用来学习 Zig，该作者是 SerenityOS
@@ -85,7 +85,7 @@ Mitchell Hashimoto 在这篇文章里分享了开发终端 Ghostty 时用的 Zig
  [SoA 内存布局]($image.siteAsset('images/soa-layout.webp'))
 
 
-# [项目/工具]($section.id('项目/工具'))
+# [项目/工具]($heading.id('projectstools'))
 
 [ZigBrains](https://plugins.jetbrains.com/plugin/22456-zigbrains)  
 A multifunctional Zig Programming Language plugin for the IDEA platform.

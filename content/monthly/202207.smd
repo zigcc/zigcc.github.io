@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-# [观点/教程]($section.id('观点/教程'))
+# [观点/教程]($heading.id('viewstutorials'))
 
 - [Zig 初体验 - Keep
   Coding](https://liujiacai.net/blog/2022/07/16/zig-intro/)
@@ -28,7 +28,7 @@
   before starting with Zig? :
   Zig](https://www.reddit.com/r/Zig/comments/w63x6r/is_it_necessary_to_know_c_or_another_systems/)
 
-# [项目/工具]($section.id('项目/工具'))
+# [项目/工具]($heading.id('projectstools'))
 
 - [Release bun v0.1.5 ·
   oven-sh/bun](https://github.com/oven-sh/bun/releases/tag/bun-v0.1.5)

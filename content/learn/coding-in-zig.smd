@@ -10,7 +10,7 @@
 
 在介绍了 Zig 语言的大部分内容之后，我们将对一些主题进行回顾，并展示几种使用 Zig 编程时一些实用的技巧。在此过程中，我们将介绍更多的标准库，并介绍一些稍复杂些的代码片段。
 
-# [悬空指针 Dangling Pointers]($section.id('dangling-pointers'))
+# [悬空指针 Dangling Pointers]($heading.id('dangling-pointers'))
 
 我们首先来看看更多关于悬空指针的例子。这似乎是一个奇怪的问题，但如果你之前主要使用带垃圾回收的语言，这可能是你学习 Zig 最大的障碍。
 
@@ -105,7 +105,7 @@ const User = struct {
 
 如果把所有东西都放在一个函数中，再加上一个像 `User` 这样的小值，这仍然像是一个人为制造的问题。我们需要一个能让数据所有权成为当务之急的例子。
 
-# [所有权 Ownership]($section.id('ownership'))
+# [所有权 Ownership]($heading.id('ownership'))
 
 我喜欢哈希表（HashMap），因为这是每个人都知道并且会经常使用的结构。它们有很多不同的用例，其中大部分你可能都用过。虽然哈希表可以用在一个短期查找的地方，但通常用于长期查找，因此插入其内的值需要同样长的生命周期。
 
@@ -218,7 +218,7 @@ defer {
 
 我保证，关于悬挂指针和内存管理的讨论已经结束了。我们所讨论的内容可能还不够清晰或过于抽象。当你有更实际的问题需要解决时，再重新讨论这个问题也不迟。不过，如果你打算编写任何稍具规模（non-trivial）的程序，这几乎肯定是你需要掌握的内容。当你觉得可以的时候，我建议你参考上面这个示例，并自己动手实践一下。引入一个 `UserLookup` 类型来封装我们必须做的所有内存管理。尝试使用 `*User` 代替 `User`，在堆上创建用户，然后像处理键那样释放它们。编写覆盖新结构的测试，使用 `std.testing.allocator` 确保不会泄漏任何内存。
 
-# [ArrayList]($section.id('arraylist'))
+# [ArrayList]($heading.id('arraylist'))
 
 现在你可以忘掉我们的 `IntList` 和我们创建的通用替代方案了。Zig 标准库中有一个动态数组实现：`std.ArrayList(T)`。
 
@@ -313,7 +313,7 @@ pub fn main() !void {
 }
 ```
 
-# [Anytype]($section.id('anytype'))
+# [Anytype]($heading.id('anytype'))
 
 在[语言概述的第一部分](language-overview-1)中，我们简要介绍了 `anytype`。这是一种非常有用的编译时 duck 类型。下面是一个简单的 logger：
 
@@ -383,7 +383,7 @@ fn stringify(
 
 第一个参数 `value: anytype` 是显而易见的，它是要序列化的值，可以是任何类型（实际上，Zig 的 JSON 序列化器不能序列化某些类型，比如 HashMap）。我们可以猜测，`out_stream` 是写入 JSON 的地方，但至于它需要实现什么方法，你和我一样猜得到。唯一的办法就是阅读源代码，或者传递一个假值，然后使用编译器错误作为我们的文档。如果有更好的自动文档生成器，这一点可能会得到改善。不过，我希望 Zig 能提供接口，这已经不是第一次了。
 
-# [@TypeOf]($section.id('typeof'))
+# [@TypeOf]($heading.id('typeof'))
 
 在前面的部分中，我们使用 `@TypeOf` 来帮助我们检查各种变量的类型。从我们的用法来看，你可能会认为它返回的是字符串类型的名称。然而，鉴于它是一个 PascalCase 风格函数，你应该更清楚：它返回的是一个 `type`。
 
@@ -412,7 +412,7 @@ pub const User = struct {
 
 更常见的是 `@TypeOf` 与 `@typeInfo` 配对，后者返回一个 `std.builtin.Type`。这是一个功能强大的带标签的联合（tagged union），可以完整描述一个类型。`std.json.stringify` 函数会递归地调用它，以确定如何将提供的 `value` 序列化。
 
-# [构建系统]($section.id('build-system'))
+# [构建系统]($heading.id('build-system'))
 
 如果你通读了整本指南，等待着深入了解如何建立更复杂的项目，包括多个依赖关系和各种目标，那你就要失望了。Zig 拥有强大的构建系统，以至于越来越多的非 Zig 项目都在使用它，比如 libsodium。不幸的是，所有这些强大的功能都意味着，对于简单的需求来说，它并不是最容易使用或理解的。
 
@@ -497,7 +497,7 @@ test "dummy build test" {
 
 这是启动和运行构建系统所需的最低配置。但是请放心,如果你需要构建你的程序，Zig 内置的功能大概率能覆盖你的需求。最后，你可以（也应该）在你的项目根目录下使用 `zig init`，让 Zig 为你创建一个文档齐全的 `build.zig` 文件。
 
-# [第三方依赖]($section.id('third-party-dependencies'))
+# [第三方依赖]($heading.id('third-party-dependencies'))
 
 Zig 的内置软件包管理器相对较新，因此存在一些缺陷。虽然还有改进的余地，但它目前还是可用的。我们需要了解两个部分：创建软件包和使用软件包。我们将对其进行全面介绍。
 

@@ -24,7 +24,7 @@ pub fn put(self: *Self, key: K, value: V) Allocator.Error!void {
 
 正如我所说，大部分繁重的工作都由 `std.HashMapUnmanaged` 完成，其他变体通过一个名为 `unmanaged` 的字段对其进行封装。
 
-# [Unmanaged]($section.id('Unmanaged'))
+# [Unmanaged]($heading.id('unmanaged'))
 
 在Zig标准库中随处可见的类型命名约定是 `unmanaged`。这种命名方式表明所涉及的类型不维护 `allocator`。任何需要分配内存的方法都会显式地将 `allocator` 作为参数传递。要实际看到这一点，可以考虑下面这个链表的例子：
 
@@ -143,7 +143,7 @@ pub fn LinkedList(comptime T: type) type {
 
 为了简化，本文的其余部分不会再提到 `unmanaged`。我们看到关于 `StringHashMap` 或 `AutoHashMap` 或 `HashMap` 的任何内容同样适用于它们的 Unmanaged 变体。
 
-# [HashMap 与 AutoHashMap]($section.id('HashMap 与 AutoHashMap'))
+# [HashMap 与 AutoHashMap]($heading.id('hashmap-and-autohashmap'))
 
 std.HashMap 是一个泛型类型，它接受两个类型参数：键的类型和值的类型。正如我们所见，哈希映射需要两个函数：hash 和 eql。这两个函数合起来被称为“上下文(context)”。这两个函数都作用于键，并且没有一个单一的 hash 或 eql 函数适用于所有类型。例如，对于整数键，eql 将是 `a_key == b_key`；而对于 `[]const u8` 键，我们希望使用 `std.mem.eql(u8, a_key, b_key)`。
 
@@ -234,7 +234,7 @@ pub const StringContext = struct {
 };
 ```
 
-# [自定义上下文]($section.id('自定义上下文'))
+# [自定义上下文]($heading.id('custom-context'))
 
 我们将在第一部分结束时，直接使用 `HashMap`，这意味着提供我们自己的上下文。我们将从一个简单的例子开始：为不区分大小写的 ASCII 字符串创建一个 `HashMap`。我们希望以下内容输出：`Goku = 9000`。请注意，虽然我们使用键 `GOKU` 进行插入，但我们使用“goku”进行获取：
 
@@ -379,7 +379,7 @@ pub fn hash(_: HashContext, u: User) u64 {
 
 插入这两个函数，以上示例应该可以工作。
 
-# [结论]($section.id('conclusion'))
+# [结论]($heading.id('conclusion'))
 
 希望你现在对 Zig 的哈希表的实现以及如何在代码中利用它们有了更好的理解。在大多数情况下，`std.StringHashMap` 或 `std.AutoHashMap` 就足够了。但知道 `*Unmanaged` 变体的存在和目的，以及更通用的 `std.HashMap`，可能会派上用场。如果没有其他用途，现在文档和它们的实现应该更容易理解了。
 

@@ -8,3 +8,5 @@ zig-cache/
 zig-out/
 
 .cache_ggshield
+.vscode
+old/

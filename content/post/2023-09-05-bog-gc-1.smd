@@ -10,11 +10,11 @@
 },
 ---
 
-# [Bog GC Design -- Concepts]($section.id('bog-gc-design-concepts'))
+# [Bog GC Design -- Concepts]($heading.id('bog-gc-design-concepts'))
 
 [Bog](https://github.com/Vexu/bog) 是一款基于 Zig 开发的小型脚本语言。它的 GC 设计受到一篇论文[An efficient of Non-Moving GC for Function languages](https://www.pllab.riec.tohoku.ac.jp/papers/icfp2011UenoOhoriOtomoAuthorVersion.pdf)的启发。
 
-# [Summary]($section.id('summary'))
+# [Summary]($heading.id('summary'))
 
 GC 是一种垃圾回收的机制，主要是针对`heap`区域的内存管理策略。在堆中的内存分配是按照指数级增长的大小进行的，此外还有一个专门用于非常大对象的特殊子堆。这种方法的一个优点可能是它可以高效地处理各种大小的内存请求。
 
@@ -63,13 +63,13 @@ graph TD
 +------------+
 ```
 
-## [Memory Sub-Heap Pool]($section.id('memory-sub-heap-pool'))
+## [Memory Sub-Heap Pool]($heading.id('memory-sub-heap-pool'))
 
 我们设计一个内存的资源池。这个池由许多固定大小的分配段组成。这意味着，无论子堆请求多少空间，它都会以这些固定大小的"段"为单位来请求。例如，如果池中的分配段大小为 1MB，那么一个子堆可能会请求 1MB、2MB、3MB 等大小的空间，而不是请求 1.5MB 或 2.5MB 这样的非整数倍的大小。
 
 而子堆从一个由固定大小的段组成的资源池中动态分配和回收空间，这种策略可以提供更高的灵活性，并可能提高内存使用的效率。
 
-## [Types of GC]($section.id('types-of-gc'))
+## [Types of GC]($heading.id('types-of-gc'))
 
 常见的 GC 有很多类型。
 
@@ -123,7 +123,7 @@ Cheney 的拷贝收集器: 是一种用于半区（semi-space）的拷贝垃圾�
 
 为了解决这些问题需要很多复杂的步骤，在此不多赘述。单以 Bog 的 GC 来讲解。
 
-## [Meta Bitmap]($section.id('meta-bitmap'))
+## [Meta Bitmap]($heading.id('meta-bitmap'))
 
 "元级位图"或"meta-level bitmaps"。这是一个更高级别的位图，用于汇总原始位图的内容。这种层次化的结构类似于文件系统中的 inode 映射或多级页表在计算机内存管理中的使用。
 
@@ -137,11 +137,11 @@ Cheney 的拷贝收集器: 是一种用于半区（semi-space）的拷贝垃圾�
 
 例如，如果一个位图有 320 位，那么在 32 位架构上，最坏的情况可能需要检查 10 个 32 位块才能找到一个空闲位。这可以通过 $\log_{32}(320)$来表示，结果是 10。
 
-## [Bitmap]($section.id('bitmap'))
+## [Bitmap]($heading.id('bitmap'))
 
 由于 Bog 的 GC 本质上还是采用了"标记-清除"，所以利用位图来记录数据是必不可少的。在 Bog 中，我们采用了"位图记录数据"的方式来进行 GC。而为了提高效率，我们增加了元位图的概念，即每 4 个元素对应一个元位图，用于记录多空间的占用状态，并且根据 heap 的对象时间增加深度。
 
-## [Implementation]($section.id('implementation'))
+## [Implementation]($heading.id('implementation'))
 
 实际上，在 Bog 的设计中，要更加复杂一些。我们增加了
 

@@ -7,7 +7,7 @@
 
 本文复盘了 ZigCC 社区网站从 Hugo 迁移至 Zine 的全过程，旨在分享其中的经验与思考，为有类似需求的朋友提供参考。
 
-# [一、为何选择 Zine？]($section.id("为何选择-Zine"))
+# [一、为何选择 Zine？]($heading.id('why-choose-zine'))
 
 我们最初使用 Hugo 及其 Docsy 主题搭建网站，但在使用过程中遇到了一些痛点，促使我们寻找新的解决方案。选择迁移至 Zine 主要基于以下几点考量：
 
@@ -22,11 +22,11 @@
 
 作为 Zig 社区的一份子，我们有责任参与到生态建设中。果不其然，这次迁移过程也让我们发现了 Zine 的一些待解决问题和潜在的改进点。
 
-# [二、Zine 核心概念解读]($section.id("Zine核心概念解读"))
+# [二、Zine 核心概念解读]($heading.id('interpretation-of-zines-core-concepts'))
 
 Zine 是一个现代、高效的静态网站生成器。要理解它，首先要掌握其核心设计理念和文件结构。
 
-## [项目结构与配置]($section.id("项目结构与配置"))
+## [项目结构与配置]($heading.id('project-structure-and-configuration'))
 
 一个基础的 Zine 项目结构与 Hugo 等主流生成器类似，主要包含内容、布局和静态资源目录：
 
@@ -56,7 +56,7 @@ Site {
 }
 ```
 
-## [内容渲染：SuperMD、SuperHTML 与 Scripty]($section.id("内容渲染"))
+## [内容渲染：SuperMD、SuperHTML 与 Scripty]($heading.id('content-rendering'))
 
 Zine 在内容渲染上采用了与 Hugo 截然不同的哲学。它没有直接使用标准的 Markdown 和 HTML，而是引入了三个核心概念：
 
@@ -96,11 +96,11 @@ Scripty 作为表达式语言，其威力在条件和嵌套逻辑中得以体现
 
 通过这三者的结合，Zine 在保证内容与布局分离的同时，提供了高度的灵活性和安全性。更详细的用法，推荐阅读 Zine 官方文档。
 
-# [三、迁移步骤详解]($section.id("迁移步骤详解"))
+# [三、迁移步骤详解]($heading.id('detailed-explanation-of-migration-steps'))
 
 整个迁移过程可以分为内容转换、布局设计、预览调试和最终部署几个关键步骤。
 
-## [内容格式转换]($section.id("内容格式转换"))
+## [内容格式转换]($heading.id('content-format-conversion'))
 
 迁移的核心工作是将原有内容（本文中主要是 Markdown 和 Org Mode 文件）转换为 Zine 支持的 SuperMarkdown (`.smd`) 格式。
 
@@ -121,12 +121,12 @@ end
 Pandoc 完成初步转换后，仍需手动调整以适配 `.smd` 和 `.shtml` 的专属语法。常见差异包括：
 
 1.  **HTML 嵌入**：`.smd` 不推荐直接嵌入 HTML。相关代码需要用 ` ```=html` 代码块包裹。
-2.  **章节标题链接**：标题不会自动生成 ID 和锚点链接，需要手动使用 `$section.id("custom-id")` 添加（注意 ID 不能包含空格）。
+2.  **章节标题链接**：标题不会自动生成 ID 和锚点链接，需要手动使用 `$heading.id("custom-id")` 添加（注意 ID 不能包含空格）。
 3.  **资源引用**：可以使用 Scripty API 或将资源放在 `public` 目录下通过绝对路径 (`/path/to/resource`) 引用。
 
 建议先完成布局文件的编写，在实时预览的环境下再进行这些细致的手动适配，效率更高。
 
-## [处理 Frontmatter]($section.id("处理-Frontmatter"))
+## [处理 Frontmatter]($heading.id('processing-frontmatter'))
 
 Zine 使用 Ziggy 语法作为 Frontmatter 的格式，它与 Zig 语法高度相似。
 
@@ -144,7 +144,7 @@ Zine 使用 Ziggy 语法作为 Frontmatter 的格式，它与 Zig 语法高度�
 ---
 ```
 
-## [设计布局]($section.id("设计布局"))
+## [设计布局]($heading.id('design-layout'))
 
 由于我们希望采用全新的简约风格，因此我没有沿用 Docsy 的样式，而是重新设计了一套布局。目前的版本虽已上线，但在目录（TOC）等细节上仍有优化空间。
 
@@ -188,7 +188,7 @@ Zine 布局有几个关键特性：
 </ctx>
 ```
 
-## [预览与调试]($section.id("预览与调试"))
+## [预览与调试]($heading.id('preview-and-debugging'))
 
 完成布局和初步内容转换后，就进入了最繁琐的环节：预览、检查和修正。
 
@@ -196,7 +196,7 @@ Zine 布局有几个关键特性：
 
 这一步需要极大的耐心，几乎等同于重新校对所有文章。需要注意的是，Zine 目前仍在快速发展中，部分功能的报错信息可能不够明确，需要结合文档和实践耐心排查。
 
-## [部署]($section.id("部署"))
+## [部署]($heading.id('deployment'))
 
 Zine 官方文档提供了详细的部署指南：
 
@@ -205,7 +205,7 @@ Zine 官方文档提供了详细的部署指南：
 
 你可以参考 zine-ssg 或本站（ZigCC）仓库中的 GitHub Actions 配置来设置自己的自动化部署流程。
 
-# [四、总结与经验分享]($section.id("总结与经验分享"))
+# [四、总结与经验分享]($heading.id('summary-and-experience-sharing'))
 
 最后，分享几点额外的经验：
 

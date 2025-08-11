@@ -10,7 +10,7 @@
 
 本部分继续上一部分的内容：熟悉 Zig 语言。我们将探究 Zig 的控制流和结构以外的类型。通过这两部分的学习，我们将掌握 Zig 语言的大部分语法，这让我们可以继续深入 Zig 语言，同时也为如何使用 std 标准库打下了基础。
 
-# [控制流]($section.id('control-flow'))
+# [控制流]($heading.id('control-flow'))
 
 Zig 的控制流很可能是我们所熟悉的，但它与 Zig 语言的其他特性协同工作是我们还没有探索过。我们先简单概述控制流的基本使用，之后在讨论依赖控制流的相关特性时，再来重新回顾。
 
@@ -207,7 +207,7 @@ const personality_analysis = blk: {
 
 稍后，当我们讨论带标签的联合（tagged union）、错误联合（error unions）和可选类型（Optional）时，我们将看到控制流如何与它们联合使用。
 
-# [枚举]($section.id('enum'))
+# [枚举]($heading.id('enum'))
 
 枚举是带有标签的整数常量。它们的定义很像结构体：
 
@@ -241,7 +241,7 @@ const Stage = enum {
 
 `switch` 的穷举性质使它能与枚举很好地搭配，因为它能确保你处理了所有可能的情况。不过在使用 `switch` 的 `else` 子句时要小心，因为它会匹配任何新添加的枚举值，而这可能不是我们想要的行为。
 
-# [带标签的联合 Tagged Union]($section.id('tagged-union'))
+# [带标签的联合 Tagged Union]($heading.id('tagged-union'))
 
 联合定义了一个值可以具有的一系列类型。例如，这个 `Number` 可以是整数、浮点数或 nan（非数字）：
 
@@ -320,7 +320,7 @@ const Timestamp = union(enum) {
 
 这里 Zig 会根据带标签的联合，自动创建一个隐式枚举。
 
-# [可选类型 Optional]($section.id('optional'))
+# [可选类型 Optional]($heading.id('optional'))
 
 在类型前加上问号 `?`，任何值都可以声明为可选类型。可选类型既可以是 `null`，也可以是已定义类型的值：
 
@@ -366,7 +366,7 @@ while (rows.next()) |row| {
 }
 ```
 
-# [未定义的值 Undefined]($section.id('undefined'))
+# [未定义的值 Undefined]($heading.id('undefined'))
 
 到目前为止，我们看到的每一个变量都被初始化为一个合理的值。但有时我们在声明变量时并不知道它的值。可选类型是一种选择，但并不总是合理的。在这种情况下，我们可以将变量设置为未定义，让其保持未初始化状态。
 
@@ -379,7 +379,7 @@ std.crypto.random.bytes(&pseudo_uuid);
 
 上述代码仍然创建了一个 16 字节的数组，但它的每个元素都没有被赋值。
 
-# [错误 Errors]($section.id('errors'))
+# [错误 Errors]($heading.id('errors'))
 
 Zig 中错误处理功能十分简单、实用。这一切都从错误集（error sets）开始，错误集的使用方式类似于枚举：
 

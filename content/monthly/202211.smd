@@ -17,13 +17,13 @@ compiler，也称为『自举』，即可以用 Zig 来写 Zig
 
 赶紧升级吧，少年！
 
-# [zigcc 中文社区微信群]($section.id('zigcc 中文社区微信群'))
+# [zigcc 中文社区微信群]($heading.id('zigcc-chinese-community-wechat-group'))
 
 欢迎喜欢 Zig 的小伙伴加入！ {{\< figure
 src=“https://github.com/zigcc/.github/raw/main/weixin.jpg” width=“200”
 title=“ZigCC 微信群二维码” \>}}
 
-# [观点/教程]($section.id('观点/教程'))
+# [观点/教程]($heading.id('viewstutorials'))
 
 - [Wasmer 3.0 使用 Zig 进行跨平台编译 · Discussion \#35 ·
   zigcc/forum](https://github.com/zigcc/forum/discussions/35)
@@ -98,7 +98,7 @@ const Animal = union(enum){
   [spoon](https://sr.ht/~leon_plickat/zig-spoon/)
   这个库开发了一个帮助自己进行图片打标的 UI 工具，
 
-# [项目/工具]($section.id('项目/工具'))
+# [项目/工具]($heading.id('projectstools'))
 
 - [Zig
   程序设计语言中文手册](https://sxwangzhiwen.github.io/zigcndoc/zigcndoc.html)

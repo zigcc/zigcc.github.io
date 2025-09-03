@@ -3,12 +3,11 @@
 # Zig 语言中文社区
 
 - <https://ziglang.cc>
-- 如果没有特殊声明，本网站内容均采用 [CC BY-NC-ND
-  4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/) 协议
+- 如果没有特殊声明，本网站内容均采用 [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/) 协议
 
 <center>
 <p>欢迎来到 Zig 语言中文社区！（Zig Chinese Community，简称：ZigCC）</p>
-<a href="https://discord.gg/UraRxD6WXD">
+<a href="http://ask.ziglang.cc/discord">
 <img src="https://img.shields.io/discord/1155469703846834187?label=Chat at Discord" />
 </a>
 <a href="/index.xml">

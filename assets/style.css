@@ -53,32 +53,16 @@ p + pre {
 
 pre {
   overflow: auto;
-  border-top: 1px solid var(--border);
+  border-top: 2px solid var(--border);
   border-bottom: 1px solid var(--border);
   padding: 4px 0;
-}
-
-pre code {
-  tab-size: 4;
-  -moz-tab-size: 4;
+  background: #8888880a;
+  line-height: 1.5;
 }
 
 code {
-  font-variant-ligatures: none;
-  font-feature-settings: "liga" 0;
-  font-family: "JetBrains Mono", monospace;
-}
-
-p > code,
-a > code,
-h1 > code,
-h2 > code,
-h3 > code,
-h4 > code,
-h5 > code,
-li > code {
-  font-weight: bold;
-  font-size: 1em;
+  font-family: monospace;
+  font-size: 14px;
 }
 
 .header {
@@ -130,7 +114,7 @@ nav a {
   text-decoration: none;
   font-size: large;
   margin: 0 10px;
-  @media screen and (max-width: 800px) {  
+  @media screen and (max-width: 800px) {
     margin: 0 8px;
   }
 }

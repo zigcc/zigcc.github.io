@@ -12,25 +12,6 @@
   <ctx :if="$page.custom.getOr('mermaid', false)">
     <script defer src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/mermaid/8.14.0/mermaid.min.js" onload="mermaid.initialize({startOnLoad:true});"></script>
   </ctx>
-  <script>
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?c7ddb41bcae30e6c2acc86e2cbe8b753";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-
-    const payload = {
-      'ns': 'zigcc',
-      'url': document.location.href,
-      'title': document.title,
-      'referrer': window.frames.top.document.referrer,
-    };
-    fetch('https://en.liujiacai.net/pv/write?' + new URLSearchParams(payload),
-          {mode: 'no-cors'}).catch(console.log);
-  </script>
-
 </head>
 <body id="body">
   <div :html="$page.content()"></div>

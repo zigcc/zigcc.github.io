@@ -1,0 +1,366 @@
+---
+.title = "Zig 新 Writer 接口的内部实现",
+.date = @date("2025-09-17T09:03:06+0800"),
+.author = "刘家财",
+.layout = "post.shtml",
+.draft = false,
+---
+
+> 原文：https://joegm.github.io/blog/inside-zigs-new-writer-interface/
+
+Zig 版本 0.15.1 最近发布，带来了一些破坏性的标准库更改，这些更改在 Zig 社区引起了轩然大波。
+
+这一事件被 Zig 社区称为 "Writergate"，因为它围绕着标准库的 Reader 和 Writer 接口的破坏性大改而展开。新版本非常复杂，声称在各个方面都有改进，尤其是在性能和对优化器的友好性方面。
+
+我将尽力具体解释新的 Writer 接口，深入了解其工作原理以及它比其他接口实现更好的地方。
+
+但首先，让我们回顾一下在 "Writergate" 时代之前，Writer 接口在 Zig 中是如何使用的。
+
+**三个 Writer 的故事**
+
+在 0.15.1 之前，接受 Writer 作为函数参数主要有 3 种方式，它们都有各自的优点，但没有一个是完美的。如果你不感兴趣，可以直接跳到我介绍新 Writer 的部分。
+
+本节是在 Zig 0.14.1 的背景下编写的，不适用于更新的版本。
+
+**GenericWriter**
+
+Generic Writer，位于 `std.io.GenericWriter`，通常被别名为 `std.io.Writer`，顾名思义，它是一个泛型类型。它需要 3 个编译时参数来创建一个新类型：
+
+*   `Context` 类型，用作 `write` 函数的第一个参数。
+*   `Error` 类型，包含所有可能由写入操作引起的错误。
+*   一个 `write` 函数，它接受一个 `Context` 以及一些要写入的字节，并返回一个 `Error` 或者写入的字节数。
+
+让我们看看 `std.fs.File` 是如何实现它的：
+
+```zig
+// std.fs.File
+
+/// 操作系统特定的文件描述符或文件句柄。
+handle: Handle,
+
+pub const WriteError = posix.WriteError;
+
+pub fn write(self: File, bytes: []const u8) WriteError!usize {
+    if (is_windows) {
+        return windows.WriteFile(self.handle, bytes, null);
+    }
+
+    return posix.write(self.handle, bytes);
+}
+
+pub const Writer = io.Writer(File, WriteError, write); // GenericWriter!
+
+pub fn writer(file: File) Writer {
+    return .{ .context = file };
+}
+```
+
+`File` 有一个字段，即它的句柄。它有一个 `write` 函数，它接受一个 `File` 并可以返回一个 `WriteError`。这就是创建泛型 Writer 所需的全部内容，使用 `io.Writer(File, WriteError, write)` 和一个方便的函数将 `File` 转换为 `File.Writer`。
+
+以下是如何使用此 API：
+
+```zig
+const std = @import("std");
+
+pub fn main() !void {
+    const stdout_file = std.io.getStdOut();
+
+    const stdout_writer = stdout_file.writer();
+
+    try writeData(stdout_writer);
+}
+
+fn writeData(writer: std.fs.File.Writer) std.fs.File.Writer.Error!void {
+    try writer.writeAll("Hello, GenericWriter!\n");
+}
+```
+
+`GenericWriter` 使用核心 `write` 函数来提供其他方便的写入函数，例如 `writeAll`、`print`、`writeStruct` 等。任何想要写入文件的函数都可以将 `File.Writer` 作为参数，就可以正常工作。
+
+但是，问题在于：`GenericWriter` 本身不是一个接口。接受 `File.Writer` 的函数不能传递 `std.net.Stream.Writer`，因为即使这两种类型都是使用 `GenericWriter` 创建的，它们也不是同一种类型。缺少的是一种调度机制。
+
+**调度的必要性**
+
+`GenericWriter` 缺少的是一种将单个接口分派到许多不同的可能的 Writer 实现的方法。调度技术分为两类：动态调度，在运行时执行；静态调度，由编译器在编译时执行。
+
+让我们首先检查旧的动态调度的 Writer 接口，称为 `AnyWriter`。
+
+**AnyWriter**
+
+`std.io.AnyWriter` 是 0.14.1 中的动态调度 Writer。与 `GenericWriter` 的主要区别在于 `AnyWriter` 不是泛型的。它是一个单一的、具体的类型，使用它的函数可以与它的任何实现一起使用。
+
+`AnyWriter` 有两个字段：
+
+*   `context`: `*const anyopaque`,
+*   `writeFn`: `*const fn (context: *const anyopaque, bytes: []const u8) anyerror!usize`,
+
+`context` 是一个类型擦除的指针，指向实现执行写入操作所需的任何数据。`writeFn` 指向一个函数，该函数使用此上下文数据执行写入操作，并且可以返回 `anyerror`，字面意思是任何可能的错误值。
+
+`AnyWriter` 不关心上下文的类型或 `write` 返回的错误，这使得它可以与不同的实现类型一起使用。`GenericWriter` 有一个将其自身转换为 `AnyWriter` 的函数，如下所示：
+
+```zig
+ pub inline fn any(self: *const Self) AnyWriter {
+    return .{
+        .context = @ptrCast(&self.context),
+        .writeFn = typeErasedWriteFn,
+    };
+}
+
+fn typeErasedWriteFn(context: *const anyopaque, bytes: []const u8) anyerror!usize {
+    const ptr: *const Context = @ptrCast(@alignCast(context));
+    return writeFn(ptr.*, bytes);
+}
+```
+
+这是一个使用 `File.Writer` 通过 `AnyWriter` 进行指针关系的可视化图：
+
+[图形：File.Writer和AnyWriter的指针关系图]($image.siteAsset('images/AnyWriter-Diagram.svg'))
+
+`File` 和 `AnyWriter` 都是运行时对象，`AnyWriter` 使用 `File.Writer` 提供的 `write` 函数。
+
+我们可以这样使用接口：
+
+```zig
+const std = @import("std");
+
+pub fn main() !void {
+    const stdout_file = std.io.getStdOut();
+
+    const stdout_writer = stdout_file.writer();
+
+    try writeData(stdout_writer.any());
+}
+
+fn writeData(writer: std.io.AnyWriter) anyerror!void {
+    try writer.writeAll("Hello, GenericWriter!\n");
+}
+```
+
+但是，运行时调度有一些缺点：
+
+*   它需要在运行时进行额外的工作，将上下文和 `writeFn` 存储为指针。每次写入都必须跟随这些指针，需要额外的内存加载。
+*   它通过返回 `anyerror` 而不是固定的错误集来降低类型安全性，而固定的错误集允许穷举处理错误。
+
+考虑到这一点，让我们看看编译时调度是如何完成的。
+
+**anytype**
+
+Zig 的 `anytype` 关键字可以在函数签名中代替参数类型使用，以允许传递任何类型的参数。对于函数使用不同类型参数的每个实例，编译器会秘密生成一个使用该类型的具体函数。
+
+这就是编译时调度的本质：我们可以编写可以与不同类型一起工作的代码，编译器会为每种使用的类型生成不同的代码。`anytype` 用于许多用途，不仅限于接口，并且在 0.15.1 中仍然存在。
+
+将我们现有的示例更改为使用 `anytype` 看起来像这样：
+
+```zig
+const std = @import("std");
+
+pub fn main() !void {
+    const stdout_file = std.io.getStdOut();
+
+    const stdout_writer = stdout_file.writer();
+
+    try writeData(stdout_writer);
+}
+
+fn writeData(writer: anytype) @TypeOf(writer).Error!void {
+    try writer.writeAll("Hello, GenericWriter!\n");
+}
+```
+
+可以使用由 `GenericWriter` 生成的 Writer 类型的任何值，甚至可以使用 `AnyWriter` 作为参数传递。请注意，尝试传递一个类型没有 `Error` 声明或 `write` 函数的值会导致编译错误。
+
+为每种正在使用的 Writer 类型生成代码消除了 `AnyWriter` 表现出的运行时开销和类型安全问题。相反，编译时调度也有其自身的缺点：
+
+*   为每种类型生成单独的函数会增加生成的执行文件的大小。
+*   从函数签名中不清楚可以使用哪些类型作为 `anytype` 参数，通常需要注释来明确说明。
+
+`anytype` 的模糊性和泛型性使得 API 很容易只接受 `GenericWriter` 的单个具体变体，例如 `std.http`，它到目前为止一直使用 `std.net.Stream`（用于网络套接字的 `GenericWriter` 实现），并且不能与其他类型的 Writer 一起使用。
+
+由于 `anytype` 也允许 `AnyWriter` 与之一起使用，因此它是此版本之前 Zig 标准库中接受 Writer 接口的主要方法。
+
+**统一的 Writer**
+
+所有上述方法的新的替代方案是 0.15.1 的 `std.Io.Writer`。它使用与 `AnyWriter` 不同的动态调度方法，在接口中执行缓冲，并且具有相当多的额外功能和特性，这些功能和特性使其比以前的接口更复杂，但也更强大。
+
+有关新接口背后的动机的简要列表可以在发行说明中找到，其中链接了 Zig 创建者 Andrew Kelley 的演讲，您绝对应该观看。
+
+让我们深入了解一下这个接口是如何编写的（省略注释）。
+
+```zig
+vtable: *const VTable,
+buffer: []u8,
+end: usize = 0,
+
+pub const VTable = struct {
+    drain: *const fn (w: *Writer, data: []const []const u8, splat: usize) Error!usize,
+    sendFile: *const fn (w: *Writer, file_reader: *File.Reader, limit: Limit) FileError!usize = unimplementedSendFile,
+    flush: *const fn (w: *Writer) Error!void = defaultFlush,
+    rebase: *const fn (w: *Writer, preserve: usize, capacity: usize) Error!void = defaultRebase,
+}
+```
+
+哇。这里有很多要分解的东西。我稍后会解释 `buffer/end` 字段，但让我们从 `vtable` 开始，以及新 Writer 中的动态调度技术与旧的 `std.io.AnyWriter` 中的动态调度技术的不同之处。
+
+**虚表和 @fieldParentPtr**
+
+任何动态调度的接口都需要两件事：一种访问实现状态的方法，以及一组操作该状态以完成接口任务的函数指针。这组函数指针统称为虚表，或 “vtable”。`AnyWriter` 只有一个直接存储的函数指针。`Io.Writer` 有一个更大的接口，因此存储了一个指向包含 4 个函数指针的虚表的指针。
+
+在 `AnyWriter` 中，指向实现对象的类型擦除指针存储在接口中。在新的 `Io.Writer` 中，接口是实现对象的一个字段，并且指向该字段的指针被传递给函数。通过使用 Zig 内置的 `@fieldParentPtr` 访问虚表函数中的实现状态，该函数从字段的指针中减去该字段在结构体内的偏移量。
+
+这是一个帮助您理解这一切的图：
+
+[图形： File.Writer 指针关系图]($image.siteAsset('images/Io-Writer-Diagram.svg'))
+
+查看 `File.Writer` 实现，注意接口是如何存储为一个字段的。像 `drain` 这样的接口函数接受一个指向该字段的指针，并使用 `@fieldParentPtr` 获取指向 `File.Writer` 的指针。
+
+```zig
+// std.fs.File
+
+pub const Writer = struct {
+    file: File,
+    // ...
+    interface: std.Io.Writer,
+
+    // ...
+
+    pub fn drain(io_w: *std.Io.Writer, data: []const []const u8, splat: usize) std.Io.Writer.Error!usize {
+        const w: *Writer = @alignCast(@fieldParentPtr("interface", io_w));
+        const handle = w.file.handle;
+```
+
+接口使用指向静态分配的虚表的指针构造，该虚表包含已实现的函数。
+
+```zig
+    pub fn initInterface(buffer: []u8) std.Io.Writer {
+        return .{
+            .vtable = &.{
+                .drain = drain,
+                .sendFile = switch (builtin.zig_backend) {
+                    else => sendFile,
+                    .stage2_aarch64 => std.Io.Writer.unimplementedSendFile,
+                },
+            },
+            .buffer = buffer,
+        };
+    }
+```
+
+现在是时候讨论新 API 的主要功能了，即它如何处理缓冲。
+
+**接口中的缓冲**
+
+缓冲是执行 IO 的一种广泛使用的优化方法。它涉及将数据存储在中间内存缓冲区中，并且仅在该缓冲区已满时才传输数据，从而减少了所需的数据传输总数。这提高了性能，因为传输数据通常很慢，例如，单个用于文件输出的 `syscall` 比写入内存缓冲区慢 3 个数量级。
+
+我们一直看到的 `drain` 函数是实现实际写入缓冲数据的方式。用户完成 Writer 操作后，他们调用 `flush` 来写出缓冲区中剩余的任何数据。
+
+[图形: 展示 Io.Writer 如何缓存数据]($image.siteAsset('images/Buffering-Interface.svg'))
+
+在大多数语言中，缓冲是在后台完成的实现细节。Zig pre-writergate 具有 `std.io.BufferedWriter`，它为此目的提供了一个 `GenericWriter`。以下是如何使用它：
+
+```zig
+const std = @import("std");
+
+pub fn main() !void {
+    const stdout_file = std.io.getStdOut();
+
+    const stdout_writer = stdout_file.writer();
+    var buffered_writer = std.io.bufferedWriter(stdout_writer);
+
+    try writeData(buffered_writer.writer());
+    try buffered_writer.flush();
+}
+
+fn writeData(writer: anytype) @TypeOf(writer).Error!void {
+    try writer.writeAll("Hello, 0.14.1!\n");
+}
+```
+
+现在，缓冲是接口本身的一部分！Writer 接口对象中的 `buffer` 和 `end` 字段分别存储缓冲区和当前缓冲的数据量。
+
+这是一个大胆的决定，因为将更多逻辑移动到接口中会降低其灵活性。没有其他可比的语言在接口中进行缓冲，但是这样做在性能方面实际上有好处。这是使用新 API 编写的先前示例：
+
+```zig
+const std = @import("std");
+
+pub fn main() !void {
+    const stdout_file = std.fs.File.stdout();
+
+    var buffer: [1024]u8 = undefined;
+    var stdout_writer = stdout_file.writer(&buffer);
+
+    try writeData(&stdout_writer.interface);
+    try stdout_writer.interface.flush(); // this could also be done in `writeData`
+}
+
+fn writeData(writer: *std.Io.Writer) std.Io.Writer.Error!void {
+    try writer.writeAll("Hello, 0.15.1!\n");
+}
+```
+
+那么，为什么这样更好呢？答案在于理解间接函数调用的性能。
+
+**间接调用和虚调用**
+
+每个动态调度的接口，无论是什么语言，都涉及使用函数指针 (`*const fn`) 来调用实现。像这样通过指针调用函数称为间接调用，如果函数指针恰好是虚表的一部分，则有时称为虚调用。
+
+通常，间接调用比直接调用已知函数慢，原因有几个。间接调用意味着在调用函数之前加载函数的地址，而直接调用可以跳转到静态地址。间接调用也更难优化。如果编译器无法确定调用将转到哪个函数，则它无法内联该函数或使用调用站点的上下文执行其他有用的优化。
+
+如果我们想要获得最佳性能，我们希望尽可能避免间接调用，这意味着尽可能少地调用 `drain`。在接口中进行缓冲可以实现这一点，因为大多数写入操作都可以通过仅将其存储在缓冲区中而无需通过虚表来执行。
+
+**drain 函数和向量 IO**
+
+`drain` 函数是接口的核心函数，因为它负责实际执行写入操作。它首先从缓冲区“排出”字节并写入它们，然后再写入传递给它的数据。它是唯一必须由实现者提供的函数。
+
+```zig
+    drain: *const fn (w: *Writer, data: []const []const u8, splat: usize) Error!usize,
+```
+
+这比像 `GenericWriter` 使用的标准 `write` 函数奇怪得多。为什么 `data` 是切片的切片而不是单个切片，`splat` 的意义何在？
+
+第一个问题可以用向量 IO 来回答。向量 IO 是指可以一次调用写入来自多个内存区域的数据。`data` 参数称为“向量”，向量中的每个数据切片都由 `drain` 顺序写入。这可能更有效，因为它减少了为写入不同的数据片段而进行多次虚调用的开销。`data` 必须至少包含一个切片。
+
+`splat` 值是最后的数据切片将被写入的次数。这对于写入大量重复数据而不实际分配或复制任何内存非常有用。这也被称为“逻辑 `memset`”。
+
+重要的是要意识到 `drain` 可以写入任意数量的字节。它可以写入所有字节，它可以写入缓冲区中的所有字节，但没有来自 `data` 的字节，它可能只排出缓冲区的一部分。它返回它写入的字节数，不包括缓冲的字节，并且可能需要多次调用才能确保所有内容都被写入。
+
+**sendFile**
+
+这是将更多逻辑移动到接口以提高性能的另一个例子。提供 `sendFile` 对于 `Io.Writer` 完全是可选的，并且用于直接写入文件的内容。
+
+```zig
+    sendFile: *const fn (
+        w: *Writer,
+        file_reader: *File.Reader,
+        limit: Limit,
+    ) FileError!usize = unimplementedSendFile,
+```
+
+源文件作为 `*File.Reader`（`File.Writer` 的对应方）传递，`limit` 参数限制了应该从文件中读取多少数据。
+
+某些操作系统具有用于将数据从文件复制到文件的 `syscall`，而不会产生将数据传入和传出用户空间的开销。如果不支持，`sendFile` 实现可以返回 `error.Unimplemented`，用户可以默认手动读取和写入。`unimplementedSendFile` 正是这样做的。
+
+**flush 和 rebase**
+
+写入完成后，用户应调用 `flush` 来写出缓冲区中剩余的任何数据。提供了默认实现作为 `defaultFlush`，它只是重复调用 `drain` 直到缓冲区为空，这通常是所需的方法，但实现可以提供其自己的函数来实现自定义行为。
+
+```zig
+    flush: *const fn (w: *Writer) Error!void = defaultFlush,
+```
+
+`rebase` 用于确保可以缓冲一定量的数据，类似于 `arraylist` 上的 `ensureCapacity`。
+
+```zig
+    rebase: *const fn (w: *Writer, preserve: usize, capacity: usize) Error!void = defaultRebase,
+```
+
+我们还可以使用 `preserve` 指定应保留多少个最近的字节。
+
+默认的 `rebase` 通过重复调用 `drain` 以在保留区域之前写出字节，然后将保留的字节向后复制以保持连续来工作。这是一个小规模的示例，说明它可能是什么样子：
+
+[图形： rebase 在小缓冲区上的工作方式]($image.siteAsset('images/Rebase-Diagram.svg'))
+
+**结论**
+
+这篇文章已经太长了，所以我将在这里停止，但是希望您对使用新 Writer 接口时在底层发生的事情有一个不错的心理模型。关于 `std.Io.Writer` 还有很多东西要学习（更不用说它的 Reader 对应物了），但是熟悉它的唯一方法是在您自己的代码中使用它。
+
+新的接口比以前更复杂，更难以学习，但是掌握它应该可以帮助您编写性能更高的 IO 代码。

@@ -1,0 +1,80 @@
+---
+.title = "Zig 0.15 中的新 Writer 接口",
+.date = @date("2025-09-18T08:58:33+0800"),
+.author = "刘家财",
+.layout = "post.shtml",
+---
+
+> 原文：https://www.openmymind.net/Zigs-New-Writer/
+
+正如你可能听说过的,Zig的`Io`命名空间正在重新设计。最终,这将意味着重新引入异步。作为第一步,Writer和Reader接口以及一些相关代码已经过改进。
+
+> 这篇文章是根据Zig的2025年7月中旬开发版本撰写的。它不适用于Zig 0.14.x(或任何以前的版本),并且可能随着更多Io命名空间的返工而过时。
+
+不久前,我写了一篇博客文章,[Zig's Writers](https://www.openmymind.net/In-Zig-Whats-a-Writer/)试图解释Zig的 Writer 。充其量,我会将当前状态描述为“混淆”两个 Writer 界面,同时经常处理`anytype`. .和虽然`anytype`很方便,它缺乏开发人员人体工程学。此外,目前的设计对于一些常见情况存在重大性能问题。
+
+新`Writer`接口是`std.Io.Writer`. .至少,实现必须提供`drain`功能。其签名看起来像:
+
+```zig
+fn drain(w: *Writer, data: []const []const u8, splat: usize) Error!usize
+```
+
+你可能会惊讶于这是自定义编写者需要实现的方法。它不仅需要一个字符串数组,但那是什么`splat`参数?像我一样,你可能期望一个更简单的`write`方法:
+
+```zig
+fn write(w: *Writer, data: []const u8) Error!usize
+```
+
+事实证明`std.Io.Writer`有内置的缓冲。例如,如果我们想要一个`Writer`为 A`std.fs.File`我们需要提供缓冲:
+
+```zig
+var buffer: [1024]u8 = undefined; var writer = my_file.writer(&buffer);
+```
+
+当然,如果我们不想要缓冲,我们总能传递一个空的缓冲区:
+
+```zig
+var writer = my_file.writer(&.{});
+```
+
+这就解释了为什么自定义编写者需要实现一个`drain`方法,而不是更简单的东西,如`write`. .
+
+最简单的实现方法`drain`,在进行这次更大的大修时,Zig标准库已经升级了很多,是:
+
+```zig
+fn drain(io_w: *std.Io.Writer, data: []const []const u8, splat: usize) !usize { _ = splat; const self: *@This() = @fieldParentPtr("interface", io_w); return self.writeAll(data[0]) catch return error.WriteFailed; }
+```
+
+我们忽略了`splat`参数,只需在中写第一个值`data`(`data.len > 0`保证是真实的)。这 转`drain`进入什么更简单`write`方法会看起来像。因为我们返回写入的字节长度,`std.Io.Writer`会知道我们可能没有写所有数据并调用`drain`再次,如果有必要,与其余的数据。
+
+> 如果你被调用混淆了`@fieldParentPtr`[upcoming linked list changes](https://www.openmymind.net/Zigs-New-LinkedList-API/)查看我关于即将到来的链接列表更改的帖子。
+
+实际执行`drain`为`File`是一个非平凡的〜150行代码。它具有特定于平台的代码,[并在可能的情况下利用矢量I/O。](https://www.openmymind.net/TCP-Server-In-Zig-Part-3-Minimizing-Writes-and-Reads/#writev)显然,提供简单的实现或更优化的实现具有灵活性。
+
+就像当前状态,当你做`file.writer(&buffer)`你没有得到一个`std.Io.Writer`. .相反,你得到一个`File.Writer`. .获取实际`std.Io.Writer`,你需要访问`interface`领域。这只是一个惯例,但期望它在整个标准和第三方图书馆中使用。准备好看很多`&xyz.interface`打电话!
+
+这种简化`File`显示三种类型之间的关系:
+
+```zig
+pub const File = struct { pub fn writer(self: *File, buffer: []u8) Writer{ return .{ .file = self, .interface = std.Io.Writer{ .buffer = buffer, .vtable = .{.drain = Writer.drain}, } }; } pub const Writer = struct { file: *File, interface: std.Io.Writer, // this has a bunch of other fields fn drain(io_w: *std.Io.Writer, data: []const []const u8, splat: usize) !usize { const self: *Writer = @fieldParentPtr("interface", io_w); // .... } } }
+```
+
+实例`File.Writer`需要存在于某个地方(例如在堆栈上),因为那是`std.Io.Writer`接口存在。有可能 那个`File`可以直接有一个`writer_interface: std.Io.Writer`字段,但这会限制你每个文件一个写入器,并且会膨胀`File`结构。
+
+我们可以从上面看到,当我们调用`Writer`一个“界面”,它只是一个正常的结构。它有几个领域超越`buffer`和`vtable.drain`,但这些是唯一两个具有非默认值;我们必须提供它们。因`Writer`接口实现了很多典型的“ Writer ”行为,比如`writeAll`和`print`(用于格式化写作)。它还有多种方法,只有`Writer`实施可能会关心。例如,`File.Writer.drain`必须调用`consume`以便作者的内部状态可以更新。在文档中并排列出所有这些功能,起初让我感到困惑。希望这是文档生成有朝一日能够帮助解开的东西。
+
+新`Writer`已经接管了多种方法。例如,`std.fmt.formatIntBuf`已经不存在了。替代者是`printInt`方法`Writer`. .但这需要一个`Writer`实例而不是简单`[]u8`以前要求。
+
+很容易错过,但`Writer.fixed([]u8) Writer`函数是你正在寻找的。您将将此用于迁移到的任何函数`Writer`用来在A上工作`buffer: []u8`. .
+
+迁移时,_可能会遇到以下错误:在“...”中没有名为“adaptToNewApi”的字段或成员函数。_你可以看到为什么发生这种情况,通过查看更新的实现`std.fmt.format`:
+
+```zig
+pub fn format(writer: anytype, comptime fmt: []const u8, args: anytype) !void { var adapter = writer.adaptToNewApi(); return adapter.new_interface.print(fmt, args) catch |err| switch (err) { error.WriteFailed => return adapter.err.?, }; }
+```
+
+因为这个功能被移动到`std.Io.Writer`, 任何`writer`传入`format`必须能够升级到新接口。这是完成的,同样,只是惯例,通过让“老” Writer 揭露一个`adaptToNewApi`返回一个类型的方法,它暴露了一个`new_interface: std.Io.Writer`领域。这是很容易实现使用基本`drain`实现,你可以在标准库中找到一些例子,但如果你不控制传统作者,那就没什么帮助了。
+
+我犹豫是否要对这一变化发表意见。我不懂语言设计。然而,虽然我认为这是对当前API的改进,但我一直认为直接添加缓冲到`Writer`不是理想的。
+
+我认为大多数语言都通过作文处理缓冲。你把一个 Reader / Writer ,并把它包装在缓冲阅读器或缓冲器。这种方法似乎既简单易懂,又易于实施,同时具有强大功能。它可以应用于缓冲和IO之外的东西。Zig似乎在与这种模式作斗争。而不是为此类问题提供一种有凝聚力和通用的方法,而是将一个特定API(IO)的特定特征(缓冲)融入到标准库中。也许我太密集了,无法理解,或者未来的变化会更全面地解决这个问题。

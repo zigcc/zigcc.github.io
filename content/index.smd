@@ -1,5 +1,5 @@
 ---
-.title = "",
+.title = "Zig 语言中文社区",
 .date = @date("1990-01-01T00:00:00"),
 .author = "ZigCC",
 .layout = "index.shtml",

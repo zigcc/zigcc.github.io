@@ -33,7 +33,8 @@ body {
   @media screen and (max-width: 800px) {
     max-width: 93vw;
   }
-  line-height: 1.5;
+  line-height: 1.7;
+  font-family: sans-serif;
   background: var(--bg);
   color: var(--fg);
 }

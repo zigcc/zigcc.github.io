@@ -1,6 +1,5 @@
 <extend template="base.shtml">
 <head id="head">
-  <link rel="stylesheet" href="$site.asset('style.css').link()">
   <super>
 </head>
 <body id="body">

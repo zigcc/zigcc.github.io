@@ -3,5 +3,7 @@
   <link type="text/css" rel="stylesheet" href="$site.asset('index.css').link()">
 </head>
 <body id="body">
-  <div class="content" :html="$page.content()"></div>
+  <article>
+    <div class="content" :html="$page.content()"></div>
+  </article>
 </body>

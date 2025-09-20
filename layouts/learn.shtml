@@ -7,7 +7,9 @@
     <h1>Table of Contents</h1>
     <div :html="$page.toc()"></div>
   </div>
-  <div :html="$page.content()"></div>
+  <article>
+    <div :html="$page.content()"></div>
+  </article>
   <div id="prev-next" :if="$page.isSection().not()">
     <div :if="$page.prevPage?()">
       <a href="$if.link()">

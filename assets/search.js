@@ -66,11 +66,18 @@ class Search {
     if (this.fuse) return this.fuse;
     const all = await Promise.all(this.feeds.map((f) => this.fetchFeed(f)));
     const index = all.flat();
-    this.fuse = new Fuse(index, { keys: ["title", "description"], threshold: 0.4 });
+    this.fuse = new Fuse(index, { keys: ["title", "description"], threshold: 0.1, ignoreLocation: true, shouldSort: true });
     return this.fuse;
   }
 
   // ---- rendering / highlighting ----
+  getOptimalDescription(description, query) {
+      const regex = new RegExp(Search.escapeRegExp(q), 'i');
+      const idx = (description || '').search(regex);
+
+      return this.highlightText(description.slice(Math.max(description.lastIndexOf("\n", idx) + 1, Math.max(0, idx - 100)), Math.min(idx + 100, description.indexOf("\n", idx))), q);
+  }
+
   highlightText(text, query) {
     if (!query || !text) return text;
     try {
@@ -95,7 +102,7 @@ class Search {
         <div class="search-item">
           <a href="${item.url}${query ? '#search=' + encodeURIComponent(query) : ''}">
             <h4>${this.highlightText(item.title, query)}</h4>
-            <p>${this.highlightText(item.description, query)}</p>
+            <p>${this.getOptimalDescription(item.description, query)}</p>
           </a>
           <span class="label">${item.module}</span>
         </div>

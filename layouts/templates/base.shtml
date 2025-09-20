@@ -25,8 +25,8 @@
       fetch('https://en.liujiacai.net/pv/write?' + new URLSearchParams(payload),
             {mode: 'no-cors'}).catch(console.log);
     </script>
-
     <super>
+    <link rel="stylesheet" href="$site.asset('search.css').link()">
   </head>
   <body id="body">
     <div class="header">
@@ -37,17 +37,38 @@
         <a href="$site.page('post').link()">博客</a>
         <a href="$site.page('contributing').link()">贡献</a>
       </nav>
+      <button id="search-btn" aria-label="搜索">
+        <!-- inline SVG for color inheritance -->
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+      </button>
     </div>
     <super>
+    <!-- Search modal (hidden by default) -->
+    <div id="search-modal" class="search-modal" hidden>
+      <div class="search-overlay" id="search-overlay" tabindex="0"></div>
+      <div class="search-panel" role="dialog" aria-modal="true" aria-label="站内搜索">
+        <div class="container">
+          <div class="search-header">
+            <input id="search-input" autocomplete="off">
+            <button id="search-close">✕</button>
+          </div>
+          <div id="search-results" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="$site.asset('search.js').link()" defer></script>
     <footer>
       <div>
         <div>
           <p>&copy; 2022–2025 |
             <a href="https://github.com/zigcc/zigcc.github.io">网站源码</a>
-            | 由 <a href="https://zine-ssg.io/">Zine</a> 驱动
-            | <a href="/rss">RSS</a>
-
-          </p>
+            | 由
+            <a href="https://zine-ssg.io/">Zine</a>
+            驱动
+            |
+            <a href="/rss">RSS</a></p>
         </div>
         <div>
           <a

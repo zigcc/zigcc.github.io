@@ -1,4 +1,4 @@
-import Fuse from "https://registry.npmmirror.com/fuse.js/7.1.0/files/dist/fuse.min.mjs";
+import Fuse from "/libs/fuse.min.js";
 
 const DEFAULT_FEEDS = [
   { url: "/learn/index.xml", module: "学习" },

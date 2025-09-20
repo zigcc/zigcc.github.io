@@ -1,0 +1,198 @@
+/* Ensure [hidden] attribute hides the modal even if other rules set display */
+.search-modal[hidden] {
+  display: none !important;
+}
+
+/* search modal and result styles */
+.search-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 16px;
+  /* Ensure the modal covers full viewport and prevent scroll chaining to background */
+  height: 100vh;
+  overscroll-behavior: none; /* 阻止滚动穿透到页面主体 */
+  -webkit-overflow-scrolling: touch;
+}
+.search-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  /* also prevent scroll chaining on the overlay */
+  overscroll-behavior: none;
+}
+.search-panel {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+}
+.search-panel .container {
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 6px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+.search-header {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+#search-input {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 16px;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#search-input:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+}
+#search-close {
+  background: transparent;
+  border: 0;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--fg);
+}
+#search-results {
+  margin-top: 12px;
+  max-height: 60vh;
+  padding-right: 10px;
+  overflow: auto;
+}
+.search-item {
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  transition: background-color 0.2s ease;
+}
+
+.search-item:hover,
+.search-item:focus-within {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.search-item a {
+  color: inherit;
+  text-decoration: none;
+  flex: 1;
+  border-radius: 2px;
+  padding: 2px;
+}
+
+.search-item h4 {
+  margin: 0;
+  font-size: 16px;
+}
+.search-item p {
+  margin: 6px 0 0 0;
+  font-size: 13px;
+  color: #3c3c3c;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+}
+.search-item .label {
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--border);
+}
+.search-highlight {
+  background: #fff5c2;
+  transition: background 1.2s ease;
+}
+
+@media (max-width: 767px) and (orientation: portrait) {
+  .search-modal {
+    padding: 0;
+    align-items: stretch;
+  }
+  .search-panel {
+    display: flex;
+    flex-direction: column;
+  }
+  /* 使 container 占满可视高度，内部结果区做独立滚动，避免背景滚动 */
+  .search-panel .container {
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    max-height: 100vh;
+  }
+
+  #search-results {
+    overflow: auto;
+    flex: 0.98;
+    max-height: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .search-panel .container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}
+
+/* search button in header */
+#search-btn {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: currentColor;
+  margin-left: 20px;
+  padding: 8px;
+}
+
+/* align SVG icon with text baseline */
+#search-btn svg {
+  vertical-align: middle;
+}
+
+/* dark mode support */
+@media (prefers-color-scheme: dark) {
+  .search-item p {
+    color: #e6e6e69f;
+  }
+  .search-item .label {
+    color: #6c757d;
+  }
+  /* dark-mode highlight for search results and matched elements */
+  .search-highlight {
+    background: #665c00;
+    transition: background 1.2s ease;
+  }
+
+  .search-item:hover,
+  .search-item:focus-within {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  #search-input:focus {
+    border-color: #4d9eff;
+    box-shadow: 0 0 0 2px rgba(77, 158, 255, 0.2);
+  }
+
+  .search-item a:focus {
+    outline-color: #4d9eff;
+  }
+}

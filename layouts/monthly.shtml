@@ -2,5 +2,7 @@
 <head id="head">
 </head>
 <body id="body">
-  <div :html="$page.content()"></div>
+  <article>
+    <div :html="$page.content()"></div>
+  </article>
 </body>

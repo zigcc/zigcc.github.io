@@ -25,8 +25,9 @@
       fetch('https://en.liujiacai.net/pv/write?' + new URLSearchParams(payload),
             {mode: 'no-cors'}).catch(console.log);
     </script>
-    <super>
     <link rel="stylesheet" href="$site.asset('search.css').link()">
+    <script type="module" src="$site.asset('search.js').link()" defer></script>
+    <super>
   </head>
   <body id="body">
     <div class="header">
@@ -58,7 +59,6 @@
         </div>
       </div>
     </div>
-    <script type="module" src="$site.asset('search.js').link()" defer></script>
     <footer>
       <div>
         <div>

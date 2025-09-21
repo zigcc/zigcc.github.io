@@ -7,7 +7,12 @@
     <title :text="$page.title"></title>
     <link type="text/css" rel="stylesheet" href="$site.asset('style.css').link()">
     <link type="text/css" rel="stylesheet" href="$site.asset('highlight.css').link()">
+    <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+    <script src="/pagefind/pagefind-ui.js"></script>
     <script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+    });
       var _hmt = _hmt || [];
       (function() {
         var hm = document.createElement("script");
@@ -38,6 +43,7 @@
         <a href="$site.page('contributing').link()">贡献</a>
       </nav>
     </div>
+    <div id="search"></div>
     <super>
     <footer>
       <div>

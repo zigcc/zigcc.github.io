@@ -34,7 +34,11 @@ jobs:
           version: v0.10.2
 
       - name: Build
-        run: zine release
+        run: |
+          zine release
+          # https://gohugo.io/tools/search/
+          # https://pagefind.app/docs/
+          npx -y pagefind --site public --force-language zh-cn
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

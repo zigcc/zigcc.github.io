@@ -71,7 +71,7 @@ class Search {
   }
 
   // ---- rendering / highlighting ----
-  getOptimalDescription(description, query) {
+  getOptimalDescription(description, q) {
       const regex = new RegExp(Search.escapeRegExp(q), 'i');
       const idx = (description || '').search(regex);
 

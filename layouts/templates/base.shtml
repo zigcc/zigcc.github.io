@@ -45,15 +45,16 @@
     </div>
     <div id="search"></div>
     <super>
+    <hr>
     <footer>
       <div>
         <div>
-          <p>&copy; 2022–2025 |
-            <a href="https://github.com/zigcc/zigcc.github.io">网站源码</a>
-            | 由 <a href="https://zine-ssg.io/">Zine</a> 驱动
-            | <a href="/rss">RSS</a>
-
-          </p>
+          &copy; 2022 – 2025
+          | <a href="https://github.com/zigcc/zigcc.github.io">GitHub</a>
+          | 由 <a href="https://zine-ssg.io/">Zine</a> 驱动
+          | <a href="http://course.ziglang.cc">Zig 圣经</a>
+          | <a href="http://cookbook.ziglang.cc">Zig Cookbook</a>
+          | <a href="/rss">RSS</a>
         </div>
         <div>
           <a

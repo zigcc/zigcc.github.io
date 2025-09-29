@@ -19,18 +19,18 @@ Zig 官网的[下载页面](https://ziglang.org/download/)中包含常见平台�
 ```bash
 brew install asdf
 
-asdf plugin add zig https://github.com/zigcc/asdf-zig.git
+asdf plugin add zig https://github.com/asdf-community/asdf-zig.git
+
+# 更新插件到最新版
+asdf plugin update zig
 
 # 安装最新稳定版
 asdf install zig latest
 
 # 设置为全局版本
-# asdf 0.16 之前
-asdf global zig latest
-
-# asdf 0.16 之后
 asdf set --home zig latest
 
-# 验证安装
+# 验证安装，asdf 会同时安装 zig 与 zls
 zig version
+zls version
 ```

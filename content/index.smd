@@ -17,4 +17,18 @@ Zig 中文社区致力于在中文用户中分享和传播 Zig 语言！
 3. 组织线上线下的学习活动和讨论
 4. 推广 Zig 语言在中文开发者中的应用
 
+## 加入我们
+
+欢迎加入我们的社区，一起学习和交流 Zig 语言！你可以通过以下方式参与：
+- 访问我们的 [论坛](https://ask.ziglang.cc) 参与讨论
+- 加入我们的 [微信群](https://ask.ziglang.cc/weixin)、[Telegram 群](https://ask.ziglang.cc/telegram)、[Discord 群](https://ask.ziglang.cc/discord) 与其他成员交流
+- 关注我们的微信公众号获取最新资讯
+
+  []($image.siteAsset('images/wechat-official.webp').linked(false))
+
+- 改进 ZigCC GitHub 组织下的[开源项目]($link.page('contributing'))，帮助更多人了解 Zig
+- 参加我们的线上线下活动，结识更多 Zig 爱好者
+
+无论你是 Zig 的新手还是资深开发者，我们都欢迎你的加入！让我们一起推动 Zig 语言在中文社区的发展，共同创造更多精彩的项目和资源！
+
 [让我们一起探索 Zig 的魅力，推动 Zig 在中文社区内的发展！]($text.attrs('center','large','bold'))

@@ -28,7 +28,8 @@ fn write(w: *Writer, data: []const u8) Error!usize
 事实证明`std.Io.Writer`有内置的缓冲。例如,如果我们想要一个`Writer`为 A`std.fs.File`我们需要提供缓冲:
 
 ```zig
-var buffer: [1024]u8 = undefined; var writer = my_file.writer(&buffer);
+var buffer: [1024]u8 = undefined;
+var writer = my_file.writer(&buffer);
 ```
 
 当然,如果我们不想要缓冲,我们总能传递一个空的缓冲区:
@@ -42,7 +43,11 @@ var writer = my_file.writer(&.{});
 最简单的实现方法`drain`,在进行这次更大的大修时,Zig标准库已经升级了很多,是:
 
 ```zig
-fn drain(io_w: *std.Io.Writer, data: []const []const u8, splat: usize) !usize { _ = splat; const self: *@This() = @fieldParentPtr("interface", io_w); return self.writeAll(data[0]) catch return error.WriteFailed; }
+fn drain(io_w: *std.Io.Writer, data: []const []const u8, splat: usize) !usize {
+    _ = splat;
+    const self: *@This() = @fieldParentPtr("interface", io_w);
+    return self.writeAll(data[0]) catch return error.WriteFailed;
+}
 ```
 
 我们忽略了`splat`参数,只需在中写第一个值`data`(`data.len > 0`保证是真实的)。这 转`drain`进入什么更简单`write`方法会看起来像。因为我们返回写入的字节长度,`std.Io.Writer`会知道我们可能没有写所有数据并调用`drain`再次,如果有必要,与其余的数据。
@@ -56,7 +61,28 @@ fn drain(io_w: *std.Io.Writer, data: []const []const u8, splat: usize) !usize { 
 这种简化`File`显示三种类型之间的关系:
 
 ```zig
-pub const File = struct { pub fn writer(self: *File, buffer: []u8) Writer{ return .{ .file = self, .interface = std.Io.Writer{ .buffer = buffer, .vtable = .{.drain = Writer.drain}, } }; } pub const Writer = struct { file: *File, interface: std.Io.Writer, // this has a bunch of other fields fn drain(io_w: *std.Io.Writer, data: []const []const u8, splat: usize) !usize { const self: *Writer = @fieldParentPtr("interface", io_w); // .... } } }
+pub const File = struct {
+    pub fn writer(self: *File, buffer: []u8) Writer {
+        return .{
+            .file = self,
+            .interface = std.Io.Writer{
+                .buffer = buffer,
+                .vtable = .{.drain = Writer.drain},
+            }
+        };
+    }
+    
+    pub const Writer = struct {
+        file: *File,
+        interface: std.Io.Writer,
+        // this has a bunch of other fields
+        
+        fn drain(io_w: *std.Io.Writer, data: []const []const u8, splat: usize) !usize {
+            const self: *Writer = @fieldParentPtr("interface", io_w);
+            // ....
+        }
+    }
+}
 ```
 
 实例`File.Writer`需要存在于某个地方(例如在堆栈上),因为那是`std.Io.Writer`接口存在。有可能 那个`File`可以直接有一个`writer_interface: std.Io.Writer`字段,但这会限制你每个文件一个写入器,并且会膨胀`File`结构。
@@ -70,7 +96,12 @@ pub const File = struct { pub fn writer(self: *File, buffer: []u8) Writer{ retur
 迁移时,_可能会遇到以下错误:在“...”中没有名为“adaptToNewApi”的字段或成员函数。_你可以看到为什么发生这种情况,通过查看更新的实现`std.fmt.format`:
 
 ```zig
-pub fn format(writer: anytype, comptime fmt: []const u8, args: anytype) !void { var adapter = writer.adaptToNewApi(); return adapter.new_interface.print(fmt, args) catch |err| switch (err) { error.WriteFailed => return adapter.err.?, }; }
+pub fn format(writer: anytype, comptime fmt: []const u8, args: anytype) !void {
+    var adapter = writer.adaptToNewApi();
+    return adapter.new_interface.print(fmt, args) catch |err| switch (err) {
+        error.WriteFailed => return adapter.err.?,
+    };
+}
 ```
 
 因为这个功能被移动到`std.Io.Writer`, 任何`writer`传入`format`必须能够升级到新接口。这是完成的,同样,只是惯例,通过让“老” Writer 揭露一个`adaptToNewApi`返回一个类型的方法,它暴露了一个`new_interface: std.Io.Writer`领域。这是很容易实现使用基本`drain`实现,你可以在标准库中找到一些例子,但如果你不控制传统作者,那就没什么帮助了。

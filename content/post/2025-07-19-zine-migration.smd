@@ -170,18 +170,18 @@ Zine 布局有几个关键特性：
 // file: layouts/post.shtml
 <ctx :if="$page.custom.getOr('math', false)">
   <link
-    href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.15.2/katex.min.css"
+    href="https://registry.npmmirror.com/katex/0.16.27/files/dist/katex.min.css"
     crossorigin="anonymous"
     rel="stylesheet"
   />
   <script
     defer
-    src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.15.2/katex.min.js"
+    src="https://registry.npmmirror.com/katex/0.16.27/files/dist/katex.min.js"
     crossorigin="anonymous"
   ></script>
   <script
     defer
-    src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.15.2/contrib/auto-render.min.js"
+    src="https://registry.npmmirror.com/katex/0.16.27/files/dist/contrib/auto-render.min.js"
     crossorigin="anonymous"
     onload="renderMathInElement(document.body);"
   ></script>

@@ -1,16 +1,16 @@
 <extend template="content.shtml">
 <head id="head">
   <ctx :if="$page.custom.getOr('math', false)">
-    <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.15.2/katex.min.css" crossorigin="anonymous" rel="stylesheet">
+    <link href="https://registry.npmmirror.com/katex/0.16.27/files/dist/katex.min.css" crossorigin="anonymous" rel="stylesheet">
     <script
       defer
-      src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.15.2/katex.min.js"
+      src="https://registry.npmmirror.com/katex/0.16.27/files/dist/katex.min.js"
       crossorigin="anonymous"
     ></script>
-    <script defer src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.15.2/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+    <script defer src="https://registry.npmmirror.com/katex/0.16.27/files/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
   </ctx>
   <ctx :if="$page.custom.getOr('mermaid', false)">
-    <script defer src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/mermaid/8.14.0/mermaid.min.js" onload="mermaid.initialize({startOnLoad:true});"></script>
+    <script defer src="https://registry.npmmirror.com/mermaid/8.14.0/files/dist/mermaid.min.js" onload="mermaid.initialize({startOnLoad:true});"></script>
   </ctx>
 </head>
 <body id="body">

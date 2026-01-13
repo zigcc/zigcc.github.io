@@ -236,3 +236,43 @@ html {
 h1{
   margin-bottom: 0;
 }
+
+/* Sidebar Layout */
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (min-width: 1200px) {
+  body {
+    max-width: 80vw;
+  }
+
+  .content-wrapper {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  .main-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .toc-sidebar {
+    width: 250px;
+    flex-shrink: 0;
+    order: 2;
+    margin-top: 20px;
+    border-left: 1px solid var(--border);
+    padding-left: 1rem;
+    font-size: 0.9em;
+  }
+
+  .toc-sticky {
+    position: sticky;
+    top: 2rem;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+  }
+}

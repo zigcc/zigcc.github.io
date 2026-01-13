@@ -250,7 +250,7 @@ h1{
 
   .content-wrapper {
     flex-direction: row;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 2rem;
   }
 
@@ -263,7 +263,6 @@ h1{
     width: 250px;
     flex-shrink: 0;
     order: 2;
-    margin-top: 20px;
     border-left: 1px solid var(--border);
     padding-left: 1rem;
     font-size: 0.9em;
@@ -271,8 +270,9 @@ h1{
 
   .toc-sticky {
     position: sticky;
-    top: 2rem;
-    max-height: calc(100vh - 4rem);
+    top: 50%;
+    transform: translateY(-50%);
+    max-height: 90vh;
     overflow-y: auto;
   }
 }

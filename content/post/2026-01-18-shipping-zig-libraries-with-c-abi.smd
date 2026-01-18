@@ -77,15 +77,15 @@ pub const ExportedContainer = extern struct {
 
 comptime {
     if (export_mod.export_mode) {
-        exprotAllSymbol();
+        exportAllSymbol();
     }
 }
 
-pub fn exprotAllSymbol() void {
+pub fn exportAllSymbol() void {
     export_mod.exportsymbols(ExportedContainer);
 }
 
-// exprot_symbol.zig
+// export_symbol.zig
 pub const export_mode = true;
 
 pub fn exportsymbols(Target: type) void {
@@ -107,7 +107,7 @@ pub fn exportsymbols(Target: type) void {
 const lib = @import("lib");
 
 fn main() void {
-    lib.exprotAllSymbol();
+    lib.exportAllSymbol();
 }
 ```
 

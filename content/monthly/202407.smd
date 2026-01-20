@@ -1,5 +1,5 @@
 ---
-.title = "202407 | Zig 成为最热门的编程语言",
+.title = "Zig 成为最热门的编程语言",
 .date = @date("2024-07-05T21:22:52+0800"),
 .author = "ZigCC",
 .layout = "monthly.shtml",

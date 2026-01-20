@@ -1,5 +1,5 @@
 ---
-.title = "202306 | Zig 要分叉了？",
+.title = "Zig 要分叉了？",
 .date = @date("2023-07-01T17:35:43+0800"),
 .author = "ZigCC",
 .layout = "monthly.shtml",

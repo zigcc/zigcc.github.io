@@ -1,4 +1,4 @@
-<extend template="content.shtml">
+<extend template="base.shtml">
 <head id="head">
   <ctx :if="$page.custom.getOr('math', false)">
     <link href="https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha512-fHwaWebuwA7NSF5Qg/af4UeDx9XqUpYpOGgubo3yWu+b2IQR4UeQwbb42Ti7gVAjNtVoI/I9TEoYeu9omwcC6g==" crossorigin="anonymous" rel="stylesheet">
@@ -26,6 +26,61 @@
     <script defer src="https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/mermaid/11.12.0/mermaid.min.js" integrity="sha512-5TKaYvhenABhlGIKSxAWLFJBZCSQw7HTV7aL1dJcBokM/+3PNtfgJFlv8E6Us/B1VMlQ4u8sPzjudL9TEQ06ww==" crossorigin="anonymous" onload="mermaid.initialize({theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default'}); mermaid.run();"></script>
   </ctx>
 </head>
-<div id="content">
-  <div :html="$page.content()"></div>
-</div>
+<body id="body">
+  <div class="content-wrapper">
+    <!-- TOC Sidebar for Articles -->
+    <div class="toc-sidebar" :if="$page.isSection().not().and($page.custom.getOr('toc', true))">
+      <div class="toc-sticky">
+        <h3>TOC</h3>
+        <div :html="$page.toc()"></div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <h1 :text="$page.title"></h1>
+      
+      <!-- Index Page: List of Posts -->
+      <div :if="$page.isSection()">
+        <div :html="$page.content()" class="monthly-intro"></div>
+        <div class="monthly-timeline">
+          <div :loop="$page.subpages()">
+            <a href="$loop.it.link()" class="monthly-item">
+              <span class="monthly-item-title" :text="$loop.it.title"></span>
+              <div class="monthly-item-meta">
+                <span class="monthly-date-part" :text="$loop.it.date.format('02')"></span>
+                <span class="monthly-sep">/</span>
+                <span class="monthly-date-part" :text="$loop.it.date.format('01')"></span>
+                <span class="monthly-sep">/</span>
+                <span class="monthly-date-part" :text="$loop.it.date.format('2006')"></span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article Page: Content + Prev/Next -->
+      <div :if="$page.isSection().not()">
+        <div id="meta">
+            <p>
+                <span id="author" :text="$page.author"></span>
+                |
+                <span :text="$page.date.format('January 02, 2006')"></span>
+            </p>
+        </div>
+        <div :html="$page.content()"></div>
+        <div id="prev-next">
+          <div :if="$page.prevPage?()">
+            <a href="$if.link()">
+              <span :text="$if.title"></span>
+            </a>
+          </div>
+          <div :if="$page.nextPage?()">
+            <a href="$if.link()">
+              <span :text="$if.title"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

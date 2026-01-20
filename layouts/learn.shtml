@@ -2,7 +2,6 @@
 <head id="head">
 </head>
 <body id="body">
-  <h1 :text="$page.title"></h1>
   <div class="content-wrapper">
     <div class="toc-sidebar" :if="$page.custom.getOr('toc', true).and($page.isSection().not()).and($page.toc().len().gt(11))">
       <div class="toc-sticky">
@@ -11,6 +10,7 @@
       </div>
     </div>
     <div class="main-content">
+      <h1 :text="$page.title"></h1>
       <div :html="$page.content()"></div>
       <div id="prev-next" :if="$page.isSection().not()">
         <div :if="$page.prevPage?()">

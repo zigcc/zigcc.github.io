@@ -1,5 +1,5 @@
 ---
-.title = "202405",
+.title = "Zig 任务调度器与 CLI 进度条",
 .date = @date("2024-06-02T22:18:59+0800"),
 .author = "ZigCC",
 .layout = "monthly.shtml",

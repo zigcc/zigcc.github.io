@@ -1,5 +1,5 @@
 ---
-.title = "202304 | 首次闯入 Tiobe 前 50",
+.title = "首次闯入 Tiobe 前 50",
 .date = @date("2023-05-03T10:31:04+0800"),
 .author = "ZigCC",
 .layout = "monthly.shtml",

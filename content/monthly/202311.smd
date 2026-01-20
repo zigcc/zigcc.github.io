@@ -1,5 +1,5 @@
 ---
-.title = "202311 | 传值或传引用，这是个大问题",
+.title = "传值或传引用，这是个大问题",
 .date = @date("2023-11-19T18:26:29+0800"),
 .author = "ZigCC",
 .layout = "monthly.shtml",

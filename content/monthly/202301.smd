@@ -1,5 +1,5 @@
 ---
-.title = "202301 | 包管理来了",
+.title = "包管理来了",
 .date = @date("2023-01-31T20:05:19+0800"),
 .author = "ZigCC",
 .layout = "monthly.shtml",

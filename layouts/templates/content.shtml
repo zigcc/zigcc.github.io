@@ -3,22 +3,6 @@
   <super>
 </head>
 <body id="body">
-  <h1 :text="$page.title"></h1>
-  <div id="meta" :if="$page.isSection().not()">
-    <p :text="$page.date.format('2006-01-03')"></p>
-    <p :text="$page.author" id="author"></p>
-  </div>
-  <ul :loop="$page.subpages()">
-    <li>
-      <i :if="$page.custom.getOr('showTocDate', true)">
-        <time datetime="$loop.it.date.format('2006-01-03')" :text="$loop.it.date.format('2006-01-03')"></time>
-        &nbsp;
-      </i>
-      <a href="$loop.it.link()">
-        <span :text="$loop.it.title"></span>
-      </a>
-    </li>
-  </ul>
   <div class="content-wrapper">
     <div class="toc-sidebar" :if="$page.custom.getOr('toc', true).and($page.isSection().not())">
       <div class="toc-sticky">
@@ -27,6 +11,21 @@
       </div>
     </div>
     <div class="main-content" id="content">
+      <h1 :text="$page.title"></h1>
+      <div id="meta" :if="$page.isSection().not()">
+        <p :text="$page.date.format('2006-01-03')"></p>
+        <p :text="$page.author" id="author"></p>
+      </div>
+      <ul class="article-list" :loop="$page.subpages()">
+        <li>
+          <a href="$loop.it.link()" class="article-item">
+            <span class="article-title" :text="$loop.it.title"></span>
+            <span class="article-date" :if="$page.custom.getOr('showTocDate', true)">
+              <time datetime="$loop.it.date.format('2006-01-03')" :text="$loop.it.date.format('2006-01-03')"></time>
+            </span>
+          </a>
+        </li>
+      </ul>
       <super>
       <div id="prev-next" :if="$page.isSection().not()">
         <div :if="$page.prevPage?()">

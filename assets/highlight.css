@@ -1,103 +1,79 @@
 :root {
-  --code-fg: #BD976A;
-  --keyword: #4D9375;
-  --variable: #BD976A;
-  --comment: #758575DD;
-  --operator: #666666;
-  --string: #C98A7D;
-  --number: #4C9A91;
-  --function: #CB7676;
-  --bracket: #93aa9e;
+  /* Light Mode Syntax Tokens (GitHub Light inspired) */
+  --hl-fg: #24292f;
+  --hl-keyword: #cf222e;      /* Red */
+  --hl-variable: #953800;     /* Orange */
+  --hl-comment: #6e7781;      /* Gray */
+  --hl-operator: #24292f;     /* Dark Gray */
+  --hl-string: #0a3069;       /* Dark Blue */
+  --hl-number: #0550ae;       /* Blue */
+  --hl-function: #8250df;     /* Purple */
+  --hl-bracket: #24292f;
+  --hl-constant: #0550ae;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark Mode Syntax Tokens (GitHub Dark inspired) */
+    --hl-fg: #c9d1d9;
+    --hl-keyword: #ff7b72;      /* Coral */
+    --hl-variable: #ffa657;     /* Orange */
+    --hl-comment: #8b949e;      /* Gray */
+    --hl-operator: #c9d1d9;     /* Light Gray */
+    --hl-string: #a5d6ff;       /* Light Blue */
+    --hl-number: #79c0ff;       /* Blue */
+    --hl-function: #d2a8ff;     /* Purple */
+    --hl-bracket: #c9d1d9;
+    --hl-constant: #79c0ff;
+  }
 }
 
 code {
-  color: var(--code-fg);
+  color: var(--hl-fg);
 }
 
-code.zig, code.javascript, code.c, code.cpp, code.zon, code.go{
-  color: var(--code-fg);
-  .keyword, .keyword_modifier, .type_builtin, .keyword_type, .keyword_return, .keyword_conditional, .keyword_repeat, .keyword_operator, .constant_builtin, .keyword_exception, .type{
-    color: var(--keyword);
-  }
-  .variable, .function_builtin{
-    color: var(--variable);
-  }
-  .comment{
-    color: var(--comment);
-  }
-  .operator, .punctuation{
-    color: var(--operator);
-  }
-  .string, .character{
-    color: var(--string);
-  }
-  .number{
-    color: var(--number);
-  }
-  .keyword_function, .punctuation_delimiter, .function{
-    color: var(--function);
-  }
-  .punctuation_bracket{
-    color: var(--bracket);
-  }
+/* General Syntax Highlighting */
+.keyword, .keyword_modifier, .type_builtin, .keyword_type, .keyword_return, .keyword_conditional, .keyword_repeat, .keyword_operator, .keyword_exception, .type, .storage, .tag {
+  color: var(--hl-keyword);
 }
 
-code.conf{
-  color: var(--code-fg);
-  .function{
-    color: var(--function);
-  }
-  .punctuation_bracket{
-    color: var(--bracket);
-  }
+.variable, .function_builtin, .attr-name {
+  color: var(--hl-variable);
 }
 
-code.diff{
-  color: var(--code-fg);
-  .addition, .string{
-    color: #4D9375;
-  }
-  .deletion, .keyword{
-    color: #CB7676;
-  }
+.comment, .prolog, .doctype, .cdata {
+  color: var(--hl-comment);
+  font-style: italic;
 }
 
-/* TODO 分词器太烂了 */
-code.bash {
-  color: var(--code-fg);
-  .comment {
-    color: var(--comment);
-    font-style: italic;
-  }
-  span.operator {
-    color: var(--operator);
-  }
-  .constant {
-    color: var(--number);
-  }
-  .string {
-    color: var(--string);
-  }
-  .function {
-    color: var(--function);
-  }
+.operator, .punctuation, .punctuation_delimiter {
+  color: var(--hl-operator);
 }
 
-code.json{
-  color: var(--code-fg);
-  .constant_builtin{
-    color: var(--keyword);
-  }
-  span.string_special_key{
-    color: var(--string)
-  }
-  .string{
-    color: var(--function)
-  }
+.string, .character, .attr-value {
+  color: var(--hl-string);
 }
 
-@media (prefers-color-scheme: light) {
-  code{
-    filter: brightness(0.8) contrast(1.5);
-  }
+.number, .constant_builtin, .constant, .boolean {
+  color: var(--hl-number);
 }
+
+.function, .keyword_function, .method {
+  color: var(--hl-function);
+}
+
+.punctuation_bracket, .bracket {
+  color: var(--hl-bracket);
+}
+
+/* Language Specific Overrides if needed */
+code.diff .addition { color: #1a7f37; } /* Green */
+code.diff .deletion { color: #cf222e; } /* Red */
+
+@media (prefers-color-scheme: dark) {
+  code.diff .addition { color: #3fb950; }
+  code.diff .deletion { color: #ff7b72; }
+}
+
+/* Bash specific adjustments */
+code.bash .constant { color: var(--hl-variable); }

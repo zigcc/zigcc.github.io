@@ -1,6 +1,53 @@
-<extend template="content.shtml">
+<extend template="base.shtml">
 <head id="head">
 </head>
-<div id="content">
-  <div :html="$page.content()"></div>
-</div>
+<body id="body">
+  <div class="content-wrapper">
+    <!-- TOC Sidebar for Articles -->
+    <div class="toc-sidebar" :if="$page.isSection().not().and($page.custom.getOr('toc', true))">
+      <div class="toc-sticky">
+        <h3>TOC</h3>
+        <div :html="$page.toc()"></div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <h1 :text="$page.title"></h1>
+      
+      <!-- Index Page: Intro + Timeline -->
+      <div :if="$page.isSection()">
+        <div :html="$page.content()" class="monthly-intro"></div>
+        <div class="monthly-timeline">
+          <div :loop="$page.subpages()">
+            <a href="$loop.it.link()" class="monthly-item">
+              <span class="monthly-item-title" :text="$loop.it.title"></span>
+              <div class="monthly-item-meta">
+                <span class="monthly-date-part" :text="$loop.it.date.format('01')"></span>
+                <span class="monthly-sep">/</span>
+                <span class="monthly-date-part" :text="$loop.it.date.format('2006')"></span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article Page: Content + Prev/Next -->
+      <div :if="$page.isSection().not()">
+        <div :html="$page.content()" class="monthly-content"></div>
+        <div id="prev-next">
+          <div :if="$page.prevPage?()">
+            <a href="$if.link()">
+              <span :text="$if.title"></span>
+            </a>
+          </div>
+          <div :if="$page.nextPage?()">
+            <a href="$if.link()">
+              <span :text="$if.title"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>

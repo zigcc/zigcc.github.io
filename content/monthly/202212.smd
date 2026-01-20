@@ -1,5 +1,5 @@
 ---
-.title = "202212 | TBD",
+.title = "告别 C++ 实现",
 .date = @date("2022-12-11T14:11:38+0800"),
 .author = "ZigCC",
 .layout = "monthly.shtml",

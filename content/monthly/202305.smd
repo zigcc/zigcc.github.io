@@ -1,5 +1,5 @@
 ---
-.title = "202305 | HTTP is built-in",
+.title = "HTTP is built-in",
 .date = @date("2023-06-16T16:32:29+0800"),
 .author = "ZigCC",
 .layout = "monthly.shtml",

@@ -11,23 +11,91 @@
 .draft = false,
 ---
 
-# [《学习 Zig》 目录]($heading.id('table-of-contents'))
-
-- [前言](./preface)
-- [安装 Zig](./installing-zig)
-- [语言概述 - 第一部分](./language-overview-1)
-- [语言概述 - 第二部分](./language-overview-2)
-- [编码风格](./style-guide)
-- [指针](./pointers)
-- [栈内存](./stack-memory)
-- [堆内存和分配器](./heap-memory)
-- [泛型](./generics)
-- [实战](./coding-in-zig)
-- [总结](./conclusion)
-
 [《学习 Zig》](https://www.openmymind.net/learning_zig/)系列教程最初由 [Karl Seguin](https://github.com/karlseguin) 编写，该教程行文流畅，讲述的脉络由浅入深，深入浅出，是入门 Zig 非常不错的选择。因此，[Zig 中文社区](https://ziglang.cc)将其翻译成中文，便于在中文用户内阅读与传播。
 
 初次接触 Zig 的用户可以按序号依次阅读，对于有经验的 Zig 开发者可按需阅读感兴趣的章节。
+
+```=html
+<div class="learn-chapter-list">
+  <a href="./preface" class="learn-item">
+    <span class="learn-num">01</span>
+    <div class="learn-info">
+      <span class="learn-title">前言</span>
+      <span class="learn-desc">关于本教程与 Zig 语言的简要介绍。</span>
+    </div>
+  </a>
+  <a href="./installing-zig" class="learn-item">
+    <span class="learn-num">02</span>
+    <div class="learn-info">
+      <span class="learn-title">安装 Zig</span>
+      <span class="learn-desc">环境配置与编译器安装指南。</span>
+    </div>
+  </a>
+  <a href="./language-overview-1" class="learn-item">
+    <span class="learn-num">03</span>
+    <div class="learn-info">
+      <span class="learn-title">语言概述 - 第一部分</span>
+      <span class="learn-desc">基本语法、变量、控制流与函数。</span>
+    </div>
+  </a>
+  <a href="./language-overview-2" class="learn-item">
+    <span class="learn-num">04</span>
+    <div class="learn-info">
+      <span class="learn-title">语言概述 - 第二部分</span>
+      <span class="learn-desc">结构体、数组、切片与错误处理。</span>
+    </div>
+  </a>
+  <a href="./style-guide" class="learn-item">
+    <span class="learn-num">05</span>
+    <div class="learn-info">
+      <span class="learn-title">编码风格</span>
+      <span class="learn-desc">Zig 官方推荐的代码格式与命名规范。</span>
+    </div>
+  </a>
+  <a href="./pointers" class="learn-item">
+    <span class="learn-num">06</span>
+    <div class="learn-info">
+      <span class="learn-title">指针</span>
+      <span class="learn-desc">理解 Zig 中的指针、多级指针与切片。</span>
+    </div>
+  </a>
+  <a href="./stack-memory" class="learn-item">
+    <span class="learn-num">07</span>
+    <div class="learn-info">
+      <span class="learn-title">栈内存</span>
+      <span class="learn-desc">栈分配、生命周期与内存安全。</span>
+    </div>
+  </a>
+  <a href="./heap-memory" class="learn-item">
+    <span class="learn-num">08</span>
+    <div class="learn-info">
+      <span class="learn-title">堆内存和分配器</span>
+      <span class="learn-desc">Allocator 接口、常用分配器与内存管理。</span>
+    </div>
+  </a>
+  <a href="./generics" class="learn-item">
+    <span class="learn-num">09</span>
+    <div class="learn-info">
+      <span class="learn-title">泛型</span>
+      <span class="learn-desc">编译期多态、Comptime 与泛型数据结构。</span>
+    </div>
+  </a>
+  <a href="./coding-in-zig" class="learn-item">
+    <span class="learn-num">10</span>
+    <div class="learn-info">
+      <span class="learn-title">实战</span>
+      <span class="learn-desc">综合运用所学知识构建实际应用。</span>
+    </div>
+  </a>
+  <a href="./conclusion" class="learn-item">
+    <span class="learn-num">11</span>
+    <div class="learn-info">
+      <span class="learn-title">总结</span>
+      <span class="learn-desc">教程回顾与进阶学习路线。</span>
+    </div>
+  </a>
+</div>
+```
 
 # [关于原作者]($heading.id('about-original-author'))
 

@@ -1,5 +1,5 @@
 ---
-.title = "202309 | Bun 正式发布 1.0",
+.title = "Bun 正式发布 1.0",
 .date = @date("2023-09-23T10:10:58+0800"),
 .author = "ZigCC",
 .layout = "monthly.shtml",

@@ -1,5 +1,5 @@
 ---
-.title = "202411",
+.title = "JAM 与 JS 工具链重构",
 .date = @date("2024-12-09T21:02:40+0800"),
 .author = "ZigCC",
 .layout = "monthly.shtml",

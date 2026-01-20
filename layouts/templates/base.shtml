@@ -30,22 +30,36 @@
       fetch('https://en.liujiacai.net/pv/write?' + new URLSearchParams(payload),
             {mode: 'no-cors'}).catch(console.log);
     </script>
+    <script src="$site.asset('js/toc.js').link()"></script>
+    <script src="$site.asset('js/code-block.js').link()"></script>
 
     <super>
   </head>
   <body id="body">
     <div class="header">
-      <a href="$site.page('').link()" class="site-title"><h1 :text="$site.title"></h1></a>
-      <nav>
-        <a href="$site.page('learn').link()">学习</a>
-        <a href="$site.page('monthly').link()">月刊</a>
-        <a href="$site.page('post').link()">博客</a>
-        <a href="$site.page('contributing').link()">贡献</a>
-      </nav>
+      <div class="container header-inner">
+        <a href="$site.page('').link()" class="site-title"><h1 :text="$site.title"></h1></a>
+        <nav id="nav-menu">
+          <a href="$site.page('learn').link()">学习</a>
+          <a href="$site.page('monthly').link()">月刊</a>
+          <a href="$site.page('post').link()">博客</a>
+          <a href="$site.page('contributing').link()">贡献</a>
+        </nav>
+        <button class="mobile-menu-toggle" id="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <span class="mobile-menu-line"></span>
+          <span class="mobile-menu-line"></span>
+          <span class="mobile-menu-line"></span>
+        </button>
+      </div>
     </div>
+    <script>
+      document.getElementById('menu-toggle').addEventListener('click', function() {
+        document.getElementById('nav-menu').classList.toggle('active');
+        this.classList.toggle('active');
+      });
+    </script>
     <div id="search"></div>
     <super>
-    <hr>
     <footer>
       <div>
         <div>
@@ -56,7 +70,7 @@
           | <a href="http://cookbook.ziglang.cc">Zig Cookbook</a>
           | <a href="/rss">RSS</a>
         </div>
-        <div>
+        <div class="social-links">
           <a
             href="http://ask.ziglang.cc"
             target="_blank"

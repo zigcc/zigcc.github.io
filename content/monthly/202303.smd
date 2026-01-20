@@ -1,5 +1,5 @@
 ---
-.title = "202303 | 并发编译",
+.title = "并发编译",
 .date = @date("2023-04-10T19:25:59+0800"),
 .author = "ZigCC",
 .layout = "monthly.shtml",

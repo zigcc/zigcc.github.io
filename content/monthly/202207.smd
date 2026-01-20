@@ -1,5 +1,5 @@
 ---
-.title = "202207 | 开刊 HelloWorld",
+.title = "开刊 HelloWorld",
 .date = @date("2022-07-30T14:08:15+0800"),
 .author = "ZigCC",
 .layout = "monthly.shtml",

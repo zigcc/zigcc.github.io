@@ -11,7 +11,7 @@
     <script defer src="https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js" integrity="sha512-iWiuBS5nt6r60fCz26Nd0Zqe0nbk1ZTIQbl3Kv7kYsX+yKMUFHzjaH2+AnM6vp2Xs+gNmaBAVWJjSmuPw76Efg==" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
   </ctx>
   <ctx :if="$page.custom.getOr('mermaid', false)">
-    <script defer src="https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/mermaid/11.12.0/mermaid.min.js" integrity="sha512-5TKaYvhenABhlGIKSxAWLFJBZCSQw7HTV7aL1dJcBokM/+3PNtfgJFlv8E6Us/B1VMlQ4u8sPzjudL9TEQ06ww==" crossorigin="anonymous" onload="mermaid.initialize({startOnLoad:true});"></script>
+    <script defer src="https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/mermaid/11.12.0/mermaid.min.js" integrity="sha512-5TKaYvhenABhlGIKSxAWLFJBZCSQw7HTV7aL1dJcBokM/+3PNtfgJFlv8E6Us/B1VMlQ4u8sPzjudL9TEQ06ww==" crossorigin="anonymous" onload="mermaid.run();"></script>
   </ctx>
 </head>
 <div id="content">

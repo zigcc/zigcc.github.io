@@ -1,0 +1,269 @@
+---
+.title = "在0.15.2版本使用C ABI模拟Zig ABI",
+.date = @date("2026-01-18T21:05:00+0800"),
+.author = "艾达爱白糖",
+.layout = "post.shtml",
+.draft = false,
+.custom = {
+  .mermaid = true,
+},
+---
+
+白糖：艾达，我怎么才能把我的zig项目发布出去，但是不公开源码呀？
+
+艾达：可以分发二进制库文件和相关符号定义文件（符合C ABI的符号定义），照着这样写就行了。
+
+```zig
+// lib.zig
+pub const Container = extern struct {
+    value: c_int,
+
+    pub export fn foo(self: *@This()) callconv(.c) void {
+        // ...
+    }
+};
+
+// project.zig
+pub const Container = extern struct {
+    value: c_int,
+
+    pub extern fn foo(self: *@This()) callconv(.c) void;
+};
+```
+
+白糖：导出为C库呀。但是你这就一个结构，一个函数，这么写当然没什么问题，如果有很多函数，结构呢？
+
+艾达：别忘了zig的`comptime`机制呀，编译时可以自动导出符号并且生成符号定义文件。
+
+```zig
+// lib.zig
+pub const Container = extern struct {
+    value: c_int,
+
+    pub export fn foo(self: *@This()) callconv(.c) void {
+        // ...
+    }
+};
+
+comptime {
+    exports(Container);
+}
+
+fn exports(Target: type) void {
+    const info = @typeInfo(Target);
+
+    inline for (info.@"struct".decls) |decl| {
+        const field = @field(Target, decl.name);
+        const field_type = @TypeOf(field);
+        const field_type_info = @typeInfo(field_type);
+
+        if (field_type_info == .@"fn") {
+            @export(&field, .{ .name = decl.name });
+        }
+    }
+}
+```
+
+艾达：如果结构内还有类型定义，可以递归调用，这样就只需要传最外层的类型。怕参数错误，可以在导出前做各种检测来避免。注意这个方法需要函数标记`pub`以及不需要标记`export`。对于`extern union`和`enum(c_int)`也是相似的。
+
+白糖：这里只有导出，那符号定义文件怎么自动生成。而且编译时必须是常量，如果可以把调用了`exports`的类型都收集起来给运行时用就好了。艾达，有什么办法吗？
+
+艾达：编译时收集有些困难。不过办法还是有的，如果`exports`在编译时和生成符号定义文件时是不同的函数是不是就可以解决了。接下来就是zig构建系统的事情，我们要利用其module机制。
+
+艾达：首先我们把项目分成多个模块，分别是库本身、导出符号模块、生成符号定义文件模块和依赖生成文件模块的库本身以及运行生成符号定义文件的模块。
+
+```zig
+// lib.zig
+const export_mod = @import("export_mod");
+
+pub const ExportedContainer = extern struct {
+    value: c_int,
+
+    pub export fn foo(self: *@This()) callconv(.c) void {
+        // ...
+    }
+};
+
+comptime {
+    if (export_mod.export_mode) {
+        exportAllSymbol();
+    }
+}
+
+pub fn exportAllSymbol() void {
+    export_mod.exportsymbols(ExportedContainer);
+}
+
+// export_symbol.zig
+pub const export_mode = true;
+
+pub fn exportsymbols(Target: type) void {
+    // ...
+
+    @export(..., ...) ;
+
+    // ...
+}
+
+// gen_header.zig
+pub const export_mode = false;
+
+pub fn exportsymbols(Target: type) void {
+    genHeader(Target);
+}
+
+// gen_header_main.zig
+const lib = @import("lib");
+
+fn main() void {
+    lib.exportAllSymbol();
+}
+```
+
+艾达：最后在build.zig中创建依赖。
+
+```=html
+<pre class="mermaid">
+graph TD
+    lib_builder --> lib
+    lib -- 依赖 --- symbol_mod
+
+    gen_header --> gen_main
+    gen_main -- 依赖 --- gen_header_lib[lib: gen_header_lib]
+    gen_header_lib[lib: gen_header_lib] -- 依赖 --- gen_mod
+</pre>
+```
+
+```zig
+// build.zig
+pub fn build2(b: *std.Build) void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+
+    // 构建库以及导出符号
+    const symbol_mod = b.createModule(
+        .{
+            .root_source_file = b.path("export_symbol.zig"),
+            .target = target,
+            .optimize = optimize,
+        },
+    );
+
+    const lib = b.createModule(
+        .{
+            .root_source_file = b.path("lib.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{
+                    .name = "export_mod",
+                    .module = symbol_mod,
+                },
+            },
+        },
+    );
+
+    const lib_builder = b.addLibrary(.{
+        .name = "lib",
+        .root_module = lib,
+    });
+
+    b.installArtifact(lib_builder);
+
+    // 生成符号定义文件
+    const gen_mod = b.createModule(
+        .{
+            .root_source_file = b.path("gen_header.zig"),
+            .target = target,
+            .optimize = optimize,
+        },
+    );
+
+    const gen_header_lib = b.createModule(
+        .{
+            .root_source_file = b.path("lib.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{
+                    .name = "export_mod", //注意名字需要相同
+                    .module = gen_mod,
+                },
+            },
+        },
+    );
+
+    const gen_main = b.createModule(
+        .{
+            .root_source_file = b.path("gen_header_main.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{
+                    .name = "lib", // 与 gen_header_main 中对应
+                    .module = gen_header_lib,
+                },
+            },
+        },
+    );
+
+    const run = b.addRunArtifact(b.addExecutable(.{
+        .name = "gen_main",
+        .root_module = gen_main,
+    }));
+
+    b.getInstallStep().dependOn(&run.step);
+}
+```
+
+艾达：现在完成了构建库时自动生成相关符号定义文件，实现了分享zig库不公开源码的功能。因为用C ABI所以会有一些限制，例如zig标准库的一些类型不能导出，需要实现C版本的。
+
+艾达：具体生成的函数这里省略了，就是递归类型的`decls`和`fields`字段根据类型输出相应文本。不过zig的`Type`有些限制，生成会有些不完美，比如函数信息就没有参数名，`struct`内的`union`字段不知道初始化的哪个变体等。
+
+白糖：太好了，有什么例子可以看看吗？
+
+艾达：当然！
+
+```zig
+// lib
+pub const Color = extern struct {
+    r: u8,
+    g: u8,
+    b: u8,
+    a: u8 = 255,
+
+    pub fn init(color: @Vector(4, u8)) callconv(.c) @This() {
+        return .{
+            .r = color[0],
+            .g = color[1],
+            .b = color[2],
+            .a = color[3],
+        };
+    }
+};
+
+// symbol.zig 符号定义文件
+pub const Color = extern struct {
+    r : u8 align(1),
+    g : u8 align(1),
+    b : u8 align(1),
+    a : u8 align(1) = 255,
+    extern fn main_Color_init(@Vector(4, u8)) callconv(.c) @This();
+};
+```
+
+艾达：对了，如果不想在构建库的同时生成符号定义文件可以修改build.zig。
+
+```zig
+    // ...
+
+    // b.getInstallStep().dependOn(&run.step);
+    const run_step = b.step("gen_main", "generate the header.");
+    run_step.dependOn(&run.step);
+
+    // ...
+```
+
+艾达：在命令行运行`zig build gen_main`就可以单独生成了。
+
+白糖：太好了，爱你！艾达。

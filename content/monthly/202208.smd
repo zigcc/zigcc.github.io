@@ -6,48 +6,21 @@
 .draft = false,
 ---
 
-# [观点/教程]($heading.id('viewstutorials'))
+## [观点/教程]($section.id('viewstutorials'))
 
-- [Growing a {{mustache}} with
-  Zig](https://zig.news/batiati/growing-a-mustache-with-zig-di4)
-  作者使用 Zig 开发时的目标：
-  1.  Robost，test 代码快
-  2.  Optimal，Zig 语言本身就要求开发者去考虑堆分配
-  3.  Reusable，用户可以在高性能（better performance）与低内存（minimal
-      memory footprint）使用之间做取舍，以满足不同的场景
-- [Will Bun JavaScript Take Node’s
-  Crown](https://semaphoreci.com/blog/javascript-bun) Hacker News
-  上的[评论](https://news.ycombinator.com/item?id=32457587)。作者从多个方面对比了
-  Node 与 Bun，Bun 均胜出
-- [Looking into Zig - Ayende @
-  Rahien](https://ayende.com/blog/194404-A/looking-into-zig)。作者对比了
-  Zig 与 Rust/C 的区别
-- [Cool Zig Patterns - Gotta alloc
-  fast](https://zig.news/xq/cool-zig-patterns-gotta-alloc-fast-23h)。如果需要分配的对象只有一个，如何优化
-  Allocator 呢？作者给出了一个 memory pool 的实现，23 行代码
-- [Packed structs in Zig make bit/flag sets trivial | Hexops’
-  devlog](https://devlog.hexops.com/2022/packed-structs-in-zig/)。使用
-  Zig 的 `packet struct` 实现 bit set 功能
+- [Growing a {{mustache}} with Zig](https://zig.news/batiati/growing-a-mustache-with-zig-di4)
 
-# [项目/工具]($heading.id('projectstools'))
+- [Will Bun JavaScript Take Node’s Crown](https://semaphoreci.com/blog/javascript-bun)
 
-- [Virtual tables by vrischmann · Pull Request \#100 ·
-  vrischmann/zig-sqlite](https://github.com/vrischmann/zig-sqlite/pull/100)。zig-sqlite
-  作者正常尝试封装 virtual table 的 API，这样就可以用 Zig 写 SQLite
-  模块了。
+- [Looking into Zig - Ayende @ Rahien](https://ayende.com/blog/194404-A/looking-into-zig)
 
-- [Zig Support plugin for IntelliJ and CLion version 0.1.0
-  released](https://zig.news/marioariasc/zig-support-plugin-for-intellij-and-clion-version-010-released-pd0)
+- [Cool Zig Patterns - Gotta alloc fast](https://zig.news/xq/cool-zig-patterns-gotta-alloc-fast-23h)
 
-- [How to walk directories? - Help -
-  Ziggit](https://ziggit.dev/t/how-to-walk-directories/260)
+- [Packed structs in Zig make bit/flag sets trivial](https://devlog.hexops.com/2022/packed-structs-in-zig/)
 
-- [Zig Visual Programming with
-  Blockly](https://zig.news/lupyuen/zig-visual-programming-with-blockly-3pbg)
+## [项目/工具]($section.id('projectstools'))
 
-  ![](/images/blockly.webp)
-
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2022-08-01..2022-09-01)
+## [Zig 语言更新]($section.id('zig-updates'))
 
 - [make self-hosted the default compiler by andrewrk · Pull Request
   \#12368](https://github.com/ziglang/zig/pull/12368) Master

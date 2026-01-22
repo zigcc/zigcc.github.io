@@ -6,17 +6,17 @@
 .draft = false,
 ---
 
-# [zoop]($heading.id('zoop'))
+## [zoop]($section.id('zoop'))
 
 zoop 是 zig 的一个 OOP 解决方案，详细信息可以看看 [zoop官网](https://zhuyadong.github.io/zoop-docs/)。
 
-# [为什么不用别的 OOP 语言]($heading.id('why-not-use-another-oop-language'))
+## [为什么不用别的 OOP 语言]($section.id('why-not-use-another-oop-language'))
 
 简单的说，是我个人原因，必需使用 zig 的同时，还一定要用 OOP，所以有了 zoop。
 
-# [zoop 入门]($heading.id('getting-started-with-zoop'))
+## [zoop 入门]($section.id('getting-started-with-zoop'))
 
-# [类和方法]($heading.id('classes-and-methods'))
+### [类和方法]($section.id('classes-and-methods'))
 
 ```zig
 pub const Base = struct {
@@ -73,7 +73,7 @@ pub const Base = struct {
 
 上面的代码给 `Base` 添加了一个可以继承的方法 `getName()`。
 
-# [类的继承]($heading.id('class-inheritance'))
+### [类的继承]($section.id('class-inheritance'))
 
 zoop 引入一个关键字 `extends` 用来实现继承，比如下面我们定义 `Base` 的子类 `Child`：
 
@@ -102,7 +102,7 @@ test {
 }
 ```
 
-# [接口定义]($heading.id('interface-definition'))
+### [接口定义]($section.id('interface-definition'))
 
 zoop 中的接口，实际上是一个胖指针。下面我们定义一个接口 `IGetName`:
 
@@ -132,7 +132,7 @@ pub const IGetName = struct {
 
 上面的代码具体原理下面会说到，这里大家知道接口就是这样定义的就行了。上面的代码定义了接口 `IGetName`，这个接口有一个方法 `getName()`。
 
-# [接口实现]($heading.id('interface-implementation'))
+### [接口实现]($section.id('interface-implementation'))
 
 上面的 `Base` 类正好也有个符合 `IGetName` 接口的方法 `getName()`，那我们修改一下 `Base` 的代码让它来实现 `IGetName` 接口：
 
@@ -148,7 +148,7 @@ pub const Base = struct {
 
 可以看到实现接口和继承用的同样一个关键字 `extends`。因为子类会继承父类的接口，所以这样一来，`Child` 也自动实现了 `IGetName` 接口。
 
-# [方法重写和虚函数调用]($heading.id('method-overrides-and-virtual-function-calls'))
+### [方法重写和虚函数调用]($section.id('method-overrides-and-virtual-function-calls'))
 
 我们修改上面 `Child` 的代码，重写 `getName()` 方法：
 
@@ -194,7 +194,7 @@ try t.expectEqualStrings(base.as(IGetName).?.getName(), "override");
 
 那么 zoop 的基本使用方法就介绍到这里，下面我们开始介绍 zoop 的实现原理。
 
-# [预设场景]($heading.id('preset-scene'))
+## [预设场景]($section.id('preset-scene'))
 
 接下来的讨论基于如下的属于 `mymod` 模块的类和接口：
 
@@ -285,7 +285,7 @@ pub const Child = struct {
 - `Base`: 基类，实现接口 `ISetName`
 - `Child`: 子类，继承 `Base`，并实现接口 `IGetName`
 
-# [核心数据结构 `zoop.Mixin(T)`]($heading.id('core-data-structure-zoopmixint'))
+## [核心数据结构 `zoop.Mixin(T)`]($section.id('core-data-structure-zoopmixint'))
 
 我们看看两个类的 `mixin` 这个数据里面有什么：
 
@@ -337,9 +337,9 @@ zoop.Mixin(Child) = struct {
 - `getVtable`: 根据接口名获得接口 `Vtable` 的函数
 - `getSuperPtr`: 根据父类名获得 `mixin.data` 中父类指针
 
-上面两个函数获取的都是最外层对象的数据。根据对 `mixin` 数据的分析，zoop 的类型转换的原理就很清楚了，大家可以参考官网上关于 [类型转换](https://zhuyadong.github.io/zoop-docs/guide/as-cast) 的内容。
+根据对 `mixin` 数据的分析，zoop 的类型转换的原理就很清楚了，大家可以参考官网上关于 [类型转换](https://zhuyadong.github.io/zoop-docs/guide/as-cast) 的内容。
 
-# [动态构造类的方法、接口方法、和 `Vtable`]($heading.id('dynamically-constructing-class-methods-interface-methods-and-vtable'))
+## [动态构造类的方法、接口方法、和 `Vtable`]($section.id('dynamically-constructing-class-methods-interface-methods-and-vtable'))
 
 OOP 概念中的继承，重写，虚函数，实质其实就是在编译时动态构造需要的方法和属性。zoop 中主要是通过通过 [zoop.tuple](https://zhuyadong.github.io/zoop-docs/reference/tuple) 这个模块来进行编译时动态构造。
 
@@ -347,11 +347,11 @@ OOP 概念中的继承，重写，虚函数，实质其实就是在编译时动�
 
 下面我介绍一下 zoop 中用到的 `comptime` 一些技巧，相信会对大家今后使用 zig 有帮助。
 
-# [`struct` 很万能]($heading.id('struct-is-omnipotent'))
+### [`struct` 很万能]($section.id('struct-is-omnipotent'))
 
 `comptime` 编程中，`struct` 是你最好的朋友，想在不同的 `comptime` 函数之间传递数据，最方便的方式，就是通过构造一个 `struct`，把想传递的数据通过 `pub const xxx = ...` 的方式传递出去，通过 `struct` 保存数据最好的地方，就在于这个数据在运行时也是可用的 （`struct` 中的常量，是保存在 exe 的 `.data` 区，运行时可见），[zoop.tuple](https://zhuyadong.github.io/zoop-docs/reference/tuple) 就是通过这个方法实现的。
 
-# [动态构造 `struct` 的字段，用 `@Type()`]($heading.id('dynamically-construct-the-fields-of-struct-using-type'))
+### [动态构造 `struct` 的字段，用 `@Type()`]($section.id('dynamically-construct-the-fields-of-struct-using-type'))
 
 网上好像很少有关于 `@Type()` 的使用说明，一般都是通过看 `zig.std` 的代码来学习，那我这里就稍微说明一下，希望能对大家有帮助。
 目前 zig 通过 `@Type()`，能动态构造的 `struct`，只有纯字段类型的 `struct` (个人理解)。构造的方法，就是先把计算好的一个 `std.builtin.Type.StructField` 数组传递给 `@Type()` 来返回一个 `struct`，比如以下代码：
@@ -398,7 +398,7 @@ const MyStruct = struct {
 
 zoop 动态构造 `Vtable` 就是通过这个方法做到的，参考 [zoop.DefVtable 原理](https://zhuyadong.github.io/zoop-docs/reference/principle#DefVtable) 和 [zoop 源代码](https://github.com/zhuyadong/zoop.git)
 
-# [动态构造 `struct` 的函数，用 `usingnamespace`]($heading.id('dynamically-construct-the-function-of-struct-using-usingnamespace'))
+### [动态构造 `struct` 的函数，用 `usingnamespace`]($section.id('dynamically-construct-the-function-of-struct-using-usingnamespace'))
 
 要想定义 `struct` 中的函数，理论上代码是一定要写在 `struct` 中的，目前 zig 唯一留下的一个口子，就是 `usingnamespace`，zoop 正是利用这个特性，来动态构造 `struct` 的函数。
 
@@ -442,7 +442,7 @@ pub usingnamespace struct {
 
 因而实现了对 `Base.setName()` 方法的继承。
 
-# [运行时根据类型找 `Vtable` 和父类指针]($heading.id('finding-vtable-and-parent-class-pointers-at-runtime-based-on-type'))
+### [运行时根据类型找 `Vtable` 和父类指针]($section.id('finding-vtable-and-parent-class-pointers-at-runtime-based-on-type'))
 
 这个功能的实现当时第一版是使用的 `std.StaticStringMap` 保存了一个类中所有接口名到接口 `Vtable` ，以及父类名到父类数据在本类中的地址偏移的映射。和 C++ 的 `dynamic_cast` 比起来，性能是比较差的。后来看到西瓜大大发的一个链接 [点这里](https://github.com/SuperAuguste/cursed-zig-errors)，忽然意识到这不就是我一直想要的 `comptime` 全局变量么，我终于能写出 `typeId(comptime T: type) u32` 这样的函数了：
 
@@ -484,3 +484,4 @@ fn getVtableFunc(comptime T: type) VtableFunc {
 ```
 
 上面是找 `Vtable` 的实现，找父类指针的实现原理是一样的，大家可以去看 zoop 源代码了解细节。
+

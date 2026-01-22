@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-# [重大事件]($heading.id('major-events'))
+## [重大事件]($section.id('major-events'))
 
 2024-06-07，0.13.0 发布，历时不足 2 个月，有 73 位贡献者，一共进行了 415
 次提交！ 这是一个相对较短的发布周期，主要原因是工具链升级，例如升级到
@@ -29,9 +29,10 @@ const map = std.StaticStringMap(T).initComptime(kvs_list);
 - 启用增量编译以实现快速重建。
 - 将并发引入语义分析，进一步提高编译速度。
 
-# [观点/教程]($heading.id('opinion-tutorial'))
+## [观点/教程]($section.id('opinion-tutorial'))
 
-# [Leveraging Zig's Allocators](https://www.openmymind.net/Leveraging-Zigs-Allocators/)
+### [Leveraging Zig's Allocators]($section.id('leveraging-zig-allocators'))
+- [原文地址](https://www.openmymind.net/Leveraging-Zigs-Allocators/)
 
 老朋友 openmymind 的又一篇好文章：如何利用 Zig 的 Allocator
 来实现请求级别的内存分配。 Zig Allocator
@@ -100,7 +101,8 @@ fn run(worker: *Worker) void {
 }
 ```
 
-# [On Zig vs Rust at work and the choice we made](https://ludwigabap.bearblog.dev/zig-vs-rust-at-work-the-choice-we-made/)
+### [On Zig vs Rust at work and the choice we made]($section.id('zig-vs-rust-at-work'))
+- [原文地址](https://ludwigabap.bearblog.dev/zig-vs-rust-at-work-the-choice-we-made/)
 
 这篇文章作者描述了所在公司在改造老 C/C++ 项目时，为什么选择了 Zig 而不是
 Rust。 重写的项目运行在多个平台上（Web、移动端、VR
@@ -110,33 +112,16 @@ Rust。 重写的项目运行在多个平台上（Web、移动端、VR
 - 新语言与 C 的交互性
 - 工程师扩展代码库的难易程度（如招聘和维护）
 
-下面是 Zig VS Rust 的优势：
-
-|          | Rust                       | Zig                                             |
-|----------|----------------------------|-------------------------------------------------|
-| 成熟度   | 更流行、稳定；使用范围更广 |                                                 |
-| 包管理   | Cargo 业界领先             | 比 Makefile 好用                                |
-| 安全     | 内存安全                   |                                                 |
-| SIMD     | nightly 支持               | 通过 Vector 类型支持                            |
-| C 交互性 | 生态丰富                   | 编译器本身就是 C 编译器，这样就可以逐步重写项目 |
-
-如果只是根据上面的比较，貌似还看不出选择 Zig
-的动机，因此作者在最后提到：
-
-> Zig
-> 大大减少了移植现有代码库和确保所有平台兼容性所需的时间和精力。我们的团队无法相信
-> Rust 能让这一切变得如此简单。
-
-相信这也是大部分人选择 Zig 的原因：简洁、高效。
-
-# [Packing some Zig before going for the countryside](https://ludwigabap.bearblog.dev/packing-some-zig-before-going-for-the-countryside/)
+### [Packing some Zig before going for the countryside]($section.id('packing-some-zig'))
+- [原文地址](https://ludwigabap.bearblog.dev/packing-some-zig-before-going-for-the-countryside/)
 
 作者列举的一些 Zig
 学习资料、常用类库。该作者的另一篇文章也有不少资料：[2024 Collection of
 Zig
 resources](https://ludwigabap.bearblog.dev/2024-collection-of-zig-resources/)
 
-# [Why I am not yet ready to switch to Zig from Rust](https://turso.tech/blog/why-i-am-not-yet-ready-to-switch-to-zig-from-rust)
+### [Why I am not yet ready to switch to Zig from Rust]($section.id('not-ready-to-switch'))
+- [原文地址](https://turso.tech/blog/why-i-am-not-yet-ready-to-switch-to-zig-from-rust)
 
 Turso CTO 的一篇文章，他本身是个资深 C 程序员，而且也比较喜欢 C，但 C
 不是一门安全的语言，因此通过 Rust，作者可以避免 写出 SIGSEGVS
@@ -144,20 +129,7 @@ Turso CTO 的一篇文章，他本身是个资深 C 程序员，而且也比较�
 是门复杂的语言，但是因为它有完善的生态（有大公司如微软、谷歌等做背书）、已经内存安全等特点，
 已经是作者系统编程的首选。
 
-对于 Zig，尽管作者也表达了喜欢，但由于 Zig
-的生态不完善，没有足够多的学习资料，因此作者觉得目前阶段选择 Zig
-并不会带来
-工作上生产力的提高。这一点说的无可厚非，试想一下，如果一个项目所有的依赖都需要自己做，工作效率确实很难提上去。
-
-但是笔者有一点不能理解，就是该作者觉得 comptime
-不好用，相比之下，他更喜欢 C 里面的宏。comptime 就是为了 C 宏的不足
-而诞生的，社区普遍也觉得 comptime
-是个新颖的设计，笔者也是第一次见到这个观点，只能说，萝卜青菜，各有所爱。
-
-其他社区的一些讨论：[Lobsters](https://lobste.rs/s/0mnhdx)、[Hacker
-News](https://news.ycombinator.com/item?id=40681862)
-
-# [项目/工具]($heading.id('projects-tools'))
+## [项目/工具]($section.id('projects-tools'))
 
 [malcolmstill/zware](https://github.com/malcolmstill/zware)
 Zig WebAssembly Runtime Engine
@@ -166,4 +138,7 @@ Zig WebAssembly Runtime Engine
 io_uring like asynchronous API and coroutine powered IO tasks
 for zig
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-06-01..2024-07-01)
+## [Zig 语言更新]($section.id('zig-updates'))
+
+[GitHub PRs](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-06-01..2024-07-01)
+

@@ -9,15 +9,15 @@
 > - 原文链接： https://zig.news/xq/zig-build-explained-part-2-1850
 > - API 适配到 Zig 0.11.0 版本
 
-# [注释]($heading.id('annotation'))
+## [注释]($section.id('annotation'))
 
-从现在起，我将只提供一个最精简的 build.zig，用来说明解决一个问题所需的步骤。如果你想了解如何将所有这些文件粘合到一个构建文件中，请阅读本系列[第一篇文章](2023-12-24-zig-build-explained-part1)。
+从现在起，我将只提供一个最精简的 build.zig，用来说明解决一个问题所需的步骤。如果你想了解如何将所有这些文件粘合到一个构建文件中，请阅读本系列[第一篇文章]($link.page('post/2023-12-24-zig-build-explained-part1'))。
 
-# [在命令行上编译 C 代码]($heading.id('compile-c-code-on-the-command-line'))
+## [在命令行上编译 C 代码]($section.id('compile-c-code-on-the-command-line'))
 
 Zig 有两种编译 C 代码的方法，而且这两种很容易混淆。
 
-## [使用 zig cc]($heading.id('using-zig-cc'))
+### [使用 zig cc]($section.id('using-zig-cc'))
 
 Zig 提供了 LLVM c 编译器 clang。第一种是 zig cc 或 zig c++，它是与 clang 接近 1:1 的前端。由于我们无法直接从 build.zig 访问这些功能（而且我们也不需要！），所以我将在快速的介绍这个主题。
 
@@ -41,7 +41,7 @@ zig cc -o example.exe -target x86_64-windows-gnu buffer.c main.c
 
 如你所见，只需向 -target 传递目标三元组，就能调用交叉编译。只需确保所有外部库都已准备好进行交叉编译即可！
 
-# [使用 zig build-exe 和其他工具]($heading.id('use-zig-build-exe-and-other-tools'))
+## [使用 zig build-exe 和其他工具]($section.id('use-zig-build-exe-and-other-tools'))
 
 使用 Zig 工具链构建 C 项目的另一种方法与构建 Zig 项目的方法相同：
 
@@ -59,7 +59,7 @@ zig build-exe -lc -target x86_64-windows-gnu main.c buffer.c
 
 你会发现，使用这条编译命令，Zig 会自动在输出文件中附加 .exe 扩展名，并生成 .pdb 调试数据库。如果你在此处传递 --name example，输出文件也会有正确的 .exe 扩展名，所以你不必考虑这个问题。
 
-# [用 build.zig 创建 C 代码]($heading.id('create-c-code-with-buildzig'))
+## [用 build.zig 创建 C 代码]($section.id('create-c-code-with-buildzig'))
 
 那么，我们如何用 build.zig 来构建上面的两个示例呢？
 
@@ -112,7 +112,7 @@ exe.addCSourceFile(.{ .file = std.build.LazyPath.relative("buffer.c"), .flags = 
 exe.addCSourceFile(.{.file = std.build.LazyPath.relative("buffer.c"), .flags = &.{"-fno-sanitize=undefined"}});
 ```
 
-# [使用外部库]($heading.id('using-external-libraries'))
+## [使用外部库]($section.id('using-external-libraries'))
 
 通常情况下，C 项目依赖于其他库，这些库通常预装在 Unix 系统中，或通过软件包管理器提供。
 
@@ -181,7 +181,7 @@ zig build
 ./zig-out/bin/downloader  https://mq32.de/public/ziggy.txt
 ```
 
-# [配置路径]($heading.id('configuration-path'))
+## [配置路径]($section.id('configuration-path'))
 
 由于我们不能在交叉编译项目中使用 pkg-config，或者我们想使用预编译的专用库（如 BASS 音频库），因此我们需要配置包含路径和库路径。
 
@@ -220,7 +220,7 @@ pub fn build(b: *std.Build) void {
 
 addIncludePath 和 addLibraryPath 都可以被多次调用，以向编译器添加多个路径。这些函数不仅会影响 C 代码，还会影响 Zig 代码，因此 @cImport 可以访问包含路径中的所有头文件。
 
-# [每个文件的包含路径]($heading.id('include-path-for-each-file'))
+## [每个文件的包含路径]($section.id('include-path-for-each-file'))
 
 因此，如果我们需要为每个 C 文件设置不同的包含路径，我们就需要用不同的方法来解决这个问题：
 由于我们仍然可以通过 addCSourceFile 传递任何 C 编译器标志，因此我们也可以在这里手动设置包含目录。
@@ -252,7 +252,7 @@ pub fn build(b: *std.Build) void {
 
 上面的示例非常简单，所以你可能会想为什么需要这样的东西。答案是，有些库的头文件名称非常通用，如 api.h 或 buffer.h，而您希望使用两个共享头文件名称的不同库。
 
-# [构建 C++ 项目]($heading.id('build-c-projects'))
+## [构建 C++ 项目]($section.id('build-c-projects'))
 
 到目前为止，我们只介绍了 C 文件，但构建 C++ 项目并不难。你仍然可以使用 addCSourceFile，但只需传递一个具有典型 C++ 文件扩展名的文件，如 cpp、cxx、c++ 或 cc：
 
@@ -285,7 +285,7 @@ pub fn build(b: *std.Build) void {
 
 这就是构建 C++ 文件所需的全部知识，没有什么更神奇的了。
 
-# [指定语言版本]($heading.id('specify-language-version'))
+## [指定语言版本]($section.id('specify-language-version'))
 
 试想一下，如果你创建了一个庞大的项目，其中的 C 或 C++ 文件有新有旧，而且可能是用不同的语言标准编写的。为此，我们可以使用编译器标志来传递 -std=c90 或 -std=c++98：
 
@@ -320,7 +320,7 @@ pub fn build(b: *std.Build) void {
 }
 ```
 
-# [条件编译]($heading.id('conditional-compilation'))
+## [条件编译]($section.id('conditional-compilation'))
 
 与 Zig 相比，C 和 C++ 的条件编译方式非常繁琐。由于缺乏惰性求值的功能，有时必须根据目标环境来包含/排除文件。你还必须提供宏定义来启用/禁用某些项目功能。
 
@@ -373,7 +373,7 @@ pub fn build(b: *std.Build) void {
 
 有条件地包含文件就像使用 if 一样简单，你可以这样做。只要不根据你想在构建脚本中定义的任何约束条件调用 addCSourceFile 即可。只包含特定平台的文件？看看上面的脚本就知道了。根据系统时间包含文件？也许这不是个好主意，但还是有可能的！
 
-# [编译大型项目]($heading.id('compile-large-projects'))
+## [编译大型项目]($section.id('compile-large-projects'))
 
 由于大多数 C（更糟糕的是 C++）项目都有大量文件（SDL2 有 411 个 C 文件和 40 个 C++ 文件），我们必须找到一种更简单的方法来编译它们。调用 addCSourceFile 400 次并不能很好地扩展。
 
@@ -478,7 +478,7 @@ pub fn build(b: *std.build.Builder) !void {
 
 注意：其他构建系统会考虑文件名，而 Zig 系统不会！例如，在一个 qmake 项目中不能有两个名为 data.c 的文件！Zig 并不在乎，你可以添加任意多的同名文件，只要确保它们在不同的文件夹中就可以了 😏。
 
-# [编译 Objective C]($heading.id('compiled-objective-c'))
+## [编译 Objective C]($section.id('compiled-objective-c'))
 
 我完全忘了！Zig 不仅支持编译 C 和 C++，还支持通过 clang 编译 Objective C！
 
@@ -514,7 +514,7 @@ pub fn build(b: *std.Build) void {
 
 在这里，链接 libc 是隐式的，因为添加框架会自动强制链接 libc。是不是很酷？
 
-# [混合使用 C 和 Zig 源代码]($heading.id('mixing-c-and-zig-source-code'))
+## [混合使用 C 和 Zig 源代码]($section.id('mixing-c-and-zig-source-code'))
 
 现在，是最后一章： 混合 C 代码和 Zig 代码！
 
@@ -554,7 +554,7 @@ pub fn build(b: *std.Build) void {
 您应用程序的入口点现在必须在 Zig 代码中，因为根文件必须导出一个 pub fn main(...) ……。
 因此，如果你想将 C 项目中的代码移植到 Zig 中，你必须将 argc 和 argv 转发到你的 C 代码中，并将 C 代码中的 main 重命名为其他函数（例如 oldMain），然后在 Zig 中调用它。如果需要 argc 和 argv，可以通过 std.process.argsAlloc 获取。或者更好： 在 Zig 中重写你的入口点，然后从你的项目中移除一些 C 语言！
 
-# [结论]($heading.id('conclusion'))
+## [结论]($section.id('conclusion'))
 
 假设你只编译一个输出文件，那么现在你应该可以将几乎所有的 C/C++ 项目移植到 build.zig。
 

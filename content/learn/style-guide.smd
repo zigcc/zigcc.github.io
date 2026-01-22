@@ -10,7 +10,7 @@
 
 本小节的主要内容是介绍 Zig 编译器强制遵守的 2 条规则，以及 Zig 标准库的命名惯例(naming convention)。
 
-# [未使用变量 Unused Variable]($heading.id('unused-variable'))
+## [未使用变量 Unused Variable]($section.id('unused-variable'))
 
 Zig 编译器禁止`未使用变量`，例如以下代码会导致两处编译错误：
 
@@ -55,7 +55,7 @@ fn add(a: i64, _: i64) i64 {
 
 值得注意的是，在上述例子中，`std`也是一个未使用的符号，但是当前这种用法并不会导致任何编译错误。可能在未来，Zig 编译器也将此视为错误。
 
-# [变量覆盖 Variable Shadowing]($heading.id('variable-shadowing'))
+## [变量覆盖 Variable Shadowing]($section.id('variable-shadowing'))
 
 Zig 不允许使用同名的变量。下面是一个读取 `socket` 的例子，这个例子包含了一个变量覆盖的编译错误：
 
@@ -74,7 +74,7 @@ fn read(stream: std.net.Stream) ![]const u8 {
 
 我认为，这个规范并不能使代码可读性提高。在这个场景下，应该是开发者，而不是编译器，更有资格选择更有可读性的命名方案。
 
-# [命名规范]($heading.id('naming-convention'))
+## [命名规范]($section.id('naming-convention'))
 
 除了遵守以上这些规则以外，开发者可以自由地选择他们喜欢的命名规范。但是，理解 Zig 自身的命名规范是有益的，因为大部分你需要打交道的代码，如 Zig 标准库，或者其他三方库，都采用了 Zig 的命名规范。
 

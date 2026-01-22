@@ -6,7 +6,10 @@
 .draft = false,
 ---
 
-# [重大事件]($heading.id('major-events'))
+## [重大事件]($section.id('major-events'))
+
+### [Zig May Pass Anything By Reference]($section.id('pass-by-reference'))
+- [原文地址](https://www.1a-insec.net/blog/25-zig-reference-semantics/)
 
 本月讨论比较多的就是 [Zig May Pass Anything By
 Reference](https://www.1a-insec.net/blog/25-zig-reference-semantics/)
@@ -58,9 +61,11 @@ precisely』，目前来看确实是这样的，而且 core team
 - [Design flaw: Swapping struct fields yields unexpected value
   \#12064](https://github.com/ziglang/zig/issues/12064)
 
-# [观点/教程]($heading.id('opinion-tutorial'))
+## [观点/教程]($section.id('opinion-tutorial'))
 
-[Zig's std.json.Parsed(T)](https://www.openmymind.net/Zigs-std-json-Parsed/)  
+### [Zig's std.json.Parsed(T)]($section.id('zig-json-parsed'))
+- [原文地址](https://www.openmymind.net/Zigs-std-json-Parsed/)
+
 老朋友 openmymind 的文章，这篇文章主要讲述了使用 Zig 中的 json
 库序列化后，如何更好的使用返回值，由于有一个 allocator
 参数，因此比不能简单的返回 `T` ，作者这里定义了一个 `Managed` 来解决：
@@ -90,19 +95,27 @@ pub fn Managed(comptime T: type) type {
 }
 ```
 
-[Factor is faster than Zig!](https://re.factorcode.org/2023/11/factor-is-faster-than-zig.html)  
-一个有意思的案例分享。
+### [Factor is faster than Zig!]($section.id('factor-faster-than-zig'))
+- [原文地址](https://re.factorcode.org/2023/11/factor-is-faster-than-zig.html)
 
-[A day with Zig](https://www.pierrebeaucamp.com/a-day-with-zig/)  
+一个有意思的最佳实践案例分享。
+
+### [A day with Zig]($section.id('day-with-zig'))
+- [原文地址](https://www.pierrebeaucamp.com/a-day-with-zig/)
+
 作者把之前一个 Go 的项目转成 Zig，这里介绍了一些感受，
 
 - 文档缺乏
 - 文件级别导入
 
-[@fieldParentPtr](https://registerspill.thorstenball.com/p/zig-zaggin)  
+### [@fieldParentPtr]($section.id('fieldparentptr'))
+- [原文地址](https://registerspill.thorstenball.com/p/zig-zaggin)
+
 对 `@fieldParentPtr` 使用的介绍
 
-[Generating documentation from zig build](https://sudw1n.gitlab.io/posts/zig-build-docs/)  
+### [Generating documentation from zig build]($section.id('generate-docs-from-build'))
+- [原文地址](https://sudw1n.gitlab.io/posts/zig-build-docs/)
+
 作者在这篇文章里尝试在 zig build 文件中输出文档，目前步骤略微繁琐。
 
 ``` zig
@@ -129,13 +142,19 @@ pub fn build(b: *std.Build) void {
 }
 ```
 
-[What's Zig got that C, Rust and Go don't have? (with Loris Cro)](https://www.youtube.com/watch?v=5_oqWE9otaE)  
-\[视频\] Loris 参与的一档播客
+### [What's Zig got that C, Rust and Go don't have? (with Loris Cro)]($section.id('video-loris-cro'))
+- [原文地址](https://www.youtube.com/watch?v=5_oqWE9otaE)
 
-[A Simple Example of Calling a C Library from Zig](https://mtlynch.io/notes/zig-call-c-simple/)  
+[视频] Loris 参与的一档播客
+
+### [A Simple Example of Calling a C Library from Zig]($section.id('call-c-lib'))
+- [原文地址](https://mtlynch.io/notes/zig-call-c-simple/)
+
 一个简明的教程，演示 Zig 如何引用 C 类库
 
-[What is the Zig philosophy on APIs and abstraction?](https://www.reddit.com/r/Zig/comments/17xd46v/what_is_the_zig_philosophy_on_apis_and_abstraction/)  
+### [What is the Zig philosophy on APIs and abstraction?]($section.id('zig-api-philosophy'))
+- [原文地址](https://www.reddit.com/r/Zig/comments/17xd46v/what_is_the_zig_philosophy_on_apis_and_abstraction/)
+
 一个 Reddit 帖子，讨论 Zig 的在 API 设计上的哲学、理念。一个有意思的点是
 Zig 不支持私有的字段，全部都是 public 的。Andrew 在 [Proposal: Private
 Fields
@@ -147,7 +166,7 @@ Fields
 - 一个包的兼容性，应该由文档来解释
 - 增加私有字段，会增加语言的复杂度，而且这种复杂性本身是完全可以避免的
 
-# [项目/工具]($heading.id('projects-tools'))
+## [项目/工具]($section.id('projects-tools'))
 
 [zig build explained – building C/C++ projects](https://zig.news/xq/zig-build-explained-part-2-1850)  
 经典文章回顾，如何使用 Zig 构建系统编译 C/C++ 项目
@@ -155,4 +174,7 @@ Fields
 [akhildevelops/cudaz](https://github.com/akhildevelops/cudaz)  
 A Zig Cuda wrapper
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-10-01..2023-11-01)
+## [Zig 语言更新]($section.id('zig-updates'))
+
+[GitHub PRs](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-10-01..2023-11-01)
+

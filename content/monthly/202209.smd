@@ -6,124 +6,30 @@
 .draft = false,
 ---
 
-# [Zig VS Rust 火花]($heading.id('zig-vs-rust-spark'))
+## [Zig VS Rust 火花]($section.id('zig-vs-rust-spark'))
 
-在 9/10 号左右，在 Twitter 上牵起了一小波关于 Zig VS Rust
-的小火花，以至于最后 Zig 创始人 Andrew Kelley
-[发推](https://twitter.com/andy_kelley/status/1568679389113757698)表示
-Let us exist。这里稍微整理下这件事情的过程： 本次事件主要涉及两个人：
+### [时间线]($section.id('timeline'))
 
-- Rust 核心贡献者： Patrick Walton
-- Zig 社区 VP： Loris Cro
+### [总结]($section.id('summary'))
 
-## [时间线]($heading.id('timeline'))
+## [观点/教程]($section.id('viewstutorials'))
 
-- 8/26 号，一篇关于 wasm 2 Game Jam
-  的[分析报告](https://wasm4.org/blog/jam-2-results/)中，使用 Zig
-  的人数最多
-- 9/9 号，这篇报告在 HackerNews
-  上引起了[热烈讨论](https://news.ycombinator.com/item?id=32777636)，其中
-  Walton 在多处回复中表示 Zig
-  语言的劣势，[并称](https://news.ycombinator.com/item?id=32782842) \>
-  It’s perfectly reasonable to take the position that it’s deeply
-  problematic for a language aiming for wide use in 2022 to not be
-  memory safe. There’s no requirement that you “focus on tradeoffs”,
-  especially since real people get hurt by memory safety problems.
-- Loris [回复到](https://news.ycombinator.com/item?id=32785380)： \> I
-  think you’re actively hurting the project that you care about in your
-  ineffective crusade, but hey, don’t let me stop you.
-- 9/10 号，有人发推对
-  [tigerbeetle](https://github.com/tigerbeetledb/tigerbeetle/blob/main/docs/TIGER_STYLE.md#safety)
-  内存分配方式表示好奇：所有内存必须在启动时静态分配好
-- Walton
-  [回复到](https://mobile.twitter.com/pcwalton/status/1568498326496247809)：
-  \> The weird thing is that this is used as an example of why you
-  supposedly don’t need language-enforced memory safety. \> \> But that
-  literally is language-enforced memory safety! Just *way* more
-  restrictive than what Rust has: if you hate the borrow check, try the
-  “no heap” check… \> \> This is wrong because you can still have UAF
-  from freed stack frames.
-- Loris 针对 Walton 的回复说了句“What a boring, useless
-  take.（[原推](https://mobile.twitter.com/kripken/status/1568428308131622913)的回复已经被
-  Loris
-  删除了，可以[在这里](https://archive.ph/jq3kw#selection-1275.0-1275.30)看到历史）：
-- Walton
-  发推[表示](https://mobile.twitter.com/pcwalton/status/1568302065851707392)在
-  2022 年，所有语言都应该是内存安全，应该算是『编程语言界的共识』，并称
-  Zig 是行业的一大退步 😅
-- Loris 专门发了一个 [Twitter
-  thread](https://twitter.com/croloris/status/1568573729940164608?s=21&t=v2Dj_F2f_kUzZDQps5KjtQ)
-  来阐述『软件的目标不仅仅是内存安全，更重要的是正确』。比如 tigerbeetle
-  这里[提到的](https://github.com/tigerbeetledb/tigerbeetle/blob/main/docs/DESIGN.md)。而且即便内存安全，也可能发生
-  OOM
+- [How (memory) safe is zig?](https://www.scattered-thoughts.net/writing/how-safe-is-zig/)
 
-## [总结]($heading.id('summary'))
+- [Hacked std.PriorityQueue for constant time update](https://www.reddit.com/r/Zig/comments/x8fxqr/hacked_stdpriorityqueue_for_constant_time_update/)
 
-上面的链接比较多，这里稍微总结下这次争论的问题：
+- [Flutter/Dart + FFI + Zig](https://github.com/zigcc/forum/discussions/21)
 
-> Rust 用户觉得 Zig 不是内存安全的语言，Zig 认为 Rust
-> 的语言过度复杂，这反而会导致程序复杂度挺升，导致程序产生错误行为
+- [Building a Tiny Mutex](https://zig.news/kprotty/building-a-tiny-mutex-537k)
 
-使用 Zig 的人大概率也是 Rust 用户，之所以有了安全的 Rust，还来选
-Zig，笔者觉得大概率就是本次争论的观点，Rust
-过于复杂，导致程序员不仅仅要考虑业务行为，还需要按照 Rust
-的风格来编程，这加剧了程序出错的可能性。
+- [Perfecting WebGPU/Dawn native graphics for Zig](https://devlog.hexops.com/2022/perfecting-webgpu-native/)
 
-# [观点/教程]($heading.id('viewstutorials'))
+- [Cross-Compiling and packaging C, Go and Zig projects with Nix](https://flyx.org/cross-packaging/)
 
-- [How (memory) safe is
-  zig?](https://www.scattered-thoughts.net/writing/how-safe-is-zig/)
-  作者重点介绍了在内存安全方面，Zig 的优劣势。尽管 Zig 相比 C
-  有了明显的改进，但相比 Rust
-  这种在编译期就能发现程序问题来说，显得有些鸡肋，但在一些可控的环境下，比如
-  WASM、嵌入式环境中，Zig 还是有发挥的空间
-  - [How (memory) safe is zig? (UPDATED) |
-    Lobsters](https://lobste.rs/s/nw7hsd)
-  - [How safe is Zig? | Hacker
-    News](https://news.ycombinator.com/item?id=31850347)
-- [Hacked std.PriorityQueue for constant time
-  update](https://www.reddit.com/r/Zig/comments/x8fxqr/hacked_stdpriorityqueue_for_constant_time_update/)
-- [Flutter/Dart + FFI + Zig: Flutter 使用 FFI 调用 Zig
-  示例](https://github.com/zigcc/forum/discussions/21)
-- [Building a Tiny
-  Mutex](https://zig.news/kprotty/building-a-tiny-mutex-537k)
-- [Perfecting WebGPU/Dawn native graphics for
-  Zig](https://devlog.hexops.com/2022/perfecting-webgpu-native/)
-- [Cross-Compiling and packaging C, Go and Zig projects with
-  Nix](https://flyx.org/cross-packaging/) 介绍如何基于
-  [Nix](https://nixos.org/) 来进行交叉编译
-- [Revisiting the design approach to the Zig programming
-  language](https://about.sourcegraph.com/blog/zig-programming-language-revisiting-design-approach)
-  Sourcegraph 的一档播客，对 Zig 创始人的采访，介绍了 Zig
-  的由来，其中提到一个性能优化点是：untagged
-  union，这里有它的一些介绍：[Andrew Kelley claims Zig is faster than
-  Rust in
-  perfomance](https://www.reddit.com/r/rust/comments/s5caye/comment/hsz6uf0/?utm_source=share&utm_medium=web2x&context=3)
-- [Zig ⚡ Improving the User Experience for Unused
-  Variables](https://vimeo.com/748218307)
+- [Revisiting the design approach to the Zig programming language](https://about.sourcegraph.com/blog/zig-programming-language-revisiting-design-approach)
 
-# [项目/工具]($heading.id('projectstools'))
+- [Zig ⚡ Improving the User Experience for Unused Variables](https://vimeo.com/748218307)
 
-- [Zig
-  开发常用类库](https://github.com/zigcc/forum/discussions/28)，如果读者的
-  Zig 项目托管在 GitHub，推荐加上
-  [zig-package](https://github.com/topics/zig-package)
-  这个标签，这样可以自动被 https://zig.pm/ 收录
-- https://zig.run/ - 在线运行 zig 代码
-- [Zig Support plugin for IntelliJ and CLion version 0.0.7
-  released](https://zig.news/marioariasc/zig-support-plugin-for-intellij-and-clion-version-007-released-1en8)
-- [zig-napigen](https://github.com/cztomsik/zig-napigen) Automatic N-API
-  bindings for your Zig project.
-- [Dart 通过 FFI 调用 Zig
-  库示例](https://github.com/better-dart/learn-dart/blob/main/packages/ffi-binding/example/main.dart#L31)
-- [zig-gamedev](https://github.com/michal-z/zig-gamedev)
-- [loc in Zig](https://github.com/jiacai2050/loc) 代码行数统计工具
-- [Grep in Zig](https://github.com/EclesioMeloJunior/zig-grep)
-- [randomutils](https://gitlab.com/hdante/randomutils) Generate 64-bit
-  random numbers
-- [zig-pico](https://github.com/paperdev-code/zig-pico) 树莓派 [Pico
-  SDK](https://github.com/raspberrypi/pico-sdk) 的 Zig 绑定库
-- [stm32f4.zig](https://github.com/moonxraccoon/stm32f4.zig) STM32F4(ARM
-  Cortex M4 的高性能 32 位微控制器) 固件抽象层
+## [项目/工具]($section.id('projectstools'))
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?q=+is%3Aclosed+is%3Apr+closed%3A2022-09-01..2022-10-01+)
+## [Zig 语言更新]($section.id('zig-updates'))

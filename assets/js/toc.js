@@ -11,9 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // If the heading itself doesn't have an ID, check if it contains an element with an ID (e.g. <a id="...">)
     // or if the Zine renderer placed the ID on a wrapper.
     if (!id) {
-        const childWithId = h.querySelector('[id]');
-        if (childWithId) {
-            id = childWithId.getAttribute('id');
+        // Check if the parent element has an ID (SuperMD section wrapper)
+        if (h.parentElement && h.parentElement.getAttribute('id')) {
+            id = h.parentElement.getAttribute('id');
+        } else {
+            const childWithId = h.querySelector('[id]');
+            if (childWithId) {
+                id = childWithId.getAttribute('id');
+            }
         }
     }
     

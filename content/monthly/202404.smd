@@ -39,9 +39,7 @@ CMake、Makefile、Vcpkg、Git submodule 等工具，所有的依赖使用 zon
 
 ## [观点/教程]($section.id('opinion-tutorial'))
 
-### [Zig 中任意精度整数用途与实现]($section.id('arbitrary-precision-int'))
-- [原文地址](https://github.com/zigcc/forum/issues/112)
-
+[Zig 中任意精度整数用途与实现](https://github.com/zigcc/forum/issues/112)  
 由于 CPU
 在访问内存时，一般都会有对齐的要求，对于这种非常规的数字，在内存中的地址会是怎样的呢？可以做一个简单的实验：
 
@@ -90,28 +88,20 @@ u3@16b196367-u2@16b196367
 结构中，就会变成 3 个 bit。其中的 11001 就是字段 a b 混合后的值，且 a
 是三位，b 是高两位。
 
-### [Learnings From Building a DB in Zig]($section.id('building-db-learnings'))
-- [原文地址](https://procmarco.com/blog/learnings-from-building-a-db-in-zig/)
-
+[Learnings From Building a DB in Zig](https://procmarco.com/blog/learnings-from-building-a-db-in-zig/)  
 作者分享了在一次 3 天的 Hackthon 中，使用 Zig 开发一个数据库的经历。
 
-### [build.zig.zon dependency hashes]($section.id('zon-hashes'))
-- [原文地址](https://zig.news/michalsieron/buildzigzon-dependency-hashes-47kj)
-
+[build.zig.zon dependency hashes](https://zig.news/michalsieron/buildzigzon-dependency-hashes-47kj)  
 讲解了 zon 中依赖的 hash 是怎么计算出来的
 
-- [play with new comptime var rule of zig 0.12.0](https://zig.news/liyu1981/play-with-new-comptime-var-rule-of-zig-0120-333k)
+[play with new comptime var rule of zig 0.12.0](https://zig.news/liyu1981/play-with-new-comptime-var-rule-of-zig-0120-333k)  
 
-### [To SIMD and beyond: Optimizing a simple comparison routine]($section.id('simd-optimization'))
-- [原文地址](https://zig.news/inspectorboat/to-simd-and-beyond-optimizing-a-simple-comparison-routine-1jkf)
-
+[To SIMD and beyond: Optimizing a simple comparison routine](https://zig.news/inspectorboat/to-simd-and-beyond-optimizing-a-simple-comparison-routine-1jkf)  
 作者在这里循序渐进的介绍了几种数字比较的技巧，从基本的方案，到
 Vector，到最后利用 bit 的特点，来逐步优化，并用 godbolt
 查看生成的汇编代码，是一篇不错的文章。
 
-### [Documentation takes another step backwards : r/Zig]($section.id('documentation-complaint'))
-- [原文地址](https://www.reddit.com/r/Zig/comments/1cc1x2v/documentation_takes_another_step_backwards/)
-
+[Documentation takes another step backwards : r/Zig](https://www.reddit.com/r/Zig/comments/1cc1x2v/documentation_takes_another_step_backwards/)  
 一个 Reddit 用户对文档的抱怨
 
 ## [项目/工具]($section.id('projects-tools'))
@@ -136,5 +126,4 @@ Yet another zig language plugin for intellij
 
 ## [Zig 语言更新]($section.id('zig-updates'))
 
-[GitHub PRs](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-04-01..2024-05-01)
-
+[相关链接](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-04-01..2024-05-01)

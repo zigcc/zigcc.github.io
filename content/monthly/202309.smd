@@ -8,8 +8,9 @@
 
 ## [重大事件]($section.id('major-events'))
 
-### [Bounties Damage Open Source Projects]($section.id('bounties-damage-os'))
-- [原文地址](https://ziglang.org/news/bounties-damage-open-source-projects)
+### [Bounties Damage Open Source Projects]($section.id('bounties-damage-open-source-projects'))
+
+[原文链接](https://ziglang.org/news/bounties-damage-open-source-projects)
 
 在 2023-09-11 号，Wasmerio CEO 创建了 [Support WASIX · Issue
 \#17115](https://github.com/ziglang/zig/issues/17115)，表示想赞助 Zig
@@ -24,8 +25,9 @@ Andrew 与 Loris 在这篇文章中主要阐述了这么做为什么是伤害社
 社区，他更想保证 Zig 的独立性，这也是他们创办 [Software You Can
 Love](https://kristoff.it/blog/the-open-source-game/) 的初衷。
 
-### [Bun 1.0]($section.id('bun-1.0'))
-- [原文地址](https://bun.sh/blog/bun-v1.0)
+### [Bun 1.0]($section.id('bun-1-0'))
+
+[原文链接](https://bun.sh/blog/bun-v1.0)
 
 面包终于出炉了！Bun 毫无疑问是 Zig 的明星项目，它在 2023-09-08
 正式发布了 1.0 版本，这对开发者来说可能没什么太大的区别，毕竟就只是个
@@ -42,15 +44,11 @@ Bun 并不简单的是个 Node.js 替代品，而是大而全的工具链：
 
 ## [观点/教程]($section.id('viewstutorials'))
 
-### [Kiesel Devlog \#1: Now passing 25% of test262]($section.id('kiesel-devlog-1'))
-- [原文地址](https://linus.dev/posts/kiesel-devlog-1/)
-
+[Kiesel Devlog \#1: Now passing 25% of test262](https://linus.dev/posts/kiesel-devlog-1/)  
 另一个 devlog，作者写了一个 JS engine 用来学习 Zig，该作者是 SerenityOS
 系统中，Ladybird 浏览器 JS 引擎 LibJS 的作者
 
-### [Talk: Introducing Ghostty and Some Useful Zig Patterns]($section.id('ghostty-zig-patterns'))
-- [原文地址](https://mitchellh.com/writing/ghostty-and-useful-zig-patterns)
-
+[Talk: Introducing Ghostty and Some Useful Zig Patterns](https://mitchellh.com/writing/ghostty-and-useful-zig-patterns)  
 Mitchell Hashimoto 在这篇文章里分享了开发终端 Ghostty 时用的 Zig
 常用模式。计划在 2024 年发布 1.0
 
@@ -59,9 +57,7 @@ Mitchell Hashimoto 在这篇文章里分享了开发终端 Ghostty 时用的 Zig
 - Comptime Type Generation
 - [B 站视频地址](https://www.bilibili.com/video/BV1884y1D7gu/)
 
-### [Learning Zig]($section.id('learning-zig'))
-- [原文地址](https://www.openmymind.net/learning_zig/)
-
+[Learning Zig](https://www.openmymind.net/learning_zig/)  
 一个 Zig 教程，写的非常易懂，推荐每个 Zig 爱好者阅读。目录
 
 1.  Language Overview - Part 1
@@ -74,27 +70,19 @@ Mitchell Hashimoto 在这篇文章里分享了开发终端 Ghostty 时用的 Zig
 8.  Coding In Zig
 9.  Conclusion
 
-### [Debugging a Zig Test Failure]($section.id('debug-test-failure'))
-- [原文地址](https://zinascii.com/2023/debugging-a-zig-test-failure.html)
-
+[Debugging a Zig Test Failure](https://zinascii.com/2023/debugging-a-zig-test-failure.html)  
 非常硬核的文章，作者为了调查一个文件名太长的错误，使用了 DTrace
 来探测内核函数的调用，对平时的问题排查非常有帮助
 
-### [Intercepting and modifying Linux system calls with ptrace]($section.id('ptrace-syscalls'))
-- [原文地址](https://notes.eatonphil.com/2023-10-01-intercepting-and-modifying-linux-system-calls-with-ptrace.html)
-
+[Intercepting and modifying Linux system calls with ptrace](https://notes.eatonphil.com/2023-10-01-intercepting-and-modifying-linux-system-calls-with-ptrace.html)  
 用 Zig 来封装 Dtrace，用于跟踪子进程的 syscall
 
-### [Managing Zig Versions with zvm: A Technical Dive]($section.id('zvm-tech-dive'))
-- [原文地址](https://double-trouble.dev/post/zvm/)
-
+[Managing Zig Versions with zvm: A Technical Dive](https://double-trouble.dev/post/zvm/)  
 另一个 Zig 版本管理工具，不过这次是用 Zig 写的了
 
-### [When Zig Outshines Rust – Memory Efficient Enum Arrays]($section.id('dense-enums'))
-- [原文地址](https://alic.dev/blog/dense-enums)
-
-一个图文并茂的文章，重点推荐. 作者这里通过分析 array of struct
-内存浪费情况，介绍了 Rust/Zig 中不同的解法，Zig
+[When Zig Outshines Rust – Memory Efficient Enum Arrays](https://alic.dev/blog/dense-enums)  
+一个图文并茂的文章，重点推荐。作者这里通过分析 array of struct
+的内存浪费情况，介绍了 Rust/Zig 中不同的解法，Zig
 由于有强大的编译期元编程能力，能够更方便的实现 SoA（struct of arrays）
 [struct
 数组的内存布局]($image.siteAsset('images/struct-padding.webp'))
@@ -132,7 +120,8 @@ A small/lightweight statically typed scripting language
 
 ## [Zig 语言更新]($section.id('zig-updates'))
 
+[相关链接](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-08-01..2023-09-01)
+
 [Aro translate](https://github.com/ziglang/zig/pull/17221)  
 用 Zig 写的 [Aro](https://github.com/Vexu/arocc) 来替换 clang，来实现
 `translate-c` 的功能
-

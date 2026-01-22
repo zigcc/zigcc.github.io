@@ -1,5 +1,5 @@
 ---
-.title = "JAM 与 JS 工具链重构",
+.title = "无题",
 .date = @date("2024-12-09T21:02:40+0800"),
 .author = "ZigCC",
 .layout = "monthly.shtml",
@@ -8,8 +8,9 @@
 
 ## [观点/教程]($section.id('opinion-tutorial'))
 
-### [Why am I writing a JavaScript toolchain in Zig?]($section.id('why-jam'))
-- [原文地址](https://injuly.in/blog/announcing-jam/index.html)
+### [Why am I writing a JavaScript toolchain in Zig?]($section.id('why-am-i-writing-a-javascript-toolchain-in-zig'))
+
+[原文链接](https://injuly.in/blog/announcing-jam/index.html)
 
 [JAM](https://github.com/srijan-paul/jam)
 作者写的一篇文章，分析里市面上现有的 JS
@@ -34,7 +35,7 @@
     node.callee.object.type === "Identifier" &&
     node.callee.object.name === "child_process"
   ) {
-   // many of these checks to satisfy typescript^
+   // many of these checks are to satisfy typescript^
   }
 
 
@@ -49,8 +50,9 @@
   esquery 的问题在于执行效率，通过借助于 zig 的 comptime 来在编译器翻译
   esquery 就避免了运行时开销。
 
-### [Advent of Code in Zig | Loris Cro's Blog]($section.id('aoc-in-zig'))
-- [原文地址](https://kristoff.it/blog/advent-of-code-zig/)
+### [Advent of Code in Zig | Loris Cro's Blog]($section.id('advent-of-code-in-zig-loris-cro-s-blog'))
+
+[原文链接](https://kristoff.it/blog/advent-of-code-zig/)
 
 一年一度的 AoC 又到了，这篇文章里给出了一些使用的技巧来帮助大家用 Zig
 来解决 AoC 问题。
@@ -101,10 +103,13 @@
 > 的某些功能甚至能帮助您取得比其他语言更快的进展，但它最终还是针对软件工程进行了优化，而这并不是您在
 > AoC 中要做的事情。
 
-- [Zig and Emulators](https://floooh.github.io/2024/08/24/zig-and-emulators.html)
+### [Zig and Emulators]($section.id('zig-and-emulators'))
 
-### [Zig Reproduced Without Binaries]($section.id('reproduced-without-binaries'))
-- [原文地址](https://jakstys.lt/2024/zig-reproduced-without-binaries/)
+[原文链接](https://floooh.github.io/2024/08/24/zig-and-emulators.html)
+
+### [Zig Reproduced Without Binaries]($section.id('zig-reproduced-without-binaries'))
+
+[原文链接](https://jakstys.lt/2024/zig-reproduced-without-binaries/)
 
 一个很有趣的实验，在 0.10 版本中，Zig 编译器实现了自举，即可以用老版本的
 Zig 来编译 Zig 源码，生成最新的 Zig
@@ -156,5 +161,4 @@ An MMO game written in Erlang (+ PostgreSQL) + Zig (+ Raylib)
 
 ## [Zig 语言更新]($section.id('zig-updates'))
 
-[GitHub PRs](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-11-01..2024-12-01)
-
+[相关链接](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-11-01..2024-12-01)

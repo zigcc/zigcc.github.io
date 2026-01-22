@@ -8,40 +8,104 @@
 
 ## [重大事件]($section.id('major-events'))
 
+在 2023 四月份的 [Tiobe](https://www.tiobe.com/tiobe-index/) 指数上，Zig
+[排名
+46](https://www.techrepublic.com/article/tiobe-index-language-rankings/)，尽管
+Loris 发推表示这个数字对 Zig
+来说没什么实际意义，但对于多数吃瓜群众来说，这还是十分让人鼓舞的。
+
+> For people who heard about Zig just recently:
+>
+> - Zig is not 2x faster than Rust, despite what recent benchmarks might
+>   lead you to believe.
+>
+> - You won’t find many Zig jobs for a few years still, despite the
+>   Tiobe stuff.
+>
+> - Don’t join to the Zig community just to rant about Rust.
+>
+> — Loris Cro ⚡ (@croloris) [April 13,
+> 2023](https://twitter.com/croloris/status/1646555550358831131)
+
+\>
+
 ## [观点/教程]($section.id('viewstutorials'))
 
-- [When should I use an UNTAGGED Union?](https://zig.news/kristoff/when-should-i-use-an-untagged-union-56ek)
+[When should I use an UNTAGGED
+Union?](https://zig.news/kristoff/when-should-i-use-an-untagged-union-56ek)  
+Loris 的文章，作者利用访问 untagged union 的未赋值字段是一种
+safety-checked UB 的行为，来解决数组成员被重新赋值过的情况。
 
-- [Data driven polymorphism](https://zig.news/rutenkolk/data-driven-polymorphism-45bk)
+[Data driven
+polymorphism](https://zig.news/rutenkolk/data-driven-polymorphism-45bk)  
+作者用 Zig 来实现 Clojure 语言中的
+[defmulti](https://clojuredocs.org/clojure.core/defmulti)，以达到『动态派发』的效果
 
-- [Testing and Files as Structs](https://zig.news/aryaelfren/testing-and-files-as-structs-n94)
+[Testing and Files as
+Structs](https://zig.news/aryaelfren/testing-and-files-as-structs-n94)  
+作者演示了一个文件作为 struct 的效果，这样导入时就可以用
+`const Node = @import("Node.zig")` 的方式了。
 
-- [Sneaky Error Payloads](https://zig.news/ityonemo/sneaky-error-payloads-1aka)
+[Sneaky Error
+Payloads](https://zig.news/ityonemo/sneaky-error-payloads-1aka)  
+一种在错误中携带上下文信息的方式，上一期的月报也有类似讨论。 [Errors and
+Zig](https://notes.eatonphil.com/errors-and-zig.html)
 
-- [Regular Expressions in Zig](https://www.openmymind.net/Regular-Expressions-in-Zig/)
+[Regular Expressions in
+Zig](https://www.openmymind.net/Regular-Expressions-in-Zig/)  
+由于 Zig 现在不支持 C 中的 bitfields，因此无法直接使用 Posix 的
+`regex.h` ，这篇文章介绍了一种解决方法。
 
-- [Zig Build System](https://en.liujiacai.net/2023/04/13/zig-build-system/)
+[Zig Build
+System](https://en.liujiacai.net/2023/04/13/zig-build-system/)  
+对 Zig build 系统的介绍
 
-- [Reasonable Bootstrap](https://matklad.github.io/2023/04/13/reasonable-bootstrap.html)
+[Reasonable
+Bootstrap](https://matklad.github.io/2023/04/13/reasonable-bootstrap.html)  
+探讨了编译器如何实现自举的方式
 
-- [Data Oriented Parallel Value Interner](https://matklad.github.io/2023/04/23/data-oriented-parallel-value-interner.html)
+[Data Oriented Parallel Value
+Interner](https://matklad.github.io/2023/04/23/data-oriented-parallel-value-interner.html)  
+Matklad 探讨了如何实现一个高性能的 Interner
 
-- [TigerStyle! (Or How To Design Safer Systems in Less Time)](https://www.youtube.com/watch?v=w3WYdYyjek4)
+[TigerStyle! (Or How To Design Safer Systems in Less
+Time)](https://www.youtube.com/watch?v=w3WYdYyjek4)  
+Systems Distributed 23 视频。[B
+站链接](https://www.bilibili.com/video/BV1fm4y1C7XL)
 
-- [What Is a Database?](https://www.youtube.com/watch?v=MqbVoSs0lXk)
+[What Is a Database?](https://www.youtube.com/watch?v=MqbVoSs0lXk)  
+Systems Distributed 23 视频，[B
+站链接](https://www.bilibili.com/video/BV1gP41117zY/)，作者博客：[Scattered
+Thoughts](https://www.scattered-thoughts.net/)
 
 ## [项目/工具]($section.id('projectstools'))
 
-- [Coming Soon to a Zig Near You: HTTP Client](https://zig.news/nameless/coming-soon-to-a-zig-near-you-http-client-5b81)
+[Coming Soon to a Zig Near You: HTTP
+Client](https://zig.news/nameless/coming-soon-to-a-zig-near-you-http-client-5b81)  
+对标准库 `std.http` 的介绍。
 
-- [Zig Bits 0x3: Mastering project management in Zig](https://blog.orhun.dev/zig-bits-03/)
+[Zig Bits 0x3: Mastering project management in
+Zig](https://blog.orhun.dev/zig-bits-03/)  
+介绍了如何更好地维护一个 Zig
+项目，包括：新增依赖、增加测试覆盖率、增加文档、基于 GitHub Action
+做持续集成等。
 
-- [ityonemo/zigler](https://github.com/ityonemo/zigler)
+[ityonemo/zigler](https://github.com/ityonemo/zigler)  
+zig nifs in elixir
 
-- [Ziggifying Kilo](https://bingcicle.github.io/posts/ziggifying-kilo.html)
+[Ziggifying
+Kilo](https://bingcicle.github.io/posts/ziggifying-kilo.html)  
+使用 Zig 重写 [kilo](https://github.com/antirez/kilo) 编辑器，目前仅能在
+Linux 上运行
 
-- [jakubgiesler/VecZig](https://github.com/jakubgiesler/VecZig)
+[jakubgiesler/VecZig](https://github.com/jakubgiesler/VecZig)  
+Vector implementation in Zig
 
-- [b0bleet/zvisor](https://github.com/b0bleet/zvisor)
+[b0bleet/zvisor](https://github.com/b0bleet/zvisor)  
+Zvisor is an open-source hypervisor written in the Zig programming
+language, which provides a modern and efficient approach to systems
+programming.
 
 ## [Zig 语言更新]($section.id('zig-updates'))
+
+[相关链接](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-04-01..2023-05-01)

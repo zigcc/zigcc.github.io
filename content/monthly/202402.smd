@@ -34,19 +34,13 @@ Andrew 最近在 zigshow 节目中介绍了 Zig 2024 年的规划，主要有以
 
 ## [观点/教程]($section.id('opinion-tutorial'))
 
-### [Fast-growing Zig tops Stack Overflow survey for highest-paid programming language]($section.id('stackoverflow-highest-paid'))
-- [原文地址](https://www.infoworld.com/article/3713082/fast-growing-zig-tops-stack-overflow-survey-for-highest-paid-programming-language.html)
-
+[Fast-growing Zig tops Stack Overflow survey for highest-paid programming language](https://www.infoworld.com/article/3713082/fast-growing-zig-tops-stack-overflow-survey-for-highest-paid-programming-language.html)  
 估计是 Bun 带动的贫富差距？！
 
-### [Pool with generational references in Zig]($section.id('generational-pool'))
-- [原文地址](https://text.garden/writings/generationalpool.html)
-
+[Pool with generational references in Zig](https://text.garden/writings/generationalpool.html)  
 作者在文中介绍了一种有意思的思路：当有很多指针指向同一个对象时，如何不用遍历这些指针就能让其失效，答案是用一个胖指针，包括两部分：真正的数据指针和指向对象的年龄，当指针的年龄和指向对象的年龄不一致时，即认为该指针失效。
 
-### [TCC RISC-V Compiler runs in the Web Browser (thanks to Zig Compiler)]($section.id('tcc-in-browser'))
-- [原文地址](https://lupyuen.codeberg.page/articles/tcc.html)
-
+[TCC RISC-V Compiler runs in the Web Browser (thanks to Zig Compiler)](https://lupyuen.codeberg.page/articles/tcc.html)  
 [TCC](https://github.com/sellicott/tcc-riscv32) 是一个 64 位 RISC-V
 的编译器，作者在这篇文章里利用 Zig 把它编译成 WebAssembly
 放到浏览器里执行。其中的难点在于 TCC 会调用 Posix
@@ -60,13 +54,11 @@ Zig 社区内已经有不少 libc 的实现了：
   libc implementation written in Zig that is designed to be used with
   freestanding targets.
 
-- [Building the DirectX shader compiler better than Microsoft?](https://devlog.hexops.com/2024/building-the-directx-shader-compiler-better-than-microsoft/)
+[Building the DirectX shader compiler better than Microsoft?](https://devlog.hexops.com/2024/building-the-directx-shader-compiler-better-than-microsoft/)  
 
-- [Porting Zig to NetBSD](http://coypu.sdf.org/porting-zig.html)
+[Porting Zig to NetBSD](http://coypu.sdf.org/porting-zig.html)  
 
-### [Sig Engineering - Part 2 - Progress on AccountsDB & more]($section.id('sig-engineering'))
-- [原文地址](https://blog.syndica.io/sig-engineering-part-2-accountsdb-more/)
-
+[Sig Engineering - Part 2 - Progress on AccountsDB & more](https://blog.syndica.io/sig-engineering-part-2-accountsdb-more/)  
 Syndica 公司的 Sig，这是一款用 Zig 编写的、专注于 RPS 的 Solana
 验证器客户端。在这篇文章里，他们分析了如何优化 HashMap
 的性能，而且实现了一个基于本地磁盘的 Allocator。而且他们还在招聘 Zig
@@ -104,5 +96,4 @@ Zig-TypeScript binding generator 🟦 🦎
 
 ## [Zig 语言更新]($section.id('zig-updates'))
 
-[GitHub PRs](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-02-01..2024-03-01)
-
+[相关链接](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-02-01..2023-03-01)

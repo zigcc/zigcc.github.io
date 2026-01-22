@@ -41,9 +41,7 @@ Zig 的 discord。
 
 ## [观点/教程]($section.id('opinion-tutorial'))
 
-### [Redesign How Autodoc Works]($section.id('redesign-autodoc'))
-- [原文地址](https://github.com/ziglang/zig/pull/19208)
-
+[Redesign How Autodoc Works](https://github.com/ziglang/zig/pull/19208)  
 Andrew 在这个 PR 里重构了现有的文档系统
 Autodoc，之前的实现问题很多。比如：
 
@@ -63,9 +61,7 @@ Autodoc，之前的实现问题很多。比如：
 
   快来体验最新的文档系统吧：https://ziglang.org/documentation/master/std/
 
-### [Zig, Rust, and other languages]($section.id('zig-rust-other-langs'))
-- [原文地址](https://notes.eatonphil.com/2024-03-15-zig-rust-and-other-languages.html)
-
+[Zig, Rust, and other languages](https://notes.eatonphil.com/2024-03-15-zig-rust-and-other-languages.html)  
 老朋友 Phil Eaton 的文章，在这里他针对以下几点进行了语言对比：
 
 - 内存管理。Zig 最大的问题是不支持 RAII，一个近似的概念是 arenas
@@ -81,9 +77,7 @@ Autodoc，之前的实现问题很多。比如：
   `must-not-allocate` 的注解，
   这样高级语言里，也可以保值某些操作不会有内存分配。
 
-### [Why does an extraneous build step make my Zig app 10x faster?]($section.id('faster-build-step'))
-- [原文地址](https://mtlynch.io/zig-extraneous-build/)
-
+[Why does an extraneous build step make my Zig app 10x faster?](https://mtlynch.io/zig-extraneous-build/)  
 作者在这篇文章里分享了自己遇到的一个很有意思的问题，
 同一份代码，执行方式不同，竟然有不同的耗时。最小复现代码：
 
@@ -142,16 +136,12 @@ pipeline，一般本能的会认为 B 只会在 A
 `main` 函数的执行时间在 `zig build run` 方式下，
 其实执行的要晚一些，因为它需要先执行编译操作，因此造成了这个误差。
 
-### [One Bilion rows in zig]($section.id('1brc-zig'))
-- [原文地址](https://neurobug.com/posts/zig/billion/)
-
+[One Bilion rows in zig](https://neurobug.com/posts/zig/billion/)  
 作者用[ 1BRC](https://1brc.dev/) 这个项目作为 Zig 的练手项目，里面用到了
 [mstange/samply](https://github.com/mstange/samply) 这个 Profiler
 工具，还起来还比较实用。
 
-### [Zig defer Patterns]($section.id('defer-patterns'))
-- [原文地址](https://matklad.github.io/2024/03/21/defer-patterns.html)
-
+[Zig defer Patterns](https://matklad.github.io/2024/03/21/defer-patterns.html)  
 Matklad 最新的一篇文章，Ziggit
 [讨论链接](https://ziggit.dev/t/zig-defer-patterns/3638/3)。里面讲述了
 defer 除了做资源回收外，其他的一些惯用法，里面有几个有趣的点：
@@ -238,15 +228,11 @@ const port = port: {
 };
 ```
 
-### [Build system tricks]($section.id('build-system-tricks'))
-- [原文地址](https://ziggit.dev/t/build-system-tricks/3531/1)
-
+[Build system tricks](https://ziggit.dev/t/build-system-tricks/3531/1)  
 介绍了 zig build
 的使用技巧，这些技巧有助于在确保方便地命名和布局构建步骤的同时，如何使用构建系统的每个部分。
 
-### [Using Zig with WebAssembly]($section.id('zig-with-wasm'))
-- [原文地址](https://blog.mjgrzymek.com/blog/zigwasm)
-
+[Using Zig with WebAssembly](https://blog.mjgrzymek.com/blog/zigwasm)  
 如何将 Zig 编译成 wasm，并传递复杂的参数。
 
 ## [项目/工具]($section.id('projects-tools'))
@@ -307,5 +293,4 @@ Zig milstone monitor
 
 ## [Zig 语言更新]($section.id('zig-updates'))
 
-[GitHub PRs](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-02-01..2024-03-01)
-
+[相关链接](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-02-01..2024-03-01)

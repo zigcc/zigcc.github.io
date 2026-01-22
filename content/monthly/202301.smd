@@ -6,29 +6,100 @@
 .draft = false,
 ---
 
-## [0.10.1 版本发布]($section.id('release-0.10.1'))
-- [原文地址](https://ziglang.org/download/0.10.1/release-notes.html)
+## [0.10.1]($section.id('0-10-1'))
+
+[原文链接](https://ziglang.org/download/0.10.1/release-notes.html)
+
+一个小版本，主要是 bugfix。最主要的功能是：[Package Manager
+MVP](https://github.com/ziglang/zig/pull/14265)，Zig
+终于开始支持包管理了！
+不过才刚刚开始，有一个[面板](https://github.com/ziglang/zig/projects/4)来跟踪相关
+issue 进度。使用的配置文件是 `build.zig.ini` ，格式如下：
+
+``` conf
+[package]
+name=libffmpeg
+version=5.1.2
+
+[dependency]
+name=libz
+url=https://github.com/andrewrk/libz/archive/f0e53cc2391741034b144a2c2076ed8a9937b29b.tar.gz
+hash=c9b30cffc40999d2c078ff350cbcee642970a224fe123c756d0892f876cf1aae
+
+[dependency]
+name=libmp3lame
+url=https://github.com/andrewrk/libmp3lame/archive/497568e670bfeb14ab6ef47fb6459a2251358e43.tar.gz
+hash=9ba4f49895b174a3f918d489238acbc146bd393575062b2e3be33488b688e36f
+```
+
+`build.zig` 引用方式：
+
+``` zig
+const std = @import("std");
+
+pub fn build(b: *std.build.Builder) void {
+    const target = b.standardTargetOptions(.{});
+    const mode = b.standardReleaseOptions();
+
+    const libz_dep = b.dependency("libz", .{});
+    const libmp3lame_dep = b.dependency("libmp3lame", .{});
+
+    const lib = b.addStaticLibrary("ffmpeg", null);
+    lib.setTarget(target);
+    lib.setBuildMode(mode);
+    lib.linkLibrary(libz_dep.artifact("z"));
+    lib.linkLibrary(libmp3lame_dep.artifact("mp3lame"));
+    lib.linkLibC();
+    lib.addIncludePath(".");
+    lib.install();
+}
+```
+
+其他关注点：
+
+- LLVM 升级到
+  [15.0.7](http://releases.llvm.org/15.0.7/docs/ReleaseNotes.html)
+- 是 0.10.x 的最后一个 release 版本
 
 ## [观点/教程]($section.id('viewstutorials'))
 
-- [Code study: interface idioms/patterns in zig standard libraries](https://zig.news/yglcode/code-study-interface-idiomspatterns-in-zig-standard-libraries-4lkj)
+[Code study: interface idioms/patterns in zig standard
+libraries](https://zig.news/yglcode/code-study-interface-idiomspatterns-in-zig-standard-libraries-4lkj)  
+由于 Zig
+目前还不支持接口抽空，本文介绍了标准库中来实现类似功能的五种方式
 
-- [A Zig Diary](https://kihlander.net/post/a-zig-diary/)
+[A Zig Diary](https://kihlander.net/post/a-zig-diary/)  
+作者分享了对 Zig 的使用体验
 
-- [Why Accounting Needs Its Own Database with Joran Greef of Tiger Beetle](https://datastackshow.com/podcast/why-accounting-needs-its-own-database-with-joran-greef-of-tiger-beetle/)
+[Why Accounting Needs Its Own Database with Joran Greef of Tiger
+Beetle](https://datastackshow.com/podcast/why-accounting-needs-its-own-database-with-joran-greef-of-tiger-beetle/)  
+播客分享
 
-- [Crossplatform JNI builds with Zig](https://0110.be/posts/Crossplatform_JNI_builds_with_Zig)
+[Crossplatform JNI builds with
+Zig](https://0110.be/posts/Crossplatform_JNI_builds_with_Zig)  
+又一个使用 Zig 作为交叉编译的例子
 
 ## [项目/工具]($section.id('projectstools'))
 
-- [Introducing ⚡zap⚡ - blazingly fast backends in zig](https://zig.news/renerocksai/introducing-zap-blazingly-fast-backends-in-zig-3jhh)
+[Introducing ⚡zap⚡ - blazingly fast backends in
+zig](https://zig.news/renerocksai/introducing-zap-blazingly-fast-backends-in-zig-3jhh)  
+Zap 是 Zig 对 [facil.io - The C Web Application
+Framework](https://facil.io/) 的封装，本文算是对它的宣传。
 
-- [Indexing every Zig for great justice](https://zig.news/auguste/indexing-every-zig-for-great-justice-4l1h)
+[Indexing every Zig for great
+justice](https://zig.news/auguste/indexing-every-zig-for-great-justice-4l1h)  
+本文介绍了另一种语言服务器协议（LSP)：SCIP，并用 zig
+实现。项目处于早期阶段。
 
-- [dantecatalfamo/zig-git](https://github.com/dantecatalfamo/zig-git)
+[dantecatalfamo/zig-git](https://github.com/dantecatalfamo/zig-git)  
+Implementing git structures and functions in zig
 
-- [axiomhq/zig-hyperloglog](https://github.com/axiomhq/zig-hyperloglog)
+[axiomhq/zig-hyperloglog](https://github.com/axiomhq/zig-hyperloglog)  
+Zig library for HyperLogLog estimation
 
-- [This Week In Zig](https://thisweekinzig.mataroa.blog/)
+[This Week In Zig](https://thisweekinzig.mataroa.blog/)  
+一个介绍 Zig 的周刊，主要是 master 分支上的改动
 
 ## [Zig 语言更新]($section.id('zig-updates'))
+
+[相关链接](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-01-01..2023-02-01)

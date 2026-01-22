@@ -109,8 +109,8 @@ Scripty 作为表达式语言，其威力在条件和嵌套逻辑中得以体现
 以下是使用 Pandoc 将 `.org` 文件批量转换为 Markdown 格式（并重命名为 `.smd`）的 Fish 脚本，此方法同样适用于 `.md` 文件：
 
 ```fish
-**注意**：这里实际上是转换到了 GitHub Flavored Markdown (gfm) 格式
-**后续仍需手动调整**以完全适配 smd 语法
+# 注意：这里实际上是转换到了 GitHub Flavored Markdown (gfm) 格式
+# 后续仍需手动调整以完全适配 smd 语法
 for f in *.org
   pandoc -s $f -t gfm -o (path change-extension "smd" $f)
 end

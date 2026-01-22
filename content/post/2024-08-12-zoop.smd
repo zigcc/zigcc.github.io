@@ -337,7 +337,7 @@ zoop.Mixin(Child) = struct {
 - `getVtable`: 根据接口名获得接口 `Vtable` 的函数
 - `getSuperPtr`: 根据父类名获得 `mixin.data` 中父类指针
 
-根据对 `mixin` 数据的分析，zoop 的类型转换的原理就很清楚了，大家可以参考官网上关于 [类型转换](https://zhuyadong.github.io/zoop-docs/guide/as-cast) 的内容。
+上面两个函数获取的都是最外层对象的数据。根据对 `mixin` 数据的分析，zoop 的类型转换的原理就很清楚了，大家可以参考官网上关于 [类型转换](https://zhuyadong.github.io/zoop-docs/guide/as-cast) 的内容。
 
 ## [动态构造类的方法、接口方法、和 `Vtable`]($section.id('dynamically-constructing-class-methods-interface-methods-and-vtable'))
 

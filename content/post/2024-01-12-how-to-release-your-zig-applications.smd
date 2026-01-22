@@ -14,7 +14,7 @@ You've just written an application in Zig and want others to use it.
 A convenient way for users to use your application is to provide a pre-built executable file.
 Next, I'll discuss the two main things that need to be handled correctly in a good release process.
 
-## [Why provide pre-built executable files?]($section.id('why-provide-pre-built-executable-files'))
+## [Why provide pre-built executable files?]($heading.id('why-provide-pre-built-executable-files'))
 
 Given how C/C++ dependencies work (or don't work), for some C/C++ projects,
 providing pre-compiled executable files is almost a necessity,
@@ -26,7 +26,7 @@ That said, the more popular your application is, the less users will care what l
 Your users don't want to install Zig and run the build process to easily use your application (99% of the time, the rest 1% will be discussed later),
 so it's still better to pre-build your application.
 
-## [`zig build` vs `zig build-exe`]($section.id('zig-build-vs-zig-build-exe'))
+## [`zig build` vs `zig build-exe`]($heading.id('zig-build-vs-zig-build-exe'))
 
 In this article, we'll see how to make, release a build for a Zig project,
 so it's worth spending a little time to fully understand the relationship between Zig build system and command line.
@@ -48,7 +48,7 @@ what `zig build` does is to prepare command line parameters for `build-exe`.
 This means that in compiling Zig code, `zig build` (assuming the code in `build.zig` is correct)
 and `zig build-exe` are one-to-one correspondence. The only difference is convenience.
 
-## [Build mode]($section.id('build-mode'))
+## [Build mode]($heading.id('build-mode'))
 
 When building a Zig project with `zig build` or `zig build-exe myapp.zig`,
 the default is a debug build executable file. Debug build is mainly for development convenience, so it's usually considered unsuitable for release.
@@ -70,7 +70,7 @@ but it's not prioritized for performance, but rather for trying to minimize the 
 For example, this is a very meaningful build mode for WebAssembly,
 because you want the executable file to be as small as possible, and the sandbox runtime environment has provided a lot of security guarantees.
 
-## [How to set build mode]($section.id('how-to-set-build-mode'))
+## [How to set build mode]($heading.id('how-to-set-build-mode'))
 
 When using `zig build-exe`, you can add `-O ReleaseSafe`
 (or `ReleaseFast`, or `ReleaseSmall`) to get the corresponding build mode.
@@ -98,7 +98,7 @@ const exe = b.addExecutable(.{
 This is how you specify release mode in command line: `zig build -Doptimize=ReleaseSafe` (or
 `-Doptimize=ReleaseFast`, or `-Doptimize=ReleaseSmall`).
 
-## [Choose the correct build target]($section.id('choose-the-correct-build-target'))
+## [Choose the correct build target]($heading.id('choose-the-correct-build-target'))
 
 Now, we've chosen the correct release mode, it's time to consider build target.
 Obviously, if the platform used and build platform are different, the corresponding build target needs to be specified,
@@ -109,7 +109,7 @@ The most straightforward way is to directly call `zig build` or `zig build-exe` 
 
 If you do this, sometimes it works, but sometimes it crashes due to `illegal instruction` (or similar error). What's happening?
 
-## [CPU features]($section.id('cpu-features'))
+## [CPU features]($heading.id('cpu-features'))
 
 If build target is not specified when building, Zig will build for the current machine,
 which means it will use all instruction sets supported by the current CPU. If the CPU supports AVX extension,
@@ -173,7 +173,7 @@ const exe = b.addExecutable(.{
 This also means if you want to add other restrictions or change how to specify target when building,
 you can achieve this by adding your own code.
 
-## [Conclusion]($section.id('conclusion'))
+## [Conclusion]($heading.id('conclusion'))
 
 Now you've learned the things you need to ensure correctly when releasing a build: choose a release optimization mode and choose the correct build target,
 including building for the same system you're building.

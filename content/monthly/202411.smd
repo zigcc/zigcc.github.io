@@ -6,9 +6,9 @@
 .draft = false,
 ---
 
-## [观点/教程]($section.id('opinion-tutorial'))
+## [观点/教程]($heading.id('opinion-tutorial'))
 
-### [Why am I writing a JavaScript toolchain in Zig?]($section.id('why-am-i-writing-a-javascript-toolchain-in-zig'))
+### [Why am I writing a JavaScript toolchain in Zig?]($heading.id('why-am-i-writing-a-javascript-toolchain-in-zig'))
 
 [原文链接](https://injuly.in/blog/announcing-jam/index.html)
 
@@ -50,7 +50,7 @@
   esquery 的问题在于执行效率，通过借助于 zig 的 comptime 来在编译器翻译
   esquery 就避免了运行时开销。
 
-### [Advent of Code in Zig | Loris Cro's Blog]($section.id('advent-of-code-in-zig-loris-cro-s-blog'))
+### [Advent of Code in Zig | Loris Cro's Blog]($heading.id('advent-of-code-in-zig-loris-cro-s-blog'))
 
 [原文链接](https://kristoff.it/blog/advent-of-code-zig/)
 
@@ -103,11 +103,11 @@
 > 的某些功能甚至能帮助您取得比其他语言更快的进展，但它最终还是针对软件工程进行了优化，而这并不是您在
 > AoC 中要做的事情。
 
-### [Zig and Emulators]($section.id('zig-and-emulators'))
+### [Zig and Emulators]($heading.id('zig-and-emulators'))
 
 [原文链接](https://floooh.github.io/2024/08/24/zig-and-emulators.html)
 
-### [Zig Reproduced Without Binaries]($section.id('zig-reproduced-without-binaries'))
+### [Zig Reproduced Without Binaries]($heading.id('zig-reproduced-without-binaries'))
 
 [原文链接](https://jakstys.lt/2024/zig-reproduced-without-binaries/)
 
@@ -138,7 +138,7 @@ Zig，利用 LLVM 后端，以 wasm32-wasi 为目标生成的二进制文件。
 - [Why is the bootstrapping process so complicated? :
   r/Zig](https://www.reddit.com/r/Zig/comments/142gwls/why_is_the_bootstrapping_process_so_complicated/)
 
-## [项目/工具]($section.id('projects-tools'))
+## [项目/工具]($heading.id('projects-tools'))
 
 [Builds (Zig) - GoReleaser](https://goreleaser.com/customization/zig-builds/)  
 版本发布工具 GoReleaser 支持了 Zig
@@ -159,6 +159,6 @@ PDF reader for terminal emulators using the Kitty image protocol
 [Dr-Nekoma/lyceum](https://github.com/Dr-Nekoma/lyceum)  
 An MMO game written in Erlang (+ PostgreSQL) + Zig (+ Raylib)
 
-## [Zig 语言更新]($section.id('zig-updates'))
+## [Zig 语言更新]($heading.id('zig-updates'))
 
 [相关链接](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-11-01..2024-12-01)

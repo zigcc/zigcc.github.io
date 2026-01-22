@@ -6,9 +6,9 @@
 .draft = false,
 ---
 
-## [重大事件]($section.id('major-events'))
+## [重大事件]($heading.id('major-events'))
 
-### [向 Zig 软件基金会认捐 30 万美元]($section.id('donation-zsf-300k'))
+### [向 Zig 软件基金会认捐 30 万美元]($heading.id('donation-zsf-300k'))
 
 Mitchell 在其最新的博客上宣布：我和我的妻子向 Zig 软件基金会 (ZSF)
 捐赠了 300,000 美元。
@@ -25,9 +25,9 @@ Mitchell 在其最新的博客上宣布：我和我的妻子向 Zig 软件基金
 作为其中的一部分，我们希望支持那些我们认为可以带来变革和影响的独立软件项目，这既是回馈给我如此之多的社区的一种方式，更重要的是，这也是彰显和鼓励为热爱而构建的文化的一种方式。
 Zig 就是这样一个项目。
 
-## [观点/教程]($section.id('opinion-tutorial'))
+## [观点/教程]($heading.id('opinion-tutorial'))
 
-### [Zig is everything I want C to be]($section.id('zig-is-everything-i-want-c-to-be'))
+### [Zig is everything I want C to be]($heading.id('zig-is-everything-i-want-c-to-be'))
 
 [原文链接](https://mrcat.au/blog/zig_is_cool/)
 
@@ -63,11 +63,11 @@ Zig 就是这样一个项目。
 
 4.  与 C 无缝交互， `zig cc` 是交叉编译的首选
 
-### [Building Nintendo 3DS Homebrew with Zig]($section.id('building-nintendo-3ds-homebrew-with-zig'))
+### [Building Nintendo 3DS Homebrew with Zig]($heading.id('building-nintendo-3ds-homebrew-with-zig'))
 
 [原文链接](https://blog.erikwastaken.dev/posts/2024-10-27-building-3ds-homebrew-with-zig.html)
 
-### [Critical Social Infrastructure for Zig Communities | Loris Cro's Blog]($section.id('critical-social-infrastructure-for-zig-communities-loris-cro-s-blog'))
+### [Critical Social Infrastructure for Zig Communities | Loris Cro's Blog]($heading.id('critical-social-infrastructure-for-zig-communities-loris-cro-s-blog'))
 
 [原文链接](https://kristoff.it/blog/critical-social-infrastructure/)
 
@@ -80,35 +80,35 @@ Zig 就是这样一个项目。
 - <https://ziglang.org/devlog/>
 - <https://zine-ssg.io/log/>
 
-### [The Zig Website Has Been Re-engineered]($section.id('the-zig-website-has-been-re-engineered'))
+### [The Zig Website Has Been Re-engineered]($heading.id('the-zig-website-has-been-re-engineered'))
 
 [原文链接](https://ziglang.org/news/website-zine)
 
 Zig 官网已经用 [Zine](https://zine-ssg.io/) 重写！
 
-### [Rust vs. Zig in Reality: A (Somewhat) Friendly Debate]($section.id('rust-vs-zig-in-reality-a-somewhat-friendly-debate'))
+### [Rust vs. Zig in Reality: A (Somewhat) Friendly Debate]($heading.id('rust-vs-zig-in-reality-a-somewhat-friendly-debate'))
 
 [原文链接](https://thenewstack.io/rust-vs-zig-in-reality-a-somewhat-friendly-debate/)
 
-### [Why I rewrote my Rust keyboard firmware in Zig: consistency, mastery, and fun]($section.id('why-i-rewrote-my-rust-keyboard-firmware-in-zig-consistency-mastery-and-fun'))
+### [Why I rewrote my Rust keyboard firmware in Zig: consistency, mastery, and fun]($heading.id('why-i-rewrote-my-rust-keyboard-firmware-in-zig-consistency-mastery-and-fun'))
 
 [原文链接](https://teckrevie.blogspot.com/2024/09/why-zig-programmers-are-cashing-in-deep.html)
 
-## [视频]($section.id('videos'))
+## [视频]($heading.id('videos'))
 
-### [I made an operating system that self replicates doom on a network "from scratch"]($section.id('i-made-an-operating-system-that-self-replicates-doom-on-a-network-from-scratch'))
+### [I made an operating system that self replicates doom on a network "from scratch"]($heading.id('i-made-an-operating-system-that-self-replicates-doom-on-a-network-from-scratch'))
 
 [原文链接](https://www.youtube.com/watch?v=xOySJpQlmv4&feature=youtu.be)
 
-### [Rust vs Zig vs Go: Performance (Latency - Throughput - Saturation - Availability)]($section.id('rust-vs-zig-vs-go-performance-latency-throughput-saturation-availability'))
+### [Rust vs Zig vs Go: Performance (Latency - Throughput - Saturation - Availability)]($heading.id('rust-vs-zig-vs-go-performance-latency-throughput-saturation-availability'))
 
 [原文链接](https://www.youtube.com/watch?feature=shared&v=3fWx5BOiUiY)
 
-### [Let's explore Vulkan API with Zig programming language from scratch]($section.id('let-s-explore-vulkan-api-with-zig-programming-language-from-scratch'))
+### [Let's explore Vulkan API with Zig programming language from scratch]($heading.id('let-s-explore-vulkan-api-with-zig-programming-language-from-scratch'))
 
 [原文链接](https://www.youtube.com/live/Kf7BIPUUfsc?t=764)
 
-## [项目/工具]($section.id('projects-tools'))
+## [项目/工具]($heading.id('projects-tools'))
 
 [laohanlinux/boltdb-zig](https://github.com/laohanlinux/boltdb-zig)  
 a zig implement kv database
@@ -147,6 +147,6 @@ Video editor 🎬 written in Zig ⚡ using raylib
 [pwbh/ymlz](https://github.com/pwbh/ymlz)  
 Small and convenient yaml parser for Zig
 
-## [Zig 语言更新]($section.id('zig-updates'))
+## [Zig 语言更新]($heading.id('zig-updates'))
 
 [相关链接](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-10-01..2024-11-01)

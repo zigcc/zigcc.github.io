@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-## [观点/教程]($section.id('viewstutorials'))
+## [观点/教程]($heading.id('viewstutorials'))
 
 - [Zig 初体验 - Keep
   Coding](https://liujiacai.net/blog/2022/07/16/zig-intro/)
@@ -28,7 +28,7 @@
   before starting with Zig? :
   Zig](https://www.reddit.com/r/Zig/comments/w63x6r/is_it_necessary_to_know_c_or_another_systems/)
 
-## [项目/工具]($section.id('projectstools'))
+## [项目/工具]($heading.id('projectstools'))
 
 - [Release bun v0.1.5 ·
   oven-sh/bun](https://github.com/oven-sh/bun/releases/tag/bun-v0.1.5)
@@ -47,7 +47,7 @@
 - [How I built
   zig-sqlite](https://rischmann.fr/blog/how-i-built-zig-sqlite)
 
-## [Zig 语言更新]($section.id('zig-updates'))
+## [Zig 语言更新]($heading.id('zig-updates'))
 
 [相关链接](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2022-07-01..2022-08-01)
 

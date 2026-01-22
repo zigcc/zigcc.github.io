@@ -6,13 +6,13 @@
 .draft = false,
 ---
 
-## [观点/教程]($section.id('viewstutorials'))
+## [观点/教程]($heading.id('viewstutorials'))
 
 - [Goodbye to the C++ Implementation of Zig ⚡ Zig Programming
   Language](https://ziglang.org/news/goodbye-cpp/)
 
-## [项目/工具]($section.id('projectstools'))
+## [项目/工具]($heading.id('projectstools'))
 
-## [Zig 语言更新]($section.id('zig-updates'))
+## [Zig 语言更新]($heading.id('zig-updates'))
 
 [相关链接](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2022-12-01..2023-01-01)

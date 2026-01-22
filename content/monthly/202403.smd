@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-## [重大事件]($section.id('major-events'))
+## [重大事件]($heading.id('major-events'))
 
 > <https://ziglang.cc/>
 
@@ -39,7 +39,7 @@ Kelley](https://rustacean-station.org/episode/andrew-kelley/)
 也会紧密关注发布动态，有消息第一时间分享给大家。耐不住寂寞的朋友，可以先去刷刷
 Zig 的 discord。
 
-## [观点/教程]($section.id('opinion-tutorial'))
+## [观点/教程]($heading.id('opinion-tutorial'))
 
 [Redesign How Autodoc Works](https://github.com/ziglang/zig/pull/19208)  
 Andrew 在这个 PR 里重构了现有的文档系统
@@ -235,7 +235,7 @@ const port = port: {
 [Using Zig with WebAssembly](https://blog.mjgrzymek.com/blog/zigwasm)  
 如何将 Zig 编译成 wasm，并传递复杂的参数。
 
-## [项目/工具]($section.id('projects-tools'))
+## [项目/工具]($heading.id('projects-tools'))
 
 [xataio/pgzx](https://github.com/xataio/pgzx)  
 Create PostgreSQL extensions using Zig. 一个例子：
@@ -291,6 +291,6 @@ ability of running pipeline like bash.
 [zigcc/zig-milestone](https://github.com/zigcc/zig-milestone)  
 Zig milstone monitor
 
-## [Zig 语言更新]($section.id('zig-updates'))
+## [Zig 语言更新]($heading.id('zig-updates'))
 
 [相关链接](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-02-01..2024-03-01)

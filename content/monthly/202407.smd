@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-## [重大事件]($section.id('major-events'))
+## [重大事件]($heading.id('major-events'))
 
 在[这篇文章](https://leaddev.com/tech/why-zig-one-hottest-programming-languages-learn)里，作者引用
 Stackoverflow 2024
@@ -34,9 +34,9 @@ Zig 开发者的一些观点：
   但与此同时，这些语言的工具链却非常糟糕。 Zig
   允许用户涉猎这些核心编程语言，但可以使用更好的工具链，兼容各种语言和更丰富的功能。
 
-## [观点/教程]($section.id('opinion-tutorial'))
+## [观点/教程]($heading.id('opinion-tutorial'))
 
-### [Improving Your Zig Language Server Experience]($section.id('improving-your-zig-language-server-experience'))
+### [Improving Your Zig Language Server Experience]($heading.id('improving-your-zig-language-server-experience'))
 
 [原文链接](https://kristoff.it/blog/improving-your-zls-experience/)
 
@@ -84,7 +84,7 @@ zls --config-path zls.json
 
 这样不同的项目就可以用不同的检查步骤了。
 
-### [Systems Distributed '24]($section.id('systems-distributed-24'))
+### [Systems Distributed '24]($heading.id('systems-distributed-24'))
 
 [原文链接](https://guergabo.substack.com/p/systems-distributed-24)
 
@@ -96,7 +96,7 @@ zls --config-path zls.json
 - Lessons from Building Distributed Databases
 - Notes from Water Cooler Chats
 
-### [C Macro Reflection in Zig – Zig Has Better C Interop Than C Itself]($section.id('c-macro-reflection-in-zig-zig-has-better-c-interop-than-c-itself'))
+### [C Macro Reflection in Zig – Zig Has Better C Interop Than C Itself]($heading.id('c-macro-reflection-in-zig-zig-has-better-c-interop-than-c-itself'))
 
 [原文链接](https://jstrieb.github.io/posts/c-reflection-zig/)
 
@@ -141,7 +141,7 @@ fn get_window_messages() [65536][:0]const u8 {
 }
 ```
 
-### [A TypeScripter's Take on Zig (Advent of Code 2023)]($section.id('a-typescripter-s-take-on-zig-advent-of-code-2023'))
+### [A TypeScripter's Take on Zig (Advent of Code 2023)]($heading.id('a-typescripter-s-take-on-zig-advent-of-code-2023'))
 
 [原文链接](https://effectivetypescript.com/2024/07/17/advent2023-zig/)
 
@@ -175,7 +175,7 @@ fn get_window_messages() [65536][:0]const u8 {
 - 在 JavaScript
   允许您内联表达式的某些情况下，您可能需要分解出一个变量来澄清生存期。看看[这个问题](https://github.com/ziglang/zig/issues/12414)。
 
-## [项目/工具]($section.id('projects-tools'))
+## [项目/工具]($heading.id('projects-tools'))
 
 [18alantom/fex](https://github.com/18alantom/fex)  
 A command-line file explorer prioritizing quick navigation.
@@ -183,6 +183,6 @@ A command-line file explorer prioritizing quick navigation.
 [griush/zm](https://github.com/griush/zm)  
 SIMD Math library fully cross-platform
 
-## [Zig 语言更新]($section.id('zig-updates'))
+## [Zig 语言更新]($heading.id('zig-updates'))
 
 [相关链接](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2024-07-01..2024-08-01)

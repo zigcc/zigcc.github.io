@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-## [0.10.0 Release Notes]($section.id('0-10-0-release-notes'))
+## [0.10.0 Release Notes]($heading.id('0-10-0-release-notes'))
 
 [相关链接](https://ziglang.org/download/0.10.0/release-notes.html)
 
@@ -19,13 +19,13 @@ compiler，也称为『自举』，即可以用 Zig 来写 Zig
 
 赶紧升级吧，少年！
 
-### [zigcc 中文社区微信群]($section.id('zigcc-chinese-community-wechat-group'))
+### [zigcc 中文社区微信群]($heading.id('zigcc-chinese-community-wechat-group'))
 
 欢迎喜欢 Zig 的小伙伴加入！ {{\< figure
 src=“https://github.com/zigcc/.github/raw/main/weixin.jpg” width=“200”
 title=“ZigCC 微信群二维码” \>}}
 
-## [观点/教程]($section.id('viewstutorials'))
+## [观点/教程]($heading.id('viewstutorials'))
 
 - [Wasmer 3.0 使用 Zig 进行跨平台编译 · Discussion \#35 ·
   zigcc/forum](https://github.com/zigcc/forum/discussions/35)
@@ -100,7 +100,7 @@ const Animal = union(enum){
   [spoon](https://sr.ht/~leon_plickat/zig-spoon/)
   这个库开发了一个帮助自己进行图片打标的 UI 工具，
 
-## [项目/工具]($section.id('projectstools'))
+## [项目/工具]($heading.id('projectstools'))
 
 - [Zig
   程序设计语言中文手册](https://sxwangzhiwen.github.io/zigcndoc/zigcndoc.html)
@@ -116,6 +116,6 @@ const Animal = union(enum){
 - [Zig Support plugin for IntelliJ and CLion version 0.2.0
   released](https://zig.news/marioariasc/zig-support-plugin-for-intellij-and-clion-version-020-released-3g06)
 
-## [Zig 语言更新]($section.id('zig-updates'))
+## [Zig 语言更新]($heading.id('zig-updates'))
 
 [相关链接](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2022-11-01..2022-12-01)

@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-## [观点/教程]($section.id('viewstutorials'))
+## [观点/教程]($heading.id('viewstutorials'))
 
 - [Growing a {{mustache}} with
   Zig](https://zig.news/batiati/growing-a-mustache-with-zig-di4)
@@ -29,7 +29,7 @@
   devlog](https://devlog.hexops.com/2022/packed-structs-in-zig/)。使用
   Zig 的 `packet struct` 实现 bit set 功能
 
-## [项目/工具]($section.id('projectstools'))
+## [项目/工具]($heading.id('projectstools'))
 
 - [Virtual tables by vrischmann · Pull Request \#100 ·
   vrischmann/zig-sqlite](https://github.com/vrischmann/zig-sqlite/pull/100)。zig-sqlite
@@ -47,7 +47,7 @@
 
   ![](/images/blockly.webp)
 
-## [Zig 语言更新]($section.id('zig-updates'))
+## [Zig 语言更新]($heading.id('zig-updates'))
 
 [相关链接](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2022-08-01..2022-09-01)
 

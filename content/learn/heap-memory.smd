@@ -14,7 +14,7 @@
 
 本部分分为两个主题。第一个主题是第三个内存区域--堆的总体概述。另一个主题是 Zig 直接而独特的堆内存管理方法。即使你熟悉堆内存，比如使用过 C 语言的 `malloc`，你也会希望阅读第一部分，因为它是 Zig 特有的。
 
-## [堆]($section.id('heap'))
+## [堆]($heading.id('heap'))
 
 堆是我们可以使用的第三个也是最后一个内存区域。与全局数据和调用栈相比，堆有点像蛮荒之地：什么都可以使用。具体来说，在堆中，我们可以在运行时创建大小已知的内存，并完全控制其生命周期。
 
@@ -52,7 +52,7 @@ fn getRandomCount() !u8 {
 
 一般来说，每次 `alloc` 都会有相应的 `free`。`alloc`分配内存，`free`释放内存。不要让这段简单的代码限制了你的想象力。这种 `try alloc` + `defer free` 的模式很常见，这是有原因的：在我们分配内存的地方附近释放相对来说是万无一失的。但同样常见的是在一个地方分配，而在另一个地方释放。正如我们之前所说，堆没有内置的生命周期管理。你可以在 HTTP 处理程序中分配内存，然后在后台线程中释放，这是代码中两个完全独立的部分。
 
-## [defer 和 errdefer]($section.id('defer-and-errdefer'))
+## [defer 和 errdefer]($heading.id('defer-and-errdefer'))
 
 说句题外话，上面的代码介绍了一个新的语言特性：`defer`，它在退出作用域时执行给定的代码。『作用域退出』包括到达作用域的结尾或从作用域返回。严格来说， `defer` 与分配器或内存管理并无严格关系；你可以用它来执行任何代码。但上述用法很常见。
 
@@ -100,7 +100,7 @@ pub const Game = struct {
 
 > `init` 和 `deinit` 的名字并不特殊。它们只是 Zig 标准库使用的，也是社区采纳的名称。在某些情况下，包括在标准库中，会使用 `open` 和 `close`，或其他更适当的名称。
 
-## [双重释放和内存泄漏]($section.id('double-free-and-memory-leak'))
+## [双重释放和内存泄漏]($heading.id('double-free-and-memory-leak'))
 
 上面提到过，没有规则规定什么时候必须释放什么东西。但事实并非如此，还是有一些重要规则，只是它们不是强制的，需要你自己格外小心。
 
@@ -159,7 +159,7 @@ fn isSpecial(allocator: Allocator, name: [] const u8) !bool {
 
 至少在双重释放的情况下，我们的程序会遭遇严重崩溃。内存泄漏可能很隐蔽。不仅仅是根本原因难以确定。真正的小泄漏或不常执行的代码中的泄漏甚至很难被发现。这是一个很常见的问题，Zig 提供了帮助，我们将在讨论分配器时看到。
 
-## [创建与销毁]($section.id('create-and-destroy'))
+## [创建与销毁]($heading.id('create-and-destroy'))
 
 `std.mem.Allocator`的`alloc`方法会返回一个切片，其长度为传递的第二个参数。如果想要单个值，可以使用 `create` 和 `destroy` 而不是 `alloc` 和 `free`。
 
@@ -233,7 +233,7 @@ fn init(allocator: std.mem.Allocator, id: u64, power: i32) !*User{
 
 请记住，`create` 返回一个 `!*User`，所以我们的 `user` 是 `*User` 类型。
 
-## [分配器 Allocator]($section.id('allocator'))
+## [分配器 Allocator]($heading.id('allocator'))
 
 Zig 的核心原则之一是无隐藏内存分配。根据你的背景，这听起来可能并不特别。但这与 C 语言中使用标准库的 malloc 函数分配内存的做法形成了鲜明的对比。在 C 语言中，如果你想知道一个函数是否分配内存，你需要阅读源代码并查找对 malloc 的调用。
 
@@ -254,7 +254,7 @@ defer allocator.free(say);
 
 如果你正在构建一个库，那么最好接受一个 `std.mem.Allocator`，然后让库的用户决定使用哪种分配器实现。否则，你就需要选择正确的分配器，正如我们将看到的，这些分配器并不相互排斥。在你的程序中创建不同的分配器可能有很好的理由。
 
-## [通用分配器 GeneralPurposeAllocator]($section.id('general-purpose-allocator'))
+## [通用分配器 GeneralPurposeAllocator]($heading.id('general-purpose-allocator'))
 
 顾名思义，`std.heap.GeneralPurposeAllocator` 是一种通用的、线程安全的分配器，可以作为应用程序的主分配器。对于许多程序来说，这是唯一需要的分配器。程序启动时，会创建一个分配器并传递给需要它的函数。我的 HTTP 服务器库中的示例代码就是一个很好的例子：
 
@@ -299,7 +299,7 @@ var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 
 类型是什么，字段在哪里？类型其实是 `std.heap.general_purpose_allocator.Config`，但它并没有直接暴露出来，这也是我们没有显式给出类型的原因之一。没有设置字段是因为 Config 结构定义了默认值，我们将使用默认值。这是配置、选项的中常见的模式。事实上，我们在下面几行向 `init` 传递 `.{.port = 5882}` 时又看到了这种情况。在本例中，除了端口这一个字段外，我们都使用了默认值。
 
-## [std.testing.allocator]($section.id('std-testing-allocator'))
+## [std.testing.allocator]($heading.id('std-testing-allocator'))
 
 希望当我们谈到内存泄漏时，你已经足够烦恼，而当我提到 Zig 可以提供帮助时，你肯定渴望了解更多这方面内容。这种帮助来自 `std.testing.allocator`，它是一个 `std.mem.Allocator` 实现。目前，它基于通用分配器（GeneralPurposeAllocator）实现，并与 Zig 的测试运行器进行了集成，但这只是实现细节。重要的是，如果我们在测试中使用 `std.testing.allocator`，就能捕捉到大部分内存泄漏。
 
@@ -423,7 +423,7 @@ self.allocator.free(self.items);
 
 将`items`复制到我们的 `larger` 切片中后, 添加最后一行`free`可以解决泄漏的问题。如果运行 `zig test learning.zig`，便不会再有错误。
 
-## [ArenaAllocator]($section.id('arena-allocator'))
+## [ArenaAllocator]($heading.id('arena-allocator'))
 
 通用分配器（GeneralPurposeAllocator）是一个合理的默认设置，因为它在所有可能的情况下都能很好地工作。但在程序中，你可能会遇到一些固定场景，使用更专业的分配器可能会更合适。其中一个例子就是需要在处理完成后丢弃的短期状态。解析器（Parser）通常就有这样的需求。一个 `parse` 函数的基本轮廓可能是这样的
 
@@ -508,7 +508,7 @@ defer list.deinit();
 
 最后举个简单的例子，我上面提到的 HTTP 服务器在响应中暴露了一个 `ArenaAllocator`。一旦发送了响应，它就会被清空。由于`ArenaAllocator`的生命周期可以预测（从请求开始到请求结束），因此它是一种高效的选择。就性能和易用性而言，它都是高效的。
 
-## [固定缓冲区分配器 FixedBufferAllocator]($section.id('fixed-buffer-allocator'))
+## [固定缓冲区分配器 FixedBufferAllocator]($heading.id('fixed-buffer-allocator'))
 
 我们要讨论的最后一个分配器是 `std.heap.FixedBufferAllocator`，它可以从我们提供的缓冲区（即 `[]u8`）中分配内存。这种分配器有两大好处。首先，由于所有可能使用的内存都是预先创建的，因此速度很快。其次，它自然而然地限制了可分配内存的数量。这一硬性限制也可以看作是一个缺点。另一个缺点是，`free` 和 `destroy` 只对最后分配/创建的项目有效（想想堆栈）。调用释放非最后分配的内存是安全的，但不会有任何作用。
 

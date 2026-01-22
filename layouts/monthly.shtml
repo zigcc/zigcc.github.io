@@ -6,7 +6,6 @@
     <!-- TOC Sidebar for Articles -->
     <div class="toc-sidebar" :if="$page.isSection().not().and($page.custom.getOr('toc', true))">
       <div class="toc-sticky">
-        <h3>TOC</h3>
         <div :html="$page.toc()"></div>
       </div>
     </div>

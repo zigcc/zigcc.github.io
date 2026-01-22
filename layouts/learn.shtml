@@ -5,7 +5,6 @@
   <div class="content-wrapper">
     <div class="toc-sidebar" :if="$page.custom.getOr('toc', true).and($page.isSection().not()).and($page.toc().len().gt(11))">
       <div class="toc-sticky">
-        <h3>TOC</h3>
         <div :html="$page.toc()"></div>
       </div>
     </div>

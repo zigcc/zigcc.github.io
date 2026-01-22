@@ -15,6 +15,10 @@
         <p :text="$page.date.format('2006-01-03')"></p>
         <p :text="$page.author" id="author"></p>
       </div>
+      <div class="toc-fallback" :if="$page.custom.getOr('toc', true).and($page.isSection().not())">
+        <h3>Table Of Content</h3>
+        <div :html="$page.toc()"></div>
+      </div>
       <ul class="article-list" :loop="$page.subpages()">
         <li>
           <a href="$loop.it.link()" class="article-item">

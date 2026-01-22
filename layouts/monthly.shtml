@@ -32,6 +32,10 @@
 
       <!-- Article Page: Content + Prev/Next -->
       <div :if="$page.isSection().not()">
+        <div class="toc-fallback" :if="$page.custom.getOr('toc', true)">
+          <h3>Table Of Content</h3>
+          <div :html="$page.toc()"></div>
+        </div>
         <div :html="$page.content()" class="monthly-content"></div>
         <div id="prev-next">
           <div :if="$page.prevPage?()">

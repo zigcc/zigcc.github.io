@@ -3,13 +3,17 @@
 </head>
 <body id="body">
   <div class="content-wrapper">
-    <div class="toc-sidebar" :if="$page.custom.getOr('toc', true).and($page.isSection().not()).and($page.toc().len().gt(11))">
+    <div class="toc-sidebar" :if="$page.custom.getOr('toc', true).and($page.isSection().not())">
       <div class="toc-sticky">
         <div :html="$page.toc()"></div>
       </div>
     </div>
     <div class="main-content">
       <h1 :text="$page.title"></h1>
+      <div class="toc-fallback" :if="$page.isSection().not().and($page.custom.getOr('toc', true))">
+        <h3>Table Of Content</h3>
+        <div :html="$page.toc()"></div>
+      </div>
       <div :html="$page.content()"></div>
       <div id="prev-next" :if="$page.isSection().not()">
         <div :if="$page.prevPage?()">

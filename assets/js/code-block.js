@@ -16,14 +16,16 @@ document.addEventListener('DOMContentLoaded', () => {
     codeContainer.appendChild(copyButton);
     
     copyButton.addEventListener('click', () => {
-      const codeText = code.innerText;
+      const codeText = code.textContent;
       navigator.clipboard.writeText(codeText).then(() => {
         copyButton.classList.add('copied');
         setTimeout(() => { copyButton.classList.remove('copied'); }, 2000);
+      }).catch(err => {
+        console.error('无法复制到剪贴板：', err);
       });
     });
 
-    const codeLines = code.innerHTML.split(/\r?\n/);
+    const codeLines = code.textContent.split(/\r?\n/);
     const hasTrailingEmptyLine = codeLines.length > 0 && codeLines[codeLines.length - 1].trim() === '';
     if (hasTrailingEmptyLine) {
         codeLines.pop();

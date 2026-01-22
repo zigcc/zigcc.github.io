@@ -8,14 +8,15 @@
         <div :html="$page.toc()"></div>
       </div>
     </div>
-    <div class="main-content">
-      <h1 :text="$page.title"></h1>
-      <div class="toc-fallback" :if="$page.isSection().not().and($page.custom.getOr('toc', true))">
+    <div class="main-content" data-pagefind-body data-pagefind-weight="10">
+      <h1 :text="$page.title" data-pagefind-meta="title" data-pagefind-ignore></h1>
+      <div data-pagefind-sort="date" :text="$page.date.format('2006-01-02')" style="display:none"></div>
+      <div class="toc-fallback" :if="$page.isSection().not().and($page.custom.getOr('toc', true))" data-pagefind-ignore>
         <h3>Table Of Content</h3>
         <div :html="$page.toc()"></div>
       </div>
       <div :html="$page.content()"></div>
-      <div id="prev-next" :if="$page.isSection().not()">
+      <div id="prev-next" :if="$page.isSection().not()" data-pagefind-ignore>
         <div :if="$page.prevPage?()">
           <a href="$if.link()">
             <span :text="$if.title"></span>

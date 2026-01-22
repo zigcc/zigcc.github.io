@@ -7,12 +7,7 @@
     <title :text="$page.title"></title>
     <link type="text/css" rel="stylesheet" href="$site.asset('style.css').link()">
     <link type="text/css" rel="stylesheet" href="$site.asset('highlight.css').link()">
-    <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
-    <script src="/pagefind/pagefind-ui.js"></script>
     <script>
-    window.addEventListener('DOMContentLoaded', (event) => {
-        new PagefindUI({ element: "#search", showSubResults: true });
-    });
       var _hmt = _hmt || [];
       (function() {
         var hm = document.createElement("script");
@@ -36,7 +31,7 @@
     <super>
   </head>
   <body id="body">
-    <div class="header">
+    <div class="header" data-pagefind-ignore>
       <div class="container header-inner">
         <a href="$site.page('').link()" class="site-title"><h1 :text="$site.title"></h1></a>
         <nav id="nav-menu">
@@ -44,6 +39,9 @@
           <a href="$site.page('monthly').link()">月刊</a>
           <a href="$site.page('post').link()">博客</a>
           <a href="$site.page('contributing').link()">贡献</a>
+          <a href="$site.page('search').link()" class="search-link" aria-label="Search">
+            <img src="$site.asset('icons/search.svg').link()" alt="Search" class="search-icon">
+          </a>
         </nav>
         <button class="mobile-menu-toggle" id="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
           <span class="mobile-menu-line"></span>
@@ -58,9 +56,8 @@
         this.classList.toggle('active');
       });
     </script>
-    <div id="search"></div>
     <super>
-    <footer>
+    <footer data-pagefind-ignore>
       <div>
         <div>
           &copy; 2022 – 2025

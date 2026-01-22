@@ -2,5 +2,5 @@
 <head id="head">
 </head>
 <body id="body">
-  <div class="container" :html="$page.content()"></div>
+  <div class="container" :html="$page.content()" data-pagefind-ignore></div>
 </body>

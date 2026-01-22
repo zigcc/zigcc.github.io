@@ -477,10 +477,207 @@ nav a:hover {
   height: 100%;
 }
 
-#search {
-  max-width: var(--container-width);
-  margin: 0 auto;
-  padding: 0 var(--page-padding);
+.search-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  padding: 0 0.5rem;
+  opacity: 0.8;
+}
+
+.search-link:hover {
+  opacity: 1;
+  color: var(--brand-primary);
+  text-decoration: none !important;
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+
+@media (prefers-color-scheme: dark) {
+  .search-icon {
+    filter: invert(1) brightness(2);
+  }
+}
+
+.search-link:hover .search-icon {
+  transform: scale(1.1);
+}
+
+.search-container {
+  margin-top: 4rem;
+  width: 100%;
+}
+
+.pagefind-ui, 
+.pagefind-ui *,
+.pagefind-ui *::before,
+.pagefind-ui *::after {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.pagefind-ui__search-input {
+  background-color: transparent !important;
+  color: var(--text-primary) !important;
+  border: none !important;
+  border-bottom: 2px solid var(--border-subtle) !important;
+  padding: 12px 0 12px 40px !important;
+  font-size: 2rem !important;
+  width: 100% !important;
+  outline: none !important;
+  transition: border-color 0.2s ease !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: left center !important;
+  background-size: 24px 24px !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .pagefind-ui__search-input {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E") !important;
+  }
+}
+
+.pagefind-ui__search-input:focus {
+  border-bottom-color: var(--brand-primary) !important;
+}
+
+.pagefind-ui__search-clear {
+  display: none !important;
+}
+
+.pagefind-ui__result {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 3rem 0 !important;
+  border: none !important;
+  border-bottom: 1px dashed var(--border-subtle) !important;
+  padding-bottom: 3rem !important;
+}
+
+.pagefind-ui__result:last-child {
+  border-bottom: none !important;
+}
+
+.pagefind-ui__result-link {
+  color: var(--text-primary) !important;
+  font-weight: 700 !important;
+  font-size: 1.75rem !important;
+  text-decoration: none !important;
+  display: inline-block !important;
+  margin-bottom: 0.75rem !important;
+  line-height: 1.2 !important;
+}
+
+.pagefind-ui__result-link:hover {
+  color: var(--brand-primary) !important;
+}
+
+.pagefind-ui__result-excerpt {
+  color: var(--text-secondary) !important;
+  line-height: 1.8 !important;
+  font-size: 1.05rem !important;
+  margin-bottom: 0 !important;
+}
+
+.pagefind-ui__result-excerpt mark {
+  background-color: transparent !important;
+  color: var(--brand-primary) !important;
+  font-weight: 700 !important;
+  text-decoration: underline !important;
+  text-decoration-thickness: 2px !important;
+  text-underline-offset: 2px !important;
+}
+
+.pagefind-ui__result-nested {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1rem !important;
+  margin: 0 !important;
+  padding: 0 0 0 1.5rem !important;
+  border-left: 2px solid var(--border-subtle) !important;
+  margin-left: 0.5rem !important;
+  margin-top: 1rem !important;
+}
+
+.pagefind-ui__result-nested + .pagefind-ui__result-nested {
+  margin-top: 0 !important;
+  padding-top: 1rem !important;
+}
+
+.pagefind-ui__result-sub {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+
+.pagefind-ui__result-sub .pagefind-ui__result-link {
+  font-size: 1.25rem !important;
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+  margin-bottom: 0 !important;
+}
+
+.pagefind-ui__result-sub {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.25rem !important;
+}
+
+.pagefind-ui__result-sub::before {
+  display: none !important;
+}
+
+.pagefind-ui__result-sub .pagefind-ui__result-link {
+  font-size: 1.25rem !important;
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.pagefind-ui__result-sub .pagefind-ui__result-link:hover {
+  color: var(--brand-primary) !important;
+}
+
+.pagefind-ui__result-sub .pagefind-ui__result-excerpt {
+  font-size: 0.95rem !important;
+  color: var(--text-tertiary) !important;
+  opacity: 0.9 !important;
+}
+
+.pagefind-ui__message {
+  padding: 2rem 0 1rem !important;
+  font-family: var(--font-mono) !important;
+  font-size: 0.85rem !important;
+  color: var(--text-tertiary) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.pagefind-ui__button {
+  border: 1px solid var(--border-subtle) !important;
+  color: var(--text-secondary) !important;
+  padding: 12px !important;
+  width: 100% !important;
+  cursor: pointer !important;
+  margin-top: 2rem !important;
+  font-family: var(--font-mono) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+}
+
+.pagefind-ui__button:hover {
+  border-color: var(--text-primary) !important;
+  color: var(--text-primary) !important;
 }
 
 .main-content {
@@ -492,7 +689,11 @@ nav a:hover {
   margin-top: 0;
 }
 
-/* Hide duplicate H1s that come from markdown content since the template already renders the title */
+.pagefind-ui__results {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
 .main-content div > h1:first-child,
 .monthly-intro h1:first-child {
   display: none;

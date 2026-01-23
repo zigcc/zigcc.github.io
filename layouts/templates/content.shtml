@@ -13,11 +13,11 @@
       <h1 :text="$page.title" data-pagefind-meta="title" data-pagefind-ignore></h1>
       <div data-pagefind-sort="date" :text="$page.date.format('2006-01-02')" style="display:none"></div>
       <div id="meta" :if="$page.isSection().not()" data-pagefind-ignore>
-        <p :text="$page.date.format('2006-01-03')"></p>
+        <p :text="$page.date.format('2006-01-02')"></p>
         <p :text="$page.author" id="author"></p>
       </div>
       <div class="toc-fallback" :if="$page.custom.getOr('toc', true).and($page.isSection().not())" data-pagefind-ignore>
-        <h3>Table Of Content</h3>
+        <h3>Table of Contents</h3>
         <div :html="$page.toc()"></div>
       </div>
       <ul class="article-list" :loop="$page.subpages()" data-pagefind-ignore>
@@ -25,7 +25,7 @@
           <a href="$loop.it.link()" class="article-item">
             <span class="article-title" :text="$loop.it.title"></span>
             <span class="article-date" :if="$page.custom.getOr('showTocDate', true)">
-              <time datetime="$loop.it.date.format('2006-01-03')" :text="$loop.it.date.format('2006-01-03')"></time>
+              <time datetime="$loop.it.date.format('2006-01-02')" :text="$loop.it.date.format('2006-01-02')"></time>
             </span>
           </a>
         </li>

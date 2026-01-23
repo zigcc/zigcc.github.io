@@ -365,7 +365,7 @@ if (gop.found_existing) {
 }
 ```
 
-当然，只要不对哈希表进行修改，`value_ptr` 就应被视为有效. 顺便提一句，这同样适用于我们通过 `iterator()`、`valueIterator` 和 `keyIterator` 获取的迭代键和值，原因相同。
+当然，只要不对哈希表进行修改，`value_ptr` 就应被视为有效。顺便提一句，这同样适用于我们通过 `iterator()`、`valueIterator` 和 `keyIterator` 获取的迭代键和值，原因相同。
 
 ## [结论]($heading.id('conclusion'))
 

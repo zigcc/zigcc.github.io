@@ -47,11 +47,7 @@
             <a href="$loop.it.link()" class="monthly-item">
               <span class="monthly-item-title" :text="$loop.it.title"></span>
               <div class="monthly-item-meta">
-                <span class="monthly-date-part" :text="$loop.it.date.format('02')"></span>
-                <span class="monthly-sep">/</span>
-                <span class="monthly-date-part" :text="$loop.it.date.format('01')"></span>
-                <span class="monthly-sep">/</span>
-                <span class="monthly-date-part" :text="$loop.it.date.format('2006')"></span>
+                <span class="monthly-date-part" :text="$loop.it.date.format('2006-01-02')"></span>
               </div>
             </a>
           </div>
@@ -64,11 +60,11 @@
             <p>
                 <span id="author" :text="$page.author"></span>
                 |
-                <span :text="$page.date.format('January 02, 2006')"></span>
+                <span :text="$page.date.format('2006-01-02')"></span>
             </p>
         </div>
         <div class="toc-fallback" :if="$page.custom.getOr('toc', true)" data-pagefind-ignore>
-          <h3>Table Of Content</h3>
+          <h3>Table of Contents</h3>
           <div :html="$page.toc()"></div>
         </div>
         <div :html="$page.content()"></div>

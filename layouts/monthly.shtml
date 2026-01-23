@@ -22,9 +22,7 @@
             <a href="$loop.it.link()" class="monthly-item">
               <span class="monthly-item-title" :text="$loop.it.title"></span>
               <div class="monthly-item-meta">
-                <span class="monthly-date-part" :text="$loop.it.date.format('01')"></span>
-                <span class="monthly-sep">/</span>
-                <span class="monthly-date-part" :text="$loop.it.date.format('2006')"></span>
+                <span class="monthly-date-part" :text="$loop.it.date.format('2006-01-02')"></span>
               </div>
             </a>
           </div>
@@ -34,7 +32,7 @@
       <!-- Article Page: Content + Prev/Next -->
       <div :if="$page.isSection().not()">
         <div class="toc-fallback" :if="$page.custom.getOr('toc', true)" data-pagefind-ignore>
-          <h3>Table Of Content</h3>
+          <h3>Table of Contents</h3>
           <div :html="$page.toc()"></div>
         </div>
         <div :html="$page.content()" class="monthly-content"></div>

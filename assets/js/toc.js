@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       ticking = true;
     }
-  });
+  }, { passive: true });
   
   onScroll(); // Initial check
 });

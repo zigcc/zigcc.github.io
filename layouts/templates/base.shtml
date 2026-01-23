@@ -25,8 +25,8 @@
       fetch('https://en.liujiacai.net/pv/write?' + new URLSearchParams(payload),
             {mode: 'no-cors'}).catch(console.log);
     </script>
-    <script src="$site.asset('js/toc.js').link()"></script>
-    <script src="$site.asset('js/code-block.js').link()"></script>
+    <script defer src="$site.asset('js/toc.js').link()"></script>
+    <script defer src="$site.asset('js/code-block.js').link()"></script>
 
     <super>
   </head>
@@ -41,7 +41,7 @@
           <a href="$site.page('contributing').link()">贡献</a>
           <a href="$site.page('search').link()">搜索</a>
         </nav>
-        <button class="mobile-menu-toggle" id="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <button class="mobile-menu-toggle" id="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-menu">
           <span class="mobile-menu-line"></span>
           <span class="mobile-menu-line"></span>
           <span class="mobile-menu-line"></span>
@@ -50,8 +50,10 @@
     </div>
     <script>
       document.getElementById('menu-toggle').addEventListener('click', function() {
-        document.getElementById('nav-menu').classList.toggle('active');
+        const nav = document.getElementById('nav-menu');
+        const active = nav.classList.toggle('active');
         this.classList.toggle('active');
+        this.setAttribute('aria-expanded', active);
       });
     </script>
     <super>

@@ -248,7 +248,7 @@ defer allocator.free(say);
 
 另一种形式是将 `Allocator` 传递给 `init` ，然后由对象**内部使用**。这种方法不那么明确，因为你已经给了对象一个分配器来使用，但你不知道哪些方法调用将实际分配。对于长寿命对象来说，这种方法更实用。
 
-注入分配器的优势不仅在于显式，还在于灵活性。`std.mem.Allocator` 是一个接口，提供了 `alloc`、`free`、`create` 和 `destroy` 函数以及其他一些函数。到目前为止，我们只看到了 `std.heap.GeneralPurposeAllocator`，但标准库或第三方库中还有其他实现.
+注入分配器的优势不仅在于显式，还在于灵活性。`std.mem.Allocator` 是一个接口，提供了 `alloc`、`free`、`create` 和 `destroy` 函数以及其他一些函数。到目前为止，我们只看到了 `std.heap.GeneralPurposeAllocator`，但标准库或第三方库中还有其他实现。
 
 > Zig 没有用于创建接口的语法糖。一种类似于接口的模式是带标签的联合（tagged unions），不过与真正的接口相比，这种模式相对受限。整个标准库中也探索了一些其他模式，例如 `std.mem.Allocator`。本指南不探讨这些接口模式。
 

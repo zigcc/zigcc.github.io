@@ -482,11 +482,6 @@ nav a:hover {
   width: 100%;
 }
 
-.pagefind-ui, 
-.pagefind-ui *,
-.pagefind-ui *::before,
-.pagefind-ui *::after {
-}
 
 #search .pagefind-ui, 
 #search .pagefind-ui *,

@@ -1,0 +1,8 @@
+# 忽略所有文件
+*
+
+# 只允许 content 目录下的 smd 文件
+!content/**/*.smd
+
+# 只允许 layouts 目录下的 shtml 文件
+!layouts/**/*.shtml

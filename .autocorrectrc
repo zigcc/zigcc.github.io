@@ -1,0 +1,8 @@
+file_types:
+  smd: markdown
+  shtml: html
+
+rules:
+  space_word: 1
+  space_punctuation: 1
+  fullwidth: 1

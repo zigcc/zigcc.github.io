@@ -1,0 +1,47 @@
+<extend template="base.shtml">
+<head id="head">
+    <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+    <script src="/pagefind/pagefind-ui.js" defer></script>
+    <script>
+    function initSearch() {
+        if (typeof PagefindUI === 'undefined') {
+            return;
+        }
+        new PagefindUI({ 
+            element: "#search", 
+            showSubResults: true,
+            excerptLength: 40,
+            showImages: false,
+            translations: {
+                placeholder: "搜索...",
+                load_more: "加载更多",
+                search_label: "搜索",
+                filters_label: "筛选",
+                zero_results: "没有找到关于 [SEARCH_TERM] 的结果",
+                many_results: "找到 [COUNT] 条关于 [SEARCH_TERM] 的结果",
+                one_result: "找到 [COUNT] 条关于 [SEARCH_TERM] 的结果",
+                alt_search: "没有找到关于 [SEARCH_TERM] 的结果。显示关于 [DIFFERENT_TERM] 的结果：",
+                search_suggestion: "没有找到关于 [SEARCH_TERM] 的结果。请尝试以下搜索之一：",
+                searching: "正在搜索 [SEARCH_TERM]...",
+                sort_label: "排序"
+            }
+        });
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+        if (typeof PagefindUI !== 'undefined') {
+            initSearch();
+        } else {
+            window.addEventListener('load', initSearch);
+        }
+    });
+    </script>
+</head>
+<body id="body" data-pagefind-ignore>
+    <div class="content-wrapper">
+        <div class="main-content">
+            <div class="search-container">
+                <div id="search"></div>
+            </div>
+        </div>
+    </div>
+</body>

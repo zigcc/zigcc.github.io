@@ -1,6 +1,55 @@
-<extend template="content.shtml">
+<extend template="base.shtml">
 <head id="head">
 </head>
-<div id="content">
-  <div :html="$page.content()"></div>
-</div>
+<body id="body">
+  <div class="content-wrapper">
+    <!-- TOC Sidebar for Articles -->
+    <div class="toc-sidebar" :if="$page.isSection().not().and($page.custom.getOr('toc', true))">
+      <div class="toc-sticky">
+        <div :html="$page.toc()"></div>
+      </div>
+    </div>
+
+    <div class="main-content" data-pagefind-body data-pagefind-weight="10">
+      <h1 :text="$page.title" data-pagefind-meta="title" data-pagefind-ignore></h1>
+      <div data-pagefind-sort="date" :text="$page.date.format('2006-01-02')" style="display:none"></div>
+      
+      <!-- Index Page: Intro + Timeline -->
+      <div :if="$page.isSection()" data-pagefind-ignore>
+        <div :html="$page.content()" class="monthly-intro"></div>
+        <div class="monthly-timeline">
+          <div :loop="$page.subpages()">
+            <a href="$loop.it.link()" class="monthly-item">
+              <span class="monthly-item-title" :text="$loop.it.title"></span>
+              <div class="monthly-item-meta">
+                <span class="monthly-date-part" :text="$loop.it.date.format('2006-01-02')"></span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article Page: Content + Prev/Next -->
+      <div :if="$page.isSection().not()">
+        <div class="toc-fallback" :if="$page.custom.getOr('toc', true)" data-pagefind-ignore>
+          <h3>Table of Contents</h3>
+          <div :html="$page.toc()"></div>
+        </div>
+        <div :html="$page.content()" class="monthly-content"></div>
+        <div id="prev-next" data-pagefind-ignore>
+          <div :if="$page.prevPage?()">
+            <a href="$if.link()">
+              <span :text="$if.title"></span>
+            </a>
+          </div>
+          <div :if="$page.nextPage?()">
+            <a href="$if.link()">
+              <span :text="$if.title"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>

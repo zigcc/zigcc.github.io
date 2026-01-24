@@ -3,32 +3,35 @@
   <super>
 </head>
 <body id="body">
-  <h1 :text="$page.title"></h1>
-  <div id="meta" :if="$page.isSection().not()">
-    <p :text="$page.date.format('2006-01-03')"></p>
-    <p :text="$page.author" id="author"></p>
-  </div>
-  <ul :loop="$page.subpages()">
-    <li>
-      <i :if="$page.custom.getOr('showTocDate', true)">
-        <time datetime="$loop.it.date.format('2006-01-03')" :text="$loop.it.date.format('2006-01-03')"></time>
-        &nbsp;
-      </i>
-      <a href="$loop.it.link()">
-        <span :text="$loop.it.title"></span>
-      </a>
-    </li>
-  </ul>
   <div class="content-wrapper">
     <div class="toc-sidebar" :if="$page.custom.getOr('toc', true).and($page.isSection().not())">
       <div class="toc-sticky">
-        <h3>TOC</h3>
         <div :html="$page.toc()"></div>
       </div>
     </div>
-    <div class="main-content" id="content">
+    <div class="main-content" id="content" data-pagefind-body data-pagefind-weight="10">
+      <h1 :text="$page.title" data-pagefind-meta="title" data-pagefind-ignore></h1>
+      <div data-pagefind-sort="date" :text="$page.date.format('2006-01-02')" style="display:none"></div>
+      <div id="meta" :if="$page.isSection().not()" data-pagefind-ignore>
+        <p :text="$page.date.format('2006-01-02')"></p>
+        <p :text="$page.author" id="author"></p>
+      </div>
+      <div class="toc-fallback" :if="$page.custom.getOr('toc', true).and($page.isSection().not())" data-pagefind-ignore>
+        <h3>Table of Contents</h3>
+        <div :html="$page.toc()"></div>
+      </div>
+      <ul class="article-list" :loop="$page.subpages()" data-pagefind-ignore>
+        <li>
+          <a href="$loop.it.link()" class="article-item">
+            <span class="article-title" :text="$loop.it.title"></span>
+            <span class="article-date" :if="$page.custom.getOr('showTocDate', true)">
+              <time datetime="$loop.it.date.format('2006-01-02')" :text="$loop.it.date.format('2006-01-02')"></time>
+            </span>
+          </a>
+        </li>
+      </ul>
       <super>
-      <div id="prev-next" :if="$page.isSection().not()">
+      <div id="prev-next" :if="$page.isSection().not()" data-pagefind-ignore>
         <div :if="$page.prevPage?()">
           <a href="$if.link()">
             <span :text="$if.title"></span>

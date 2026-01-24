@@ -1,12 +1,12 @@
 ---
-.title = "202209 | 锋芒毕露",
+.title = "锋芒毕露",
 .date = @date("2022-10-03T23:32:12+0800"),
 .author = "ZigCC",
 .layout = "monthly.shtml",
 .draft = false,
 ---
 
-# [Zig VS Rust 火花]($heading.id('zig-vs-rust-spark'))
+## [Zig VS Rust 火花]($heading.id('zig-vs-rust-spark'))
 
 在 9/10 号左右，在 Twitter 上牵起了一小波关于 Zig VS Rust
 的小火花，以至于最后 Zig 创始人 Andrew Kelley
@@ -69,7 +69,7 @@ Zig，笔者觉得大概率就是本次争论的观点，Rust
 过于复杂，导致程序员不仅仅要考虑业务行为，还需要按照 Rust
 的风格来编程，这加剧了程序出错的可能性。
 
-# [观点/教程]($heading.id('viewstutorials'))
+## [观点/教程]($heading.id('viewstutorials'))
 
 - [How (memory) safe is
   zig?](https://www.scattered-thoughts.net/writing/how-safe-is-zig/)
@@ -102,7 +102,7 @@ Zig，笔者觉得大概率就是本次争论的观点，Rust
 - [Zig ⚡ Improving the User Experience for Unused
   Variables](https://vimeo.com/748218307)
 
-# [项目/工具]($heading.id('projectstools'))
+## [项目/工具]($heading.id('projectstools'))
 
 - [Zig
   开发常用类库](https://github.com/zigcc/forum/discussions/28)，如果读者的
@@ -126,4 +126,6 @@ Zig，笔者觉得大概率就是本次争论的观点，Rust
 - [stm32f4.zig](https://github.com/moonxraccoon/stm32f4.zig) STM32F4(ARM
   Cortex M4 的高性能 32 位微控制器) 固件抽象层
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?q=+is%3Aclosed+is%3Apr+closed%3A2022-09-01..2022-10-01+)
+## [Zig 语言更新]($heading.id('zig-updates'))
+
+[相关链接](https://github.com/ziglang/zig/pulls?q=+is%3Aclosed+is%3Apr+closed%3A2022-09-01..2022-10-01+)

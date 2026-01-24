@@ -1,12 +1,12 @@
 ---
-.title = "202303 | 并发编译",
+.title = "并发编译",
 .date = @date("2023-04-10T19:25:59+0800"),
 .author = "ZigCC",
 .layout = "monthly.shtml",
 .draft = false,
 ---
 
-# [观点/教程]($heading.id('viewstutorials'))
+## [观点/教程]($heading.id('viewstutorials'))
 
 [Creating arbitrary error values by using error.Something
 syntax](https://www.reddit.com/r/zig/comments/11wmoky)  
@@ -61,7 +61,7 @@ Nix](https://flyx.org/cross-packaging/)
 
 [Zig And Rust](https://matklad.github.io/2023/03/26/zig-and-rust.html)
 
-# [项目/工具]($heading.id('projectstools'))
+## [项目/工具]($heading.id('projectstools'))
 
 [macovedj/doink](https://github.com/macovedj/doink)  
 Making WebAssembly Components with Zig
@@ -80,7 +80,9 @@ Tiny desktop utility to keep notes
 [ringtailsoftware/zig-wasm-audio-framebuffer](https://github.com/ringtailsoftware/zig-wasm-audio-framebuffer)  
 Examples of integrating Zig and Wasm for audio and graphics on the web
 
-# [Zig 语言更新](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-03-01..2023-04-01)
+## [Zig 语言更新]($heading.id('zig-updates'))
+
+[相关链接](https://github.com/ziglang/zig/pulls?page=1&q=+is%3Aclosed+is%3Apr+closed%3A2023-03-01..2023-04-01)
 
 [zig build: run steps in parallel
 \#14647](https://github.com/ziglang/zig/pull/14647)  
@@ -98,7 +100,7 @@ bug，一个影响比较大的是 test 的构建方式不一样了。
 现在 `addTest` 和 `addExecutable` 一样，输出都是 `CompileStep`
 ，它默认不会执行，需要调用 `run()` 拿到 run step 才可以。
 
-# [Zig 构建系统介绍]($heading.id('zig-build-system-intro'))
+### [Zig 构建系统介绍]($heading.id('zig-build-system-intro'))
 
 构建系统其实是 Zig 生态中比较重要的一环，和 Rust 不同，Zig
 即是一门编程语言，也是一系列工具链，比如编译 Zig 时，没有 zigc

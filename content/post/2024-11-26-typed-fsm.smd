@@ -6,11 +6,11 @@
 .draft = false,
 ---
 
-# [typed fsm]($heading.id('typed-fsm'))
+## [typed fsm]($heading.id('typed-fsm'))
 
-# [1. 简单介绍类型化有限状态机的优势]($heading.id('1-briefly-introduce-the-advantages-of-typed-finite-state-machines'))
+## [1. 简单介绍类型化有限状态机的优势]($heading.id('1-briefly-introduce-the-advantages-of-typed-finite-state-machines'))
 
-# [1.1 介绍有限状态机]($heading.id('11-introduction-to-finite-state-machines'))
+### [1.1 介绍有限状态机]($heading.id('11-introduction-to-finite-state-machines'))
 
 有限状态机（FSM，以下简称状态机）是程序中很常见的设计模式。
 
@@ -18,7 +18,8 @@
 
 而状态主要是在代码层面帮助人们理解消息的产生和处理。
 
-# [1.2 [typed-fsm-zig](https://github.com/sdzx-1/typed-fsm-zig)
+### [1.2 typed-fsm-zig]($heading.id('12-typed-fsm-zig'))
+- [原文地址](https://github.com/sdzx-1/typed-fsm-zig)
 
 typed-fsm-zig 是一个利用 zig 类型系统加一些编程规范实现的一个库，用于实现类型安全的有限状态机。
 
@@ -39,19 +40,19 @@ typed-fsm-zig 是一个利用 zig 类型系统加一些编程规范实现的一�
 
    在实际的使用中没有任何的代码生成，除了一处隐式的约束要求之外，没有任何其它的控制，开发者完全掌握状态机，因此你可以方便的将它和你现有的代码结合起来。
 
-# [2. 例子：修改 ATM 状态机的状态]($heading.id('2-example-modifying-the-state-of-an-atm-state-machine'))
+## [2. 例子：修改 ATM 状态机的状态]($heading.id('2-example-modifying-the-state-of-an-atm-state-machine'))
 
 这里我将以一个 ATM 状态机（以下简称 ATM）的例子来展示 typed-fsm-zig 和 zig 的类型系统如何帮助我快速修改 ATM 的状态。
 
 为了简单性，这里我不展示构建 ATM 这个例子的过程，感兴趣的可以在这里看到[代码](https://github.com/sdzx-1/typed-fsm-zig/blob/master/examples/atm-gui.zig)。
 
-# [2.1 介绍 ATM 状态机]($heading.id('21-introducing-atm-state-machines'))
+### [2.1 介绍 ATM 状态机]($heading.id('21-introducing-atm-state-machines'))
 
 ATM 代表自动取款机，因此它的代码的逻辑就是模拟自动取款机的一些行为：插入银行卡，输入 pin，检查 pin，取钱，修改 pin。
 
 它的状态机整体如下：
 
-![ATM](/images/typed-fsm/2.1-1.webp)
+[ATM]($image.siteAsset('images/typed-fsm/2.1-1.webp'))
 
 图中椭圆形表示状态，箭头表示消息。
 它包含五种状态：exit, ready, cardInserted, session, changePin。
@@ -64,19 +65,19 @@ ATM 代表自动取款机，因此它的代码的逻辑就是模拟自动取款�
 
 整个程序效果如下：
 
-![ATM](/images/typed-fsm/2.1-2.webp)
+[ATM]($image.siteAsset('images/typed-fsm/2.1-2.webp'))
 
 这里注意消息 Update，它代表更新 pin，同时将状态转从 changePin 换到 ready。
 
-![ATM](/images/typed-fsm/2.1-4.webp)
+[ATM]($image.siteAsset('images/typed-fsm/2.1-4.webp'))
 
 实际的表现就是在 changePin 的界面中我们修改 pin，然后点击 Change 按钮触发 Update 消息，修改 pin，并返回到 ready 界面。
 
-![ATM](/images/typed-fsm/2.1-3.webp)
+[ATM]($image.siteAsset('images/typed-fsm/2.1-3.webp'))
 
 接下来的文章中我将修改 Update 的行为，并展示在这个过程中类型系统如何帮助我快速调整代码。
 
-# [2.2 修改 Update 消息]($heading.id('22-modify-update-messages'))
+### [2.2 修改 Update 消息]($heading.id('22-modify-update-messages'))
 
 实际的消息 Update 定义代码如下
 
@@ -96,7 +97,7 @@ ATM 代表自动取款机，因此它的代码的逻辑就是模拟自动取款�
 
 新的状态图如下：
 
-![ATM](/images/typed-fsm/2.2-1.webp)
+[ATM]($image.siteAsset('images/typed-fsm/2.2-1.webp'))
 
 这时如果我重新编译代码，那么类型系统就会产生下面的错误：
 
@@ -134,12 +135,12 @@ referenced by:
 
 在这里类型系统精确的告诉了我们需要修改的地方，以及原因。修改完成后程序即能正确运行。
 
-# [2.3 移除 changePin 状态]($heading.id('23-remove-changepin-status'))
+### [2.3 移除 changePin 状态]($heading.id('23-remove-changepin-status'))
 
 这一节中我们尝试移除 changePin 状态，看看类型系统会给我们什么反馈。
 如果移除 changePin，新的状态图如下：
 
-![ATM](/images/typed-fsm/2.3-1.webp)
+[ATM]($image.siteAsset('images/typed-fsm/2.3-1.webp'))
 
 重新编译项目，将获得类型系统的反馈
 
@@ -177,7 +178,7 @@ examples/atm-gui.zig:296:10: error: no field named 'ChangePin' in enum '@typeInf
 
 在这个过程中类型系统帮助我们找到问题和原因。这非常酷！！！
 
-# [2.4 总结]($heading.id('24-summary'))
+### [2.4 总结]($heading.id('24-summary'))
 
 以上是一个简单的例子，展示了 typed-fsm-zig 对于提升状态机编程体验的巨大效果。
 
@@ -192,9 +193,7 @@ examples/atm-gui.zig:296:10: error: no field named 'ChangePin' in enum '@typeInf
 
 接下来我将介绍 typed-fsm-zig 的原理和实现。
 
-
-
-# [3. 原理与实现]($heading.id('3-principle-and-implementation'))
+## [3. 原理与实现]($heading.id('3-principle-and-implementation'))
 
 最开始的版本是[typed-fsm](https://github.com/sdzx-1/typed-fsm)，由使用 haskell 实现，它实现了完整类型安全的有限状态机。
 
@@ -434,7 +433,7 @@ fn s2Handler(val: Witness(Exmaple, .exit, .s2), ref: *i32) void {
 
 以上就是 typed-fsm-zig 核心想法的完整介绍。接下来我将介绍需要的编程规范。
 
-# [4. typed-fsm-zig 需要哪些编程规范]($heading.id('4-what-programming-specifications-do-typed-fsm-zig-need'))
+## [4. typed-fsm-zig 需要哪些编程规范]($heading.id('4-what-programming-specifications-do-typed-fsm-zig-need'))
 
 1. 状态和消息集合之间需要满足的隐式命名规范
 
@@ -548,7 +547,7 @@ pub fn readyHandler(comptime w: AtmSt.EWitness(.ready), ist: *InternalState) voi
 
 遵循这四点要求，就能获得强大的类型安全保证，足以让你愉快的使用状态机！
 
-# [5. 接下来能够增强的功能]($heading.id('5-future-enhancements'))
+## [5. 接下来能够增强的功能]($heading.id('5-future-enhancements'))
 
 暂时我能想到的有如下几点：
 

@@ -11,25 +11,93 @@
 .draft = false,
 ---
 
-# [《学习 Zig》 目录]($heading.id('table-of-contents'))
-
-- [前言](./preface)
-- [安装 Zig](./installing-zig)
-- [语言概述 - 第一部分](./language-overview-1)
-- [语言概述 - 第二部分](./language-overview-2)
-- [编码风格](./style-guide)
-- [指针](./pointers)
-- [栈内存](./stack-memory)
-- [堆内存和分配器](./heap-memory)
-- [泛型](./generics)
-- [实战](./coding-in-zig)
-- [总结](./conclusion)
-
 [《学习 Zig》](https://www.openmymind.net/learning_zig/)系列教程最初由 [Karl Seguin](https://github.com/karlseguin) 编写，该教程行文流畅，讲述的脉络由浅入深，深入浅出，是入门 Zig 非常不错的选择。因此，[Zig 中文社区](https://ziglang.cc)将其翻译成中文，便于在中文用户内阅读与传播。
 
 初次接触 Zig 的用户可以按序号依次阅读，对于有经验的 Zig 开发者可按需阅读感兴趣的章节。
 
-# [关于原作者]($heading.id('about-original-author'))
+```=html
+<div class="learn-chapter-list">
+  <a href="./preface" class="learn-item">
+    <span class="learn-num">01</span>
+    <div class="learn-info">
+      <span class="learn-title">前言</span>
+      <span class="learn-desc">关于本教程与 Zig 语言的简要介绍。</span>
+    </div>
+  </a>
+  <a href="./installing-zig" class="learn-item">
+    <span class="learn-num">02</span>
+    <div class="learn-info">
+      <span class="learn-title">安装 Zig</span>
+      <span class="learn-desc">环境配置与编译器安装指南。</span>
+    </div>
+  </a>
+  <a href="./language-overview-1" class="learn-item">
+    <span class="learn-num">03</span>
+    <div class="learn-info">
+      <span class="learn-title">语言概述 - 第一部分</span>
+      <span class="learn-desc">基本语法、变量、控制流与函数。</span>
+    </div>
+  </a>
+  <a href="./language-overview-2" class="learn-item">
+    <span class="learn-num">04</span>
+    <div class="learn-info">
+      <span class="learn-title">语言概述 - 第二部分</span>
+      <span class="learn-desc">结构体、数组、切片与错误处理。</span>
+    </div>
+  </a>
+  <a href="./style-guide" class="learn-item">
+    <span class="learn-num">05</span>
+    <div class="learn-info">
+      <span class="learn-title">编码风格</span>
+      <span class="learn-desc">Zig 官方推荐的代码格式与命名规范。</span>
+    </div>
+  </a>
+  <a href="./pointers" class="learn-item">
+    <span class="learn-num">06</span>
+    <div class="learn-info">
+      <span class="learn-title">指针</span>
+      <span class="learn-desc">理解 Zig 中的指针、多级指针与切片。</span>
+    </div>
+  </a>
+  <a href="./stack-memory" class="learn-item">
+    <span class="learn-num">07</span>
+    <div class="learn-info">
+      <span class="learn-title">栈内存</span>
+      <span class="learn-desc">栈分配、生命周期与内存安全。</span>
+    </div>
+  </a>
+  <a href="./heap-memory" class="learn-item">
+    <span class="learn-num">08</span>
+    <div class="learn-info">
+      <span class="learn-title">堆内存和分配器</span>
+      <span class="learn-desc">Allocator 接口、常用分配器与内存管理。</span>
+    </div>
+  </a>
+  <a href="./generics" class="learn-item">
+    <span class="learn-num">09</span>
+    <div class="learn-info">
+      <span class="learn-title">泛型</span>
+      <span class="learn-desc">编译期多态、Comptime 与泛型数据结构。</span>
+    </div>
+  </a>
+  <a href="./coding-in-zig" class="learn-item">
+    <span class="learn-num">10</span>
+    <div class="learn-info">
+      <span class="learn-title">实战</span>
+      <span class="learn-desc">综合运用所学知识构建实际应用。</span>
+    </div>
+  </a>
+  <a href="./conclusion" class="learn-item">
+    <span class="learn-num">11</span>
+    <div class="learn-info">
+      <span class="learn-title">总结</span>
+      <span class="learn-desc">教程回顾与进阶学习路线。</span>
+    </div>
+  </a>
+</div>
+```
+
+## [关于原作者]($heading.id('about-original-author'))
 
 [Karl Seguin](https://www.linkedin.com/in/karlseguin/) 在多个领域有着丰富经验，前微软 MVP，他撰写了大量文章，是多个微软公共新闻组的活跃成员。现居新加坡。他还是以下教程的作者：
 
@@ -39,17 +107,17 @@
 
 可以在 <http://openmymind.net> 找到他的博客，或者通过 [@karlseguin](http://twitter.com/karlseguin) 在 Twitter 上关注他。
 
-# [翻译原则]($heading.id('translation-principles'))
+## [翻译原则]($heading.id('translation-principles'))
 
 技术文档的翻译首要原则是准确，但在准确的前提下如何保证『信、达、雅』？这是个挑战，在翻译本教程时，在某些情况下会根据上下文进行意译，便于中文读者阅读。
 
 最后，感谢翻译者的无私贡献。❤️️
 
-# [离线阅读]($heading.id('offline-reading'))
+## [离线阅读]($heading.id('offline-reading'))
 
 在本仓库的 [release 页面](https://github.com/zigcc/zigcc.github.io/releases)会定期将本教程导出为 PDF 格式，读者可按需下载。
 
-# [其他学习资料]($heading.id('other-learning-resources'))
+## [其他学习资料]($heading.id('other-learning-resources'))
 
 由于 Zig 目前还处于快速迭代，因此最权威的资料无疑是官方的 [Zig Language Reference](https://ziglang.org/documentation/master/)，遇到语言的细节问题，基本都可以在这里找到答案。其次是社区的一些高质量教程，例如：
 

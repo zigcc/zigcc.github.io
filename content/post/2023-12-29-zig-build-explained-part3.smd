@@ -9,19 +9,19 @@
 > - 原文链接： https://zig.news/xq/zig-build-explained-part-3-1ima
 > - API 适配到 Zig 0.11.0 版本
 
-从现在起，我将只提供一个最精简的 build.zig，用来说明解决一个问题所需的步骤。如果你想了解如何将所有这些文件粘合到一个构建文件中，请阅读本系列[第一篇文章](2023-12-24-zig-build-explained-part1)。
+从现在起，我将只提供一个最精简的 build.zig，用来说明解决一个问题所需的步骤。如果你想了解如何将所有这些文件粘合到一个构建文件中，请阅读本系列[第一篇文章]($link.page('post/2023-12-24-zig-build-explained-part1'))。
 
-# [复合项目]($heading.id('composite-project'))
+## [复合项目]($heading.id('composite-project'))
 
 有很多简单的项目只包含一个可执行文件。但是，一旦开始编写库，就必须对其进行测试，通常会编写一个或多个示例应用程序。当人们开始使用外部软件包、C 语言库、生成代码等时，复杂性也会随之上升。
 
 本文试图涵盖所有这些用例，并将解释如何使用 build.zig 来编写多个程序和库。
 
-# [软件包]($heading.id('software-package'))
+## [软件包]($heading.id('software-package'))
 
 译者：此处代码和说明，需要 zig build-exe --pkg-begin，但是在 0.11 已经失效。所以删除。
 
-# [库]($heading.id('library'))
+## [库]($heading.id('library'))
 
 但 Zig 也知道库这个词。但我们不是已经讨论过外部库了吗？
 
@@ -36,7 +36,7 @@
 
 在 Zig 中，我们需要导入库的头文件，如果头文件在 Zig 中，则使用包，如果是 C 语言头文件，则使用 @cImport。
 
-# [工具]($heading.id('tool'))
+## [工具]($heading.id('tool'))
 
 如果我们的项目越来越多，那么在构建过程中就需要使用工具。这些工具通常会完成以下任务：
 
@@ -48,7 +48,7 @@
 
 但我们如何在 build.zig 中完成这些工作呢？
 
-# [添加软件包]($heading.id('add-pack'))
+## [添加软件包]($heading.id('add-pack'))
 
 添加软件包通常使用 LibExeObjStep 上的 addPackage 函数。该函数使用一个 std.build.Pkg 结构来描述软件包的外观：
 
@@ -98,7 +98,7 @@ exe.addModule("lola",pkgs.lola);
 exe.addModule("args",pkgs.args);
 ```
 
-# [添加库]($heading.id('add-library'))
+## [添加库]($heading.id('add-library'))
 
 添加库相对容易，但我们需要配置更多的路径。
 
@@ -106,7 +106,7 @@ exe.addModule("args",pkgs.args);
 
 假设我们要将 libcurl 链接到我们的项目，因为我们要下载一些文件。
 
-## [系统库]($heading.id('system-library'))
+### [系统库]($heading.id('system-library'))
 
 对于 unixoid 系统，我们通常可以使用系统软件包管理器来链接系统库。方法是调用 linkSystemLibrary，它会使用 pkg-config 自行找出所有路径：
 
@@ -137,7 +137,7 @@ pub fn build(b: *std.Build) void {
 
 对于 Linux 系统，这是链接外部库的首选方式。
 
-## [本地库]($heading.id('native-library'))
+### [本地库]($heading.id('native-library'))
 
 不过，您也可以链接您作为二进制文件提供商的库。为此，我们需要调用几个函数。首先，让我们来看看这样一个库是什么样子的：
 
@@ -167,7 +167,7 @@ include
 
 我们可以看到，vendor/libcurl/include 路径包含我们的头文件，vendor/libcurl/lib 文件夹包含一个静态库（libcurl.a）和一个共享/动态库（libcurl.so）。
 
-## [动态链接]($heading.id('dynamic-link'))
+### [动态链接]($heading.id('dynamic-link'))
 
 要链接 libcurl，我们需要先添加 include 路径，然后向 zig 提供库的前缀和库名：(todo 代码有待验证,因为 curl 可能需要自己编译自己生成 static lib)
 
@@ -197,7 +197,7 @@ addLibraryPath 对库文件也有同样的作用。这意味着 Zig 现在也会
 
 最后，linkSystemLibrary 会告诉 Zig 搜索名为 "curl "的库。如果你留心观察，就会发现上面列表中的文件名是 libcurl.so，而不是 curl.so。在 unixoid 系统中，库文件的前缀通常是 lib，这样就不会将其传递给系统。在 Windows 系统中，库文件的名字应该是 curl.lib 或类似的名字。
 
-# [静态链接]($heading.id('static-link'))
+## [静态链接]($heading.id('static-link'))
 
 当我们要静态链接一个库时，我们必须采取一些不同的方法：
 
@@ -250,7 +250,7 @@ pub fn build(b: *std.build.Builder) void {
 
 我们可以继续静态链接越来越多的库，并拉入完整的依赖关系树。
 
-# [通过源代码链接库]($heading.id('link-library-via-source-code'))
+## [通过源代码链接库]($heading.id('link-library-via-source-code'))
 
 不过，我们还有一种与 Zig 工具链截然不同的链接库方式：
 
@@ -293,7 +293,7 @@ pub fn build(b: *std.build.Builder) void {
 
 这一点尤其方便，因为我们可以使用 setTarget 和 setBuildMode 从任何地方编译到任何地方。
 
-# [使用工具]($heading.id('use-tooling'))
+## [使用工具]($heading.id('use-tooling'))
 
 在工作流程中使用工具，通常是在需要以 bison、flex、protobuf 或其他形式进行预编译时。工具的其他用例包括将输出文件转换为不同格式（如固件映像）或捆绑最终应用程序。
 
@@ -352,7 +352,7 @@ size 是一个很好的工具，它可以输出有关可执行文件代码大小
 
 如您所见，我们在这里使用了 addArtifactArg，因为 addSystemCommand 只会返回一个 std.build.RunStep。这样，我们就可以增量构建完整的命令行，包括任何 LibExeObjStep 输出、FileSource 或逐字参数。
 
-# [全新工具]($heading.id('new-tools'))
+## [全新工具]($heading.id('new-tools'))
 
 最酷的是 我们还可以从 LibExeObjStep 获取 std.build.RunStep：
 
@@ -389,7 +389,7 @@ pub fn build(b: *std.build.Builder) void {
 
 调用 zig build pack 时，我们将运行 tools/pack.zig。这很酷，因为我们还可以从头开始编译所需的工具。为了获得最佳的开发体验，你甚至可以从源代码编译像 bison 这样的 "外部 "工具，这样就不会依赖系统了！
 
-# [将所有内容放在一起]($heading.id('putting-everything-together'))
+## [将所有内容放在一起]($heading.id('putting-everything-together'))
 
 一开始，所有这些都会让人望而生畏，但如果我们看一个更大的 build.zig 实例，就会发现一个好的构建文件结构会给我们带来很大帮助。
 
@@ -491,7 +491,7 @@ pub fn build(b: *std.build.Builder) void {
 两者都是为了在主机平台上运行，而不是在目标机器上。
 此外，deploy_tool 还设置了固定的编译模式，因为我们希望快速编译，即使我们编译的是应用程序的调试版本。
 
-# [总结]($heading.id('summary'))
+## [总结]($heading.id('summary'))
 
 看完这一大堆文字，你现在应该可以构建任何你想要的项目了。我们已经学会了如何编译 Zig 应用程序，如何为其添加任何类型的外部库，甚至如何为发布管理对应用程序进行后处理。
 

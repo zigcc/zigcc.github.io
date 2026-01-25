@@ -1,8 +1,10 @@
-file_types:
-  smd: markdown
-  shtml: html
-
+# yaml-language-server: $schema=https://huacnlee.github.io/autocorrect/schema.json
 rules:
   space_word: 1
   space_punctuation: 1
   fullwidth: 1
+fileTypes:
+  smd: markdown
+  shtml: html
+context:
+  codeblock: 1

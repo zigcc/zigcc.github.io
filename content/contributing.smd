@@ -21,7 +21,7 @@ Zig 中文社区是一个开放的组织，我们致力于推广 Zig 在中文�
 ---
 .title = "文章标题",
 .date = @date("2025-06-05T16:00:00+0800"),
-.author = "刘家财",
+.author = "Your Name",
 .layout = "post.shtml",
 .draft = false,
 .custom = {
@@ -30,6 +30,17 @@ Zig 中文社区是一个开放的组织，我们致力于推广 Zig 在中文�
 },
 ---
 ```
+
+如果需要插入图片，请将图片放在 `assets/images` 目录下，然后在文章中通过下面方式引用，例如：
+
+```
+[Demo]($image.siteAsset('images/demo.webp'))
+```
+
+图片格式优先选择 `webp`，其次是 `svg`。这样可以在保证图片质量的同时，减小图片体积，提高网站加载速度。可以使用下面的在线工具将图片转换为 `webp` 格式：
+- [WebP Converter - FreeConvert.com](https://www.freeconvert.com/webp-converter)
+- [Getting Started  |  WebP  |  Google for Developers](https://developers.google.com/speed/webp/docs/using)
+
 
 ## [本地预览]($heading.id('local-preview'))
 

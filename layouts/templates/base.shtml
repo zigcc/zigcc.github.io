@@ -3,6 +3,7 @@
   <head id="head">
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.webstatic.cn https://cdnjs.cloudflare.com https://hm.baidu.com; style-src 'self' 'unsafe-inline' https://cdnjs.webstatic.cn https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://en.liujiacai.net https://cdnjs.cloudflare.com https://hm.baidu.com;">
     <meta name="algolia-site-verification" content="12324D77A7D77468">
     <title :text="$page.title"></title>
     <link type="text/css" rel="stylesheet" href="$site.asset('style.css').link()">

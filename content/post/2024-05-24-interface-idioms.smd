@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-> 原文链接： https://zig.news/yglcode/code-study-interface-idiomspatterns-in-zig-standard-libraries-4lkj
+> 原文链接：https://zig.news/yglcode/code-study-interface-idiomspatterns-in-zig-standard-libraries-4lkj
 
 ## [引言]($heading.id('introduction'))
 
@@ -22,7 +22,7 @@ Zig 标准库应用了一些代码习语或模式以达到类似效果。
 这里有一些显著的不同：
 
 - 在 Go 中，接口的定义与实现是独立的。可以在任何位置给一个类型实现新接口，只需保证其方法签名与新接口一致即可。无需像在 Java 中那样，需要回过头去修改类型定义，来实现新的接口。
-- Go 的接口只包含用于动态分派的 `vtab`，并且推荐 vtable 中方法即可能少 ，例如 `io.Reader` 和 `io.Writer`只有一个方法。
+- Go 的接口只包含用于动态分派的 `vtab`，并且推荐 vtable 中方法即可能少，例如 `io.Reader` 和 `io.Writer`只有一个方法。
   常见的工具函数如`io.Copy`、`CopyN`、`ReadFull`、`ReadAtLeast` 等，作为包函数提供，内部使用这些小接口。
   与之相比，Zig 的接口，如 `std.mem.Allocator`，同时包含 `vtable` 和一些工具方法，因此方法会多一些。
 
@@ -86,7 +86,7 @@ fn init_data() struct { point: Point, box: Box, circle: Circle } {
 }
 ```
 
-## [接口1：枚举标签联合]($heading.id('interface-1-enumerate-label-unions'))
+## [接口 1：枚举标签联合]($heading.id('interface-1-enumerate-label-unions'))
 
 Loris Cro 在[“使用 Zig 0.10.0 轻松实现接口”](https://zig.news/kristoff/easy-interfaces-with-zig-0100-2hc5)
 中介绍了使用枚举标签联合作为接口的方法。这是最简单的解决方案，尽管你必须在联合类型中显式列出所有“实现”该接口的变体类型。
@@ -126,7 +126,7 @@ test "union_as_intf" {
 }
 ```
 
-## [接口2：vtable 和动态分派的第一种实现]($heading.id('interface-2-the-first-implementation-of-vtable-and-dynamic-dispatch'))
+## [接口 2：vtable 和动态分派的第一种实现]($heading.id('interface-2-the-first-implementation-of-vtable-and-dynamic-dispatch'))
 
 Zig 已从最初基于嵌入式 `vtab` 和 `#fieldParentPtr()` 的动态分派切换到基于“胖指针”接口的以下模式；
 请查阅此文章了解更多细节[“Allocgate 将在 Zig 0.9 中到来...”](https://pithlessly.github.io/allocgate.html)。
@@ -136,7 +136,7 @@ Zig 已从最初基于嵌入式 `vtab` 和 `#fieldParentPtr()` 的动态分派�
 
 ```zig
 const Shape2 = struct {
-    // 定义接口字段: ptr,vtab
+    // 定义接口字段：ptr,vtab
     ptr: *anyopaque, //ptr to instance
     vtab: *const VTab, //ptr to vtab
     const VTab = struct {
@@ -198,7 +198,7 @@ test "vtab1_as_intf" {
 }
 ```
 
-## [接口3：vtable 和动态分派的第二种实现]($heading.id('interface-3-second-implementation-of-vtable-and-dynamic-dispatch'))
+## [接口 3：vtable 和动态分派的第二种实现]($heading.id('interface-3-second-implementation-of-vtable-and-dynamic-dispatch'))
 
 在上述第一种实现中，通过 `Shape2.init()` 将 `Box` “转换”为接口 `Shape2` 时，会对 `box` 实例进行类型检查，
 以确保其实现了 `Shape2` 的方法（包括名称的匹配签名）。第二种实现中有两个变化：
@@ -271,7 +271,7 @@ test "vtab2_as_intf" {
 }
 ```
 
-## [接口4：使用嵌入式 vtab 和 @fieldParentPtr() 的原始动态分派]($heading.id('interface-4-raw-dynamic-dispatch-using-embedded-vtab-and-fieldparentptr'))
+## [接口 4：使用嵌入式 vtab 和 @fieldParentPtr() 的原始动态分派]($heading.id('interface-4-raw-dynamic-dispatch-using-embedded-vtab-and-fieldparentptr'))
 
 接口 `std.build.Step` 和所有构建步骤 `std.build.[RunStep, FmtStep, ...]` 仍然使用这种模式。
 
@@ -364,7 +364,7 @@ test "vtab3_embedded_in_struct" {
 }
 ```
 
-## [接口5：编译时的泛型接口]($heading.id('interface-5-compile-time-generic-interface'))
+## [接口 5：编译时的泛型接口]($heading.id('interface-5-compile-time-generic-interface'))
 
 所有上述接口都侧重于 `vtab` 和动态分派：接口值将隐藏其持有的具体值的类型。因此，你可以将这些接口值放入数组中并统一处理。
 

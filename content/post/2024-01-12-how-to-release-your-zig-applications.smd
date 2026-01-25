@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-> - 原文链接： https://zig.news/kristoff/how-to-release-your-zig-applications-2h90
+> - 原文链接：https://zig.news/kristoff/how-to-release-your-zig-applications-2h90
 > - API 适配到 Zig 0.12.0 版本
 > - 本文配套代码在[这里](https://github.com/zigcc/zigcc.github.io/tree/main/examples/20240112)找到
 

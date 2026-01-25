@@ -85,7 +85,7 @@ Zig 0.14.0 版本是经过 **9 个月的工作**，由 **251 位不同的贡献�
 -   **基于现有模块创建 Artifacts (Creating Artifacts from Existing Modules):** 修改了构建系统 API，允许从现有的 std.Build.Module 对象创建 Compile 步骤，使模块图的定义更清晰，组件复用更容易。旧的 API 用法已被弃用。
 -   引用：Zig 0.14.0 modifies the build system APIs for creating Compile steps, allowing them to be created from existing std.Build.Module objects.
 -   **允许包按名称暴露任意 LazyPath (Allow Packages to Expose Arbitrary LazyPaths by Name):** 新增 std.Build.addNamedLazyPath 和 std.Build.Module.namedLazyPath 方法，允许依赖包按名称暴露生成的 LazyPath 给其依赖者使用。
--   **addLibrary 函数:** 新增 addLibrary 函数，取代 addSharedLibrary 和 addStaticLibrary，使得在 build.zig 中更容易切换链接模式，并与 linkLibrary 名称更匹配。
+-   **addLibrary 函数：** 新增 addLibrary 函数，取代 addSharedLibrary 和 addStaticLibrary，使得在 build.zig 中更容易切换链接模式，并与 linkLibrary 名称更匹配。
 -   **文件系统监控 (File System Watching):** #22105
 -   **新包哈希格式 (New Package Hash Format):** 引入新的包哈希格式，包含 32 位 id 和 32 位校验和，用于在去中心化生态系统中唯一标识包。当 fork 项目时，如果上游仍维护，应该重新生成 fingerprint。
 -   **WriteFile Step, RemoveDir Step, Fmt Step:** 新增或改进了这些构建步骤。

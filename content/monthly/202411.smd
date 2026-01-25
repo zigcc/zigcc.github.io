@@ -23,7 +23,7 @@
   里就有四次！），而且都是指针的树结构非常不利用重复利用 CPU，Carbon
   编译器就有一种更紧凑的 AST 表示。
 
-- Compile time AST query processing。Lint
+- Compile time AST query processing. Lint
   的规则大部分都是模式匹配，大部分时候都有多个嵌套的 if
   逻辑，为了简化插件开发者，eslint 采用了一种
   [esquery](https://estools.github.io/esquery/) 的语法，示例：
@@ -92,7 +92,7 @@
 
 更重要的，作者最后提到 AoC 可能不是学习 Zig 的最好方式：
 
-> 虽然 AoC 非常有趣，但它并不是练习软件工程的方法。 每个 AoC
+> 虽然 AoC 非常有趣，但它并不是练习软件工程的方法。每个 AoC
 > 练习都要求你找到一个问题的解决方案，虽然你需要编写一个程序来解决这个问题，
 > 但你的程序将是一个只需运行一次（一次正确）的一次性脚本。
 >
@@ -126,7 +126,7 @@ Zig，利用 LLVM 后端，以 wasm32-wasi 为目标生成的二进制文件。
   cc 编译 zig1.c 就可以得到 stage1 的 zig 编译器
 - 之后再用 zig1 编译 zig 源码，由于 zig1 之后 C
   后端，因此这里得到的产物是 zig2.c，再利用 cc 就可以可以 stage2 的
-  zig。 zig2 功能上已经完备，但是速度很慢（没有经过 LLVM 优化）
+  zig。zig2 功能上已经完备，但是速度很慢（没有经过 LLVM 优化）
 - 最后再用 zig2 继续编译 zig 源码，得到最后的 zig3，这也是我们下载 zig
   安装包时包含的版本
 - 如果再继续用 zig3 来编译 zig 源码，得到的 zig4 会和 zig3 一模一样。

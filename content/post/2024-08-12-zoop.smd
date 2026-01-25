@@ -8,7 +8,7 @@
 
 ## [zoop]($heading.id('zoop'))
 
-zoop 是 zig 的一个 OOP 解决方案，详细信息可以看看 [zoop官网](https://zhuyadong.github.io/zoop-docs/)。
+zoop 是 zig 的一个 OOP 解决方案，详细信息可以看看 [zoop 官网](https://zhuyadong.github.io/zoop-docs/)。
 
 ## [为什么不用别的 OOP 语言]($heading.id('why-not-use-another-oop-language'))
 
@@ -25,7 +25,7 @@ pub const Base = struct {
 }
 ```
 
-2-3行是一个struct成为zoop类必需的两行，这样一来，`Base` 就成为了一个 zoop 的类。
+2-3 行是一个 struct 成为 zoop 类必需的两行，这样一来，`Base` 就成为了一个 zoop 的类。
 
 创建 `Base` 的对象有两种方法：
 
@@ -185,7 +185,7 @@ var base: *Base = child.cast(Base);
 try t.expectEqualStrings(child.getName(), "override");
 try t.expectEqualStrings(base.getName(), "Child");
 
-// 通过接口调用(虚函数调用) getName();
+// 通过接口调用 (虚函数调用) getName();
 try t.expectEqualStrings(child.as(IGetName).?.getName(), "override");
 try t.expectEqualStrings(base.as(IGetName).?.getName(), "override");
 ```
@@ -275,12 +275,12 @@ pub const Child = struct {
 }
 ```
 
-接口有两个:
+接口有两个：
 
 - `IGetName`: 接口方法 `getName`
 - `ISetName`: 接口方法 `setName`
 
-类有两个:
+类有两个：
 
 - `Base`: 基类，实现接口 `ISetName`
 - `Child`: 子类，继承 `Base`，并实现接口 `IGetName`
@@ -331,7 +331,7 @@ zoop.Mixin(Child) = struct {
 
 事实上，`child.mixin.data.mymod_Base.mixin.meta` 里面的内容就是完全复制的 `child.mixin.meta`，因为所有内层对象的 `mixin.meta` 都是复制的最外层那个对象的 `mixin.meta`，因而所有对象的 `rootptr` 都指向最外层对象，这也是为什么叫 `rootptr` 的原因。
 
-再看看 `typeinfo` 字段，这个字段是一个有3个字段的结构：
+再看看 `typeinfo` 字段，这个字段是一个有 3 个字段的结构：
 
 - `typename`: 这是 `rootptr` 指向对象的类型名
 - `getVtable`: 根据接口名获得接口 `Vtable` 的函数
@@ -349,7 +349,7 @@ OOP 概念中的继承，重写，虚函数，实质其实就是在编译时动�
 
 ### [`struct` 很万能]($heading.id('struct-is-omnipotent'))
 
-`comptime` 编程中，`struct` 是你最好的朋友，想在不同的 `comptime` 函数之间传递数据，最方便的方式，就是通过构造一个 `struct`，把想传递的数据通过 `pub const xxx = ...` 的方式传递出去，通过 `struct` 保存数据最好的地方，就在于这个数据在运行时也是可用的 （`struct` 中的常量，是保存在 exe 的 `.data` 区，运行时可见），[zoop.tuple](https://zhuyadong.github.io/zoop-docs/reference/tuple) 就是通过这个方法实现的。
+`comptime` 编程中，`struct` 是你最好的朋友，想在不同的 `comptime` 函数之间传递数据，最方便的方式，就是通过构造一个 `struct`，把想传递的数据通过 `pub const xxx = ...` 的方式传递出去，通过 `struct` 保存数据最好的地方，就在于这个数据在运行时也是可用的（`struct` 中的常量，是保存在 exe 的 `.data` 区，运行时可见），[zoop.tuple](https://zhuyadong.github.io/zoop-docs/reference/tuple) 就是通过这个方法实现的。
 
 ### [动态构造 `struct` 的字段，用 `@Type()`]($heading.id('dynamically-construct-the-fields-of-struct-using-type'))
 
@@ -430,7 +430,7 @@ struct {
 }
 ```
 
-通过返回一个 `struct` 的方式，在它的 `value` 常量中保存了一个 `tuple`，`tuple` 有一个带有方法 `setName` 的 `struct` 元素。众所周知，`tuple` 是可以各种组合的 （参考 [zoop.tuple](https://zhuyadong.github.io/zoop-docs/reference/tuple)），于是 zoop 通过 [zoop.Fn](https://zhuyadong.github.io/zoop-docs/reference/zoop#Fn)，比如上例中 `Child` 中的 `pub usingnamespace zoop.Fn(@This())`，把 `Child` 类型代入 `Base.Fn` 中，就相当于在 `Child` 内写了如下代码：
+通过返回一个 `struct` 的方式，在它的 `value` 常量中保存了一个 `tuple`，`tuple` 有一个带有方法 `setName` 的 `struct` 元素。众所周知，`tuple` 是可以各种组合的（参考 [zoop.tuple](https://zhuyadong.github.io/zoop-docs/reference/tuple)），于是 zoop 通过 [zoop.Fn](https://zhuyadong.github.io/zoop-docs/reference/zoop#Fn)，比如上例中 `Child` 中的 `pub usingnamespace zoop.Fn(@This())`，把 `Child` 类型代入 `Base.Fn` 中，就相当于在 `Child` 内写了如下代码：
 
 ```zig
 pub usingnamespace struct {
@@ -459,7 +459,7 @@ fn typeId(comptime T: type) u32 {
 利用这个新的 `typeId()` 函数，zoop 怎么做动态类型转换，我从 zoop 中抄一段代码大家一看就明白：
 
 ```zig
-/// 返回一个函数，函数的功能是输入接口 `typeid`，返回针对T的该接口的 Vtable
+/// 返回一个函数，函数的功能是输入接口 `typeid`，返回针对 T 的该接口的 Vtable
 fn getVtableFunc(comptime T: type) VtableFunc {
     // 先找出 T 实现的所有接口
     const ifaces = tuple.Append(.{IObject}, Interfaces(T)).value;

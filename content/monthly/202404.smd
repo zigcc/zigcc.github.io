@@ -29,7 +29,7 @@ Zig 生态的发展是十分关键的一步，试想一个项目用到的依赖�
 这个版本解决了，用户可以基于 Step
 构成的有向无环图来编译自己的项目，不需要再折腾
 CMake、Makefile、Vcpkg、Git submodule 等工具，所有的依赖使用 zon
-来管理即可。 读者如果对 Zig 构建系统还不熟悉，可以参考：
+来管理即可。读者如果对 Zig 构建系统还不熟悉，可以参考：
 
 - 官方文档：[Zig Build System](https://ziglang.org/learn/build-system/)
 - Zig 升级：

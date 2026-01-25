@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-> - 原文链接： https://zig.news/xq/zig-build-explained-part-1-59lf
+> - 原文链接：https://zig.news/xq/zig-build-explained-part-1-59lf
 > - API 适配到 Zig 0.11.0 版本
 
 Zig 构建系统仍然缺少文档，对很多人来说，这是不使用它的致命理由。还有一些人经常寻找构建项目的秘诀，但也在与构建系统作斗争。
@@ -214,7 +214,7 @@ pub fn build(b: *std.build.Builder) void {
 3. 当我们调用 zig build install（或简称 zig build）时，它将创建 InstallArtifactStep。
 4. InstallArtifactStep 会将 exe 的输出文件注册到一个列表中，以便再次卸载它
 
-现在，当你调用 zig build 时，你会看到一个新的目录 zig-out 被创建了.看起来有点像这样：
+现在，当你调用 zig build 时，你会看到一个新的目录 zig-out 被创建了。看起来有点像这样：
 
 ```
 zig-out
@@ -293,7 +293,7 @@ RunStep 有几个函数可以为执行进程的 argv 添加值：
 info: All your codebase are belong to us.
 ```
 
-请注意，这里有一个重要的区别： 使用 RunStep 时，我们从 ./zig-cache/.../fresh 而不是 zig-out/bin/fresh 运行可执行文件！如果你加载的文件相对于可执行路径，这一点可能很重要。
+请注意，这里有一个重要的区别：使用 RunStep 时，我们从 ./zig-cache/.../fresh 而不是 zig-out/bin/fresh 运行可执行文件！如果你加载的文件相对于可执行路径，这一点可能很重要。
 
 RunStep 的配置非常灵活，可以通过 stdin 向进程传递数据，也可以通过 stdout 和 stderr 验证输出。你还可以更改工作目录或环境变量。
 

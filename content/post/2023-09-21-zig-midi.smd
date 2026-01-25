@@ -1,5 +1,5 @@
 ---
-.title = "Zig音频之MIDI —— 源码解读",
+.title = "Zig 音频之 MIDI —— 源码解读",
 .date = @date("2023-09-21T23:15:02+0800"),
 .author = "文轩",
 .layout = "post.shtml",
@@ -282,7 +282,7 @@ pub const Message = struct {
 
 ## [decode.zig]($heading.id('decodezig'))
 
-本文件是对 MIDI 文件的解码器, 提供了一组工具，可以从不同的输入源解析 MIDI 文件的各个部分。这样可以方便地读取和处理 MIDI 文件。
+本文件是对 MIDI 文件的解码器，提供了一组工具，可以从不同的输入源解析 MIDI 文件的各个部分。这样可以方便地读取和处理 MIDI 文件。
 
 ```zig
 const midi = @import("../midi.zig");
@@ -658,7 +658,7 @@ pub fn file(writer: anytype, f: midi.File) !void {
 }
 ```
 
-- message 函数：这是将 MIDI 消息编码为字节序列的函数, 将单个 MIDI 消息编码为其二进制形式。根据消息类型，这会向提供的 writer 写入一个或多个字节。若消息需要状态字节，并且不同于前一个消息的状态，函数会写入状态字节。接着，根据消息的种类，函数会写入所需的数据字节。
+- message 函数：这是将 MIDI 消息编码为字节序列的函数，将单个 MIDI 消息编码为其二进制形式。根据消息类型，这会向提供的 writer 写入一个或多个字节。若消息需要状态字节，并且不同于前一个消息的状态，函数会写入状态字节。接着，根据消息的种类，函数会写入所需的数据字节。
 
 - chunkToBytes 函数：将 MIDI 文件的块（Chunk）信息转换为 8 字节的二进制数据。这 8 字节中包括 4 字节的块类型和 4 字节的块长度。它复制块类型到前 4 个字节，然后写入块的长度到后 4 个字节，并返回结果。
 
@@ -666,7 +666,7 @@ pub fn file(writer: anytype, f: midi.File) !void {
 
 - int 函数：将一个整数编码为 MIDI 文件中的可变长度整数格式。在 MIDI 文件中，某些整数值使用一种特殊的编码格式，可以根据整数的大小变化长度。
 
-- metaEvent 函数：将 MIDI 元事件（Meta Event）编码为二进制数据, 这包括事件的类型和长度。具体则是编码一个元事件，首先写入其种类字节，然后是其长度。
+- metaEvent 函数：将 MIDI 元事件（Meta Event）编码为二进制数据，这包括事件的类型和长度。具体则是编码一个元事件，首先写入其种类字节，然后是其长度。
 
 - trackEvent 函数：编码轨道事件。轨道事件可以是元事件或 MIDI 事件，函数首先写入事件之间的时间差（delta 时间），然后根据事件类型（MetaEvent 或 MidiEvent）编码事件内容。
 
@@ -956,26 +956,26 @@ pub fn build(b: *Builder) void {
 }
 ```
 
-这个 build 比较复杂，我们逐行来解析:
+这个 build 比较复杂，我们逐行来解析：
 
 ```zig
 const test_all_step = b.step("test", "Run all tests in all modes.");
 ```
 
-- 使用 b.step()方法定义了一个名为 test 的步骤。描述是"在所有模式下运行所有测试"。
+- 使用 b.step() 方法定义了一个名为 test 的步骤。描述是"在所有模式下运行所有测试"。
 
 ```zig
 inline for (@typeInfo(std.builtin.Mode).Enum.fields) |field| {}
 ```
 
-- Zig 有几种构建模式，例如 Debug、ReleaseSafe 等, 上面则是为每种构建模式生成测试.
-  - 这里，@typeInfo()函数获取了一个类型的元信息。std.builtin.Mode 是 Zig 中定义的构建模式的枚举。Enum.fields 获取了这个枚举的所有字段。
+- Zig 有几种构建模式，例如 Debug、ReleaseSafe 等，上面则是为每种构建模式生成测试。
+  - 这里，@typeInfo() 函数获取了一个类型的元信息。std.builtin.Mode 是 Zig 中定义的构建模式的枚举。Enum.fields 获取了这个枚举的所有字段。
 
 ```zig
 const example_step = b.step("examples", "Build examples");
 ```
 
-- 配置示例构建,为所有示例创建的构建步骤.
+- 配置示例构建，为所有示例创建的构建步骤。
 
 ```zig
 const all_step = b.step("all", "Build everything and runs all tests");

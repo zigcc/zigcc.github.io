@@ -135,7 +135,7 @@ pub fn main() !void {
 		try stdout.print("Please enter a name: ", .{});
 		if (try stdin.readUntilDelimiterOrEof(&buf, '\n')) |line| {
 			var name = line;
-			// Windows平台换行以`\r\n`结束
+			// Windows 平台换行以 `\r\n` 结束
 			// 所以需要截取\r以获取控制台输入字符
 			if (builtin.os.tag == .windows) {
 			    name = @constCast(std.mem.trimRight(u8, name, "\r"));
@@ -222,7 +222,7 @@ defer {
 
 现在你可以忘掉我们的 `IntList` 和我们创建的通用替代方案了。Zig 标准库中有一个动态数组实现：`std.ArrayList(T)`。
 
-它是相当标准的东西，但由于它如此普遍需要和使用的数据结构，值得看看它的实际应用:
+它是相当标准的东西，但由于它如此普遍需要和使用的数据结构，值得看看它的实际应用：
 
 ```zig
 const std = @import("std");
@@ -459,7 +459,7 @@ zig build install -Doptimize=ReleaseSmall -Dtarget=x86_64-windows-gnu
 除了默认的『安装』步骤外，可执行文件通常还会增加两个步骤：『运行』和『测试』。一个库可能只有一个『测试』步骤。对于基本的无参数即可运行的程序来说，只需要在构建文件的最后添加四行：
 
 ```zig
-// 在这行代码后添加下面的代码: b.installArtifact(exe);
+// 在这行代码后添加下面的代码：b.installArtifact(exe);
 
 const run_cmd = b.addRunArtifact(exe);
 run_cmd.step.dependOn(b.getInstallStep());
@@ -495,7 +495,7 @@ test "dummy build test" {
 
 现在运行 `zig build test`时，应该会出现测试失败。如果你修复了测试，并再次运行 `zig build test`，你将不会得到任何输出。默认情况下，Zig 的测试运行程序只在失败时输出结果。如果你像我一样，无论成功还是失败，都想要一份总结，那就使用 `zig build test --summary all`。
 
-这是启动和运行构建系统所需的最低配置。但是请放心,如果你需要构建你的程序，Zig 内置的功能大概率能覆盖你的需求。最后，你可以（也应该）在你的项目根目录下使用 `zig init`，让 Zig 为你创建一个文档齐全的 `build.zig` 文件。
+这是启动和运行构建系统所需的最低配置。但是请放心，如果你需要构建你的程序，Zig 内置的功能大概率能覆盖你的需求。最后，你可以（也应该）在你的项目根目录下使用 `zig init`，让 Zig 为你创建一个文档齐全的 `build.zig` 文件。
 
 ## [第三方依赖]($heading.id('third-party-dependencies'))
 
@@ -655,12 +655,12 @@ _ = b.addModule("calc", .{
 要使用这一依赖关系，我们需要对 `build.zig` 进行一处修改：
 
 ```zig
-// 将这些代码:
+// 将这些代码：
 const calc_module = b.addModule("calc", .{
 	.root_source_file = b.path("calc/calc.zig"),
 });
 
-// 替换成:
+// 替换成：
 const calc_dep = b.dependency("calc", .{.target = target,.optimize = optimize});
 const calc_module = calc_dep.module("calc");
 ```

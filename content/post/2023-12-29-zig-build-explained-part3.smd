@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-> - 原文链接： https://zig.news/xq/zig-build-explained-part-3-1ima
+> - 原文链接：https://zig.news/xq/zig-build-explained-part-3-1ima
 > - API 适配到 Zig 0.11.0 版本
 
 从现在起，我将只提供一个最精简的 build.zig，用来说明解决一个问题所需的步骤。如果你想了解如何将所有这些文件粘合到一个构建文件中，请阅读本系列[第一篇文章]($link.page('post/2023-12-24-zig-build-explained-part1'))。
@@ -169,7 +169,7 @@ include
 
 ### [动态链接]($heading.id('dynamic-link'))
 
-要链接 libcurl，我们需要先添加 include 路径，然后向 zig 提供库的前缀和库名：(todo 代码有待验证,因为 curl 可能需要自己编译自己生成 static lib)
+要链接 libcurl，我们需要先添加 include 路径，然后向 zig 提供库的前缀和库名：(todo 代码有待验证，因为 curl 可能需要自己编译自己生成 static lib)
 
 ```zig
 //demo 3.3
@@ -220,7 +220,7 @@ pub fn build(b: *std.build.Builder) void {
 }
 ```
 
-对 addIncludeDir 的调用没有改变，但我们突然不再调用带 link 的函数了？你可能已经知道了： 静态库实际上就是对象文件的集合。在 Windows 上，这一点也很相似，据说 MSVC 也使用了相同的工具集。
+对 addIncludeDir 的调用没有改变，但我们突然不再调用带 link 的函数了？你可能已经知道了：静态库实际上就是对象文件的集合。在 Windows 上，这一点也很相似，据说 MSVC 也使用了相同的工具集。
 
 因此，静态库就像对象文件一样，通过 addObjectFile 传递给链接器，并由其解包。
 
@@ -324,7 +324,7 @@ pub fn build(b: *std.build.Builder) void {
 
 从这里可以看出，我们只是向 addSystemCommand 传递了一个选项数组，该数组将反映我们的命令行调用。然后，我们按照习惯创建可执行文件，并使用 dependOn 在 cmd 上添加步骤依赖关系。
 
-我们也可以反其道而行之，在编译程序时添加有关程序的小信息:
+我们也可以反其道而行之，在编译程序时添加有关程序的小信息：
 
 ```zig
 //demo3.6

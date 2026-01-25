@@ -9,7 +9,7 @@
 ## [重大事件]($heading.id('major-events'))
 
 2024-06-07，0.13.0 发布，历时不足 2 个月，有 73 位贡献者，一共进行了 415
-次提交！ 这是一个相对较短的发布周期，主要原因是工具链升级，例如升级到
+次提交！这是一个相对较短的发布周期，主要原因是工具链升级，例如升级到
 [LLVM
 18](https://ziglang.org/download/0.13.0/release-notes.html#LLVM-18)。
 
@@ -36,7 +36,7 @@ const map = std.StaticStringMap(T).initComptime(kvs_list);
 [原文链接](https://www.openmymind.net/Leveraging-Zigs-Allocators/)
 
 老朋友 openmymind 的又一篇好文章：如何利用 Zig 的 Allocator
-来实现请求级别的内存分配。 Zig Allocator
+来实现请求级别的内存分配。Zig Allocator
 的最佳应用。[这里](/post/2024-06-16-leveraging-zig-allocator/)它的中文翻译。
 
 ``` zig
@@ -107,7 +107,7 @@ fn run(worker: *Worker) void {
 [原文链接](https://ludwigabap.bearblog.dev/zig-vs-rust-at-work-the-choice-we-made/)
 
 这篇文章作者描述了所在公司在改造老 C/C++ 项目时，为什么选择了 Zig 而不是
-Rust。 重写的项目运行在多个平台上（Web、移动端、VR
+Rust。重写的项目运行在多个平台上（Web、移动端、VR
 设备），因此最靠谱的方案就是暴露一个 C API，然后通过 FFI
 来调用。在做决策时，重点关注以下两点：
 

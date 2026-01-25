@@ -1,10 +1,12 @@
 <extend template="base.shtml">
 <head id="head">
   <ctx :if="$page.custom.getOr('math', false)">
-    <link href="https://cdnjs.webstatic.cn/ajax/libs/KaTeX/0.16.9/katex.min.css" rel="stylesheet">
+    <link href="https://cdnjs.webstatic.cn/ajax/libs/KaTeX/0.16.9/katex.min.css" rel="stylesheet" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
     <script
       defer
       src="https://cdnjs.webstatic.cn/ajax/libs/KaTeX/0.16.9/katex.min.js"
+      integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8"
+      crossorigin="anonymous"
     ></script>
     <script>
       function renderKaTeX() {
@@ -18,10 +20,10 @@
         });
       }
     </script>
-    <script defer src="https://cdnjs.webstatic.cn/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js" onload="renderKaTeX()"></script>
+    <script defer src="https://cdnjs.webstatic.cn/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderKaTeX()"></script>
   </ctx>
   <ctx :if="$page.custom.getOr('mermaid', false)">
-    <script defer src="https://cdnjs.webstatic.cn/ajax/libs/mermaid/11.12.0/mermaid.min.js" onload="mermaid.initialize({theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default'}); mermaid.run();"></script>
+    <script defer src="https://cdnjs.webstatic.cn/ajax/libs/mermaid/11.12.0/mermaid.min.js" integrity="sha384-o+g/BxPwhi0C3RK7oQBxQuNimeafQ3GE/ST4iT2BxVI4Wzt60SH4pq9iXVYujjaS" crossorigin="anonymous" onload="mermaid.initialize({theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default'}); mermaid.run();"></script>
   </ctx>
 </head>
 <body id="body">

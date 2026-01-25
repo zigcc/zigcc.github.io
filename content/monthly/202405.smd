@@ -31,7 +31,7 @@ Zig，这是个不错的经验参考。
 - 十分简洁，import 返回的是一个 struct，和其他变量一样使用
 - 与 C 无缝交换，
 - 具有 Result 效果的错误处理
-- 唯一缺失的就是『接口』，但这一点并不是很关键，就像在 C里也没有，但是 C
+- 唯一缺失的就是『接口』，但这一点并不是很关键，就像在 C 里也没有，但是 C
   可以做任何事
 
 ### [Zig's New CLI Progress Bar Explained]($heading.id('zigs-new-cli-progress-bar-explained'))

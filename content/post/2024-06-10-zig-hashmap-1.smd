@@ -8,9 +8,9 @@
 
 > 阅读这篇文章的前提是了解 [Zig 的范型实现](https://www.openmymind.net/learning_zig/generics/)
 
-如大多数哈希映射实现一样，Zig 的 `std.HashMap` 依赖于两个函数：`hash(key: K) u64` 和 `eql(key_a: K, key_b: K) bool`。其中，哈希函数接收一个键并返回一个无符号的64位整数作为哈希码。相同的关键字总是会返回相同的哈希码。然而，为了处理不同的键可能生成相同哈希码的情况（即碰撞），我们还需要 `eql` 函数来确定两个键是否相等。
+如大多数哈希映射实现一样，Zig 的 `std.HashMap` 依赖于两个函数：`hash(key: K) u64` 和 `eql(key_a: K, key_b: K) bool`。其中，哈希函数接收一个键并返回一个无符号的 64 位整数作为哈希码。相同的关键字总是会返回相同的哈希码。然而，为了处理不同的键可能生成相同哈希码的情况（即碰撞），我们还需要 `eql` 函数来确定两个键是否相等。
 
-这是一些标准做法，但Zig的实现有一些特定的细节值得关注。尤其是考虑到标准库中包含多种哈希映射类型以及文档似乎不完整且令人困惑这一点。具体来说，有六种哈希映射变体：`std.HashMap`, `std.HashMapUnmanaged`, `std.AutoHashMap`, `std.AutoHashMapUnmanaged`, `std.StringHashMap`, 和 `std.StringHashMapUnmanaged`。
+这是一些标准做法，但 Zig 的实现有一些特定的细节值得关注。尤其是考虑到标准库中包含多种哈希映射类型以及文档似乎不完整且令人困惑这一点。具体来说，有六种哈希映射变体：`std.HashMap`, `std.HashMapUnmanaged`, `std.AutoHashMap`, `std.AutoHashMapUnmanaged`, `std.StringHashMap`, 和 `std.StringHashMapUnmanaged`。
 
 `std.HashMapUnmanaged` 包含了实现的主要部分。其他五个都是对它的简单包装。由于这些变体通过一个名为“unmanaged”的字段进行包装，因此这五种类型的文档处理不清晰。
 
@@ -26,7 +26,7 @@ pub fn put(self: *Self, key: K, value: V) Allocator.Error!void {
 
 ## [Unmanaged]($heading.id('unmanaged'))
 
-在Zig标准库中随处可见的类型命名约定是 `unmanaged`。这种命名方式表明所涉及的类型不维护 `allocator`。任何需要分配内存的方法都会显式地将 `allocator` 作为参数传递。要实际看到这一点，可以考虑下面这个链表的例子：
+在 Zig 标准库中随处可见的类型命名约定是 `unmanaged`。这种命名方式表明所涉及的类型不维护 `allocator`。任何需要分配内存的方法都会显式地将 `allocator` 作为参数传递。要实际看到这一点，可以考虑下面这个链表的例子：
 
 ```zig
 pub fn LinkedList(comptime T: type) type {
@@ -145,7 +145,7 @@ pub fn LinkedList(comptime T: type) type {
 
 ## [HashMap 与 AutoHashMap]($heading.id('hashmap-and-autohashmap'))
 
-std.HashMap 是一个泛型类型，它接受两个类型参数：键的类型和值的类型。正如我们所见，哈希映射需要两个函数：hash 和 eql。这两个函数合起来被称为“上下文(context)”。这两个函数都作用于键，并且没有一个单一的 hash 或 eql 函数适用于所有类型。例如，对于整数键，eql 将是 `a_key == b_key`；而对于 `[]const u8` 键，我们希望使用 `std.mem.eql(u8, a_key, b_key)`。
+std.HashMap 是一个泛型类型，它接受两个类型参数：键的类型和值的类型。正如我们所见，哈希映射需要两个函数：hash 和 eql。这两个函数合起来被称为“上下文 (context)”。这两个函数都作用于键，并且没有一个单一的 hash 或 eql 函数适用于所有类型。例如，对于整数键，eql 将是 `a_key == b_key`；而对于 `[]const u8` 键，我们希望使用 `std.mem.eql(u8, a_key, b_key)`。
 
 当我们使用 std.HashMap 时，我们需要提供上下文（这两个函数）。我们不久后将讨论这一点，但现在我们可以依赖 std.AutoHashMap，它为我们自动生成这些函数。可能会让你惊讶的是，AutoHashMap 甚至可以为更复杂的键生成上下文。以下操作是有效的：
 以下是修正后的代码：
@@ -195,7 +195,7 @@ pub fn main() !void {
 }
 ```
 
-得到下面的错误:
+得到下面的错误：
 
 > error: `std.auto_hash.autoHash` does not allow slices here (`[]const u8`) because the intent is unclear. Consider using `std.StringHashMap` for hashing the contents of `[]const u8`. Alternatively, consider using `std.auto_hash.hash` or providing your own hash function instead.
 
@@ -385,4 +385,4 @@ pub fn hash(_: HashContext, u: User) u64 {
 
 在下一部分，我们将深入探讨哈希表的键和值，它们是如何存储和管理的。
 
-> 原文地址: https://www.openmymind.net/Zigs-HashMap-Part-1/
+> 原文地址：https://www.openmymind.net/Zigs-HashMap-Part-1/

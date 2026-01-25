@@ -33,7 +33,7 @@ Zig 的构建系统分为两部分：
 - zon 文件，声明依赖， `zig fetch` 会去下载里面的依赖
 - `build.zig` 文件，项目的构建器，由多个 Step
   形成一个有向无环图，来驱动不同逻辑的进行，如安装头文件、编译静态链接库等。Step
-  里面最重要的是 Compile ，addTest、addExecutable
+  里面最重要的是 Compile，addTest、addExecutable
   返回的都是它，主要功能是对代码进行编译。其他常见的 Step 还有
   - ConfigHeader 配置要用的头文件
   - InstallArtifact，将编译好的 lib 或 bin 安装到 zig-out 目录中
@@ -44,7 +44,7 @@ longer depend on LLVM, LLD, and Clang libraries
 \#16270](https://github.com/ziglang/zig/issues/16270) 这个 issue
 的基础。之前笔者以为所谓移除 llvm，是把 Zig 代码翻译成 C
 代码，然后再有不同架构下的 C
-编译器来生成最终的可执行文件，目前看这种想法是错误的， 尽管 Zig 有 C
+编译器来生成最终的可执行文件，目前看这种想法是错误的，尽管 Zig 有 C
 这个后端，但目前看并不是解决这个 issue 专用的。
 
 这就不得不好奇，Zig

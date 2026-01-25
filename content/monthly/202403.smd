@@ -50,7 +50,7 @@ Autodoc，之前的实现问题很多。比如：
   wasm 就可以调用
 
 - 功能更强，因为新设计方案不再处理
-  ZIR，而是直接处理源文件，这意味着它拥有100%
+  ZIR，而是直接处理源文件，这意味着它拥有 100%
   的信息，不需要向后拼凑任何东西。
 
 - sources.tar 文件经 HTTP 层解压后，直接进入 wasm 模块的内存。使用
@@ -151,7 +151,7 @@ errdefer comptime unreachable
 ```
 
 文中称这个是 Zig 的巅峰用法😅， `errdefer unreachable`
-还比较好理解，即在执行出错时，执行 unreachable ，加上 comptime 呢？
+还比较好理解，即在执行出错时，执行 unreachable，加上 comptime 呢？
 
 其实这是阻止 Zig
 编译器生产错误处理的代码，即在编译时期保证下面的逻辑不会出错，确实用的很巧妙！一个简单的例子：
@@ -214,7 +214,7 @@ test.zig:4:23: error: reached unreachable code
 +}
 ```
 
-可以看到， 这么修改后，就可以保证 `map.deinit(allocator)`
+可以看到，这么修改后，就可以保证 `map.deinit(allocator)`
 语句之前没有错误可能产生！读者可以细细品味一下这个用法。
 
 另一个小技巧是 errdefer 竟然支持错误捕获，即下面这种用法：

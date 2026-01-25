@@ -14,7 +14,7 @@ Zig 中文社区是一个开放的组织，我们致力于推广 Zig 在中文�
 ## [供稿方式]($heading.id('contribute'))
 
 1. Fork 仓库 https://github.com/zigcc/zigcc.github.io
-2. 在 `content/post` 内添加自己的文章（smd格式），文件命名为： `${YYYY}-${MM}-${DD}-${SLUG}.smd`
+2. 在 `content/post` 内添加自己的文章（smd 格式），文件命名为： `${YYYY}-${MM}-${DD}-${SLUG}.smd`
 3. 文件开始需要包含一些描述信息，例如：
 
 ```ziggy

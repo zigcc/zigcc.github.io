@@ -143,7 +143,7 @@ fn allocLower(allocator: Allocator, str: []const u8) ![]const u8 {
 }
 ```
 
-上面的代码没问题。但以下用法不是:
+上面的代码没问题。但以下用法不是：
 
 ```zig
 // 对于这个特定的代码，我们应该使用 std.ascii.eqlIgnoreCase
@@ -290,7 +290,7 @@ pub fn main() !void {
 const T = std.heap.GeneralPurposeAllocator(.{});
 var gpa = T{};
 
-// 等同于:
+// 等同于：
 
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 ```
@@ -421,7 +421,7 @@ var larger = try self.allocator.alloc(i64, len * 2);
 self.allocator.free(self.items);
 ```
 
-将`items`复制到我们的 `larger` 切片中后, 添加最后一行`free`可以解决泄漏的问题。如果运行 `zig test learning.zig`，便不会再有错误。
+将`items`复制到我们的 `larger` 切片中后，添加最后一行`free`可以解决泄漏的问题。如果运行 `zig test learning.zig`，便不会再有错误。
 
 ## [ArenaAllocator]($heading.id('arena-allocator'))
 
@@ -504,7 +504,7 @@ defer list.deinit();
 ...
 ```
 
-由于 `IntList` 接受的参数是 `std.mem.Allocator`， 因此我们不需要做什么改变。如果 `IntList`内部创建了自己的 `ArenaAllocator`，那也是可行的。允许在`ArenaAllocator`内部创建`ArenaAllocator`。
+由于 `IntList` 接受的参数是 `std.mem.Allocator`，因此我们不需要做什么改变。如果 `IntList`内部创建了自己的 `ArenaAllocator`，那也是可行的。允许在`ArenaAllocator`内部创建`ArenaAllocator`。
 
 最后举个简单的例子，我上面提到的 HTTP 服务器在响应中暴露了一个 `ArenaAllocator`。一旦发送了响应，它就会被清空。由于`ArenaAllocator`的生命周期可以预测（从请求开始到请求结束），因此它是一种高效的选择。就性能和易用性而言，它都是高效的。
 

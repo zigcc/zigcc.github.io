@@ -6,7 +6,7 @@
 .draft = false,
 ---
 
-> - 原文链接： https://zig.news/xq/zig-build-explained-part-2-1850
+> - 原文链接：https://zig.news/xq/zig-build-explained-part-2-1850
 > - API 适配到 Zig 0.11.0 版本
 
 ## [注释]($heading.id('annotation'))
@@ -78,7 +78,7 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
-    // 这块调试了很久。API变了不会写，着了很久的文档和看了很久的代码
+    // 这块调试了很久。API 变了不会写，着了很久的文档和看了很久的代码
     exe.addCSourceFile(.{ .file = std.build.LazyPath.relative("main.c"), .flags = &.{} });
     exe.addCSourceFile(.{ .file = std.build.LazyPath.relative("buffer.c"), .flags = &.{} });
     //exe.linkLibC();
@@ -516,7 +516,7 @@ pub fn build(b: *std.Build) void {
 
 ## [混合使用 C 和 Zig 源代码]($heading.id('mixing-c-and-zig-source-code'))
 
-现在，是最后一章： 混合 C 代码和 Zig 代码！
+现在，是最后一章：混合 C 代码和 Zig 代码！
 
 为此，我们只需将 addExecutable 中的第二个参数设置为文件名，然后点击编译！
 
@@ -552,7 +552,7 @@ pub fn build(b: *std.Build) void {
 
 实际上，有一种情况现在还没有得到很好的支持：
 您应用程序的入口点现在必须在 Zig 代码中，因为根文件必须导出一个 pub fn main(...) ……。
-因此，如果你想将 C 项目中的代码移植到 Zig 中，你必须将 argc 和 argv 转发到你的 C 代码中，并将 C 代码中的 main 重命名为其他函数（例如 oldMain），然后在 Zig 中调用它。如果需要 argc 和 argv，可以通过 std.process.argsAlloc 获取。或者更好： 在 Zig 中重写你的入口点，然后从你的项目中移除一些 C 语言！
+因此，如果你想将 C 项目中的代码移植到 Zig 中，你必须将 argc 和 argv 转发到你的 C 代码中，并将 C 代码中的 main 重命名为其他函数（例如 oldMain），然后在 Zig 中调用它。如果需要 argc 和 argv，可以通过 std.process.argsAlloc 获取。或者更好：在 Zig 中重写你的入口点，然后从你的项目中移除一些 C 语言！
 
 ## [结论]($heading.id('conclusion'))
 

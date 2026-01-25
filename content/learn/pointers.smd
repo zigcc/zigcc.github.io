@@ -130,7 +130,7 @@ pub fn main() void {
 }
 ```
 
-我们最初的目标是通过`levelUp`函数将用户的`power`值增加 1 。我们已经让代码编译通过，但当我们打印`power`时，它仍然是原始值。虽然有点跳跃，但让我们修改代码，在 `main` 和 `levelUp` 中打印 `user`的地址：
+我们最初的目标是通过`levelUp`函数将用户的`power`值增加 1。我们已经让代码编译通过，但当我们打印`power`时，它仍然是原始值。虽然有点跳跃，但让我们修改代码，在 `main` 和 `levelUp` 中打印 `user`的地址：
 
 ```zig
 pub fn main() void {

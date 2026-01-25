@@ -12,12 +12,12 @@
 Stackoverflow 2024
 年的[调查报告](https://survey.stackoverflow.co/2024/technology)，指出
 Zig 语言是最热门的编程语言之一，并且 Zig
-开发者的薪水都很高，平均年收入为75,332美元！
+开发者的薪水都很高，平均年收入为 75,332 美元！
 
 [Zig 受欢迎程度]($image.siteAsset('images/stackoverflow2024-salary.webp'))
 
 [Zig 薪水对比]($image.siteAsset('images/stackoverflow2024-salary.webp'))
- 尽管使用 Zig 语言的开发者仅占调查人数的1%，但上升趋势明显。Zig 语言的倡导者、自由和开放源码软件开发者 Ali Cheragi 说：
+ 尽管使用 Zig 语言的开发者仅占调查人数的 1%，但上升趋势明显。Zig 语言的倡导者、自由和开放源码软件开发者 Ali Cheragi 说：
 
 > Zig
 > 的魅力在于它的简洁性、现代设计以及在底层控制和运行时安全性之间取得的平衡。
@@ -29,9 +29,9 @@ Zig 开发者的一些观点：
 - 与许多其他语言不同，Zig 可以与现有的 C
   代码实现真正的无缝互操作。出于多种原因，这一点至关重要。
 - Zig 正在对大量编程基础架构进行彻底改造，而这些基础架构在过去 40
-  年里无人敢碰。 C 和 C++
+  年里无人敢碰。C 和 C++
   是著名的核心编程语言，在这两种语言中，你可以完全控制硬件。
-  但与此同时，这些语言的工具链却非常糟糕。 Zig
+  但与此同时，这些语言的工具链却非常糟糕。Zig
   允许用户涉猎这些核心编程语言，但可以使用更好的工具链，兼容各种语言和更丰富的功能。
 
 ## [观点/教程]($heading.id('opinion-tutorial'))
@@ -41,7 +41,7 @@ Zig 开发者的一些观点：
 [原文链接](https://kristoff.it/blog/improving-your-zls-experience/)
 
 Loris Cro 的最新文章，介绍了一个改进 Zig
-编码体验的小技巧，十分推荐大家使用。具体来说是这样的： 通过配置
+编码体验的小技巧，十分推荐大家使用。具体来说是这样的：通过配置
 zls，达到保存文件时，自动进行源码检查，而且速度非常快！
 
 ``` json
@@ -52,7 +52,7 @@ zls，达到保存文件时，自动进行源码检查，而且速度非常快�
 ```
 
 将上述内存保存到 zls 的配置文件中，（路径可以通过
-`zls --show-config-path` 查看 ），zls 就会在保存时，自动执行
+`zls --show-config-path` 查看），zls 就会在保存时，自动执行
 `zig build check` ，这个 `check` 一般来说是这样的：
 
 ``` zig
@@ -70,7 +70,7 @@ check.dependOn(&exe_check.step);
 由于 Zig 目前的一个
 bug（[\#18877](https://github.com/ziglang/zig/issues/18877)），这个
 `exe_check` 不能作为 install、run 的依赖，否则在编译时，就不会增加
-`-fno-emit-bin` 选项。 而这个选项的作用就是让 Zig
+`-fno-emit-bin` 选项。而这个选项的作用就是让 Zig
 来分析我们的代码，但是不会调用 LLVM
 来生成最终的二进制文件，因此速度会比较快。
 
@@ -153,7 +153,7 @@ fn get_window_messages() [65536][:0]const u8 {
   帮助程序，这些帮助程序可以很快地读取大多数问题的输入。
 - Zig 支持所有大小的 int，一直到
   u65536。如果出现溢出，请尝试使用更大的整数类型。我在一些问题上使用了
-  u128和 i128。
+  u128 和 i128。
 - StringToEnum 是解析受限制的字符串或字符集的一个简单技巧。
 - 可以在结构上定义一个 format 方法，使它们按照您的喜好打印。
 - 尽量避免将字符串复制到 StringHashMap 中用作键。从 JS
@@ -168,9 +168,9 @@ fn get_window_messages() [65536][:0]const u8 {
 - 用于处理字符串的许多函数都在 std.mem 中，例如 std.mem.eql 和
   std.mem.startsWith
 - 使用 std.met.eql 比较 structs，而不是 `=`
-- 有一个按偏移量和长度切片的技巧: `array [start..][0..length]`
+- 有一个按偏移量和长度切片的技巧：`array [start..][0..length]`
 - 记忆函数通常是很有用的。我不知道 Zig 有没有通用的方法
-- 调试构建比优化构建慢得多，有时候慢10倍。如果你在一个合理的时间内得到一个答案的10倍之内，尝试一个不同的发布模式。
+- 调试构建比优化构建慢得多，有时候慢 10 倍。如果你在一个合理的时间内得到一个答案的 10 倍之内，尝试一个不同的发布模式。
 - 迭代时不要对数组列表进行修改
 - 在 JavaScript
   允许您内联表达式的某些情况下，您可能需要分解出一个变量来澄清生存期。看看[这个问题](https://github.com/ziglang/zig/issues/12414)。

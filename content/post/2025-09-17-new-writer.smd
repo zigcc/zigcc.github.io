@@ -114,7 +114,7 @@ fn typeErasedWriteFn(context: *const anyopaque, bytes: []const u8) anyerror!usiz
 
 这是一个使用 `File.Writer` 通过 `AnyWriter` 进行指针关系的可视化图：
 
-[图形：File.Writer和AnyWriter的指针关系图]($image.siteAsset('images/AnyWriter-Diagram.svg'))
+[图形：File.Writer 和 AnyWriter 的指针关系图]($image.siteAsset('images/AnyWriter-Diagram.svg'))
 
 `File` 和 `AnyWriter` 都是运行时对象，`AnyWriter` 使用 `File.Writer` 提供的 `write` 函数。
 
@@ -203,13 +203,13 @@ pub const VTable = struct {
 
 **虚表和 @fieldParentPtr**
 
-任何动态调度的接口都需要两件事：一种访问实现状态的方法，以及一组操作该状态以完成接口任务的函数指针。这组函数指针统称为虚表，或 “vtable”。`AnyWriter` 只有一个直接存储的函数指针。`Io.Writer` 有一个更大的接口，因此存储了一个指向包含 4 个函数指针的虚表的指针。
+任何动态调度的接口都需要两件事：一种访问实现状态的方法，以及一组操作该状态以完成接口任务的函数指针。这组函数指针统称为虚表，或“vtable”。`AnyWriter` 只有一个直接存储的函数指针。`Io.Writer` 有一个更大的接口，因此存储了一个指向包含 4 个函数指针的虚表的指针。
 
 在 `AnyWriter` 中，指向实现对象的类型擦除指针存储在接口中。在新的 `Io.Writer` 中，接口是实现对象的一个字段，并且指向该字段的指针被传递给函数。通过使用 Zig 内置的 `@fieldParentPtr` 访问虚表函数中的实现状态，该函数从字段的指针中减去该字段在结构体内的偏移量。
 
 这是一个帮助您理解这一切的图：
 
-[图形： File.Writer 指针关系图]($image.siteAsset('images/Io-Writer-Diagram.svg'))
+[图形：File.Writer 指针关系图]($image.siteAsset('images/Io-Writer-Diagram.svg'))
 
 查看 `File.Writer` 实现，注意接口是如何存储为一个字段的。像 `drain` 这样的接口函数接受一个指向该字段的指针，并使用 `@fieldParentPtr` 获取指向 `File.Writer` 的指针。
 
@@ -253,7 +253,7 @@ pub const Writer = struct {
 
 我们一直看到的 `drain` 函数是实现实际写入缓冲数据的方式。用户完成 Writer 操作后，他们调用 `flush` 来写出缓冲区中剩余的任何数据。
 
-[图形: 展示 Io.Writer 如何缓存数据]($image.siteAsset('images/Buffering-Interface.svg'))
+[图形：展示 Io.Writer 如何缓存数据]($image.siteAsset('images/Buffering-Interface.svg'))
 
 在大多数语言中，缓冲是在后台完成的实现细节。Zig pre-writergate 具有 `std.io.BufferedWriter`，它为此目的提供了一个 `GenericWriter`。以下是如何使用它：
 
@@ -357,7 +357,7 @@ fn writeData(writer: *std.Io.Writer) std.Io.Writer.Error!void {
 
 默认的 `rebase` 通过重复调用 `drain` 以在保留区域之前写出字节，然后将保留的字节向后复制以保持连续来工作。这是一个小规模的示例，说明它可能是什么样子：
 
-[图形： rebase 在小缓冲区上的工作方式]($image.siteAsset('images/Rebase-Diagram.svg'))
+[图形：rebase 在小缓冲区上的工作方式]($image.siteAsset('images/Rebase-Diagram.svg'))
 
 **结论**
 

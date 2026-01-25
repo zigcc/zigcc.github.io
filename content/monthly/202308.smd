@@ -210,7 +210,7 @@ Andrew 关于构建系统的视频，[B
 
 [Wrap your NIF with Zig](https://rbino.com/posts/wrap-your-nif-with-zig/)  
 NIF 是 Elixir 中进行 FFI 调用的方式，如果用原生 C
-接口来用，会需要写很多胶水代码， 作者这里用 comptime 特性来定义了一个
+接口来用，会需要写很多胶水代码，作者这里用 comptime 特性来定义了一个
 `make_nif_wrapper` 来简化 NIF 的实现，这个技巧在与 C
 项目交互时十分有用。
 

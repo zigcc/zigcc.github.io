@@ -41,18 +41,18 @@
 - **哈希**
 - 类型为字符串。
 - **[多重哈希](https://multiformats.io/multihash/)**
-  该哈希值是基于一系列文件内容计算得出的，这些文件是在获取URL后并应用了路径规则后得到的。
+  该哈希值是基于一系列文件内容计算得出的，这些文件是在获取 URL 后并应用了路径规则后得到的。
   这个字段是最重要的；一个包是的唯一性是由它的哈希值确定的，不同的 URL 可能对应同一个包。
 
 ## [多重哈希]($heading.id('multiple-hashing'))
 
-在他们的网站上有一个很好的可视化展示，说明了这一过程: [多重哈希](https://multiformats.io/multihash/)。
+在他们的网站上有一个很好的可视化展示，说明了这一过程：[多重哈希](https://multiformats.io/multihash/)。
 
 [multihash 示意图]($image.siteAsset('images/zon-multihash.webp'))
 
-因此 `build.zig.zon` 中的哈希字段不仅包含了摘要(digest)，还包含了一些元数据(metadata)。但即使我们丢弃了头部信息，得到的结果仍与下载的 `tar` 包的 `sha256` 摘要不相符。而这就涉及到了包含规则的问题。
+因此 `build.zig.zon` 中的哈希字段不仅包含了摘要 (digest)，还包含了一些元数据 (metadata)。但即使我们丢弃了头部信息，得到的结果仍与下载的 `tar` 包的 `sha256` 摘要不相符。而这就涉及到了包含规则的问题。
 
-## [包含规则(inclusion rules)]($heading.id('inclusion-rules'))
+## [包含规则 (inclusion rules)]($heading.id('inclusion-rules'))
 
 回到 [doc/build.zig.zon.md](https://github.com/ziglang/zig/blob/1a6485d111d270014f57c46c53597a516a24dc47/doc/build.zig.zon.md) 文件，我们看到：
 

@@ -55,9 +55,10 @@ Zig 的编译管线可以抽象为一系列数据变换阶段。每一个阶段�
 graph TD
     Start((启动编译器)) --> Init[初始化 Zcu 编译单元]
     Init --> Discovery
+    Discovery --> Src
 
     subgraph Frontend ["前端处理 (Per File)"]
-        Src --> Tokenizer
+        Src[源文件 (Source Files)] --> Tokenizer
         Tokenizer --> Parser
         Parser --> AST
         AST --> CacheCheck{Hash 缓存命中?}

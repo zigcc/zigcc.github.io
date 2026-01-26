@@ -105,6 +105,7 @@ graph TD
     LLVM_IR --> Optimizer[LLVM 优化器]
     MachineCode --> Linker[Zig 内置链接器 zld]
     C_Source --> C_Compiler[外部 C 编译器]
+    C_Compiler --> FinalArtifact[最终产物 Artifact]
 
     Optimizer --> Linker
     Linker --> FinalArtifact[最终产物 Artifact]

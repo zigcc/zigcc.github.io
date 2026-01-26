@@ -324,5 +324,5 @@ Zig 编译器的内部架构展示了现代系统编程语言在编译原理上�
 11. Stage 2 Proposal: Standardise a binary format for ZIR, and enable compilation to and from this representation · Issue \#5635 · ziglang/zig \- GitHub, accessed January 24, 2026, [https://github.com/ziglang/zig/issues/5635](https://github.com/ziglang/zig/issues/5635)
 12. Zig builds are getting faster \- Hacker News, accessed January 24, 2026, [https://news.ycombinator.com/item?id=45468698](https://news.ycombinator.com/item?id=45468698)
 13. Building self-hosted from the original C++ implementation \- Help \- Ziggit, accessed January 24, 2026, [https://ziggit.dev/t/building-self-hosted-from-the-original-c-implementation/6607](https://ziggit.dev/t/building-self-hosted-from-the-original-c-implementation/6607)
-14. Bootstrapping (compilers) \- Wikipedia, accessed January 24, 2026, [https://en.wikipedia.org/wiki/Bootstrapping\_(compilers)](https://en.wikipedia.org/wiki/Bootstrapping_\(compilers\))
+14. Bootstrapping (compilers) \- Wikipedia, accessed January 24, 2026, [https://en.wikipedia.org/wiki/Bootstrapping_(compilers)](https://en.wikipedia.org/wiki/Bootstrapping_(compilers))
 15. Goodbye to the C++ Implementation of Zig \- Zig Programming Language, accessed January 24, 2026, [https://ziglang.org/news/goodbye-cpp/](https://ziglang.org/news/goodbye-cpp/)

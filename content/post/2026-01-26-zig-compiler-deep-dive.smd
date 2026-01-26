@@ -70,7 +70,7 @@ graph TD
     Discovery --> AnalyzeRoot
     AnalyzeRoot --> SemaLoop{Sema 解释器循环}
 
-    subgraph Sema
+    subgraph Sema["语义分析 (Sema)"]
         SemaLoop --> FetchInst
         FetchInst --> ResolveOps["解析操作数 (Values/Insts)"]
         ResolveOps --> CheckComptime{编译期已知?}

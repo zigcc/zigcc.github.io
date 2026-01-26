@@ -58,7 +58,7 @@ graph TD
     Discovery --> Src
 
     subgraph Frontend ["前端处理 (Per File)"]
-        Src[源文件 (Source Files)] --> Tokenizer
+        Src["源文件 (Source Files)"] --> Tokenizer
         Tokenizer --> Parser
         Parser --> AST
         AST --> CacheCheck{Hash 缓存命中?}

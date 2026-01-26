@@ -89,6 +89,7 @@ graph TD
         CheckDep -- Yes --> Pause[挂起当前分析]
         Pause --> Recurse[递归分析被引用的声明]
         Recurse --> Resume[恢复当前分析]
+        Resume --> SemaLoop
     end
 
     Sema --> AIR

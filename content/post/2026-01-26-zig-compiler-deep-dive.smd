@@ -77,11 +77,13 @@ graph TD
 
         CheckComptime -- Yes (Comptime) --> ExecCTFE
         ExecCTFE --> InternPool["存入 InternPool (Values)"]
-        InternPool --> UpdateMap
+        InternPool --> UpdateMap["更新映射 (Values)"]
+        UpdateMap --> SemaLoop
 
         CheckComptime -- No (Runtime) --> EmitAIR
         EmitAIR --> Liveness[活跃度分析 Liveness]
-        Liveness --> UpdateMapAIR
+        Liveness --> UpdateMapAIR["更新映射 (AIR)"]
+        UpdateMapAIR --> SemaLoop
 
         FetchInst --> CheckDep{引用其他声明?}
         CheckDep -- Yes --> Pause[挂起当前分析]

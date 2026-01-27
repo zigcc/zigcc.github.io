@@ -3,9 +3,6 @@
 .date = @date("2026-01-26T09:49:51+0800"),
 .author = "jiacai2050",
 .layout = "post.shtml",
-.custom = {
-  .mermaid = true
-},
 ---
 
 ## **摘要**
@@ -50,68 +47,7 @@ Zig 的编译管线可以抽象为一系列数据变换阶段。每一个阶段�
 
 为了满足“流程图”的需求，以下是 Zig 编译器核心控制流的结构化描述：
 
-```=html
-<pre class="mermaid">
-graph TD
-    Start((启动编译器)) --> Init[初始化 Zcu 编译单元]
-    Init --> Discovery
-    Discovery --> Src
-
-    subgraph Frontend ["前端处理 (Per File)"]
-        Src["源文件 (Source Files)"] --> Tokenizer
-        Tokenizer --> Parser
-        Parser --> AST
-        AST --> CacheCheck{Hash 缓存命中?}
-        CacheCheck -- Yes --> LoadZIR
-        CacheCheck -- No --> AstGen
-        AstGen --> ZIR
-        ZIR --> SaveCache[存入缓存]
-    end
-
-    Discovery --> AnalyzeRoot
-    AnalyzeRoot --> SemaLoop{Sema 解释器循环}
-
-    subgraph Sema["语义分析 (Sema)"]
-        SemaLoop --> FetchInst
-        FetchInst --> ResolveOps["解析操作数 (Values/Insts)"]
-        ResolveOps --> CheckComptime{编译期已知?}
-
-        CheckComptime -- Yes (Comptime) --> ExecCTFE
-        ExecCTFE --> InternPool["存入 InternPool (Values)"]
-        InternPool --> UpdateMap["更新映射 (Values)"]
-        UpdateMap --> SemaLoop
-
-        CheckComptime -- No (Runtime) --> EmitAIR
-        EmitAIR --> Liveness[活跃度分析 Liveness]
-        Liveness --> UpdateMapAIR["更新映射 (AIR)"]
-        UpdateMapAIR --> SemaLoop
-
-        FetchInst --> CheckDep{引用其他声明?}
-        CheckDep -- Yes --> Pause[挂起当前分析]
-        Pause --> Recurse[递归分析被引用的声明]
-        Recurse --> Resume[恢复当前分析]
-        Resume --> SemaLoop
-    end
-
-    Sema --> AIR
-    AIR --> CodeGen[代码生成 CodeGen]
-
-    subgraph Backend [后端处理]
-        CodeGen --> SelectBackend{选择后端}
-        SelectBackend -- LLVM --> LLVM_IR
-        SelectBackend -- Self-Hosted --> MachineCode
-        SelectBackend -- C --> C_Source[生成 C 源码]
-    end
-
-    LLVM_IR --> Optimizer[LLVM 优化器]
-    MachineCode --> Linker[Zig 内置链接器 zld]
-    C_Source --> C_Compiler[外部 C 编译器]
-    C_Compiler --> FinalArtifact[最终产物 Artifact]
-
-    Optimizer --> Linker
-    Linker --> FinalArtifact[最终产物 Artifact]
-</pre>
-```
+[How Zig compiler works]($image.siteAsset('images/zig-compiler.svg'))
 
 ## **3\. 第一阶段：解析与 AST 构建 (Parsing)**
 

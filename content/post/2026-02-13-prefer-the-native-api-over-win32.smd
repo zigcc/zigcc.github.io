@@ -1,6 +1,6 @@
 ---
 .title = "Windows：优先使用原生API而非Win32",
-.date = @date("2026-2-13T20:11:51+0800"),
+.date = @date("2026-02-13T20:11:51+0800"),
 .author = "cers",
 .layout = "post.shtml",
 ---
@@ -35,7 +35,7 @@
 
 | 类别 | 示例 | 说明 |
 | :--- | :--- | :--- |
-| **可替换的（“公平游戏”）** | **ABI兼容的转发器**（如 `ReleaseSRWLockExclusive` 直接转发给 `RtlReleaseSRWLockExclusive`）、**简单包装器**（如 `CopySid`）、**组合API**（如 `CreateIoCompletionPort`） | 这些Win32函数本质上是Native API的简单封装，可以直接替换以获得更清晰的错误处理和性能提升。 |
+| **可替换的（“适宜替换的对象”）** | **ABI兼容的转发器**（如 `ReleaseSRWLockExclusive` 直接转发给 `RtlReleaseSRWLockExclusive`）、**简单包装器**（如 `CopySid`）、**组合API**（如 `CreateIoCompletionPort`） | 这些Win32函数本质上是Native API的简单封装，可以直接替换以获得更清晰的错误处理和性能提升。 |
 | **过于复杂，暂不替换** | **控制台API**（已在讨论过程中被重写）、**Winsock API**、**动态库加载**、**进程创建**（`NtCreateUserProcess` 因需与 `csrss.exe` 复杂交互而异常脆弱） | 这些领域要么实现过于复杂，要么与Windows子系统的深层机制绑定，使用Native API的收益远低于风险和复杂度。 |
 
 ### 4\. 对常见质疑的回应

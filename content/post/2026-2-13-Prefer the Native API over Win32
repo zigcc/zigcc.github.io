@@ -5,11 +5,11 @@
 .layout = "post.shtml",
 ---
 
-## **摘要**
+## 摘要
 
 这篇发布于2026年2月5日的 Zig 语言 Issues（编号 #31131），标题为 “Windows: Prefer the Native API over Win32”，详细阐述了 Zig 项目在 Windows 平台上的一项重要技术策略调整：即优先使用更底层的 Native API（由 ntdll.dll 导出），而不是传统的 Win32 API（由 kernel32.dll 等导出）。
 
-## **1\. 核心主张：为何要“弃用”Win32，转向Native？**
+### 1\. 核心主张：为何要“弃用”Win32，转向Native？
 
 作者并非 Zig 核心成员，但深度参与了相关工作。他提出，现代 Windows 的 Win32 API 本质上是构建于 Native API 之上的一个“子系统”。Native API 是内核直接提供的、更接近底层的接口。Zig 选择优先使用 Native API，主要基于以下**四大优势**：
 
@@ -20,7 +20,7 @@
     *   Native API 直接返回丰富的 `NTSTATUS` 错误码，而 Win32 通常只返回 `BOOL`，失败后还需调用 `GetLastError` 查询，多了一层转换。
     *   使用的数据类型（如时间 `LARGE_INTEGER`、权限掩码 `ACCESS_MASK`）更现代、更统一，更易于与 Zig 的语言特性（如打包结构体）结合。
 
-### **2\. 潜在风险与挑战**
+### 2\. 潜在风险与挑战
 
 作者也坦诚地列出了使用 Native API 的**固有风险**，这也是为什么这是一个需要审慎决策的策略：
 
@@ -29,7 +29,7 @@
 3.  **兼容性问题**：可能影响程序在**旧版Windows**（Zig官方只支持Win10/11及对应服务器版）或 **Wine** 上的运行。
 4.  **安全软件误报**：调用底层、非标准API的行为可能更容易被安全软件标记为可疑。
 
-### **3\. 具体实践：哪些该换，哪些该留？**
+### 3\. 具体实践：哪些该换，哪些该留？
 
 该策略并非一刀切。作者详细划分了替换的界限：
 
@@ -38,7 +38,7 @@
 | **可替换的（“公平游戏”）** | **ABI兼容的转发器**（如 `ReleaseSRWLockExclusive` 直接转发给 `RtlReleaseSRWLockExclusive`）、**简单包装器**（如 `CopySid`）、**组合API**（如 `CreateIoCompletionPort`） | 这些Win32函数本质上是Native API的简单封装，可以直接替换以获得更清晰的错误处理和性能提升。 |
 | **过于复杂，暂不替换** | **控制台API**（已在讨论过程中被重写）、**Winsock API**、**动态库加载**、**进程创建**（`NtCreateUserProcess` 因需与 `csrss.exe` 复杂交互而异常脆弱） | 这些领域要么实现过于复杂，要么与Windows子系统的深层机制绑定，使用Native API的收益远低于风险和复杂度。 |
 
-### **4\. 对常见质疑的回应**
+### 4\. 对常见质疑的回应
 
 议题最后，作者以问答形式回应了社区可能存在的疑虑，展现了Zig团队务实的态度：
 
@@ -47,16 +47,16 @@
 *   **问：这会影响旧版Windows兼容性吗？**
     *   **答：** 会的。但Zig标准库的目标平台是基于**开发者能支持的最新稳定版本**（Win10/11）。追求极致向后兼容的用户应直接调用Win32。
 *   **问：在Wine上出问题了怎么办？**
-    *   **答：** 我们视其为Wine的bug。除非严重影响CI测试，否则不会主动为Wine添加特殊工作区。
+    *   **答：** 我们视其为Wine的bug。除非严重影响CI测试，否则不会主动为Wine添加特殊处理。
 *   **问：微软更改Native API怎么办？**
     *   **答：** 首先，Native API的设计（如信息类枚举+可变长结构）本身就具备很强的扩展性，旧API极少被移除，只会增加新版本。其次，如果有变更，Zig标准库会负责处理，用户代码无需感知。
 
-## **5\. 总结**
+### 5\. 总结
 
-这篇Issues不仅仅是一个技术讨论，它清晰地阐述了 Zig 在系统编程语言定位下的一个具体决策：**为了追求更高的性能、更强的能力和更简洁的代码，宁愿承担使用未充分文档API的风险，也要尽可能地接近操作系统底层**。
+这篇Issues不仅仅是一个技术讨论，它清晰地阐述了 Zig 在系统编程语言定位下的一个具体决策：**为了追求更高的性能、更强的能力和更简洁的代码，宁愿承担使用文档不全的API的风险，也要尽可能地接近操作系统底层**。
 
 它展示了Zig团队在**理想目标**（性能、控制力）与**现实挑战**（兼容性、稳定性、文档缺失）之间所做的精细权衡。对于Zig开发者而言，这意味着在Windows平台上编写代码时，可以期待标准库提供更底层、更强大的能力，但也需要理解这种选择所带来的边界（如官方支持的Windows版本范围）。
 
-#### **Works cited**
+### Works cited
 
-1. Windows: Prefer the Native API over Win32  · Issue \#31131 · ziglang/zig \- Codeberg, accessed 2026年2月6日, [https://codeberg.org/ziglang/zig/issues/31131](https://codeberg.org/ziglang/zig/issues/31131)
+1. [Windows: Prefer the Native API over Win32  · Issue #31131 · ziglang/zig - Codeberg](https://codeberg.org/ziglang/zig/issues/31131), accessed 2026年2月6日.

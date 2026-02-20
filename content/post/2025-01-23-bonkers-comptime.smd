@@ -1,49 +1,50 @@
 ---
-.title = "Zig comptime 棒极了",
+.title = "Zig 的 comptime 太强了",
 .date = @date("2025-01-23T12:00:00+08:00"),
-.author = "xihale",
+.author = "xihale (翻译)",
 .layout = "post.shtml",
 .draft = false,
 ---
 
-> 原文：<https://www.scottredig.com/blog/bonkers_comptime/>
+> 原文：https://www.scottredig.com/blog/bonkers_comptime/
 
 > 译注：原文中的代码块是交互式，翻译时并没有移植。另外，由于 comptime 本身即是关键概念，并且下文的意思更侧重于 Zig comptime 的特性，故下文大多使用 comptime 代替编译时概念。
+## [引言]($heading.id('introduction'))
 
-## [引子]($heading.id('introduction'))
+编程让数据处理自动化成为可能，大幅提升了生产力。而元编程更进一层——它让我们能像操作数据一样操作代码本身。在系统编程领域，元编程的潜力尤其大，因为高级抽象必须精确映射到硬件层面。不过我发现，除了函数式语言，大多数语言的元编程体验都不怎么样。所以当 Zig 把元编程作为核心特性时，我立刻来了兴趣。
 
-编程通过自动化地处理数据极大地提升了生产力。而元编程则让我们可以像处理数据一样处理代码，以此将编程的力量反向作用于编程自身。而在底层编程中，我想元编程可能带来最大的优势，因为那些高级概念必须得精确映射到某些低级操作。然而，除了函数式编程语言外，我一直觉得各编程语言对元编程的实现并不理想。因此，当我看到 Zig 把元编程列为一个主要特性时，我提起了很大的兴趣。
+刚开始用 Zig 的 comptime 时，体验挺糟糕的。概念陌生，想实现点什么都很费劲。但后来我找到了正确的理解方式，突然一切都通了，一下子就喜欢上了。为了让你少踩坑，下面我用六种不同"视角"来解释 comptime。每个视角都从不同角度切入，帮你把已有的编程经验迁移到 Zig。
 
-说实话，刚开始使用 Zig 的 comptime 时，我的体验相当糟糕。那些概念对我而言很陌生，而想要实现预期的效果也很困难。不过后来，当我转换了思路，一切都迎刃而解了，由此，我突然就喜欢上了它。现在，为了帮助你更快地走上这条探索之路，下面我将介绍六种不同的“视角”来理解 comptime。每个视角都从不同的角度，帮助你将已有的编程知识应用到 Zig 中。
+这不是 comptime 的完整参考手册。相反，它提供多种思考策略，帮你建立以 comptime 为核心的思维方式。
 
-这并不是一本完整涵盖了 comptime 的所有所需知识的详细指南。相反，它更侧重于提供多种策略，从不同视角帮助你全面地理解该如何以 comptime 的角度思考问题。
+为了清晰，所有示例都是有效的 Zig 代码，但其中的转换只是为了说明概念——并不是 Zig 实际的工作方式。
 
-为了明确起见，所有示例都是有效的 Zig 代码，但示例中的转换只是概念性的，它们并不是 Zig 实际的实现方式。
+## [视角 0：别管它]($heading.id('perspective-0-ignore-it'))
 
-## [视角 0: 忽略它]($heading.id('perspective-0-ignore-it'))
+我说我喜欢 comptime，转头又说可以忽略它，这听着有点矛盾。但我觉得这正是 Zig comptime 最厉害的地方。
 
-我说我喜欢这个特性，却又立刻叫你忽略它，这确实有点怪。但我认为此处正是 Zig comptime 威力所体现的地方，所以我将从这里出发。Zig Zen 中的第三条是“倾向于阅读代码，而不是编写代码。”确实，能够轻松地阅读代码在各种情况下都很重要，因为它是建立概念理解的基础，而这种理解也是调试或修改代码所必需的。
+Zig 哲学第三条说"倾向于阅读代码，而不是编写代码"。能轻松读懂代码在任何情况下都至关重要——这是理解概念、调试和修改的基础。
 
-元编程很容易让人陷入“只写代码”的境地。如果你在使用基于宏的元编程或代码生成器，那么代码就会变成两种版本：源代码和展开后的代码。这个额外的间接层使得从阅读到调试代码的整个过程都变得更加困难。当你要改变程序的行为时，你不仅需要确定生成的代码应该是什么样的，还需要弄清楚该如何通过元编程来生成这些代码。
+元编程很容易让人陷入"只写难读"的境地。用宏系统或代码生成器时，代码会有源码和展开后两个版本。这个额外间接层让阅读和调试都变难。你想改程序行为时，不仅要搞清楚生成的代码该长什么样，还得琢磨怎么通过元编程生成它们。
 
-但在 Zig 中，这些额外的开销是完全不需要的。你可以简单地忽略代码在不同时间执行这一隐形的前提条件，而在概念上直接将运行时和编译时的区别忽略掉再来理解那些代码。为了演示这一点，让我们一步一步来看两个不同的代码示例。第一个是普通的运行时代码，第二个则是利用了 comptime 的代码。
+但在 Zig 里，这些开销都不需要。你可以直接忽略"代码在不同时间执行"这个隐藏前提，把编译时和运行时的区别当作透明层来理解。来看一个渐进式的例子。
 
-> 普通的运行时代码
+先看普通的运行时代码：
 
 ```zig
 pub fn main() void {
-    const array: [3]i64 = .{1,2,3};
+    const array: [3]i64 = .{1, 2, 3};
     var sum: i64 = 0;
     for (array) |value| {
         sum += value;
     }
-    std.debug.print("array's sum is {d}.\n", .{sum});
+    std.debug.print("数组的和是 {d}。\n", .{sum});
 }
 ```
 
-点击“下一步”逐步执行程序，观察状态的变化。这个例子很简单：对一组数字求和。现在我们来做些奇怪的事：对一个结构体的字段求和。虽然这个例子有些牵强，但却能够很好地展示这一概念。
+这个很简单：求一组数的和。现在做点奇怪的——求结构体所有字段的和。虽然有点牵强，但它很好地展示思路。
 
-> 基于 comptime 的代码
+再看一个真正基于 comptime 的实现：
 
 ```zig
 const MyStruct = struct {
@@ -63,19 +64,21 @@ pub fn main() void {
     inline for (comptime std.meta.fieldNames(MyStruct)) |field_name| {
         sum += @field(my_struct, field_name);
     }
-    std.debug.print("struct's sum is {d}.\n", .{sum});
+    std.debug.print("结构体的和是 {d}。\n", .{sum});
 }
 ```
 
-与数组求和的例子相比，这个 comptime 示例引入的新东西几乎是微不足道的。这正是 comptime 的重点！这段代码的可执行文件效率和你在 C 中为结构体类型手写一个求和函数一样高效，而它却看起来像是你在使用支持运行时反射的语言编写的。虽然这不是 Zig 实际的工作方式，但这也不完全是一个纯粹的理论练习：Zig 核心团队正在开发一个调试器，允许你像这个例子一样逐步执行混合了编译时和运行时的代码。
+跟数组求和的例子比，这个 comptime 版本只多了几个关键字。这正是 comptime 的精髓！
 
-Zig 中有很多基于 comptime 且远远不止这样简单的类型反射，但你只需要阅读那些代码、完全无需深入了解其中有关 comptime 的细节就可以理解它们在干什么。当然，如果你想使用 comptime 编写代码，则不能仅仅止步于此，让我们继续深入。
+这段代码生成的机器码效率等同于你在 C 里手写一个求和函数，但它看起来像是在用支持运行时反射的语言编程。虽然这不是 Zig 实际的工作方式，但也不是纯理论：Zig 团队正在开发一个调试器，可以让你像这样一步步执行混合了编译时和运行时的代码。
 
-## [视角 1: 泛型]($heading.id('perspective-1-generics'))
+Zig 有很多基于 comptime 的神奇操作，远不止简单的类型反射。关键是你可以直接阅读那些代码，完全不用理解背后 comptime 的细节。当然，如果你想写 comptime 代码，还是得深入了解。继续。
 
-泛型在 Zig 中并不是一个特定的功能。相反，Zig 中的仅仅一小部分的 comptime 特性就可以提供用来处理你进行泛型编程所需的一切。这种视角虽然不能让你完全理解 comptime，但它确实为你提供了一个入口点，借此，你可以完成基于元编程的许多任务。
+## [视角 1：泛型]($heading.id('perspective-1-generics'))
 
-要使一个类型成为泛型，只需将其定义包裹在一个接受类型并返回类型的函数中。(译注：由于 Zig 中类型是一等公民，所以面向类型的编程是合法且常见的)
+泛型在 Zig 里不是独立功能。恰恰相反，只用 comptime 的一小部分特性就足够实现所有泛型编程。这个视角虽然不能让你完全掌握 comptime，但它提供了一个切入点，让你能用元编程解决很多实际问题。
+
+要让一个类型变成泛型，只需把它包在一个函数里——这个函数接受类型参数，返回类型。（译注：Zig 里类型是一等公民，所以"面向类型的编程"是完全合法的）
 
 ```zig
 pub fn GenericMyStruct(comptime T: type) type {
@@ -101,35 +104,42 @@ pub fn main() void {
         .b = 2,
         .c = 3,
     };
-    std.debug.print("struct's sum is {d}.\n", .{my_struct.sumFields()});
+    std.debug.print("结构体的和是 {d}。\n", .{my_struct.sumFields()});
 }
 ```
 
-泛型函数也可以如此实现。
+泛型函数也是同样的道理：
 
 ```zig
-fn quadratic(comptime T: type, a: T, b: T, c: T, x: T) T {
-    return a * x*x + b * x + c;
+fn quadratic(
+    comptime T: type,
+    a: T,
+    b: T,
+    c: T,
+    x: T
+) T {
+    return a * x * x + b * x + c;
 }
 
 pub fn main() void {
     const a = quadratic(f32, 21.6, 3.2, -3, 0.5);
     const b = quadratic(i64, 1, -3, 4, 2);
-    std.debug.print("Answer: {d}{d}\n", .{a, b});
+    std.debug.print("结果：{d} 和 {d}\n", .{a, b});
 }
 ```
 
-当然，也可以通过使用特殊类型 anytype 来推断参数的类型，而这通常在参数的类型对函数签名的其余部分没有影响时使用。（译注：此时要限制 a, b, c 的类型相同，所以此处不用 anytype）
+当然，你也可以用特殊的 anytype 让编译器推断参数类型。这通常用在对函数签名其他部分没有影响的参数上。（译注：比如这里的 a、b、c、x 都要是同一种类型，所以直接指定 T 更合适）
 
-## [视角 2：编译时运行的标准代码]($heading.id('perspective-2-standard-code-running-at-compile-time'))
+## [视角 2：在编译时运行普通代码]($heading.id('perspective-2-standard-code-running-at-compile-time'))
 
-这是一个古老的故事：增加一种自动执行命令的方法。当然，你还需要变量。哦，还有条件。拜托，能给我循环吗？这些看似合理的需求，最终导致这些自动化命令变得越来越复杂，甚至演变成一个完整的宏语言。但 Zig 不同，在运行时、编译时，甚至是构建系统中都使用了相同的语言。
+这是个老故事了：想加个自动执行命令的功能？好，还得有变量。哦，再加条件判断。等等，循环呢？这些看似合理的需求最终把简单的宏系统搞成了怪物。但 Zig 不同——运行时、编译时甚至构建系统都用的是同一种语言。
 
-考虑经典的 Fizz Buzz。
+来看经典的 Fizz Buzz 问题：
 
 ```zig
 fn fizzBuzz(writer: std.io.AnyWriter) !void {
     var i: usize = 1;
+
     while (i <= 100) : (i += 1) {
         if (i % 3 == 0 and i % 5 == 0) {
             try writer.print("fizzbuzz\n", .{});
@@ -149,8 +159,9 @@ pub fn main() !void {
 }
 ```
 
-确实很简单。但是，每当讨论如何优化 Fizz Buzz 算法时，人们总是忽略一个事实：标准的 Fizz Buzz 问题只需要输出前 100 个数字的结果。既然输出是固定的，那为什么不直接预先计算出答案，然后输出呢？（由此，我时常认为那些有关优化讨论有些滑稽的。）
-我们可以使用相同的 Fizz Buzz 函数来实现这一点。
+确实很简单。但每次讨论 Fizz Buzz 优化时，人们总忘了这问题只需输出前 100 个数字的结果——既然输出是固定的，为什么不提前算好呢？（所以我觉得那些优化讨论有点小题大做）
+
+我们可以用同一个 fizzBuzz 函数来实现预计算：
 
 ```zig
 pub fn main() !void {
@@ -170,35 +181,31 @@ pub fn main() !void {
 }
 ```
 
-这里的 comptime 关键字表示它后面的代码块将在编译期间运行。此外，该代码块被标记为“init”，以便整个块可以通过之后的 break 语句产出一个值。
+这里 comptime 关键字表示它后面的代码块在编译期间运行。这个块被标记为"init"，以便通过 break 语句产出值。
 
-我们一开始用一个 `null_writer` 来计算写入的字节数（但会丢弃实际写入的字节），以确定总长度。然后再根据该长度创建 `full_fizzbuzz` 数组来保存实际数据。
+我们先用一个 null_writer 来计算要写多少字节（但丢弃数据），然后根据这个长度创建正好大小的 buffer 来保存实际内容。
 
-仅对关键部分进行计时，预计算版本的运行速度约快 9 倍。当然，这个例子过于简单，以至于总执行时间受到很多其他因素的影响，但你不难借此明白这其中 comptime 对于性能优化的意味。
+只计关键部分的执行时间，预计算版本大概快 9 倍。当然这个例子太简单了，总执行时间受很多因素影响，但你能从中感受到 comptime 对性能的意义。
 
-comptime 和运行时之间有一些小的区别。比如，只有 comptime 可以访问类型为 comptime_int、comptime_float 或 type 的变量。此外，一些函数只有 comptime 参数，这使它们仅限于编译时环境。相对的，只有运行时才能进行系统调用和那些依赖系统调用的函数。如果你的代码不使用这些特性，那么它在编译时和运行时中的表现将是一样的。
+comptime 和运行时之间有些小区别：比如只有 comptime 能访问 comptime_int、comptime_float 或 type 类型的变量；有些函数只接受 comptime 参数，只能在编译时使用。相反，只有运行时才能做系统调用和依赖系统调用的函数。如果你的代码不涉及这些，它在 comptime 和运行时表现完全一样。
 
 ## [视角 3：程序特化]($heading.id('perspective-3-partial-evaluation'))
-- [原文地址](https://en.wikipedia.org/wiki/Partial_application)
 
-> 译者注：程序特化（Partial Evaluation）是一种编译优化技术，主要是：在编译期预先计算部分表达式或代码路径，以减少运行时计算开销，提前生成更具体的代码实现。
+*（Partial Evaluation 是一种编译优化技术：在编译期预先计算部分表达式或代码路径，减少运行时开销，生成更具体的版本）*
 
-现在我们要进入有趣的部分。
+现在进入更有趣的部分。
 
->译注：请参考下面的代码和代码后的解释理解这句话。
-
-代码求值的一种方式是将输入替换为其运行时值，然后反复将第一个表达式替换为求值形式，直到表达式为基本元素。这在计算机科学理论上下文中很常见，在某些函数式语言中也是如此。作为后续示例的铺垫，我们将使用数组求和来展示这个过程：
-
+代码求值的一种思路是：把输入替换成它的运行时值，然后反复把第一个表达式替换成求值结果，直到表达式变成基本元素。这在函数式编程理论里很常见。接下来我用数组求和来展示这个过程：
 
 ```zig
 pub fn main() void {
-    const array: [3]i64 = .{1,2,3};
+    const array: [3]i64 = .{1, 2, 3};
     var sum: i64 = 0;
 
     for (array) |value| {
         sum += value;
     }
-    // 这可以展开为：
+    // 展开后相当于：
     {
         const value = array[0];
         sum += value;
@@ -212,59 +219,62 @@ pub fn main() void {
         sum += value;
     }
 
-    std.debug.print("array's sum is {d}.\n", .{sum});
+    std.debug.print("数组的和是 {d}。\n", .{sum});
 }
 ```
 
-程序特化是一种可以向函数传递部分（但不一定是全部）参数的技术。在这种情况下，可以对只使用已知值的表达式进行替换。这样就产生了一个新函数，它只接受仍然未知的参数。comtime 可以看作是在编译过程中进行的部分求值。再看一下 sum 结构的例子，我们就会发现：
+程序特化可以接受函数的部分（但不一定是全部）参数。对于那些只使用已知值的表达式，直接替换成结果。这就产生了一个新函数，只接受仍然未知的参数。comptime 可以看作是在编译过程中进行的一部分求值。
+
+再看结构体求和例子：
 
 ```zig
-onst MyStruct = struct {
+const MyStruct = struct {
     a: i64,
     b: i64,
     c: i64,
 
     fn sumFields(my_struct: MyStruct) i64 {
-      var sum: i64 = 0;
-      inline for (comptime std.meta.fieldNames(MyStruct)) |field_name| {
-          sum += @field(my_struct, field_name);
-      }
+        var sum: i64 = 0;
+        inline for (comptime std.meta.fieldNames(MyStruct)) |field_name| {
+            sum += @field(my_struct, field_name);
+        }
 
-    // 这可以展开为：
-    {
-        const field_name = "a";
-        sum += @field(my_struct, field_name);
-    }
-    {
-        const field_name = "b";
-        sum += @field(my_struct, field_name);
-    }
-    {
-        const field_name = "c";
-        sum += @field(my_struct, field_name);
-    }
-    // 更进一步，有：
-    sum += my_struct.a;
-    sum += my_struct.b;
-    sum += my_struct.c;
+        // 展开后相当于：
+        {
+            const field_name = "a";
+            sum += @field(my_struct, field_name);
+        }
+        {
+            const field_name = "b";
+            sum += @field(my_struct, field_name);
+        }
+        {
+            const field_name = "c";
+            sum += @field(my_struct, field_name);
+        }
 
-    return sum;
-  }
+        // 进一步简化：
+        sum += my_struct.a;
+        sum += my_struct.b;
+        sum += my_struct.c;
+
+        return sum;
+    }
 };
 ```
 
-上面的示例是我们手动展开后的示例，但这项工作是由 Zig 的 comptime 完成的。这使得我们可以直接独立而完整地编写出我们要实现的功能，而不需要添加"当你改变 `MyStruct` 的字段时，记得更新 sum 函数"这样的由于依赖于 `MyStruct` 具体字段而预防功能失效的注释。
-基于 comptime 的版本在 `MyStruct` 的任何字段变更时都可以正确地自动处理。
+上面这个展开过程是手动演示的，实际上是由 Zig 的 comptime 自动完成的。好处是你可以直接写出独立、完整的实现逻辑，不需要写"如果修改了 MyStruct 的字段，记得更新 sumFields"这种维护性注释。
 
-## [视角 4：Comptime 求值，运行时代码生成]($heading.id('perspective-4-comptime-evaluation-runtime-code-generation'))
+基于 comptime 的版本会在 MyStruct 的任何字段变更时自动正确处理，这就是程序特化的思想。
 
-这与程序特化（Partial Evaluation）非常相似。这里有两个版本的代码，输入 (编译前) 和输出 (编译后)。输入代码由编译器运行。如果一个语句在编译时是可知的，它就会被直接求值。但是如果一个语句需要某些运行时的值，那么这个语句就会被添加到输出代码中。
+## [视角 4：comptime 求值与运行时代码生成]($heading.id('perspective-4-comptime-evaluation-runtime-code-generation'))
 
-让我们以数组求和为例来说明这个过程：
+这和程序特化很像。想象有两个版本的代码：编译前的（输入）和编译后的（输出）。输入代码由编译器运行。如果一个语句在编译时就能确定，它就会被直接求值掉；如果需要运行时值，这个语句就会被保留到输出代码里。
 
-> 输入这一段代码：
+还是用结构体求和来演示这个过程：
 
 ```zig
+// 这段是输入代码（由编译器处理）：
 const MyStruct = struct {
     a: i64,
     b: i64,
@@ -280,9 +290,8 @@ const MyStruct = struct {
 };
 ```
 
-> 生成出的代码：
-
 ```zig
+// 编译器生成的代码：
 const MyStruct = struct {
     a: i64,
     b: i64,
@@ -298,60 +307,74 @@ const MyStruct = struct {
 };
 ```
 
-这实际上是最接近 Zig 编译器处理 comptime 的方式。他们的主要区别在于 Zig 首先解析你的代码的语法，并将其转换为虚拟机的字节码。这个虚拟机的运行方式就是 comptime 的实现方式。这个虚拟机将估量它能处理的所有内容，并为需要运行时处理的内容生成新的字节码（稍后将其转换为机器码）。具有运行时输入的条件语句，如 if 语句，会直接输出两条路径。
+这才是最接近 Zig 编译器处理 comptime 的方式。主要差别在于：Zig 首先把你的代码语法解析成虚拟机的字节码，然后运行这个虚拟机——这就是 comptime 的实现机制。这个虚拟机能评估任何它能处理的东西，并为需要运行时处理的部分生成新字节码（稍后转换成机器码）。有运行时输入的条件语句，比如 if，会直接输出两条分支。
 
-自然，这样做的后果是死代码永远不会被语义分析。也就是说，一个无效的函数并不总是会在实际被使用之前产出相应的编译错误。（对此你可能需要适应一段时间）然而，这也使得编译更加高效（译注：部分地弥补了 Zig 暂不支持增量编译的缺陷），并允许更自然的外观条件编译，这里没有 `#ifdef` （译注：谢天谢地~）！
+这样做的副作用是：死代码永远不会被语义分析。也就是说，一个无效的函数不一定会在实际被使用时就报编译错误。（你可能需要适应这点）但这也让编译更高效，并且支持更自然的条件编译——这里没有 #ifdef 那种东西！
 
-值得注意的是，comptime 在 Zig 的设计中是个很基本的设计，所有的 Zig 代码都通过这个虚拟机运行，包括没有明显使用 comptime 的函数。即使是简单的类型名称，如函数参数，实际上也是在 comptime 中评估类型变量的表达式。这就是上面泛型示例的工作原理。这也意味着您可以酌情使用更复杂的表达式来计算类型。
+值得注意：comptime 在 Zig 的设计中非常底层，所有 Zig 代码（包括那些不明显使用 comptime 的）都会经过这个虚拟机。连简单的类型名（比如函数参数）都是在 comptime 中被评估的表达式。这就是前面泛型示例的工作原理。也正因如此，你可以用更复杂的表达式来计算类型。
 
-这样做的另一个后果是，Zig 代码的静态分析要比大多数静态类型语言复杂得多，因为编译器需要运行很大一部分才能确定所有类型。因此，在 Zig 工具链跟上之前，代码自动补全等编辑工具并不总是能很好地发挥作用。
+另一个后果是：Zig 的静态分析比大多数静态类型语言复杂得多，因为编译器需要运行大量代码才能确定所有类型。所以，在工具链完善之前，IDE 的代码补全等功能可能不太稳定。
 
-## [视角 5：直接生成代码（Textual Code Generation）]($heading.id('perspective-5-direct-code-generation'))
+## [视角 5：直接代码生成]($heading.id('perspective-5-direct-code-generation'))
 
-我在文章开头感叹元编程难度。然而，即使在 Zig 中，它仍然是一个强大的工具，在解决某些问题方面也占有一席之地。如果您熟悉这种元编程方法，对 Zig comptime 提供的功能可能会觉得有些残缺。比如，怎么在写一段代码在运行时能够生成新代码？
+我在开头吐槽过元编程的难度。但即使在 Zig 里，元编程仍然是强大的工具，在某些场景下不可或缺。如果你熟悉其他语言的元编程方式，可能会觉得 Zig 的 comptime 功能有些残缺——比如，怎么在运行时生成新代码？
 
-但等等，上一个例子不就是这样吗？如果你以正确的方式看待问题，写代码的代码和混合运行时代码之间存在着潜在的等价关系。
+但等等，上一个例子不就是吗？只要换个角度看，"写代码的代码"和"混合编译时和运行时代码"之间其实是等价的。
 
-下有两例。第一个是一个元编程的示例，第二个是我们熟悉的 comptime 示例。这两个版本的代码有着相同的逻辑。
+看两个例子。第一个是元编程生成代码，第二个是我们熟悉的 comptime 版本。两段逻辑等价：
 
 ```zig
+// 元编程版本：代码生成器
 pub fn writeSumFn(
     writer: std.io.AnyWriter,
     type_name: []const u8,
-    field_names: [][]const u8,
+    field_names: [][]const u8
 ) !void {
     try writer.print("fn sumFields(value: {s}) i64 {{\n", .{type_name});
     try writer.print("var sum: i64 = 0;\n", .{});
+
     for (field_names) |field_name| {
         try writer.print("sum += value.{s};\n", .{field_name});
     }
+
     try writer.print("return sum;\n", .{});
     try writer.print("}}\n", .{});
 }
 ```
 
-注意这里有两个转换：
-1. 在生成器中直接运行的代码是 comptime 的一部分
-2. 在生成器执行后输出的代码，成为运行时的一部分
+```zig
+// 等价的 comptime 版本：
+fn sumFields(my_struct: MyStruct) i64 {
+    var sum: i64 = 0;
+    inline for (comptime std.meta.fieldNames(MyStruct)) |field_name| {
+        sum += @field(my_struct, field_name);
+    }
+    return sum;
+}
+```
 
+注意这里两次转换的分界线：
+1. 在生成器里执行的代码属于 comptime
+2. 生成器输出后的代码属于运行时
 
-我喜欢这个示例的另一点是，它展示了在 Zig 中使用类型信息作为输入来生成代码是多么简单。这个例子略过了类型名称和字段名称信息的来源。如果你使用其他形式的输入，比如 Zig 提供了 `@embedFile`，你可以像平常一样解析它。
+我喜欢这个例子的另一个原因：它展示了用 Zig 把类型信息当输入来生成代码有多自然。这个例子没展示类型名和字段名从哪来。如果你用其他输入形式，Zig 有 @embedFile 完全可以直接读取和解析。
 
-回到泛型的例子，有一些值得强调的细微之处：
+回到泛型例子，有个值得强调的微妙之处：
 
 ```zig
 pub fn writeMyStructOfType(
     writer: std.io.AnyWriter,
-    T: []const u8,
+    T: []const u8
 ) !void {
     try writer.print("const MyStruct_{s} = struct {{\n", .{T});
     try writer.print("a: {s},\n", .{T});
     try writer.print("b: {s},\n", .{T});
     try writer.print("c: {s},\n", .{T});
 
-    try writer.print("fn sumFields(value: MyStruct_{s}) {s} {{\n", .{T,T});
+    try writer.print("fn sumFields(value: MyStruct_{s}) {s} {{\n", .{T, T});
     try writer.print("var sum: {s} = 0;\n", .{T});
     const fields = [_][]const u8{ "a", "b", "c" };
+
     for (fields) |field_name| {
         try writer.print("sum += value.{s};\n", .{field_name});
     }
@@ -361,32 +384,33 @@ pub fn writeMyStructOfType(
 }
 ```
 
-以上 struct 字段的生成体现了上述两种转换方式，并且将两者混合在了一行中。字段的类型表达式由生成器/运行时完成，而字段本身则作为运行时代码使用的定义。
+这个例子里结构体字段的生成同时体现了两种转换，而且混合在同一行里。字段的类型表达式是由生成器（运行时）完成的，而字段本身则是作为运行时代码使用的定义。
 
-在 comptime 下，引用类型名称的方式更加直接，可以直接使用函数，而不必将文本拼接成一个在代码生成中保持一致的名称。
+在 comptime 上下文中，引用类型名称的方式更直接：你直接用类型值就行，不需要像传统代码生成那样把文本拼成一个名字来保持一致。
 
-这种观点有一个例外。您可以创建字段名称在编译时就已确定的类型，但这样做需要调用一个内置函数，该函数包含一个字段定义列表。因此，您无法在这些类型上定义方法等声明。在实践中，这并不会限制代码的表达能力，但确实限制了你可以向其他代码公开哪些类型的 API。
+有一种例外情况：你可以创建字段名在编译时就已经确定的类型，但这需要调用一个内置函数，它接受字段定义列表作为参数。所以你无法在这些类型上定义方法之类的声明。实践中这不会限制表达能力，但确实限制了你向其他代码公开的 API 种类。
 
-与本节相关的是文本宏，如 C 语言中的文本宏。你可以做的大多数正常事情都可以在 comptime 中完成，尽管它们很少采用类似的形式。不过，文本宏并不能做所有允许做的事情。例如，你不能决定不喜欢某个 Zig 关键字，然后让宏代替你自己的关键字。我认为这是一个正确的决定，尽管对于那些习惯了这种能力的人来说，这是一个艰难的过渡。此外，Zig 参考了半个世纪以来的程序员在这方面的探索，所以它的选择要理智得多。
+说到文本宏——比如 C 那种——你大多数情况下都能在 comptime 里做到，尽管形式不太一样。但文本宏做不到的事，comptime 也做不到。比如你不能因为不喜欢某个 Zig 关键字就写个宏来代替它。我认为这是正确的决定，虽然对习惯了这个能力的人来说会难受一阵。再说，Zig 参考了半个世纪的编程语言设计经验，它的选择要理智得多。
 
-## [结论]($heading.id('conclusion'))
+## [结语]($heading.id('conclusion'))
 
-在阅读 Zig 代码以理解代码行为时，考虑 comptime 并不是必要的。而当编写 comptime 代码时，我通常会将其视为程序特化（Partial Evaluation）的一种形式。然而，如果你知道如何使用不同的元编程方法解决问题，你很可能有能力将其翻译成 comptime 形式。
+在读 Zig 代码来理解行为时，comptime 基本上不用考虑。而当我写 comptime 代码时，通常把它当作程序特化来用。不过，如果你知道用其他元编程方法怎么解决问题，你很可能能把它转化成 comptime 形式。
 
-元编程中直接生成代码的方法的存在，就是我全力支持 Zig 风格的 comptime 元编程的原因。尽管，直接生成代码是几乎是最强大的，但是，在阅读和调试时忽略 comptime 的特性的元编程方法确是最简单的。正因如此，我给本文取名为《Zig comptime 棒极了》。
+"直接代码生成"这种元编程方法的存在，正是我全力支持 Zig 这种 comptime 元编程的原因。直接生成代码几乎是功能最强大的元编程方式，但阅读和调试时"忽略 comptime"的方法又是最简单的。两者兼得，这就是《Zig 的 comptime 太强了》标题的由来。
 
-## [进一步阅读]($heading.id('further-reading'))
+## [延伸阅读]($heading.id('further-reading'))
 
-Zig 并非一个仅仅依赖 comptime 这一特性的语言。你可以在[官方网站](https://ziglang.org/)上了解更多关于 Zig 的信息。
+Zig 不止 comptime 这一个亮点。去[官方网站](https://ziglang.org/)可以了解更多。
 
-在这篇文章中，我多次使用相同的例子来展示不同的转换方式（代码->编译时和运行时），以简化展示的过程。这样做的缺点是，尽管谈论了很多，但实际上我并没有展示太多相关的内容。而[语言参考文档](https://ziglang.org/documentation/0.13.0/)详细介绍了编译时的具体特性。
+本文多次用同一个例子展示不同转换来简化说明过程，这样做的缺点是：虽然说了很多，但实际没深入太多细节。[语言参考文档](https://ziglang.org/documentation/0.13.0/)详细介绍了编译时的具体特性。
 
-如果您想看到更多示例，我建议您阅读一些 Zig 的标准库代码。以下是一些供有兴趣者参考的链接：
+想看更多示例，我建议直接读 Zig 标准库代码。这里有几个跳转点：
 
-- [std.debug.print](https://github.com/ziglang/zig/blob/0.13.0/lib/std/fmt.zig#L80) 是一个强大的泛型函数。许多语言在运行时解析它们的格式字符串，并很可能为字符串格式添加了一些特殊的效验器，以尽早捕获错误。而在 Zig 中，格式字符串是在编译时解析的，这样不仅生成了高效的最终代码，还在编译时完成了所有的校验。
-- [ArrayList](https://github.com/ziglang/zig/blob/0.13.0/lib/std/array_list.zig#L25) 是一个实现相对简单但功能齐全的泛型容器。
+* [`std.debug.print`](https://github.com/ziglang/zig/blob/0.13.0/lib/std/fmt.zig#L80) 是个强大的泛型函数。很多语言在运行时解析格式字符串，还会加校验器来尽早抓错。而在 Zig 里，格式字符串在编译时解析，不仅生成了高效的最终代码，还在编译时完成所有校验。
 
-Zig 的函数可以具有几种不同的返回类型。但是，这并不是依赖于编译器中的某些魔法的操作，而只是[典型的 comptime 的应用](https://github.com/ziglang/zig/blob/0.13.0/lib/std/start.zig#L508)。
+* [`ArrayList`](https://github.com/ziglang/zig/blob/0.13.0/lib/std/array_list.zig#L25) 是一个实现简单但功能齐全的泛型容器。
 
-> 如果您希望就本篇文章向我提出意见或更正，请发送电子邮件至 blogcomments@scottredig.com。
-> 译者注：如果觉得翻译有问题，请提 PR 改正：<https://github.com/zigcc/zigcc.github.io>
+Zig 的函数可以有多种返回类型。但这不靠什么编译器魔法，而是[ comptime 的典型应用](https://github.com/ziglang/zig/blob/0.13.0/lib/std/start.zig#L508)。
+
+> 如果你想对原文提出意见或更正，请发邮件至 blogcomments@scottredig.com。
+> 译者注：如发现翻译问题，欢迎 PR 修改：https://github.com/zigcc/zigcc.github.io

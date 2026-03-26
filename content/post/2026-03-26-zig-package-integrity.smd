@@ -14,6 +14,8 @@
 
 与此同时，Zig 编程语言正在构建一套完全不同的包管理哲学。本文将深度分析 Zig 如何通过 **fingerprint** 和 **content-addressed hash** 机制，从根本上防止这类攻击。
 
+[信任模型对比：Python vs Zig]($image.siteAsset('images/zig_vs_python_trust_model.svg'))
+
 ## 第一部分：问题的根源
 
 ### 1.1 Python/pip 的设计缺陷

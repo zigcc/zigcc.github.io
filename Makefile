@@ -3,10 +3,10 @@ serve:
 	zine --port 1313
 
 lint:
-	npx @lint-md/cli  **/*
+	npx @lint-md/cli $$(git ls-files '*.smd')
 
 format:
-	npx @lint-md/cli --fix **/*
+	npx @lint-md/cli --fix $$(git ls-files '*.smd')
 
 
 EXCLUDE = --exclude "*webp" --exclude "*svg" --exclude "*gif"

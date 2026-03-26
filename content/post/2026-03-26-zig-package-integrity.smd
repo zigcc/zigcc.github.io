@@ -1,0 +1,751 @@
+---
+.title = "Zig 的包完整性验证机制：如何防止像 LiteLLM 这样的供应链攻击",
+.date = @date("2026-03-26T09:11:11+0800"),
+.author = "jiacai2050",
+.layout = "post.shtml",
+.draft = false,
+---
+
+## 前言
+
+2026年3月24日，Python 生态遭遇了一次典型的供应链攻击：热门的 LiteLLM 包的 PyPI 发布凭证被盗，攻击者发布了包含恶意代码的版本 1.82.7 和 1.82.8。这些版本在 PyPI 上存活了约3小时，下载了数百万次。
+
+这场事件暴露了现代包管理系统的根本性设计缺陷——**版本号不等于内容承诺**。
+
+与此同时，Zig 编程语言正在构建一套完全不同的包管理哲学。本文将深度分析 Zig 如何通过 **fingerprint** 和 **content-addressed hash** 机制，从根本上防止这类攻击。
+
+## 第一部分：问题的根源
+
+### 1.1 Python/pip 的设计缺陷
+
+#### 版本号的虚假承诺
+
+在 Python 中，当你指定依赖版本时：
+
+```python
+# requirements.txt
+litellm==1.82.7
+```
+
+**你以为你得到的是什么**：某个固定的、经过验证的代码版本。
+
+**实际上你得到的是什么**：任何人只要有 PyPI 发布权限，就能重新发布"1.82.7"，无论内容是什么。
+
+这不是 pip 的 bug——这是 PyPI 和 pip 之间的设计约定：**PyPI 相信发布者，pip 相信 PyPI**。一旦发布者凭证被盗，整个链条崩溃。
+
+#### 哈希验证的虚假安慰
+
+pip 确实支持哈希验证：
+
+```bash
+pip install --require-hashes -r requirements.txt
+# litellm==1.82.7 --hash=sha256:a1b2c3d4...
+```
+
+但这种安全性是虚幻的，原因有三：
+
+1. **可选性**：大多数项目根本不用。Snyk 的数据表明，实际使用 `--require-hashes` 的项目不超过 5%。
+
+2. **外部依赖**：哈希值必须通过另一个安全通道（如 git 提交、README 或电子邮件）传递。这引入了额外的信任点。
+
+3. **包含规则隐式**：pip 不清楚地说明"这个哈希包含哪些文件"。`setup.py` 可能修改内容，`.pth` 文件可能被包含或排除，结果难以预测。
+
+#### LiteLLM 事件的具体教训
+
+LiteLLM 1.82.8 包含了一个 `litellm_init.pth` 文件。这个文件：
+
+- ✅ 在 wheel 的 `RECORD` 清单中被正确声明
+- ✅ 与其声明的哈希值匹配
+- ✅ 完全通过 `pip install --require-hashes` 的验证
+
+但：
+
+- ❌ 在 **每次 Python 启动时自动执行**，无需显式导入
+- ❌ 包含了双 base64 编码的恶意负载，包括凭证收集和加密传输
+- ❌ Python 官方对 `.pth` 启动钩子的安全风险至今没有修复（已报告但未解决）
+
+pip 的哈希验证说："这个文件的 hash 是对的"，但**从未说"这个文件的内容是无害的"**。
+
+---
+
+### 1.2 核心问题：信任模型的缺陷
+
+```
+┌─────────────────────────────────────────────────┐
+│ Python/pip 的信任链                              │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  你的代码                                       │
+│      ↓ (相信)                                   │
+│  requirements.txt 中的版本号                    │
+│      ↓ (相信)                                   │
+│  PyPI 中的 maintainer 账户                      │
+│      ↓ (相信)                                   │
+│  GitHub Actions 中的 CI/CD 凭证                 │
+│      ↓ (相信)                                   │
+│  Trivy、KICS 等 CI 工具的完整性                 │
+│      ↓ (相信)                                   │
+│  镜像源的网络完整性                             │
+│                                                 │
+│  任何一个环节被破坏 = 整条链崩溃                │
+└─────────────────────────────────────────────────┘
+```
+
+LiteLLM 攻击链是：
+1. Trivy GitHub Action 被入侵（2026年3月19日）
+2. 从 CI/CD runner 环境偷取 `PYPI_PUBLISH` token
+3. 用这个 token 向 PyPI 发布恶意版本
+4. pip 无法区分"真正的 1.82.7"和"恶意的 1.82.7"
+
+---
+
+## 第二部分：Zig 的根本性改进
+
+### 2.1 内容寻址的哲学
+
+Zig 采用了完全不同的设计理念：**不相信版本号，相信内容的指纹**。
+
+```
+版本号 1.82.7              哈希值 122045d2e2f8a1c3...
+    ↓                              ↓
+ 虚拟承诺                      物理承诺
+ "某个 1.82.7"               "特定的文件集合"
+ 可能有不同内容               必须完全匹配
+```
+
+这种模式称为 **内容寻址**（content-addressed），其核心思想是：
+
+**包的身份由其内容的哈希值决定，而不是由版本号决定。**
+
+### 2.2 双层防护：Fingerprint + Content Hash
+
+#### 第一层：Fingerprint（身份指纹）
+
+在 `build.zig.zon` 中：
+
+```zig
+.{
+    .name = "litellm",
+    .version = "1.82.7",
+    .fingerprint = 0xee480fa30d50cbf6,  // ← 项目唯一身份
+
+    .dependencies = .{
+        .zap = .{
+            .url = "https://github.com/zigzap/zap/archive/v0.1.7.tar.gz",
+            .hash = "122045d2e2f8a1c3f7b9e8a4c6d2f1e9",  // ← 内容哈希
+        },
+    },
+}
+```
+
+**Fingerprint 的结构**（64 位整数）：
+
+```
+┌─────────────────────────┬──────────────────────┐
+│   32-bit Random ID      │   32-bit Checksum    │
+└─────────────────────────┴──────────────────────┘
+   由开发者自动生成          由包名计算
+   必须非零且非全 1          hash(name) & 0xffffffff
+```
+
+**设计意图：Fork 检测**
+
+想象有人 fork 了 Zig 的官方 zap 项目，但保持相同的名字：
+
+```zig
+// 恶意 fork（复制了原项目的 fingerprint）
+.{
+    .name = "zap",
+    .fingerprint = 0xee480fa30d50cbf6,  // ← 和原项目相同
+}
+```
+
+Zig 能识别出来吗？**理论上不能完全识别，但可以检测一致性**。如果：
+- `name` 没变但 `fingerprint` 变了 = 正当 fork
+- `name` 没变但 `fingerprint` 相同且 `hash` 不同 = 可疑冒充
+
+这依然依赖社交验证（通过 GitHub star、官方网站等确认），但至少提供了一个**一致性检查点**。
+
+#### 第二层：Content Hash（内容哈希）
+
+这是真正的防线。
+
+**hash 字段是强制的**，缺少它会导致编译失败：
+
+```bash
+$ zig build
+error: expected string for hash field
+  expected: (some hash value)
+  but got:  (empty)
+```
+
+**hash 的计算过程（确定性）**：
+
+```
+1. 下载 tar.gz 包
+   ↓
+2. 解压到临时目录
+   ↓
+3. 应用 .paths 包含规则
+   （哪些文件算"包的一部分"？）
+   ↓
+4. 按文件名字典序排列
+   （关键！确保不同系统相同结果）
+   ↓
+5. 对每个文件计算 SHA-256
+   ↓
+6. 连接所有文件哈希
+   ↓
+7. 对连接结果计算 SHA-256
+   ↓
+8. 编码为 Multihash 格式
+   122045d2e2f8a1c3...
+   │││└─ 实际 hash（hex）
+   ││└── 长度（32 字节）
+   └─── 函数（0x12 = SHA-256）
+```
+
+**为什么字典序排列至关重要**：
+
+```zig
+文件系统返回顺序可能不同：
+  文件系统 A: [lib.py, __init__.py, utils.py]
+  文件系统 B: [__init__.py, lib.py, utils.py]
+                        ↓
+              产生的哈希值完全不同！
+                        ↓
+         所以必须定义标准顺序（字典序）
+                        ↓
+    无论在哪个系统运行，都产生相同哈希
+```
+
+### 2.3 显式包含规则：.paths
+
+这解决了一个 pip 永远无法解决的问题：**"这个包由哪些文件组成"**？
+
+```zig
+.{
+    .name = "mylib",
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src/",          // 递归包含
+        "LICENSE",
+        "README.md",
+    },
+}
+```
+
+**为什么这很重要**：
+
+GitHub 源代码仓库可能包含：
+- `.github/workflows/*.yml` - CI/CD 配置
+- `.gitignore` - git 配置
+- `docs/` - 文档
+- `example/` - 示例项目
+- ...等等
+
+用户下载 tar.gz 的内容可能与用户 clone git 仓库的内容不同。
+
+但通过 `.paths` 明确声明"只有这些文件算包"，Zig 保证：
+```
+tar.gz 下载 + .paths 过滤 == git clone + .paths 过滤
+                ↓
+              相同的哈希值
+```
+
+这叫做**镜像透明**——用户不在乎从哪里下载，只要哈希匹配。
+
+---
+
+## 第三部分：为什么 Zig 的设计是防御性的
+
+### 3.1 对 LiteLLM 攻击的免疫分析
+
+**场景**：攻击者获得了 LiteLLM 的 PyPI 发布凭证
+
+#### Python 中会发生什么：
+
+```python
+# 原始版本的哈希
+pip show litellm==1.82.6 --hash
+# sha256: abc123...
+
+# 攻击者发布恶意 1.82.7
+litellm==1.82.7  # ← 相同的版本号格式
+# 内容：base64 编码的后门
+# 包含：凭证收集、加密传输、持久化后门
+
+# 用户升级：
+pip install litellm
+# 安装 1.82.7，完全信任，没有任何警告
+```
+
+#### Zig 中会发生什么：
+
+```zig
+// 原始 build.zig.zon
+.litellm = .{
+    .url = "https://github.com/BerriAI/litellm/archive/v1.82.6.tar.gz",
+    .hash = "1220abc123def456...",
+}
+
+// 攻击者发布恶意 1.82.7
+// (相同的 URL 结构，不同的内容)
+
+// 用户运行 zig build
+$ zig build
+error: hash mismatch
+  expected: 1220abc123def456...
+  got:      1220xyz789uvw012...
+
+// ❌ 编译失败，拒绝使用
+
+// 即使用户试图手动下载恶意版本：
+$ zig fetch https://github.com/.../v1.82.7.tar.gz
+// Zig 计算新 hash，用户必须有意识地更新 build.zig.zon
+// 更新会被 git diff 显示出来，可以审查
+```
+
+**关键差异**：
+
+| 方面 | Python | Zig |
+|------|--------|-----|
+| 信任基础 | 版本号（虚拟） | 内容哈希（物理） |
+| 修改检测 | 无（无法验证内容） | 立即（哈希不匹配） |
+| 审查机会 | 无（pip 自动升级） | 有（git diff 显示） |
+| 攻击者优势 | 版本号发布权足够 | 需要修改源代码 + git 凭证 |
+
+### 3.2 编译时 vs 运行时执行
+
+这是另一个根本性的防御。
+
+**Python 的 .pth 问题**：
+
+```python
+# site-packages/litellm_init.pth
+# 包含 base64 编码的恶意代码
+
+# 执行时机：Python 启动时（每次！）
+$ python -c "import sys"      # ← .pth 执行了
+$ python -c "print('hello')"  # ← .pth 又执行了
+$ pip install xxx            # ← pip 启动 Python，.pth 又执行了
+```
+
+没有逃脱——.pth 总是执行。
+
+**Zig 的编译时执行**：
+
+```zig
+// build.zig
+pub fn build(b: *Build) void {
+    // 这段代码只在 "zig build" 时执行一次
+    const dep = b.dependency("zap", .{});
+}
+
+// 生产环境的二进制文件
+$ ./myapp
+// build.zig 不会再执行
+// 依赖的代码已在编译时链接进二进制
+```
+
+这意味着：
+
+- ✅ 代码注入必须在 **build.zig 中显式声明**
+- ✅ build.zig 在 **git 中版本控制**
+- ✅ 恶意代码**无法隐式执行**
+- ✅ Pull Request 时**能审查每个依赖更新**
+
+对比 Python：
+- ❌ `.pth` 文件隐式执行
+- ❌ 难以审查（二进制 base64 编码）
+- ❌ 无法禁用（Python 不提供机制）
+
+---
+
+## 第四部分：Zig 仍存在的风险和改进方向
+
+### 4.1 当前的局限性
+
+#### build.zig 脚本本身的风险
+
+```zig
+pub fn build(b: *Build) void {
+    const evil_dep = b.dependency("evil_lib", .{});
+
+    // 如果这个依赖的 build.zig 被篡改呢？
+    // 它依然可以在编译时执行任意代码
+}
+```
+
+**缓解**：
+- Zig 假设开发者会审查 `build.zig`
+- `build.zig` 在 git 中，PR 时能看到
+- 但对于间接依赖，审查负担很重
+
+#### 缺乏包签名
+
+目前 Zig 没有：
+
+```zig
+// 不存在（规划中）
+.zap = .{
+    .url = "...",
+    .hash = "...",
+    .signature = "-----BEGIN PGP SIGNATURE-----...",
+    .signer = "zigzap@github.com",
+}
+```
+
+**风险**：如果源 URL 本身被入侵（例如 GitHub 账户被黑），攻击者可以推送恶意 tag。Zig 会检测哈希变化，但无法验证"这是真正的开发者推送的新内容"。
+
+**缓解**：需要额外的社交验证（官方网站、发布公告等）。
+
+#### 透明日志（Transparency Log）的缺失
+
+Go 有 `go.sum` 和 `sum.golang.org`，一个公共的、不可篡改的日志：
+
+```
+module golang.org/x/crypto v0.4.0
+h1: abc123...
+date: 2022-11-01
+```
+
+任何人可以查询：
+- "这个模块的哈希何时首次出现"
+- "是否有人声称旧版本有新的哈希值"（后期注入攻击）
+
+Zig 尚未实现，但已有提议，详见：[A proposal to improve trust of blobs and precompiled packages · Issue #19789 · ziglang/zig](https://github.com/ziglang/zig/issues/19789)。
+
+## 第五部分：实战对比
+
+### 5.1 添加依赖的工作流
+
+#### Python/pip
+
+```bash
+# 步骤 1：看到 PyPI 上有新版本
+$ pip search zap
+zap                 0.1.7   A web framework
+
+# 步骤 2：升级
+$ pip install --upgrade zap
+Successfully installed zap-0.1.7
+
+# 步骤 3：信任它
+# (无法验证，无法回溯，无法审查)
+
+# 如果被攻击：
+# - 你已经用了恶意版本，payload 已执行
+# - 需要全系统扫描才能检测
+```
+
+#### Zig
+
+```bash
+# 步骤 1：在 build.zig.zon 中添加依赖（留空哈希）
+.zap = .{
+    .url = "https://github.com/zigzap/zap/archive/v0.1.7.tar.gz",
+    .hash = "",  // ← 临时空值
+}
+
+# 步骤 2：运行 zig build，获得正确的哈希
+$ zig build
+error: hash mismatch
+  expected: (blank)
+  got: 122045d2e2f8a1c3...
+
+# 步骤 3：复制哈希
+.hash = "122045d2e2f8a1c3...",
+
+# 步骤 4：提交到 git
+$ git add build.zig.zon
+$ git commit -m "Add zap dependency"
+# 历史可追踪，审查可见
+
+# 如果被攻击：
+# - 哈希不匹配，编译失败
+# - 恶意版本的哈希必须有意识地承认
+# - git diff 会显示哈希变化
+```
+
+### 5.2 检测篡改的能力
+
+**场景**：你的依赖源 URL 被中间人（MITM）修改了
+
+#### Python
+
+```python
+# 中间人返回了恶意的 zap-0.1.7.tar.gz
+pip install zap==0.1.7
+# 无法检测
+# pip 对哈希的唯一检查是"与 PyPI 声称的版本一致"
+# 但 PyPI 本身可能被攻击（如 LiteLLM 事件）
+```
+
+#### Zig
+
+```zig
+// MITM 修改了下载的 tar.gz
+$ zig build
+error: hash mismatch
+  expected: 122045d2e2f8a1c3...
+  got: 1220[恶意版本的哈希]
+
+// ❌ 立即失败，无法继续
+```
+
+Zig 对 MITM 免疫，因为：
+- 哈希是提前计算好的（在 git 中）
+- 下载内容必须**完全匹配**这个哈希
+- 修改一个字节 = 哈希变化 = 拒绝
+
+---
+
+## 第六部分：为什么这很重要
+
+### 6.1 供应链攻击的演变
+
+近几年的包管理攻击：
+
+| 事件 | 时间 | 包管理器 | 攻击向量 | 防御 |
+|------|------|--------|---------|------|
+| 4,000+ npm 包 | 2021-2022 | npm | 被盗的账户 | 没有 |
+| Ultralytics | 2024年6月 | pip | 被盗的 GitHub token | 没有 |
+| Trivy → LiteLLM | 2026年3月 | pip | 被盗的 CI/CD token | 没有 |
+
+**共同点**：凭证被盗。
+
+**可怕之处**：凭证被盗 = 发布权限 = 无限制修改。
+
+现有防御：
+- GitHub 2FA？→ 仍可用 token 绕过
+- PyPI 2FA？→ 仍可用 token 绕过
+- 代码审查？→ 没人审查依赖的二进制内容
+
+### 6.2 Zig 为什么有所不同
+
+Zig 的防御不是通过"更好的认证"，而是通过**改变信任模型**：
+
+```
+旧模式（pip）：
+"我相信这个账户，所以我相信任何用它发布的代码"
+                        ↓
+一旦账户被破坏，游戏结束
+
+新模式（Zig）：
+"我相信这个哈希，我有它在 git 中的历史记录"
+                        ↓
+账户被破坏无关紧要
+攻击者需要同时修改：
+  1. GitHub 仓库
+  2. 二进制内容（无法匹配旧哈希）
+  3. build.zig.zon（在 git 中，可审查）
+```
+
+---
+
+## 第七部分：实现细节（给高级读者）
+
+### 7.1 Multihash 格式的优势
+
+Zig 采用 IPFS 的 multihash 标准：
+
+```
+1220 + 45d2e2f8a1c3...
+│││└─ SHA-256 digest（64 字符）
+││└── 长度：0x20 = 32 字节
+└─── 函数：0x12 = SHA-256
+```
+
+为什么不直接用 hex？
+
+```
+SHA-256: abc123...
+        （无法知道这是什么哈希）
+
+Multihash: 1220abc123...
+          （自描述：第 12 个函数，32 字节）
+```
+
+好处：
+- **向前兼容**：如果未来改用 SHA-3，格式变为 `1323...`
+- **防止混淆**：不会把 SHA-256 当成 SHA-512
+- **跨生态标准**：IPFS、Filecoin 等也用这个
+
+### 7.2 Zig 0.14+ 的新哈希格式
+
+更可读的格式：
+
+```
+zap-0.1.7-BmEKAAr47fud
+
+  ↓          ↓      ↓
+ 包名      版本   9字节编码
+
+编码 = [4字节LE解压大小] + [5字节截断SHA-256]
+```
+
+好处：
+- 人类可读（不再是一长串 hex）
+- 文件系统友好（可作为目录名）
+- 版本信息可见
+
+### 7.3 文件排序的关键性
+
+这看起来是小细节，但至关重要：
+
+```zig
+假设包含文件：lib.rs, main.rs, utils.rs
+
+系统 A（ext4）目录遍历顺序：
+  [lib.rs, main.rs, utils.rs]
+
+系统 B（NTFS）目录遍历顺序：
+  [main.rs, lib.rs, utils.rs]
+                        ↓
+        完全不同的哈希值
+                        ↓
+    即使是同一源代码版本！
+
+解决方案：强制字典序
+  [lib.rs, main.rs, utils.rs]
+  ↓ 无论哪个系统，顺序都相同
+  相同的哈希值
+```
+
+---
+
+## 第八部分：迁移建议
+
+### 8.1 给 Python 用户
+
+短期（继续用 pip）：
+
+1. **启用哈希验证**
+   ```bash
+   pip install --require-hashes -r requirements.txt
+   ```
+
+2. **在 git 中提交哈希**
+   ```bash
+   # requirements.txt
+   zap==0.1.7 --hash=sha256:abc123...
+   ```
+
+3. **审查 build 依赖**
+   ```bash
+   # 避免使用不pinned的 CI/CD 工具版本
+   - uses: aquasecurity/trivy-action@v0.69.4  # ← 明确 pin
+   ```
+
+长期（考虑 Zig）：
+
+1. 如果你的项目是新项目或可以重写
+2. 对安全有强烈需求
+3. 愿意采纳前沿的包管理方案
+
+### 8.2 给项目维护者
+
+1. **在发布时公开哈希**
+   ```markdown
+   ## Release v0.1.7
+
+   SHA-256 (zap-0.1.7.tar.gz): 122045d2e2f8a1c3...
+   PGP Signature: -----BEGIN PGP SIGNATURE-----
+   ```
+
+2. **鼓励使用 zig fetch --save**
+   ```bash
+   zig fetch --save https://github.com/.../v0.1.7.tar.gz
+   ```
+
+3. **提供透明的版本历史**
+   在官网或 README 中记录哈希值变化。
+
+---
+
+## 第九部分：结论
+
+### 核心论点总结
+
+1. **版本号不是安全承诺**
+   - Python/pip 假设"版本号 = 固定内容"
+   - 现实：版本号只是标签，内容可被覆盖
+   - 后果：LiteLLM 事件每年都在发生
+
+2. **Zig 用哈希替代版本号**
+   - 哈希 = 特定文件的指纹
+   - 修改一个字节 = 哈希变化 = 拒绝
+   - 这是物理承诺，不是虚拟承诺
+
+3. **双层防护**
+   - Fingerprint：防止恶意 fork 冒充
+   - Content Hash：防止版本内容篡改
+
+4. **编译时执行天然更安全**
+   - Python 的 `.pth` 在任何时刻都可能执行
+   - Zig 的 build.zig 只在编译时执行
+   - 代码在 git 中，可审查、可追踪
+
+5. **镜像透明**
+   - 相同的哈希可从不同 URL 获取
+   - 攻击者无法通过 CDN 劫持来修改包
+   - 用户不依赖单一中心源
+
+### 未来展望
+
+Zig 的包管理系统仍在演进：
+
+```
+┌─────────────────────────────────────────┐
+│  当前（0.14）                            │
+├─────────────────────────────────────────┤
+│ ✅ Fingerprint + Content Hash           │
+│ ✅ 显式 .paths 包含规则                 │
+│ ✅ 强制哈希验证                         │
+│ ✅ Git 版本控制                         │
+└─────────────────────────────────────────┘
+         ↓ 计划中
+┌─────────────────────────────────────────┐
+│  Zig 0.15-0.16+                          │
+├─────────────────────────────────────────┤
+│ ⏳ PGP/ECDSA 包签名                     │
+│ ⏳ 透明日志（防后期注入）               │
+│ ⏳ build.zig 静态分析工具               │
+│ ⏳ 自动漏洞检测集成                     │
+└─────────────────────────────────────────┘
+```
+
+---
+
+## 参考资源
+
+### 官方文档
+- [Zig Build System Docs](https://ziglang.org/documentation/master/#Build-System)
+- [build.zig.zon Specification](https://github.com/ziglang/zig/blob/master/doc/build.zig.zon.md)
+
+### 相关事件分析
+- [Snyk - LiteLLM Supply Chain Compromise](https://snyk.io/articles/poisoned-security-scanner-backdooring-litellm/)
+- [Wiz - Trivy GitHub Actions Supply Chain Attack](https://www.wiz.io/blog/trivy-compromised-teampcp-supply-chain-attack)
+- [Aikido - CanisterWorm: First ICP-based Supply Chain Attack](https://www.aikido.dev/blog/catching-a-canisterworm-uncovering-the-first-ever-icp-based-supply-chain-attack)
+
+### Zig 相关讨论
+- [Issue #14288 - Fingerprint Design](https://github.com/ziglang/zig/issues/14288)
+- [Issue #14311 - Path Inclusion Rules](https://github.com/ziglang/zig/issues/14311)
+- [Issue #20178 - New Hash Format](https://github.com/ziglang/zig/issues/20178)
+
+### 深入阅读
+- [Go Modules and Transparency Log](https://go.dev/doc/modules/managing-dependencies#add)
+- [Python PEP 681 - Data Class Transforms](https://www.python.org/dev/peps/pep-0681/) （关于包签名的讨论）
+- [IPFS Multihash Specification](https://github.com/multiformats/multihash)
+
+---
+
+## 作者后记
+
+这篇文章写于 2026 年 3 月，正是 LiteLLM 事件的余波未平之时。我们每隔几年就看到类似的供应链攻击，而每次都有人说"下次我们会更小心"。但小心不是系统设计能解决的问题。
+
+Zig 的包管理不是完美的，它仍需要签名、透明日志和其他改进。但它的根本思想是正确的：**不要相信凭证，要相信内容的指纹。**
+
+如果更多的编程语言采纳这种设计——或至少从中汲取灵感——下一次供应链攻击的伤害会小得多。

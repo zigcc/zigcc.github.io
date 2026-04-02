@@ -10,7 +10,7 @@
 
 在这篇文章中，我将通过 vibe coding 写的一个 **小型 KV 数据库** 项目来分析 Zig 和 Rust 的异同。
 
-![Rust vs Zig]($image.siteAsset('images/rust-vs-zig.webp'))
+[Rust vs Zig]($image.siteAsset('images/rust-vs-zig.webp'))
 
 ## `kvdb`：一款轻量级嵌入式 KV 数据库
 

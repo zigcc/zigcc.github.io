@@ -1,0 +1,236 @@
+---
+.title = "用 Zig 重写一个版本管理工具：从 Go 到 Zig 的实战经验",
+.date = @date("2026-04-15T16:11:11+0800"),
+.author = "lispking",
+.layout = "post.shtml",
+.draft = false,
+---
+
+
+## 背景：为什么用 Zig 重写？
+
+之前一直用 Go 写的 zvm，功能没问题，但有几个膈应人的地方：
+
+1. **二进制体积**：Go 编译出来 10MB+，静态链接还要带 runtime。Zig 最终 1-2MB，真·零依赖
+2. **启动延迟**：Go 程序启动时 runtime 初始化、GC 预热，虽然感知不强，但用多了能感觉到那种"黏滞感"
+3. **平台适配**：Go 的跨平台是强，但 syscall 封装层太厚，想改点底层行为（比如 Windows 用 junction 而不是 symlink）得绕好几层
+4. **学习成本**：既然在写 Zig 项目，不如直接用 Zig 写工具，强迫自己深入语言
+
+说白了就是想看看：Zig 吹的那些零成本抽象、编译期计算、C 级别的控制，在真实项目里到底能不能打。
+
+## 核心架构对比
+
+### 目录结构的设计哲学
+
+Go 版本用的是传统的 `~/.zvm` 单目录，所有东西塞一块。这次重构决定遵循 XDG Base Directory 规范：
+
+```
+~/.config/zvm/settings.json          # 配置
+~/.local/share/zvm/0.16.0/zig        # 安装的版本
+~/.local/share/zvm/bin -> 0.16.0/    # 软链接指向当前版本
+~/.cache/zvm/versions.json            # 版本列表缓存
+```
+
+这样做的好处是配置、数据、缓存分离，备份/清理/迁移都清楚。坏处是初始化时要分别解析三个环境变量（XDG_CONFIG_HOME、XDG_DATA_HOME、XDG_CACHE_HOME），还要处理 Windows 上没有这些变量时的 fallback。
+
+一个小细节：Windows 上 fallback 到 USERPROFILE/.config，而不是 Roaming/AppData。因为 Zig 工具链偏向开发者，默认藏深目录里反而麻烦。
+
+### 版本切换：软链接的坑
+
+Unix 上 `ln -s` 很简单，Windows 上麻烦大了。Go 的 os.Symlink 在 Windows 上需要管理员权限，因为默认创建的是真正的符号链接。
+
+Windows 其实有个叫 junction 的东西，行为类似目录软链接，但不需要管理员权限。这次用 Zig 重构时，直接在 Windows 分支上调用 `cmd /c mklink /J`，避开权限问题。
+
+另一个坑是 Windows 上删除 junction 要用 `rmdir` 而不是 `del`，删除符号链接才是 `del`。代码里封装了个 `removeSymlink` 函数，Windows 走 deleteDir，Unix 走 deleteFile。
+
+### CLI 解析：为什么不直接用库
+
+Go 版本用的 cobra/viper，功能全但笨重。Zig 生态里可选的 CLI 库不多，而且 0.16 版本 API 变动大，依赖第三方风险高。干脆手写。
+
+手写解析器的关键是命令查找要快。用 `std.StaticStringMap` 在编译期生成命令到枚举的映射表，运行时 O(1) 查找。支持别名（install/i，list/ls）就是在 map 里多加几条 entry。
+
+解析流程分三层：
+1. 全局 flags（--color、--version）
+2. 命令名匹配（install、use、list...）
+3. 命令专属参数（版本号、--force 等）
+
+三层用同一个 args 迭代器顺序消费，代码 300 行左右，没外部依赖，编译飞快。
+
+## 网络层的权衡
+
+### 镜像测速的实现思路
+
+ziglang.org 官方下载在国内时快时慢，社区维护了一份镜像列表。安装时要选最快的源，逻辑是：
+
+1. 先检查本地有没有缓存的"最快镜像"，且 24 小时内测过，直接用
+2. 否则并发向官方源+所有镜像发 HEAD 请求，测 RTT
+3. 按延迟排序，依次尝试下载，第一个成功的缓存为"最快镜像"
+4. 如果全都失败，fallback 到官方源
+
+测 RTT 时用 HEAD 而不是 GET，省流量。Zig 的标准库 HTTP 客户端支持自定义方法，几行代码就能实现。
+
+### 代理的 fallback 策略
+
+标准库的 HTTP 客户端有个坑：不支持 HTTPS over HTTP 代理（缺少 CONNECT 隧道实现）。企业环境或受限网络中常用 http_proxy 访问外网，这个不支持就废了一半。
+
+解决办法：检测到有代理配置时，fork 到 curl。子进程执行 `curl -x proxy -o dest url`，stdout/stderr 用 pipe 捕获。虽然多了外部依赖，但 curl 的代理支持是经过实战检验的，SOCKS5、HTTP 代理、认证都支持。
+
+Zig 的 `std.process.run` API 设计得很舒服，指定 argv 数组、环境变量继承、输出限制（防止内存爆炸），几行代码就能封装好。
+
+## 安装流程的魔鬼细节
+
+### 解压：tar.xz 和 zip 的双重标准
+
+Zig 0.16 的标准库有 zip 解压，但 tar.xz 依赖外部的 xz 库，编译时经常出问题。 pragmatic 的选择：
+
+- .tar.xz：调用系统 tar 命令（Unix 和 Windows 都有，Git for Windows 自带）
+- .zip：用标准库的 std.zip
+
+这样依赖最小化，同时避免引入 C 库编译的麻烦。
+
+### 目录重命名的时机
+
+Zig 官方发布的 tar 包解压后是 `zig-macos-x86_64-0.16.0/` 这种长名字，但用户只想看 `0.16.0/`。解压后要重命名。
+
+坑在于：如果用户指定了 `--force` 强制重装，老目录要先删掉。但 deleteTree 是危险操作，万一路径拼接错了把家目录删了就完了。这里加了双重校验：
+1. 只删版本号格式的目录（正则匹配 `\\d+\\.\\d+\\.\\d+`）
+2. 操作前打印 "Removing old installation..."
+
+### 安装后验证：macOS 26+ 的坑
+
+苹果在 macOS 26（Sequoia）更新了 ld64，导致某些 Zig 版本链接时报 "undefined symbol" 错误。这不是 zvm 的 bug，但用户会以为是安装器坏了。
+
+解决：装完后跑一遍 smoke test。创建一个临时 `.zig` 文件，执行 `zig build-exe -fno-emit-bin`，检查 stderr 有没有 "undefined symbol"。有的话就警告用户，建议换 nightly 版本或 Mach 引擎的 build。
+
+这个验证流程本来是可选的，但因为 macOS 用户越来越多，变成默认开启。失败不阻断流程，只打警告。
+
+## 配置持久化的设计
+
+### 立即写入 vs 延迟写入
+
+Go 版本用的 viper，配置改完调用 WriteConfig 才落盘。Zig 版本改为**每次修改立即写入**。
+
+原因是：CLI 工具生命周期短，用户 Ctrl-C 之后如果配置没写，下次启动状态不对。比如设置了代理没写成功，下次下载还是直连，用户会困惑。
+
+代价是写文件次数变多。但配置 JSON 就几百字节，现代 SSD 无感知。
+
+### 字符串生命周期的管理
+
+Zig 没有 GC，配置里那些 URL 字符串（version_map_url、proxy 等）要手动管理。Settings 结构体初始化时把所有字符串 dup 到堆上，deinit 时逐个 free。
+
+有个技巧：optional 字段（比如 path）要先判断再决定是否 free，避免 double free。代码里每个 allocator.dupe 对应一个 allocator.free，成对出现。
+
+## 从 Go 带来的思路，在 Zig 里怎么落地
+
+### 错误处理：从多返回值到 error union
+
+Go 的错误处理是 `if err != nil`，Zig 是 `try/catch` 风格的 error union。重构时最大的思维转换是：**不要把所有错误都往上抛**。
+
+比如读取设置文件时，文件不存在不应该 fatal，应该用默认值创建新配置。这种时候用 `catch` 捕获特定 error，而不是 `try` 抛给上层。
+
+```zig
+const file = std.fs.cwd().openFile(path, .{}) catch |err| switch (err) {
+    error.FileNotFound => return createDefaultSettings(),
+    else => return err,  // 其他错误再抛
+};
+```
+
+### 并发：从 goroutine 到 explicit async
+
+Go 版本测速镜像时直接 `go func() { measure() }()`，wait group 一收就完。Zig 没有 goroutine，但有 async/await（虽然 0.16 还在实验阶段）。
+
+实际用的是**阻塞式顺序执行 + 超时控制**。因为镜像测速就是发个 HEAD 请求，串行执行对总耗时影响有限，而且代码简单很多。如果以后镜像列表变长，可以改成用 std.Thread 开几个线程做并行。
+
+### 接口：从 interface 到 tagged union
+
+Go 用 interface 做命令抽象，Zig 用 tagged union + switch 实现类似效果：
+
+```zig
+const Command = union(enum) {
+    install: InstallArgs,
+    use: UseArgs,
+    list: ListArgs,
+    // ...
+};
+
+switch (cmd) {
+    .install => |args| try install.run(args),
+    .use => |args| try use.run(args),
+    // ...
+}
+```
+
+这种写法没有虚函数开销，switch 编译期可以优化成跳转表。代价是加新命令要改 switch，不像 Go 那样可以注册。
+
+## 二进制体积优化的技巧
+
+最终 ReleaseSafe 构建 1.5MB 左右，对比 Go 版本的 10MB+，主要来源：
+
+1. **没有 runtime**：Zig 编译出来就是裸二进制，没 GC、没 runtime 初始化
+2. **静态链接默认开**：Zig 的 libc 可以选择 musl 静态链接，不用动态链接系统库
+3. **代码精简**：没引入第三方库，所有功能自己写或用标准库
+4. **strip 符号**：`zig build -Doptimize=ReleaseSafe -Dstrip=true` 可以更小
+
+Debug 构建会大很多（10MB+），主要是调试符号和未优化的代码。发布时用 ReleaseSafe，保留安全检查但优化体积。
+
+## 测试和发布的工程化
+
+### CI 构建矩阵
+
+GitHub Actions 构建 6 个目标：x86_64-linux、aarch64-linux、x86_64-macos、aarch64-macos、x86_64-windows、aarch64-windows。
+
+Zig 的交叉编译是原生支持的，不需要 Docker 或 qemu。build.zig 里指定 target，一台 Linux 机器就能编出所有二进制。
+
+### 版本号注入
+
+打 tag `v0.2.0` 触发 CI，build.zig 里用 `git describe --tags` 获取版本号，通过 `@import("build_options")` 注入到代码里。本地构建没有 tag 时 fallback 到 "0.0.1"，确保 CI 版本永远高于本地，方便 `zvm upgrade` 检测更新。
+
+### 安装脚本的设计
+
+`install.sh` 做几件事：
+1. 检测平台（uname -sm）
+2. 拼接下载 URL（github.com/.../latest/download/）
+3. 下载、解压、移动到 /usr/local/bin 或 ~/.local/bin
+4. 自动检测 shell（$SHELL），在 .zshrc/.bashrc 里追加 PATH 设置
+5. 生成 shell completion 并提示用户 source
+
+关键点是**幂等**：重复执行不会重复加 PATH。用 grep 检查配置里有没有 zvm 字样，没有再追加。
+
+## 踩坑清单（血泪史）
+
+**Zig 版本锁定**
+0.16 到 0.15 API 变动巨大，特别是 `std.Io` 从 `std.io` 改名，所有文件操作 API 签名变了。项目根目录放个 `.zig-version` 文件，CI 里用指定版本构建，避免上游更新导致失败。
+
+**JSON 解析的内存管理**
+std.json 解析出来的 Value 树要手动 deinit，字符串都是指向原始 buffer 的切片。如果原始 buffer 是栈上的，函数返回后 value 就悬空了。所有 JSON 操作在同一个函数内完成，或者把原始 buffer 也堆分配。
+
+**Windows 路径长度**
+Windows 传统路径限制 260 字符，junction/symlink 在超长路径下行为诡异。用 `\\?\\` 前缀开启 extended path 模式可以突破限制，但大部分时候没必要，Zig 安装路径通常不会那么深。
+
+**macOS Gatekeeper**
+下载的二进制没有签名，第一次运行会被 Gatekeeper 拦。这不是 zvm 能解决的，要在文档里提醒用户去系统设置点"允许"。或者引导用户用 Homebrew 安装（社区维护的 tap）。
+
+**代理环境的 PATH**
+某些代理软件会劫持 PATH，zvm 加的 PATH 可能被顶到后面。在文档里强调 "把 zvm 的 PATH 放最前面"，或者检测 $PATH 里有没有 zvm，有但不在第一位时警告。
+
+## 总结：Zig 适合写这种工具吗？
+
+适合，但有前提：
+
+**适合的情况**：
+- 对二进制体积敏感（嵌入式、容器、分发）
+- 需要精确控制内存和文件生命周期
+- 不想带 runtime/VM，追求启动速度
+- 愿意手写一些 Go/Rust 里用库解决的代码
+
+**不适合的情况**：
+- 生态不成熟，很多场景要手写或用 C 库（不像 Go/Rust 有丰富的第三方库）
+- 团队对 Zig 不熟悉，维护成本高
+- 需要大量高级抽象（ORM、完整 HTTP 框架、测试框架）
+
+zvm 这种规模（3k+ 行代码）的工具，Zig 的表现超出预期。编译后的二进制是真正的"单文件可执行"，scp 到任意同架构机器就能跑，没有"在目标机器装依赖"的烦恼。
+
+项目开源在 
+> https://github.com/lispking/zvm
+
+欢迎试玩或提 issue。如果你也在用 Zig 写工具，上面这些坑应该能帮你省点时间。

@@ -830,6 +830,29 @@ blockquote p {
   margin: 0;
 }
 
+/* -- AI Notice -- */
+
+.ai-notice {
+  margin: 1.5rem 0;
+  padding: 0.875rem 1.25rem;
+  background: #fffbeb;
+  border: 1px solid #f59e0b;
+  border-left: 4px solid #f59e0b;
+  border-radius: 6px;
+  color: #92400e;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ai-notice {
+    background: #1c1a0e;
+    border-color: #b45309;
+    border-left-color: #f59e0b;
+    color: #fcd34d;
+  }
+}
+
 /* -- Code Blocks -- */
 
 .code-block-container {

@@ -68,6 +68,9 @@
           <div :html="$page.toc()"></div>
         </div>
         <div :html="$page.content()"></div>
+        <div class="ai-notice" :if="$page.custom.getOr('ai_generated', false)">
+          ⚠️ 本文包含 AI 辅助生成的内容，请结合自身判断阅读，作者对内容准确性负责。
+        </div>
         <div id="prev-next" data-pagefind-ignore>
           <div :if="$page.prevPage?()">
             <a href="$if.link()">

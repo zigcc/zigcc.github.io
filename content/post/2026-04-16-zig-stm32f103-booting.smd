@@ -78,9 +78,13 @@ MEMORY
 
 SECTIONS
 {
-    .text :
+    .isr_vector :
     {
         KEEP(*(.isr_vector))   /* 向量表必须位于 Flash 最前面 */
+    } > FLASH
+
+    .text :
+    {
         *(.text*)
         *(.rodata*)
     } > FLASH
@@ -127,7 +131,7 @@ pub fn build(b: *std.Build) void {
         .abi = .none,
     });
 
-    // 使用 ReleaseSafe 模式以保留安全检查的同时优化代码大小
+    // 通过命令行 -Doptimize 选择优化级别（例如 ReleaseSafe）
     const optimize = b.standardOptimizeOption(.{});
 
     const exe = b.addExecutable(.{

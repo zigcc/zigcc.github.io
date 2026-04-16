@@ -1,0 +1,474 @@
+---
+.title = "Zig 裸机编程之 STM32F103 —— 启动过程",
+.date = @date("2026-04-16T10:00:00+0800"),
+.author = "maldus512 (翻译)",
+.layout = "post.shtml",
+.draft = false,
+---
+
+> 原文：https://maldus512.medium.com/zig-bare-metal-programming-on-stm32f103-booting-up-b0ecdcf0de35
+
+## [引言]($heading.id('introduction'))
+
+当我第一次接触 Zig 时，令我印象深刻的是它对裸机编程的天然亲和力：零运行时开销、完全的内存控制、与 C 语言的无缝互操作性，以及能够直接生成裸二进制文件。对于嵌入式开发者来说，这些特性不仅是加分项，更是核心需求。
+
+在本文中，我将一步步带你使用 Zig 为 STM32F103 微控制器（广为人知的"蓝色药丸"开发板）编写裸机程序。我们的目标是从零开始，让 MCU 正确启动，而无需任何 HAL 库或操作系统的帮助。这是本系列文章的第一篇，专注于启动流程本身。
+
+## [认识 STM32F103]($heading.id('stm32f103-overview'))
+
+STM32F103C8T6 是 ST 公司基于 ARM Cortex-M3 内核生产的一款经典微控制器。它具有：
+
+- **64KB Flash**（某些型号为 128KB），起始地址 `0x08000000`
+- **20KB SRAM**，起始地址 `0x20000000`
+- 运行频率最高 72MHz
+- 丰富的外设：GPIO、USART、SPI、I2C、定时器、ADC 等
+
+"蓝色药丸"开发板因其极低的价格（通常不足 2 美元）而广受欢迎，是嵌入式学习和原型开发的理想平台。
+
+## [ARM Cortex-M3 的启动流程]($heading.id('cortex-m3-boot'))
+
+在深入 Zig 代码之前，我们需要理解 ARM Cortex-M3 的启动流程。
+
+当 MCU 复位后，处理器会执行以下操作：
+
+1. 从地址 `0x00000000`（通常映射到 Flash 的起始地址 `0x08000000`）读取初始**栈指针（Stack Pointer）**值
+2. 从地址 `0x00000004` 读取**复位处理函数（Reset Handler）**的地址
+3. 跳转到复位处理函数开始执行
+
+这意味着 Flash 的最开始必须存放一个特殊的数据结构——**向量表（Vector Table）**。向量表是一个函数指针数组，第一个元素是初始栈指针值，第二个元素是复位处理函数地址，后面跟着其他异常处理函数的地址。
+
+## [内存布局]($heading.id('memory-layout'))
+
+在编写任何代码之前，我们需要描述目标硬件的内存布局。这通常通过**链接脚本（Linker Script）**来完成。
+
+对于 STM32F103C8T6，内存布局如下：
+
+```
+FLASH: 起始地址 0x08000000，大小 64KB
+SRAM:  起始地址 0x20000000，大小 20KB
+```
+
+链接脚本需要告诉链接器：
+- `.text` 段（代码和只读数据）放在 Flash
+- `.data` 段（已初始化的全局变量）需要从 Flash 加载，但运行时存放在 SRAM
+- `.bss` 段（未初始化的全局变量，默认为零）放在 SRAM
+
+## [项目结构]($heading.id('project-structure'))
+
+我们的项目文件结构如下：
+
+```
+stm32f103-zig/
+├── build.zig
+├── src/
+│   └── main.zig
+└── linker.ld
+```
+
+## [链接脚本]($heading.id('linker-script'))
+
+首先创建链接脚本 `linker.ld`：
+
+```ld
+MEMORY
+{
+    FLASH (rx)  : ORIGIN = 0x08000000, LENGTH = 64K
+    RAM   (rwx) : ORIGIN = 0x20000000, LENGTH = 20K
+}
+
+SECTIONS
+{
+    .text :
+    {
+        KEEP(*(.isr_vector))   /* 向量表必须位于 Flash 最前面 */
+        *(.text*)
+        *(.rodata*)
+    } > FLASH
+
+    /* 数据段的加载地址在 Flash，运行地址在 RAM */
+    .data : AT(ADDR(.text) + SIZEOF(.text))
+    {
+        _sdata = .;            /* RAM 中数据段的起始地址 */
+        *(.data*)
+        _edata = .;            /* RAM 中数据段的结束地址 */
+    } > RAM
+
+    /* 在 Flash 中记录数据段的加载地址 */
+    _sidata = LOADADDR(.data);
+
+    .bss :
+    {
+        _sbss = .;             /* BSS 段的起始地址 */
+        *(.bss*)
+        *(COMMON)
+        _ebss = .;             /* BSS 段的结束地址 */
+    } > RAM
+
+    /* 栈位于 RAM 的末尾，向下增长 */
+    _stack_top = ORIGIN(RAM) + LENGTH(RAM);
+}
+```
+
+注意 `KEEP(*(.isr_vector))` 这一行——它确保向量表不会被链接器优化掉，并且始终位于 Flash 的最前面。
+
+## [build.zig 配置]($heading.id('build-zig'))
+
+在 Zig 中，构建配置通过 `build.zig` 文件完成，而不是传统的 Makefile。以下是针对 STM32F103 的构建配置：
+
+```zig
+const std = @import("std");
+
+pub fn build(b: *std.Build) void {
+    // 定义目标：ARM Cortex-M3，裸机（freestanding），无操作系统
+    const target = b.resolveTargetQuery(.{
+        .cpu_arch = .thumb,
+        .cpu_model = .{ .explicit = &std.Target.arm.cpu.cortex_m3 },
+        .os_tag = .freestanding,
+        .abi = .none,
+    });
+
+    // 使用 ReleaseSafe 模式以保留安全检查的同时优化代码大小
+    const optimize = b.standardOptimizeOption(.{});
+
+    const exe = b.addExecutable(.{
+        .name = "firmware",
+        .root_source_file = b.path("src/main.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+
+    // 指定链接脚本
+    exe.setLinkerScriptPath(b.path("linker.ld"));
+
+    // 不链接 libc（裸机环境）
+    exe.link_libc = false;
+
+    b.installArtifact(exe);
+
+    // 可选：生成 .bin 文件以便烧录
+    const objcopy = b.addObjCopy(exe.getEmittedBin(), .{
+        .format = .bin,
+    });
+    objcopy.step.dependOn(&exe.step);
+
+    const install_bin = b.addInstallBinFile(objcopy.getOutput(), "firmware.bin");
+    b.getInstallStep().dependOn(&install_bin.step);
+}
+```
+
+## [向量表]($heading.id('vector-table'))
+
+现在是最关键的部分——在 Zig 中定义向量表。向量表必须放在 `.isr_vector` 段，以便链接脚本能将其放在 Flash 的最开头。
+
+```zig
+const std = @import("std");
+
+// 中断/异常处理函数类型
+const Handler = *const fn () callconv(.C) void;
+
+// 可选的处理函数（某些异常可能不需要处理）
+const OptionalHandler = ?Handler;
+
+// 向量表结构：第一个元素是初始栈指针，后面是异常处理函数
+const VectorTable = extern struct {
+    initial_stack_pointer: usize,
+    reset: Handler,
+    nmi: OptionalHandler,
+    hard_fault: OptionalHandler,
+    mem_manage: OptionalHandler,
+    bus_fault: OptionalHandler,
+    usage_fault: OptionalHandler,
+    reserved1: [4]usize,
+    sv_call: OptionalHandler,
+    debug_monitor: OptionalHandler,
+    reserved2: usize,
+    pend_sv: OptionalHandler,
+    sys_tick: OptionalHandler,
+    // 后续为 STM32F103 特有的外设中断...
+};
+
+// 将向量表放在 .isr_vector 段
+export var vector_table: VectorTable linksection(".isr_vector") = .{
+    // 初始栈指针：RAM 的末尾（在链接脚本中定义）
+    .initial_stack_pointer = @intFromPtr(&_stack_top),
+    .reset = resetHandler,
+    .nmi = null,
+    .hard_fault = defaultHandler,
+    .mem_manage = null,
+    .bus_fault = null,
+    .usage_fault = null,
+    .reserved1 = [_]usize{0} ** 4,
+    .sv_call = null,
+    .debug_monitor = null,
+    .reserved2 = 0,
+    .pend_sv = null,
+    .sys_tick = null,
+};
+
+// 来自链接脚本的外部符号
+extern var _stack_top: u32;
+extern var _sdata: u32;
+extern var _edata: u32;
+extern var _sidata: u32;
+extern var _sbss: u32;
+extern var _ebss: u32;
+```
+
+注意 `linksection(".isr_vector")` 的用法——这是 Zig 中将变量放入特定链接段的方式，对应链接脚本中的 `.isr_vector` 段。
+
+## [复位处理函数]($heading.id('reset-handler'))
+
+复位处理函数是 MCU 启动后第一个运行的代码。它需要在调用 `main()` 之前完成以下工作：
+
+1. 将 `.data` 段从 Flash 复制到 RAM
+2. 将 `.bss` 段清零
+3. 调用 `main()`
+
+```zig
+fn resetHandler() callconv(.C) noreturn {
+    // 1. 将 .data 段从 Flash 复制到 RAM
+    // _sidata: Flash 中数据的加载地址
+    // _sdata / _edata: RAM 中数据段的起始/结束地址
+    const data_len = @intFromPtr(&_edata) - @intFromPtr(&_sdata);
+    const src = @as([*]u8, @ptrCast(&_sidata));
+    const dst = @as([*]u8, @ptrCast(&_sdata));
+    @memcpy(dst[0..data_len], src[0..data_len]);
+
+    // 2. 将 .bss 段清零
+    const bss_len = @intFromPtr(&_ebss) - @intFromPtr(&_sbss);
+    const bss = @as([*]u8, @ptrCast(&_sbss));
+    @memset(bss[0..bss_len], 0);
+
+    // 3. 调用主函数
+    main();
+
+    // main() 不应该返回，但以防万一进入无限循环
+    while (true) {}
+}
+
+fn defaultHandler() callconv(.C) void {
+    // 默认异常处理：进入无限循环（方便调试）
+    while (true) {}
+}
+```
+
+`@memcpy` 和 `@memset` 是 Zig 的内置函数，它们会被编译器优化为高效的内存操作，非常适合裸机环境。
+
+## [main 函数]($heading.id('main-function'))
+
+现在我们可以编写 `main()` 函数了。作为第一步，让我们简单地让一个 LED 闪烁。在蓝色药丸开发板上，板载 LED 连接在 PC13（GPIOC 第 13 引脚）。
+
+```zig
+// STM32F103 寄存器基地址
+const RCC_BASE: usize = 0x40021000;
+const GPIOC_BASE: usize = 0x40011000;
+
+// RCC 寄存器
+const RCC_APB2ENR = @as(*volatile u32, @ptrFromInt(RCC_BASE + 0x18));
+
+// GPIOC 寄存器
+const GPIOC_CRH = @as(*volatile u32, @ptrFromInt(GPIOC_BASE + 0x04));
+const GPIOC_ODR = @as(*volatile u32, @ptrFromInt(GPIOC_BASE + 0x0C));
+
+pub fn main() void {
+    // 使能 GPIOC 时钟（APB2ENR 寄存器的第 4 位）
+    RCC_APB2ENR.* |= (1 << 4);
+
+    // 配置 PC13 为推挽输出，最大速度 2MHz
+    // CRH 控制高 8 个引脚（8-15），PC13 对应位 [23:20]
+    var crh = GPIOC_CRH.*;
+    crh &= ~(@as(u32, 0xF) << 20); // 清除 PC13 的配置位
+    crh |= (0x2 << 20);            // 设置为输出模式，2MHz
+    GPIOC_CRH.* = crh;
+
+    // LED 闪烁循环
+    while (true) {
+        // 设置 PC13（ODR 第 13 位）
+        GPIOC_ODR.* |= (1 << 13);
+        delay(1_000_000);
+
+        // 清除 PC13
+        GPIOC_ODR.* &= ~(@as(u32, 1) << 13);
+        delay(1_000_000);
+    }
+}
+
+fn delay(count: u32) void {
+    var i: u32 = 0;
+    while (i < count) : (i += 1) {
+        asm volatile ("nop");
+    }
+}
+```
+
+注意这里直接使用了内存映射的寄存器地址——这正是裸机编程的精髓。`@as(*volatile u32, @ptrFromInt(...))` 将整数地址转换为易失性（volatile）指针，告诉编译器不要优化掉对这些地址的读写操作。
+
+## [完整的 main.zig]($heading.id('complete-main-zig'))
+
+将以上所有部分组合在一起，`src/main.zig` 的完整代码如下：
+
+```zig
+const std = @import("std");
+
+// ===== 向量表 =====
+
+const Handler = *const fn () callconv(.C) void;
+const OptionalHandler = ?Handler;
+
+const VectorTable = extern struct {
+    initial_stack_pointer: usize,
+    reset: Handler,
+    nmi: OptionalHandler,
+    hard_fault: OptionalHandler,
+    mem_manage: OptionalHandler,
+    bus_fault: OptionalHandler,
+    usage_fault: OptionalHandler,
+    reserved1: [4]usize,
+    sv_call: OptionalHandler,
+    debug_monitor: OptionalHandler,
+    reserved2: usize,
+    pend_sv: OptionalHandler,
+    sys_tick: OptionalHandler,
+};
+
+extern var _stack_top: u32;
+extern var _sdata: u32;
+extern var _edata: u32;
+extern var _sidata: u32;
+extern var _sbss: u32;
+extern var _ebss: u32;
+
+export var vector_table: VectorTable linksection(".isr_vector") = .{
+    .initial_stack_pointer = @intFromPtr(&_stack_top),
+    .reset = resetHandler,
+    .nmi = null,
+    .hard_fault = defaultHandler,
+    .mem_manage = null,
+    .bus_fault = null,
+    .usage_fault = null,
+    .reserved1 = [_]usize{0} ** 4,
+    .sv_call = null,
+    .debug_monitor = null,
+    .reserved2 = 0,
+    .pend_sv = null,
+    .sys_tick = null,
+};
+
+// ===== 启动代码 =====
+
+fn resetHandler() callconv(.C) noreturn {
+    const data_len = @intFromPtr(&_edata) - @intFromPtr(&_sdata);
+    const src = @as([*]u8, @ptrCast(&_sidata));
+    const dst = @as([*]u8, @ptrCast(&_sdata));
+    @memcpy(dst[0..data_len], src[0..data_len]);
+
+    const bss_len = @intFromPtr(&_ebss) - @intFromPtr(&_sbss);
+    const bss = @as([*]u8, @ptrCast(&_sbss));
+    @memset(bss[0..bss_len], 0);
+
+    main();
+    while (true) {}
+}
+
+fn defaultHandler() callconv(.C) void {
+    while (true) {}
+}
+
+// ===== 外设寄存器 =====
+
+const RCC_BASE: usize = 0x40021000;
+const GPIOC_BASE: usize = 0x40011000;
+
+const RCC_APB2ENR = @as(*volatile u32, @ptrFromInt(RCC_BASE + 0x18));
+const GPIOC_CRH = @as(*volatile u32, @ptrFromInt(GPIOC_BASE + 0x04));
+const GPIOC_ODR = @as(*volatile u32, @ptrFromInt(GPIOC_BASE + 0x0C));
+
+// ===== 主程序 =====
+
+pub fn main() void {
+    RCC_APB2ENR.* |= (1 << 4);
+
+    var crh = GPIOC_CRH.*;
+    crh &= ~(@as(u32, 0xF) << 20);
+    crh |= (0x2 << 20);
+    GPIOC_CRH.* = crh;
+
+    while (true) {
+        GPIOC_ODR.* |= (1 << 13);
+        delay(1_000_000);
+        GPIOC_ODR.* &= ~(@as(u32, 1) << 13);
+        delay(1_000_000);
+    }
+}
+
+fn delay(count: u32) void {
+    var i: u32 = 0;
+    while (i < count) : (i += 1) {
+        asm volatile ("nop");
+    }
+}
+```
+
+## [编译与烧录]($heading.id('build-and-flash'))
+
+使用以下命令构建固件：
+
+```bash
+zig build
+```
+
+这会在 `zig-out/bin/` 目录下生成 `firmware.elf`（用于调试）和 `firmware.bin`（用于烧录）。
+
+使用 ST-Link 和 OpenOCD 烧录固件：
+
+```bash
+openocd -f interface/stlink.cfg \
+        -f target/stm32f1x.cfg \
+        -c "program zig-out/bin/firmware.bin 0x08000000 verify reset exit"
+```
+
+或者使用 `stm32flash`（通过 UART 烧录）：
+
+```bash
+stm32flash -w zig-out/bin/firmware.bin -v -g 0x08000000 /dev/ttyUSB0
+```
+
+## [Zig 在裸机编程中的优势]($heading.id('zig-advantages'))
+
+通过这个示例，我们可以看到 Zig 在裸机编程中相比 C 语言的几个优势：
+
+**1. 更好的类型安全**
+
+Zig 的类型系统帮助我们避免了很多常见错误。例如，`volatile` 指针的显式声明让我们不会意外地对硬件寄存器进行不安全的访问。
+
+**2. 内置内存操作**
+
+`@memcpy` 和 `@memset` 是语言内置的，会被编译器高效优化，无需依赖 C 标准库的 `memcpy` 和 `memset`。
+
+**3. 构建系统集成**
+
+`build.zig` 将构建配置直接集成到 Zig 生态中，不需要维护额外的 Makefile 或 CMakeLists.txt。链接脚本、目标架构、优化级别都在一个地方配置。
+
+**4. 没有隐藏的运行时**
+
+与 C++ 不同（C++ 有全局构造函数、异常处理等运行时开销），Zig 的代码是完全透明的——你写什么就是什么，没有任何隐藏的初始化代码。
+
+**5. comptime 的潜力**
+
+虽然本文没有深入探讨，但 Zig 的 `comptime` 特性在嵌入式编程中大有可为。例如，可以使用 `comptime` 在编译时计算寄存器配置值、生成外设访问代码，甚至实现类型安全的寄存器映射。
+
+## [总结]($heading.id('conclusion'))
+
+在本文中，我们成功地：
+
+- 理解了 ARM Cortex-M3 的启动流程
+- 编写了 STM32F103 的链接脚本
+- 在 Zig 中实现了向量表和复位处理函数
+- 配置了针对 ARM Cortex-M3 的 Zig 构建系统
+- 编写了一个简单的 LED 闪烁程序来验证启动流程
+
+这只是系列文章的开始。在后续文章中，我们将探索更多外设的使用、中断处理、以及如何用 Zig 的特性构建更优雅的嵌入式抽象层。
+
+如果你对 Zig 的裸机编程感兴趣，欢迎参考 [microzig](https://github.com/ZigEmbeddedGroup/microzig) 项目——这是 Zig 嵌入式社区维护的一个出色框架，提供了对多种微控制器的支持。
+
+> 译者注：原文代码基于较早版本的 Zig API，本译文中的代码示例已根据 Zig 0.13/0.14 的 API 进行了适配。如发现翻译或代码问题，欢迎 PR 修改：https://github.com/zigcc/zigcc.github.io

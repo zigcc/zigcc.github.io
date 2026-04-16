@@ -4,6 +4,9 @@
 .author = "maldus512 (翻译)",
 .layout = "post.shtml",
 .draft = false,
+.custom = {
+  .ai_generated = true,
+},
 ---
 
 > 原文：https://maldus512.medium.com/zig-bare-metal-programming-on-stm32f103-booting-up-b0ecdcf0de35

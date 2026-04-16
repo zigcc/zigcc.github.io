@@ -832,6 +832,10 @@ blockquote p {
 
 /* -- AI Notice -- */
 
+.ai-notice:empty {
+  display: none;
+}
+
 .ai-notice {
   margin: 1.5rem 0;
   padding: 0.875rem 1.25rem;

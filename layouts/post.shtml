@@ -38,7 +38,7 @@
     <div class="main-content" data-pagefind-body data-pagefind-weight="10">
       <h1 :text="$page.title" data-pagefind-meta="title" data-pagefind-ignore></h1>
       <div data-pagefind-sort="date" :text="$page.date.format('2006-01-02')" style="display:none"></div>
-      
+
       <!-- Index Page: List of Posts -->
       <div :if="$page.isSection()" data-pagefind-ignore>
         <div :html="$page.content()" class="monthly-intro"></div>
@@ -67,10 +67,10 @@
           <h3>Table of Contents</h3>
           <div :html="$page.toc()"></div>
         </div>
-        <div :html="$page.content()"></div>
         <div class="ai-notice" :if="$page.custom.getOr('ai_generated', false)">
-          ⚠️ 本文包含 AI 辅助生成的内容，请结合自身判断阅读，作者对内容准确性负责。
+          本文部分内容由 AI 辅助生成，已经作者审阅校对，仅供参考。
         </div>
+        <div :html="$page.content()"></div>
         <div id="prev-next" data-pagefind-ignore>
           <div :if="$page.prevPage?()">
             <a href="$if.link()">

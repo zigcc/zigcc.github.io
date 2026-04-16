@@ -4,6 +4,9 @@
 .author = "jiacai2050",
 .layout = "post.shtml",
 .draft = false,
+.custom = {
+  .ai_generated = true, // 标注文章使用了 AI 辅助创作
+},
 ---
 
 ## 前言

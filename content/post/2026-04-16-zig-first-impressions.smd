@@ -1,0 +1,244 @@
+---
+.title = "Zig 初体验",
+.date = @date("2026-04-16T10:00:00+0800"),
+.author = "copilot (翻译)",
+.layout = "post.shtml",
+.draft = false,
+.custom = {
+  .ai_generated = true,
+},
+---
+
+> 原文：https://deplet.ing/zig-first-impressions/
+
+## [前言]($heading.id('preface'))
+
+我已经编程很多年了，主要使用 C、Python 和 Go。最近，我开始听说 Zig 这门语言，它的核心理念是"没有隐藏的控制流，没有隐藏的内存分配"。带着好奇心，我花了几周时间上手 Zig，这是我的一些初步感受。
+
+## [为什么是 Zig？]($heading.id('why-zig'))
+
+Zig 是一门系统级编程语言，目标是成为 C 的现代替代品。它既不像 Rust 那样强调内存安全的编译时保证，也不像 Go 那样拥有垃圾回收器。Zig 选择了一条中间道路：给予程序员完整的控制权，同时提供比 C 更好的工具来减少错误。
+
+让我感兴趣的特性主要有以下几点：
+
+- **显式内存管理**：所有内存分配必须显式传递分配器（allocator），没有全局堆操作
+- **comptime**：强大的编译时计算能力，可以在编译期运行任意 Zig 代码
+- **跨平台交叉编译**：内置支持，无需额外工具链
+- **C 互操作**：可以直接 `@import` C 头文件
+
+## [上手体验]($heading.id('getting-started'))
+
+安装 Zig 非常简单。从[官网](https://ziglang.org/download/)下载预编译的二进制文件，解压，加入 `PATH` 即可。不需要安装额外的运行时或虚拟机。
+
+第一个程序当然是经典的 Hello World：
+
+```zig
+const std = @import("std");
+
+pub fn main() void {
+    std.debug.print("Hello, World!\n", .{});
+}
+```
+
+用 `zig run hello.zig` 即可运行。构建速度非常快，第一次运行大约一两秒，后续因为缓存更快。
+
+## [语法印象]($heading.id('syntax-impressions'))
+
+Zig 的语法乍看之下有些奇特，但很快就会习惯。几个显著特点：
+
+**没有隐式类型转换**。所有类型转换必须显式进行：
+
+```zig
+const x: i32 = 5;
+const y: f64 = @floatFromInt(x); // 必须显式转换
+```
+
+**变量默认不可变**。用 `const` 声明常量，用 `var` 声明变量：
+
+```zig
+const immutable = 42;
+var mutable: i32 = 10;
+mutable += 1;
+```
+
+**没有 `null`，用可选类型代替**。可选类型用 `?T` 表示：
+
+```zig
+fn maybeNull() ?i32 {
+    return null; // 或者 return 42;
+}
+
+const result = maybeNull() orelse 0; // 提供默认值
+```
+
+这种设计强迫你在使用可能为空的值时必须显式处理 null 情况，避免了空指针解引用。
+
+## [错误处理]($heading.id('error-handling'))
+
+Zig 的错误处理是我最喜欢的特性之一。它使用"错误联合类型"（error union），语法是 `!T`：
+
+```zig
+const FileError = error{
+    FileNotFound,
+    PermissionDenied,
+};
+
+fn openFile(path: []const u8) FileError![]u8 {
+    if (path.len == 0) return error.FileNotFound;
+    // ...
+}
+
+pub fn main() !void {
+    const content = try openFile("config.txt");
+    // 或者
+    const content2 = openFile("config.txt") catch |err| {
+        std.debug.print("Error: {}\n", .{err});
+        return;
+    };
+    _ = content;
+    _ = content2;
+}
+```
+
+`try` 关键字会在出错时自动返回错误，类似 Go 的 `if err != nil { return err }`，但更简洁。`catch` 则允许你处理特定错误或提供 fallback。
+
+这种方式让错误处理既明确又不繁琐，比 C 的返回码清晰，比 Rust 的 `Result` 简洁（虽然原理相似）。
+
+## [内存管理与分配器]($heading.id('memory-management'))
+
+Zig 最独特的设计之一就是分配器（allocator）系统。在 Zig 中，标准库中几乎所有需要堆分配的函数都要求你传入一个分配器：
+
+```zig
+const std = @import("std");
+
+pub fn main() !void {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer _ = gpa.deinit();
+    const allocator = gpa.allocator();
+
+    var list = std.ArrayList(i32).init(allocator);
+    defer list.deinit();
+}
+```
+
+起初这显得有些啰嗦，但你很快就会明白其价值：
+
+1. **可测试性**：测试时可以用 `std.testing.allocator`，它会自动检测内存泄漏
+2. **灵活性**：可以为不同场景选择不同的分配策略，比如竞技场分配器（arena allocator）用于一次性批量分配
+3. **显式性**：代码读者能立刻知道"这里有堆分配"
+
+## [comptime：编译时计算]($heading.id('comptime'))
+
+`comptime` 是 Zig 最强大也最独特的特性。它允许在编译期运行任意 Zig 代码，实现泛型、代码生成等功能：
+
+```zig
+fn Vec(comptime T: type, comptime size: usize) type {
+    return struct {
+        data: [size]T,
+
+        pub fn init() @This() {
+            return .{ .data = std.mem.zeroes([size]T) };
+        }
+    };
+}
+
+const Vec3f = Vec(f32, 3);
+const Vec4i = Vec(i32, 4);
+```
+
+类型本身就是值，可以在编译时传递、计算和返回。这避免了 C++ 模板的复杂性，也不需要 Rust 那样的 trait 系统就能实现泛型。
+
+初次接触这个概念时我很困惑，但当我意识到"编译时和运行时代码用的是同一种语言"时，一切都豁然开朗了。
+
+## [构建系统]($heading.id('build-system'))
+
+Zig 内置了构建系统，通过 `build.zig` 文件描述构建过程，本身也是 Zig 代码：
+
+```zig
+const std = @import("std");
+
+pub fn build(b: *std.Build) void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+
+    const exe = b.addExecutable(.{
+        .name = "my-app",
+        .root_source_file = b.path("src/main.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+
+    b.installArtifact(exe);
+}
+```
+
+运行 `zig build` 即可编译。内置支持交叉编译，只需指定 `-Dtarget=aarch64-linux` 等参数，无需安装额外的交叉编译工具链。
+
+## [C 互操作]($heading.id('c-interop'))
+
+Zig 与 C 的互操作是其核心特性之一。你可以直接导入 C 头文件：
+
+```zig
+const c = @cImport({
+    @cInclude("stdio.h");
+    @cInclude("stdlib.h");
+});
+
+pub fn main() void {
+    _ = c.printf("Hello from C!\n");
+}
+```
+
+Zig 也可以作为 C 编译器使用（`zig cc`），这意味着你可以用它来编译现有的 C/C++ 项目，并且利用其内置的 musl 等 libc 实现来生成静态链接的可执行文件。
+
+## [让我印象深刻的地方]($heading.id('highlights'))
+
+经过几周的使用，有几点让我特别印象深刻：
+
+**1. 错误信息质量很高**
+
+Zig 的编译器错误信息通常很清晰，直接指出问题所在并给出建议。虽然还不及 Rust，但远好于 C/C++。
+
+**2. 工具链的一体化**
+
+`zig` 这个二进制文件集成了编译器、构建系统、包管理器、C 编译器、格式化工具等，不需要像 C++ 项目那样折腾 CMake、Conan 等各种工具的组合。
+
+**3. 调试构建自动检查**
+
+在调试模式下，Zig 会自动检查整数溢出、越界访问等问题，而不是静默地产生未定义行为。这在开发阶段非常有用。
+
+**4. 零成本抽象**
+
+`comptime` 和内联函数让你可以写出高度抽象的代码，编译后与手写的低级代码性能相当。
+
+## [遇到的挑战]($heading.id('challenges'))
+
+当然，上手过程也有不少挑战：
+
+**语言仍在演进**。Zig 还未到 1.0，API 变化较频繁。我在查阅一些网上的教程时，发现许多代码因为版本差异已经无法编译。建议始终参考与你所用版本对应的官方文档。
+
+**学习曲线**。`comptime` 的概念虽然强大，但初学时确实需要一些时间才能真正理解。与此类似，分配器系统起初感觉繁琐。
+
+**生态系统较小**。相比 Rust 或 Go，Zig 的第三方库数量还比较少。对于很多需求，你可能需要直接使用 C 库。
+
+**文档还不够完善**。标准库的文档相比其他语言来说还比较稀疏，很多时候需要直接读源码。
+
+## [总结]($heading.id('conclusion'))
+
+Zig 是一门令人耳目一新的语言。它没有试图做所有事情，而是专注于做好一件事：提供比 C 更好的系统级编程体验，同时保持简单性和可预测性。
+
+如果你：
+- 在做系统编程或嵌入式开发
+- 想要一个现代的 C 替代品，但不需要 Rust 的复杂性
+- 对编译时元编程感兴趣
+- 需要与 C 代码深度互操作
+
+那么 Zig 值得认真考虑。
+
+对于我自己，我打算继续深入学习 Zig，可能会用它重写一些之前用 C 写的小工具。语言的哲学理念——显式优于隐式、没有隐藏的控制流——与我的编程价值观非常契合。
+
+相关资源：
+- [Zig 官网](https://ziglang.org/)
+- [Zig 语言参考](https://ziglang.org/documentation/master/)
+- [ziglearn.org](https://ziglearn.org/)
+- [Zig 标准库源码](https://github.com/ziglang/zig/tree/master/lib/std)

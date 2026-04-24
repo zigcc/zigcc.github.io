@@ -9,18 +9,18 @@
         <div :html="$page.toc()"></div>
       </div>
     </div>
-    <div class="main-content" id="content" data-pagefind-body data-pagefind-weight="10">
-      <h1 :text="$page.title" data-pagefind-meta="title" data-pagefind-ignore></h1>
+    <div class="main-content" id="content" data-pagefind-body="true" data-pagefind-weight="10">
+      <h1 :text="$page.title" data-pagefind-meta="title" data-pagefind-ignore="index"></h1>
       <div data-pagefind-sort="date" :text="$page.date.format('2006-01-02')" style="display:none"></div>
-      <div id="meta" :if="$page.isSection().not()" data-pagefind-ignore>
+      <div id="meta" :if="$page.isSection().not()" data-pagefind-ignore="index">
         <p :text="$page.date.format('2006-01-02')"></p>
         <p :text="$page.author" id="author"></p>
       </div>
-      <div class="toc-fallback" :if="$page.custom.getOr('toc', true).and($page.isSection().not())" data-pagefind-ignore>
+      <div class="toc-fallback" :if="$page.custom.getOr('toc', true).and($page.isSection().not())" data-pagefind-ignore="index">
         <h3>Table of Contents</h3>
         <div :html="$page.toc()"></div>
       </div>
-      <ul class="article-list" :loop="$page.subpages()" data-pagefind-ignore>
+      <ul class="article-list" :loop="$page.subpages()" data-pagefind-ignore="index">
         <li>
           <a href="$loop.it.link()" class="article-item">
             <span class="article-title" :text="$loop.it.title"></span>
@@ -31,7 +31,7 @@
         </li>
       </ul>
       <super>
-      <div id="prev-next" :if="$page.isSection().not()" data-pagefind-ignore>
+      <div id="prev-next" :if="$page.isSection().not()" data-pagefind-ignore="index">
         <div :if="$page.prevPage?()">
           <a href="$if.link()">
             <span :text="$if.title"></span>

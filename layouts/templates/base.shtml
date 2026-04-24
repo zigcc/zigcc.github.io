@@ -32,7 +32,7 @@
     <super>
   </head>
   <body id="body">
-    <div class="header" data-pagefind-ignore>
+    <div class="header" data-pagefind-ignore="index">
       <div class="container header-inner">
         <a href="$site.page('').link()" class="site-title"><h1 :text="$site.title"></h1></a>
         <nav id="nav-menu">
@@ -58,7 +58,7 @@
       });
     </script>
     <super>
-    <footer data-pagefind-ignore>
+    <footer data-pagefind-ignore="index">
       <div>
         <div>
           &copy; 2022 – 2025

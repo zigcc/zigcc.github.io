@@ -36,7 +36,7 @@
     });
     </script>
 </head>
-<body id="body" data-pagefind-ignore>
+<body id="body" data-pagefind-ignore="index">
     <div class="content-wrapper">
         <div class="main-content">
             <div class="search-container">

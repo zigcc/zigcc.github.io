@@ -35,12 +35,12 @@
       </div>
     </div>
 
-    <div class="main-content" data-pagefind-body data-pagefind-weight="10">
-      <h1 :text="$page.title" data-pagefind-meta="title" data-pagefind-ignore></h1>
+    <div class="main-content" data-pagefind-body="true" data-pagefind-weight="10">
+      <h1 :text="$page.title" data-pagefind-meta="title" data-pagefind-ignore="index"></h1>
       <div data-pagefind-sort="date" :text="$page.date.format('2006-01-02')" style="display:none"></div>
 
       <!-- Index Page: List of Posts -->
-      <div :if="$page.isSection()" data-pagefind-ignore>
+      <div :if="$page.isSection()" data-pagefind-ignore="index">
         <div :html="$page.content()" class="monthly-intro"></div>
         <div class="monthly-timeline">
           <div :loop="$page.subpages()">
@@ -56,14 +56,14 @@
 
       <!-- Article Page: Content + Prev/Next -->
       <div :if="$page.isSection().not()">
-        <div id="meta" data-pagefind-ignore>
+        <div id="meta" data-pagefind-ignore="index">
             <p>
                 <span id="author" :text="$page.author"></span>
                 |
                 <span :text="$page.date.format('2006-01-02')"></span>
             </p>
         </div>
-        <div class="toc-fallback" :if="$page.custom.getOr('toc', true)" data-pagefind-ignore>
+        <div class="toc-fallback" :if="$page.custom.getOr('toc', true)" data-pagefind-ignore="index">
           <h3>Table of Contents</h3>
           <div :html="$page.toc()"></div>
         </div>
@@ -71,7 +71,7 @@
           本文部分内容由 AI 辅助生成，已经作者审阅校对，仅供参考。
         </div>
         <div :html="$page.content()"></div>
-        <div id="prev-next" data-pagefind-ignore>
+        <div id="prev-next" data-pagefind-ignore="index">
           <div :if="$page.prevPage?()">
             <a href="$if.link()">
               <span :text="$if.title"></span>

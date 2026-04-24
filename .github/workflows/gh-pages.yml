@@ -28,10 +28,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Change if you need git info
-      - name: Setup Zine
-        uses: kristoff-it/setup-zine@v1
-        with:
-          version: v0.10.2
+      - name: Setup Custom Zine
+        run: |
+          curl -L https://github.com/zigcc/zine/releases/download/v0.1.0/zine-v0.1.0-x86_64-linux.tar.gz -o zine.tar.gz
+          tar -xzf zine.tar.gz
+          sudo mv zine /usr/local/bin/
+
 
       - name: Build
         run: |

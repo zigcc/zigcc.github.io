@@ -11,6 +11,8 @@
 
 []($image.siteAsset('images/bun-rust-port.webp'))
 
+> 本文英文版本发布中我[个人博客](https://en.liujiacai.net/2026/05/16/bun-rust-port/)中。
+
 在讨论这次重写之前，有一件事必须说清楚，因为没有人说。
 
 Bun 能站在今天这个位置，是因为 Zig。

@@ -27,8 +27,8 @@ const std = @import("std");
 
 pub fn main() !void {
 	// we'll be talking about allocators shortly
-	var dpa = std.heap.DebugAllocator(.{}){};
-	const allocator = dpa.allocator();
+	var gpa = std.heap.DebugAllocator(.{}){};
+	const allocator = gpa.allocator();
 
 	// ** The next two lines are the important ones **
 	var arr = try allocator.alloc(usize, try getRandomCount());
@@ -41,10 +41,10 @@ pub fn main() !void {
 }
 
 fn getRandomCount() !u8 {
-	var seed: u64 = undefined;
-	try std.posix.getrandom(std.mem.asBytes(&seed));
-	var random = std.Random.DefaultPrng.init(seed);
-	return random.random().uintAtMost(u8, 5) + 5;
+	// TODO: use a proper seed, not 0.
+	var prng = std.Random.DefaultPrng.init(0);
+	const random = prng.random();
+	return random.uintAtMost(u8, 5) + 5;
 }
 ```
 
@@ -78,6 +78,12 @@ pub const Game = struct {
 		// store 10 most recent moves per player
 		var history = try allocator.alloc(Move, player_count * 10);
 
+		// This isn't strickly necessary. Nothing following the above alloc
+		// can fail, so this errdefer will never be executed. HOWEVER, if the
+		// function changes and fallible code is added, it could be easy to forget
+		// adding this.
+		errdefer allocator.free(history);
+
 		return .{
 			.players = players,
 			.history = history,
@@ -110,8 +116,8 @@ pub const Game = struct {
 const std = @import("std");
 
 pub fn main() !void {
-	var dpa = std.heap.DebugAllocator(.{}){};
-	const allocator = dpa.allocator();
+	var gpa = std.heap.DebugAllocator(.{}){};
+	const allocator = gpa.allocator();
 
 	var arr = try allocator.alloc(usize, 4);
 	allocator.free(arr);
@@ -170,8 +176,8 @@ const std = @import("std");
 
 pub fn main() !void {
 	// again, we'll talk about allocators soon!
-	var dpa = std.heap.DebugAllocator(.{}){};
-	const allocator = dpa.allocator();
+	var gpa = std.heap.DebugAllocator(.{}){};
+	const allocator = gpa.allocator();
 
 	// create a User on the heap
 	var user = try allocator.create(User);
@@ -256,9 +262,8 @@ defer allocator.free(say);
 
 ## [调试分配器 DebugAllocator]($heading.id('debug-allocator'))
 
-顾名思义，`std.heap.DebugAllocator` 是一种针对调试和安全检查的分配器。程序启动时，会创建一个分配器并传递给需要它的函数。我的 HTTP 服务器库中的示例代码就是一个很好的例子：
+顾名思义，`std.heap.DebugAllocator` 是一种在开发过程中使用的线程安全的分配器。对于很多程序而已，这也将会是他们魏需要的分配器。在程序启动时，会创建一个分配器并传递给需要它的函数。我的 HTTP 服务器库中的示例代码就是一个很好的例子：
 
-> 需要注意的是：zig在0.16.0之前是有一个`GeneralPurposeAllocator`即通用分配器的，但是在0.16.0时彻底移除了这个分配器，减少了活动映射的数量，从而提高了性能。
 
 ```zig
 const std = @import("std");
@@ -266,10 +271,10 @@ const httpz = @import("httpz");
 
 pub fn main() !void {
 	// create our general purpose allocator
-	var dpa = std.heap.DebugAllocator(.{}){};
+	var gpa = std.heap.DebugAllocator(.{}){};
 
 	// get an std.mem.Allocator from it
-	const allocator = dpa.allocator();
+	const allocator = gpa.allocator();
 
 	// pass our allocator to functions and libraries that require it
 	var server = try httpz.Server().init(allocator, .{.port = 5882});
@@ -284,22 +289,30 @@ pub fn main() !void {
 
 我们创建了 `DebugAllocator`，从中获取一个 `std.mem.Allocator` 并将其传递给 HTTP 服务器的 `init` 函数。在一个更复杂的项目中，声明的变量`allocator` 可能会被传递给代码的多个部分，每个部分可能都会将其传递给自己的函数、对象和依赖。
 
-你可能会注意到，创建 `dpa` 的语法有点奇怪。什么是`DebugAllocator(.{}){}`？
+你可能会注意到，创建 `gpa` 的语法有点奇怪。什么是`DebugAllocator(.{}){}`？
 
 我们之前见过这些东西，只是现在都混合了起来。`std.heap.DebugAllocator` 是一个函数，由于它使用的是 `PascalCase`（帕斯卡命名法），我们知道它返回一个类型。（下一部分会更多讨论泛型）。也许这个更明确的版本会更容易解读：
 
 ```zig
 const T = std.heap.DebugAllocator(.{});
-var dpa = T{};
+var gpa = T{};
 
-// 等同于：
+// is the same as:
 
-var dpa = std.heap.DebugAllocator(.{}){};
+var gpa = std.heap.DebugAllocator(.{}){};
 ```
 
 也许你仍然不太确信 `.{}` 的含义。我们之前也见过它：`.{}` 是一个具有隐式类型的结构体初始化器。
 
 类型是什么，字段在哪里？类型其实是 `std.heap.general_purpose_allocator.Config`，但它并没有直接暴露出来，这也是我们没有显式给出类型的原因之一。没有设置字段是因为 Config 结构定义了默认值，我们将使用默认值。这是配置、选项的中常见的模式。事实上，我们在下面几行向 `init` 传递 `.{.port = 5882}` 时又看到了这种情况。在本例中，除了端口这一个字段外，我们都使用了默认值。
+
+如果这种写法还是不够清晰，Zig最近引入了一种叫做声明字面量（declaration literals）的功能。虽然这个功能并不复杂，我们也不会展示他的具体工作原理，但是一下是如果用于提高分配器初始化代码的可读性的展示：
+
+```zig
+var gpa: std.heap.DebugAllocator(.{}) = .init;
+```
+
+请注意，`init` 方法仅适用于 `DebugAllocator`。其他使用声明字面量的类型可能具有不同的（或多个不同的）名称。例如，空哈希映射使用 `.empty` 声明字面量进行初始化。
 
 ## [std.testing.allocator]($heading.id('std-testing-allocator'))
 
@@ -353,8 +366,8 @@ const std = @import("std");
 const Allocator = std.mem.Allocator;
 
 pub fn main() !void {
-	var dpa = std.heap.DebugAllocator(.{}){};
-	const allocator = dpa.allocator();
+	var gpa = std.heap.DebugAllocator(.{}){};
+	const allocator = gpa.allocator();
 
 	var list = try IntList.init(allocator);
 	defer list.deinit();
@@ -380,35 +393,33 @@ test "IntList: add" {
 		try list.add(@intCast(i+10));
 	}
 
-	try testing.expectEqual(@as(usize, 5), list.pos);
-	try testing.expectEqual(@as(i64, 10), list.items[0]);
-	try testing.expectEqual(@as(i64, 11), list.items[1]);
-	try testing.expectEqual(@as(i64, 12), list.items[2]);
-	try testing.expectEqual(@as(i64, 13), list.items[3]);
-	try testing.expectEqual(@as(i64, 14), list.items[4]);
+	try testing.expectEqual(5, list.pos);
+	try testing.expectEqual(10, list.items[0]);
+	try testing.expectEqual(11, list.items[1]);
+	try testing.expectEqual(12, list.items[2]);
+	try testing.expectEqual(13, list.items[3]);
+	try testing.expectEqual(14, list.items[4]);
 }
 ```
-
-> `@as` 是一个执行类型强制的内置函数。如果你好奇什么我们的测试要用到这么多，那么你不是唯一一个。从技术上讲，这是因为第二个参数，即 `actual`，被强制为第一个参数，即 `expected`。在上面的例子中，我们的期望值都是 `comptime_int`，这就造成了问题。包括我在内的许多人都认为这是一种奇怪而不幸的行为。
 
 如果你按照步骤操作，把测试放在 `IntList` 和 `main` 的同一个文件中。Zig 的测试通常写在同一个文件中，经常在它们测试的代码附近。当使用 `zig test learning.zig` 运行测试时，我们会得到了一个令人惊喜的失败：
 
 ```bash
-Test [1/1] test.IntList: add... [dpa] (err): memory address 0x101154000 leaked:
+Test [1/1] test.IntList: add... [gpa] (err): memory address 0x101154000 leaked:
 /code/zig/learning.zig:26:32: 0x100f707b7 in init (test)
-   .items = try allocator.alloc(i64, 2),
-                               ^
+	 .items = try allocator.alloc(i64, 2),
+															 ^
 /code/zig/learning.zig:55:29: 0x100f711df in test.IntList: add (test)
  var list = try IntList.init(testing.allocator);
 
 ... MORE STACK INFO ...
 
-[dpa] (err): memory address 0x101184000 leaked:
+[gpa] (err): memory address 0x101184000 leaked:
 /code/test/learning.zig:40:41: 0x100f70c73 in add (test)
-   var larger = try self.allocator.alloc(i64, len * 2);
-                                        ^
+	 var larger = try self.allocator.alloc(i64, len * 2);
+																				^
 /code/test/learning.zig:59:15: 0x100f7130f in test.IntList: add (test)
-  try list.add(@intCast(i+10));
+	try list.add(@intCast(i+10));
 ```
 
 此处有多个内存泄漏。幸运的是，测试分配器准确地告诉我们泄漏的内存是在哪里分配的。你现在能发现泄漏了吗？如果没有，请记住，通常情况下，每个 `alloc` 都应该有一个相应的 `free`。我们的代码在 `deinit` 中调用 `free` 一次。然而在 `init` 中 `alloc` 被调用一次，每次调用 `add` 并需要更多空间时也会调用 `alloc`。每次我们 `alloc` 更多空间时，都需要 `free` 之前的 `self.items`。
@@ -431,12 +442,16 @@ self.allocator.free(self.items);
 
 ```zig
 fn parse(allocator: Allocator, input: []const u8) !Something {
+	const buf = try allocator.alloc(u8, 512);
+	defer allocator.free(buf);
+
+	const nesting = try allocator.alloc(NestType, 10)
+	defer allocator.free(nesting);
+
 	const state = State{
-		.buf = try allocator.alloc(u8, 512),
-		.nesting = try allocator.alloc(NestType, 10),
+		.buf = buf,
+		.nesting = nesting,
 	};
-	defer allocator.free(state.buf);
-	defer allocator.free(state.nesting);
 
 	return parseInternal(allocator, state, input);
 }
@@ -479,8 +494,8 @@ fn parse(allocator: Allocator, input: []const u8) !Something {
 我们的 `IntList` 却不是这样。它可以用来存储 10 个或 1000 万个值。它的生命周期可以以毫秒为单位，也可以以周为单位。它无法决定使用哪种类型的分配器。使用 IntList 的代码才有这种知识。最初，我们是这样管理 `IntList` 的：
 
 ```zig
-var dpa = std.heap.DebugAllocator(.{}){};
-const allocator = dpa.allocator();
+var gpa = std.heap.DebugAllocator(.{}){};
+const allocator = gpa.allocator();
 
 var list = try IntList.init(allocator);
 defer list.deinit();
@@ -489,8 +504,8 @@ defer list.deinit();
 我们可以选择 `ArenaAllocator` 替代：
 
 ```zig
-var dpa = std.heap.DebugAllocator(.{}){};
-const allocator = dpa.allocator();
+var gpa = std.heap.DebugAllocator(.{}){};
+const allocator = gpa.allocator();
 
 var arena = std.heap.ArenaAllocator.init(allocator);
 defer arena.deinit();
@@ -498,9 +513,8 @@ const aa = arena.allocator();
 
 var list = try IntList.init(aa);
 
-// 说实话，我很纠结是否应该调用 list.deinit。
-// 从技术上讲，我们不必这样做，因为我们在上面调用了 defer arena.deinit()。
-
+// I'm honestly torn on whether or not we should call list.deinit.
+// Technically, we don't have to since we call defer arena.deinit() above.
 defer list.deinit();
 
 ...
@@ -556,6 +570,31 @@ pub fn main() !void {
 
 固定缓冲区分配器（FixedBufferAllocators）的常见模式是 `reset` 并重复使用，竞技场分配器（ArenaAllocators）也是如此。这将释放所有先前的分配，并允许重新使用分配器。
 
+## Non-Debug Allocator
+
+自从我提到 DebugAllocator 以来，您可能一直在想是否存在非“调试”版本的替代方案？您完全可以在发布版本中使用 DebugAllocator，只是它无法提供某些系统所需的顶级性能。不过，我认为这种好奇心是合理的，所以这里列举一个您在 Zig 应用程序中常见的模式：
+
+```zig
+const std = @import("std");
+const builtin = @import("builtin");
+
+pub fn main() !void {
+	var gpa: std.heap.DebugAllocator(.{}) = .empty;
+	const allocator = if (builtin.mode == .Debug) gpa.allocator()
+	                  else std.heap.c_allocator;
+
+	defer if (builtin.mode == .Debug) {
+		if (gpa.detectLeaks()) {
+			std.posix.exit(1);
+		}
+	};
+
+	// ...
+}
+```
+
+我们不会详细讨论这一点，但简而言之，我们在调试版本中使用 DebugAllocator，在发布版本中使用 std.heap.c_allocator。std.heap.c_allocator 是 malloc 的一个封装。另一个值得注意的改进是，在调试模式下，程序退出时，我们会利用 DebugAllocator 的内存泄漏检测和报告功能。
+
 ---
 
 由于没有默认的分配器，Zig 在分配方面既透明又灵活。`std.mem.Allocator`接口非常强大，它允许专门的分配器封装更通用的分配器，正如我们在`ArenaAllocator`中看到的那样。
@@ -583,15 +622,27 @@ pub fn main() !void {
 
 ```zig
 const std = @import("std");
-
 pub fn main() !void {
-	const out = std.io.getStdOut();
+    // Zig implementation of Write (and Reader) started to change drastically in
+    // 0.15 and even more in 0.16.
+    // The new approach has a number of benefits, but simplicity isn't one of them.
 
-	try std.json.stringify(.{
-		.this_is = "an anonymous struct",
-		.above = true,
-		.last_param = "are options",
-	}, .{.whitespace = .indent_2}, out.writer());
+    var gpa = std.heap.DebugAllocator(.{}){};
+    const allocator = gpa.allocator();
+
+    var buf = std.Io.Writer.Allocating.init(allocator);
+    defer buf.deinit();
+
+    try dump(&buf.writer);
+    std.debug.print("{s}\n", .{buf.written()});
+}
+
+fn dump(writer: *std.Io.Writer) !void {
+    try std.json.Stringify.value(.{
+        .this_is = "an anonymous struct",
+        .above = true,
+        .last_param = "are options",
+    }, .{.whitespace = .indent_2}, writer);
 }
 ```
 

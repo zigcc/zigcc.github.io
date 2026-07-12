@@ -20,8 +20,8 @@
 const std = @import("std");
 
 pub fn main() !void {
-	var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-	const allocator = gpa.allocator();
+	var dpa = std.heap.DebugAllocator(.{}){};
+	const allocator = dpa.allocator();
 
 	var lookup = std.StringHashMap(User).init(allocator);
 	defer lookup.deinit();
@@ -76,8 +76,8 @@ Goku's power is: -1431655766
 const std = @import("std");
 
 pub fn main() !void {
-	var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-	const allocator = gpa.allocator();
+	var dpa = std.heap.DebugAllocator(.{}){};
+	const allocator = dpa.allocator();
 
 	// User -> *const User
 	var lookup = std.StringHashMap(*const User).init(allocator);
@@ -116,8 +116,8 @@ const std = @import("std");
 const builtin = @import("builtin");
 
 pub fn main() !void {
-	var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-	const allocator = gpa.allocator();
+	var dpa = std.heap.DebugAllocator(.{}){};
+	const allocator = dpa.allocator();
 
 	var lookup = std.StringHashMap(User).init(allocator);
 	defer lookup.deinit();
@@ -230,8 +230,8 @@ const Allocator = std.mem.Allocator;
 const builtin = @import("builtin");
 
 pub fn main() !void {
-	var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-	const allocator = gpa.allocator();
+	var dpa = std.heap.DebugAllocator(.{}){};
+	const allocator = dpa.allocator();
 
 	var arr = std.ArrayList(User).init(allocator);
 	defer {
@@ -297,8 +297,8 @@ const User = struct {
 const std = @import("std");
 
 pub fn main() !void {
-	var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-	const allocator = gpa.allocator();
+	var dpa = std.heap.DebugAllocator(.{}){};
+	const allocator = dpa.allocator();
 
 	var out = std.ArrayList(u8).init(allocator);
 	defer out.deinit();
@@ -355,8 +355,8 @@ no field or member function named 'writeAll' in 'bool'
 
 ```zig
 pub fn main() !void {
-	var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-	const allocator = gpa.allocator();
+	var dpa = std.heap.DebugAllocator(.{}){};
+	const allocator = dpa.allocator();
 
 	var l = Logger{.level = .info};
 

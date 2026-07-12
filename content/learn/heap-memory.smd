@@ -27,8 +27,8 @@ const std = @import("std");
 
 pub fn main() !void {
 	// we'll be talking about allocators shortly
-	var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-	const allocator = gpa.allocator();
+	var dpa = std.heap.DebugAllocator(.{}){};
+	const allocator = dpa.allocator();
 
 	// ** The next two lines are the important ones **
 	var arr = try allocator.alloc(usize, try getRandomCount());
@@ -110,8 +110,8 @@ pub const Game = struct {
 const std = @import("std");
 
 pub fn main() !void {
-	var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-	const allocator = gpa.allocator();
+	var dpa = std.heap.DebugAllocator(.{}){};
+	const allocator = dpa.allocator();
 
 	var arr = try allocator.alloc(usize, 4);
 	allocator.free(arr);
@@ -170,8 +170,8 @@ const std = @import("std");
 
 pub fn main() !void {
 	// again, we'll talk about allocators soon!
-	var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-	const allocator = gpa.allocator();
+	var dpa = std.heap.DebugAllocator(.{}){};
+	const allocator = dpa.allocator();
 
 	// create a User on the heap
 	var user = try allocator.create(User);
@@ -248,15 +248,17 @@ defer allocator.free(say);
 
 另一种形式是将 `Allocator` 传递给 `init` ，然后由对象**内部使用**。这种方法不那么明确，因为你已经给了对象一个分配器来使用，但你不知道哪些方法调用将实际分配。对于长寿命对象来说，这种方法更实用。
 
-注入分配器的优势不仅在于显式，还在于灵活性。`std.mem.Allocator` 是一个接口，提供了 `alloc`、`free`、`create` 和 `destroy` 函数以及其他一些函数。到目前为止，我们只看到了 `std.heap.GeneralPurposeAllocator`，但标准库或第三方库中还有其他实现。
+注入分配器的优势不仅在于显式，还在于灵活性。`std.mem.Allocator` 是一个接口，提供了 `alloc`、`free`、`create` 和 `destroy` 函数以及其他一些函数。到目前为止，我们只看到了 `std.heap.DebugAllocator`，但标准库或第三方库中还有其他实现。
 
 > Zig 没有用于创建接口的语法糖。一种类似于接口的模式是带标签的联合（tagged unions），不过与真正的接口相比，这种模式相对受限。整个标准库中也探索了一些其他模式，例如 `std.mem.Allocator`。本指南不探讨这些接口模式。
 
 如果你正在构建一个库，那么最好接受一个 `std.mem.Allocator`，然后让库的用户决定使用哪种分配器实现。否则，你就需要选择正确的分配器，正如我们将看到的，这些分配器并不相互排斥。在你的程序中创建不同的分配器可能有很好的理由。
 
-## [通用分配器 GeneralPurposeAllocator]($heading.id('general-purpose-allocator'))
+## [调试分配器 DebugAllocator]($heading.id('debug-allocator'))
 
-顾名思义，`std.heap.GeneralPurposeAllocator` 是一种通用的、线程安全的分配器，可以作为应用程序的主分配器。对于许多程序来说，这是唯一需要的分配器。程序启动时，会创建一个分配器并传递给需要它的函数。我的 HTTP 服务器库中的示例代码就是一个很好的例子：
+顾名思义，`std.heap.DebugAllocator` 是一种针对调试和安全检查的分配器。程序启动时，会创建一个分配器并传递给需要它的函数。我的 HTTP 服务器库中的示例代码就是一个很好的例子：
+
+> 需要注意的是：zig在0.16.0之前是有一个`GeneralPurposeAllocator`即通用分配器的，但是在0.16.0时彻底移除了这个分配器，减少了活动映射的数量，从而提高了性能。
 
 ```zig
 const std = @import("std");
@@ -264,10 +266,10 @@ const httpz = @import("httpz");
 
 pub fn main() !void {
 	// create our general purpose allocator
-	var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+	var dpa = std.heap.DebugAllocator(.{}){};
 
 	// get an std.mem.Allocator from it
-	const allocator = gpa.allocator();
+	const allocator = dpa.allocator();
 
 	// pass our allocator to functions and libraries that require it
 	var server = try httpz.Server().init(allocator, .{.port = 5882});
@@ -280,19 +282,19 @@ pub fn main() !void {
 }
 ```
 
-我们创建了 `GeneralPurposeAllocator`，从中获取一个 `std.mem.Allocator` 并将其传递给 HTTP 服务器的 `init` 函数。在一个更复杂的项目中，声明的变量`allocator` 可能会被传递给代码的多个部分，每个部分可能都会将其传递给自己的函数、对象和依赖。
+我们创建了 `DebugAllocator`，从中获取一个 `std.mem.Allocator` 并将其传递给 HTTP 服务器的 `init` 函数。在一个更复杂的项目中，声明的变量`allocator` 可能会被传递给代码的多个部分，每个部分可能都会将其传递给自己的函数、对象和依赖。
 
-你可能会注意到，创建 `gpa` 的语法有点奇怪。什么是`GeneralPurposeAllocator(.{}){}`？
+你可能会注意到，创建 `dpa` 的语法有点奇怪。什么是`DebugAllocator(.{}){}`？
 
-我们之前见过这些东西，只是现在都混合了起来。`std.heap.GeneralPurposeAllocator` 是一个函数，由于它使用的是 `PascalCase`（帕斯卡命名法），我们知道它返回一个类型。（下一部分会更多讨论泛型）。也许这个更明确的版本会更容易解读：
+我们之前见过这些东西，只是现在都混合了起来。`std.heap.DebugAllocator` 是一个函数，由于它使用的是 `PascalCase`（帕斯卡命名法），我们知道它返回一个类型。（下一部分会更多讨论泛型）。也许这个更明确的版本会更容易解读：
 
 ```zig
-const T = std.heap.GeneralPurposeAllocator(.{});
-var gpa = T{};
+const T = std.heap.DebugAllocator(.{});
+var dpa = T{};
 
 // 等同于：
 
-var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+var dpa = std.heap.DebugAllocator(.{}){};
 ```
 
 也许你仍然不太确信 `.{}` 的含义。我们之前也见过它：`.{}` 是一个具有隐式类型的结构体初始化器。
@@ -301,7 +303,7 @@ var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 
 ## [std.testing.allocator]($heading.id('std-testing-allocator'))
 
-希望当我们谈到内存泄漏时，你已经足够烦恼，而当我提到 Zig 可以提供帮助时，你肯定渴望了解更多这方面内容。这种帮助来自 `std.testing.allocator`，它是一个 `std.mem.Allocator` 实现。目前，它基于通用分配器（GeneralPurposeAllocator）实现，并与 Zig 的测试运行器进行了集成，但这只是实现细节。重要的是，如果我们在测试中使用 `std.testing.allocator`，就能捕捉到大部分内存泄漏。
+希望当我们谈到内存泄漏时，你已经足够烦恼，而当我提到 Zig 可以提供帮助时，你肯定渴望了解更多这方面内容。这种帮助来自 `std.testing.allocator`，它是一个 `std.mem.Allocator` 实现。目前，它基于通用分配器（DebugAllocator）实现，并与 Zig 的测试运行器进行了集成，但这只是实现细节。重要的是，如果我们在测试中使用 `std.testing.allocator`，就能捕捉到大部分内存泄漏。
 
 你可能已经熟悉了动态数组（通常称为 ArrayLists）。在许多动态编程语言中，所有数组都是动态的。动态数组支持可变数量的元素。Zig 有一个通用 ArrayList，但我们将创建一个专门用于保存整数的 ArrayList，并演示泄漏检测：
 
@@ -351,8 +353,8 @@ const std = @import("std");
 const Allocator = std.mem.Allocator;
 
 pub fn main() !void {
-	var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-	const allocator = gpa.allocator();
+	var dpa = std.heap.DebugAllocator(.{}){};
+	const allocator = dpa.allocator();
 
 	var list = try IntList.init(allocator);
 	defer list.deinit();
@@ -392,7 +394,7 @@ test "IntList: add" {
 如果你按照步骤操作，把测试放在 `IntList` 和 `main` 的同一个文件中。Zig 的测试通常写在同一个文件中，经常在它们测试的代码附近。当使用 `zig test learning.zig` 运行测试时，我们会得到了一个令人惊喜的失败：
 
 ```bash
-Test [1/1] test.IntList: add... [gpa] (err): memory address 0x101154000 leaked:
+Test [1/1] test.IntList: add... [dpa] (err): memory address 0x101154000 leaked:
 /code/zig/learning.zig:26:32: 0x100f707b7 in init (test)
    .items = try allocator.alloc(i64, 2),
                                ^
@@ -401,7 +403,7 @@ Test [1/1] test.IntList: add... [gpa] (err): memory address 0x101154000 leaked:
 
 ... MORE STACK INFO ...
 
-[gpa] (err): memory address 0x101184000 leaked:
+[dpa] (err): memory address 0x101184000 leaked:
 /code/test/learning.zig:40:41: 0x100f70c73 in add (test)
    var larger = try self.allocator.alloc(i64, len * 2);
                                         ^
@@ -425,7 +427,7 @@ self.allocator.free(self.items);
 
 ## [ArenaAllocator]($heading.id('arena-allocator'))
 
-通用分配器（GeneralPurposeAllocator）是一个合理的默认设置，因为它在所有可能的情况下都能很好地工作。但在程序中，你可能会遇到一些固定场景，使用更专业的分配器可能会更合适。其中一个例子就是需要在处理完成后丢弃的短期状态。解析器（Parser）通常就有这样的需求。一个 `parse` 函数的基本轮廓可能是这样的
+调试分配器（DebugAllocator）是一个合理的开发调试设置，因为它在所有可能的情况下都能很好地工作。但在程序中，你可能会遇到一些固定场景，使用更专业的分配器可能会更合适。其中一个例子就是需要在处理完成后丢弃的短期状态。解析器（Parser）通常就有这样的需求。一个 `parse` 函数的基本轮廓可能是这样的
 
 ```zig
 fn parse(allocator: Allocator, input: []const u8) !Something {
@@ -477,8 +479,8 @@ fn parse(allocator: Allocator, input: []const u8) !Something {
 我们的 `IntList` 却不是这样。它可以用来存储 10 个或 1000 万个值。它的生命周期可以以毫秒为单位，也可以以周为单位。它无法决定使用哪种类型的分配器。使用 IntList 的代码才有这种知识。最初，我们是这样管理 `IntList` 的：
 
 ```zig
-var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-const allocator = gpa.allocator();
+var dpa = std.heap.DebugAllocator(.{}){};
+const allocator = dpa.allocator();
 
 var list = try IntList.init(allocator);
 defer list.deinit();
@@ -487,8 +489,8 @@ defer list.deinit();
 我们可以选择 `ArenaAllocator` 替代：
 
 ```zig
-var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-const allocator = gpa.allocator();
+var dpa = std.heap.DebugAllocator(.{}){};
+const allocator = dpa.allocator();
 
 var arena = std.heap.ArenaAllocator.init(allocator);
 defer arena.deinit();
@@ -597,4 +599,4 @@ pub fn main() !void {
 
 在很多情况下，用 `std.io.BufferedWriter` 封装我们的 `Writer` 会大大提高性能。
 
-我们的目标并不是消除所有动态分配。这行不通，因为这些替代方案只有在特定情况下才有意义。但现在你有了很多选择。从堆栈到通用分配器，以及所有介于两者之间的东西，比如静态缓冲区、流式 `Writer` 和专用分配器。
+我们的目标并不是消除所有动态分配。这行不通，因为这些替代方案只有在特定情况下才有意义。但现在你有了很多选择。从堆栈到调试分配器，以及所有介于两者之间的东西，比如静态缓冲区、流式 `Writer` 和专用分配器。

@@ -56,7 +56,7 @@ fn anniversaryName(years_married: u16) []const u8 {
 }
 ```
 
-编译时会报错：`switch` 必须处理所有的可能性。由于我们的 `years_married` 是一个 16 位整数，这是否意味着我们需要处理所有 64K 中情况？是的，不过我们可以使用 `else` 来代替：
+编译时会报错：`switch` 必须处理所有的可能性。由于我们的 `years_married` 是一个 16 位整数，这是否意味着我们需要处理所有 64K 种情况？是的，不过我们可以使用 `else` 来代替：
 
 ```zig
 // ...

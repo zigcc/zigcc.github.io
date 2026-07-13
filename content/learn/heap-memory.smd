@@ -262,7 +262,7 @@ defer allocator.free(say);
 
 ## [调试分配器 DebugAllocator]($heading.id('debug-allocator'))
 
-顾名思义，`std.heap.DebugAllocator` 是一种在开发过程中使用的线程安全的分配器。对于很多程序而已，这也将会是他们魏需要的分配器。在程序启动时，会创建一个分配器并传递给需要它的函数。我的 HTTP 服务器库中的示例代码就是一个很好的例子：
+顾名思义，`std.heap.DebugAllocator` 是一种在开发过程中使用的线程安全的分配器。对于很多程序而言，这也将会是他们魏需要的分配器。在程序启动时，会创建一个分配器并传递给需要它的函数。我的 HTTP 服务器库中的示例代码就是一个很好的例子：
 
 
 ```zig
@@ -306,7 +306,7 @@ var gpa = std.heap.DebugAllocator(.{}){};
 
 类型是什么，字段在哪里？类型其实是 `std.heap.general_purpose_allocator.Config`，但它并没有直接暴露出来，这也是我们没有显式给出类型的原因之一。没有设置字段是因为 Config 结构定义了默认值，我们将使用默认值。这是配置、选项的中常见的模式。事实上，我们在下面几行向 `init` 传递 `.{.port = 5882}` 时又看到了这种情况。在本例中，除了端口这一个字段外，我们都使用了默认值。
 
-如果这种写法还是不够清晰，Zig最近引入了一种叫做声明字面量（declaration literals）的功能。虽然这个功能并不复杂，我们也不会展示他的具体工作原理，但是一下是如果用于提高分配器初始化代码的可读性的展示：
+如果这种写法还是不够清晰，Zig最近引入了一种叫做声明字面量（declaration literals）的功能。虽然这个功能并不复杂，我们也不会展示它的具体工作原理，但是一下是如果用于提高分配器初始化代码的可读性的展示：
 
 ```zig
 var gpa: std.heap.DebugAllocator(.{}) = .init;
@@ -402,7 +402,7 @@ test "IntList: add" {
 }
 ```
 
-如果你按照步骤操作，把测试放在 `IntList` 和 `main` 的同一个文件中。Zig 的测试通常写在同一个文件中，经常在它们测试的代码附近。当使用 `zig test learning.zig` 运行测试时，我们会得到了一个令人惊喜的失败：
+如果你按照步骤操作，把测试放在 `IntList` 和 `main` 的同一个文件中。Zig 的测试通常写在同一个文件中，经常在它们测试的代码附近。当使用 `zig test learning.zig` 运行测试时，我们会得到一个令人惊喜的失败：
 
 ```bash
 Test [1/1] test.IntList: add... [gpa] (err): memory address 0x101154000 leaked:

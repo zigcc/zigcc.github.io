@@ -297,8 +297,8 @@ const User = struct {
 const std = @import("std");
 
 pub fn main() !void {
-	var dpa = std.heap.DebugAllocator(.{}){};
-	const allocator = dpa.allocator();
+	var gpa = std.heap.DebugAllocator(.{}){};
+	const allocator = gpa.allocator();
 
 	var out = std.ArrayList(u8).init(allocator);
 	defer out.deinit();

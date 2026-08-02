@@ -9,6 +9,8 @@
 },
 ---
 
+> 原文地址：https://liujiacai.net/blog/2026/08/01/zig-compilation-process/
+
 Zig 作为一门专注于系统级编程的语言，不仅提供了现代化的语法特性，更内置了一套极其强大且灵活的构建系统（Build System）以及原生的 C/C++ 交叉编译管线。
 
 本文将结合 **Zig 0.16.0 官方源码**（对应 [Codeberg 0.16.0 标签](https://codeberg.org/ziglang/zig/src/tag/0.16.0)），带你深入理解 Zig 是如何从 `build.zig` 构建脚本一步步转换为具体的 `build-exe` 指令、如何在模块中编译 C 语言源码、以及底层的目标文件（`.o`）是如何被整合链接的。

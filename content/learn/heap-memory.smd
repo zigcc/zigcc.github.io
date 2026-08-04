@@ -78,7 +78,7 @@ pub const Game = struct {
 		// store 10 most recent moves per player
 		var history = try allocator.alloc(Move, player_count * 10);
 
-		// This isn't strickly necessary. Nothing following the above alloc
+		// This isn't strictly necessary. Nothing following the above alloc
 		// can fail, so this errdefer will never be executed. HOWEVER, if the
 		// function changes and fallible code is added, it could be easy to forget
 		// adding this.
@@ -262,7 +262,7 @@ defer allocator.free(say);
 
 ## [调试分配器 DebugAllocator]($heading.id('debug-allocator'))
 
-顾名思义，`std.heap.DebugAllocator` 是一种在开发过程中使用的线程安全的分配器。对于很多程序而言，这也将会是他们魏需要的分配器。在程序启动时，会创建一个分配器并传递给需要它的函数。我的 HTTP 服务器库中的示例代码就是一个很好的例子：
+顾名思义，`std.heap.DebugAllocator` 是一种在开发过程中使用的线程安全的分配器。对于很多程序而言，这也将会是他们唯一需要的分配器。在程序启动时，会创建一个分配器并传递给需要它的函数。我的 HTTP 服务器库中的示例代码就是一个很好的例子：
 
 
 ```zig
@@ -316,7 +316,7 @@ var gpa: std.heap.DebugAllocator(.{}) = .init;
 
 ## [std.testing.allocator]($heading.id('std-testing-allocator'))
 
-希望当我们谈到内存泄漏时，你已经足够烦恼，而当我提到 Zig 可以提供帮助时，你肯定渴望了解更多这方面内容。这种帮助来自 `std.testing.allocator`，它是一个 `std.mem.Allocator` 实现。目前，它基于通用分配器（DebugAllocator）实现，并与 Zig 的测试运行器进行了集成，但这只是实现细节。重要的是，如果我们在测试中使用 `std.testing.allocator`，就能捕捉到大部分内存泄漏。
+希望当我们谈到内存泄漏时，你已经足够烦恼，而当我提到 Zig 可以提供帮助时，你肯定渴望了解更多这方面内容。这种帮助来自 `std.testing.allocator`，它是一个 `std.mem.Allocator` 实现。目前，它基于调试分配器（DebugAllocator）实现，并与 Zig 的测试运行器进行了集成，但这只是实现细节。重要的是，如果我们在测试中使用 `std.testing.allocator`，就能捕捉到大部分内存泄漏。
 
 你可能已经熟悉了动态数组（通常称为 ArrayLists）。在许多动态编程语言中，所有数组都是动态的。动态数组支持可变数量的元素。Zig 有一个通用 ArrayList，但我们将创建一个专门用于保存整数的 ArrayList，并演示泄漏检测：
 

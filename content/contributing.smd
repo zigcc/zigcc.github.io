@@ -32,6 +32,8 @@ Zig 中文社区是一个开放的组织，我们致力于推广 Zig 在中文�
 ---
 ```
 
+### 图片
+
 如果需要插入图片，请将图片放在 `assets/images` 目录下，然后在文章中通过下面方式引用，例如：
 
 ```
@@ -41,6 +43,19 @@ Zig 中文社区是一个开放的组织，我们致力于推广 Zig 在中文�
 图片格式优先选择 `webp`，其次是 `svg`。这样可以在保证图片质量的同时，减小图片体积，提高网站加载速度。可以使用下面的在线工具将图片转换为 `webp` 格式：
 - [WebP Converter - FreeConvert.com](https://www.freeconvert.com/webp-converter)
 - [Getting Started  |  WebP  |  Google for Developers](https://developers.google.com/speed/webp/docs/using)
+
+### Mermaid
+
+如果需要插入 mermaid 流程图，首先需要在 frontmatter 进行如下配置：
+```ziggy
+---
+.custom = {
+  .mermaid = true,
+},
+---
+```
+
+之后通过下面流程图时用 html 方式，具体可参考[这里](https://github.com/zigcc/zigcc.github.io/blob/e06732ea9bc1d747877811f46e48707a69bd7a67/content/post/2023-09-05-bog-gc-1-en.smd?plain=1#L41)：
 
 
 ## [AI 辅助创作说明]($heading.id('ai-generated'))

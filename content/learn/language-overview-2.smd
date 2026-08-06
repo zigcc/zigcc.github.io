@@ -56,7 +56,7 @@ fn anniversaryName(years_married: u16) []const u8 {
 }
 ```
 
-编译时会报错：`switch` 必须处理所有的可能性。由于我们的 `years_married` 是一个 16 位整数，这是否意味着我们需要处理所有 64K 中情况？是的，不过我们可以使用 `else` 来代替：
+编译时会报错：`switch` 必须处理所有的可能性。由于我们的 `years_married` 是一个 16 位整数，这是否意味着我们需要处理所有 64K 种情况？是的，不过我们可以使用 `else` 来代替：
 
 ```zig
 // ...
@@ -335,7 +335,6 @@ var name: ?[]const u8 = "Leto";
 
 ```zig
 std.debug.print("{s}\n", .{name.?});
-
 ```
 
 但如果在 `null` 上使用 `.?`，运行时就会 `panic`。`if` 语句可以安全地取出可选类型背后的值：
@@ -373,11 +372,12 @@ while (rows.next()) |row| {
 通常这样做的一个地方是创建数组，其值将由某个函数来填充：
 
 ```zig
-var pseudo_uuid: [16]u8 = undefined;
-std.crypto.random.bytes(&pseudo_uuid);
+var buf: [20]u8 = undefined;
+const msg = try std.fmt.bufPrint(&buf, "over: {d}!\n", .{power_level});
+std.debug.print("{s}\n" , .{msg});
 ```
 
-上述代码仍然创建了一个 16 字节的数组，但它的每个元素都没有被赋值。
+上述代码仍然创建了一个 20 字节的数组，但它的每个元素都没有被赋值。
 
 ## [错误 Errors]($heading.id('errors'))
 

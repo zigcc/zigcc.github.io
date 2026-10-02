@@ -1,0 +1,9 @@
+https://www.openmymind.net/learning_zig/language_overview_1/
+https://www.openmymind.net/learning_zig/language_overview_2/
+https://www.openmymind.net/learning_zig/style_guide/
+https://www.openmymind.net/learning_zig/pointers/
+https://www.openmymind.net/learning_zig/stack_memory/
+https://www.openmymind.net/learning_zig/heap_memory/
+https://www.openmymind.net/learning_zig/generics/
+https://www.openmymind.net/learning_zig/coding_in_zig/
+https://www.openmymind.net/learning_zig/conclusion/

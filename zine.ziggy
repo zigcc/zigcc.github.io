@@ -6,6 +6,9 @@ Site {
     .assets_dir_path = "assets",
     .image_size_attributes = true,
     .static_assets = [
-        "404.html"
+        "404.html",
+        "images/qq.webp",
+        "images/qq-channel.webp",
+        "images/wechat-official.webp",
     ],
 }

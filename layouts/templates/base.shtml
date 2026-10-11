@@ -113,7 +113,7 @@
       </div>
 
       <div class="footer-bottom">
-        <span>&copy; 2022 – 2026 ZigCC. 由 <a href="https://zine-ssg.io/" target="_blank" rel="noopener">Zine</a> 驱动.</span>
+        <span>&copy; 2022 – 2026 ZigCC. 由 <a href="https://zine-ssg.io/" target="_blank" rel="noopener">Zine</a> 驱动。</span>
         <span>内容采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener">CC BY-NC-ND 4.0</a> 许可</span>
       </div>
     </footer>

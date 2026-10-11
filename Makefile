@@ -3,10 +3,10 @@ serve:
 	zine --port 1313
 
 lint:
-	autocorrect --lint $$(git ls-files '*.smd')
+	autocorrect --lint .
 
-format:
-	autocorrect --fix $$(git ls-files '*.smd')
+fix:
+	autocorrect --fix .
 
 
 EXCLUDE = --exclude "*webp" --exclude "*svg" --exclude "*gif"

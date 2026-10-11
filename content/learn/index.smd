@@ -123,6 +123,7 @@
 
 - **[Zig 日报](https://github.com/zigcc/forum/issues):** 实时同步社区最新动态
 - **[Zig 圣经](https://course.ziglang.cc):** 一份内容全面、深入浅出，专为中文用户打造的 Zig 的教程
+- **[Zig 构建系统指南](https://jiacai2050.github.io/x/zig-build/):** 深入解析 build.zig、编译流程与依赖包管理实战
 - **[ziglings/exercises](https://codeberg.org/ziglings/exercises/):** Learn the Zig programming language by fixing tiny broken programs.
 - **[Zig Cookbook](https://cookbook.ziglang.cc/):** A collection of simple Zig programs that demonstrate good practices to accomplish common programming tasks
 - **[Awesome Zig](https://github.com/zigcc/awesome-zig):** A collection of some awesome public Zig programming language projects.

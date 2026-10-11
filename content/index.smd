@@ -6,29 +6,229 @@
 .draft = false,
 ---
 
-[]($image.siteAsset('icons/zigcc.svg').id('logo'))
+```=html
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-badge">
+    <span class="pulse-dot"></span>
+    <span>Zig Chinese Community</span>
+  </div>
+  <div class="hero-logo-wrap">
+    <img src="/icons/zigcc.svg" alt="ZigCC Logo" class="hero-logo">
+  </div>
+  <h1 class="hero-title">
+    探索 <span class="gradient-text">Zig 语言</span> 的极致现代之美
+  </h1>
+  <p class="hero-desc">
+    Zig 中文社区致力于在中文用户中分享和推广 Zig 语言。无隐藏控制流、无隐藏内存分配、强大的 Comptime 元编程能力，为下一代高性能系统编程注入澎湃动力。
+  </p>
+  <div class="hero-actions">
+    <a href="/learn/" class="btn btn-primary">
+      <span>开始学习教程</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="https://ask.ziglang.cc" target="_blank" rel="noopener" class="btn btn-secondary">
+      <span>访问问答社区</span>
+    </a>
+    <a href="https://play.ziglang.cc/" target="_blank" rel="noopener" class="btn btn-ghost">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+      <span>在线 Playground</span>
+    </a>
+  </div>
+</section>
 
-Zig 中文社区致力于在中文用户中分享和传播 Zig 语言！
+<!-- Core Highlights / Mission Grid -->
+<section class="home-section">
+  <div class="section-header">
+    <h2 class="section-title">社区核心行动与宗旨</h2>
+    <p class="section-subtitle">连接开发者、沉淀知识库，让 Zig 语言在中国更易学、更好用</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon-box orange">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+      </div>
+      <h3 class="feature-title">官方资源本地化</h3>
+      <p class="feature-desc">系统性翻译与维护 Zig 核心文档、入门手册和进阶教程，消除语言壁垒，助力中文学习者快速上手。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon-box blue">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+      </div>
+      <h3 class="feature-title">高质量月刊与原创</h3>
+      <p class="feature-desc">定期编制《ZigCC 月刊》，精选全球 Zig 动态、生态库更新与社区原创技术深度博文。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon-box purple">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+      </div>
+      <h3 class="feature-title">活跃的交流氛围</h3>
+      <p class="feature-desc">汇聚微信、QQ、Discord、Telegram 与问答论坛，不管是初学者答疑还是资深专家切磋，随时得到响应。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon-box green">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+      </div>
+      <h3 class="feature-title">中文开源生态共建</h3>
+      <p class="feature-desc">维护 GitHub 组织下的开源库、工具链和示例，鼓励中文开发者参与 Zig 上游与社区开源项目贡献。</p>
+    </div>
+  </div>
+</section>
 
-我们是一群对 Zig 编程语言充满热情的开发者、学习者和爱好者。我们致力于：
+<!-- Resource Navigation Grid -->
+<section class="home-section">
+  <div class="section-header">
+    <h2 class="section-title">精选学习路线与资源</h2>
+    <p class="section-subtitle">从初窥门径到精通实战，社区为你准备的 Zig 学习图谱</p>
+  </div>
+  <div class="resources-grid">
+    <a href="/learn/" class="resource-card">
+      <div class="resource-card-header">
+        <span class="resource-badge">入门必读</span>
+        <span class="resource-arrow">→</span>
+      </div>
+      <h3 class="resource-title">《学习 Zig》中文版</h3>
+      <p class="resource-desc">Karl Seguin 著，ZigCC 翻译维护。深入浅出覆盖指针、内存分配器、泛型与 Comptime 实战。</p>
+    </a>
+    <a href="http://course.ziglang.cc" target="_blank" rel="noopener" class="resource-card">
+      <div class="resource-card-header">
+        <span class="resource-badge highlight">经典巨献</span>
+        <span class="resource-arrow">↗</span>
+      </div>
+      <h3 class="resource-title">Zig 圣经 (Zig Course)</h3>
+      <p class="resource-desc">专为中文开发者量身打造的全面深入教程，涵盖语法、高级特性和现代编程实战技巧。</p>
+    </a>
+    <a href="http://cookbook.ziglang.cc" target="_blank" rel="noopener" class="resource-card">
+      <div class="resource-card-header">
+        <span class="resource-badge">实战代码</span>
+        <span class="resource-arrow">↗</span>
+      </div>
+      <h3 class="resource-title">Zig Cookbook 菜谱</h3>
+      <p class="resource-desc">针对常见开发任务与场景的代码片段集合，手把手示范 Zig 最佳工程实践与标准库用法。</p>
+    </a>
+    <a href="https://jiacai2050.github.io/x/zig-build/" target="_blank" rel="noopener" class="resource-card">
+      <div class="resource-card-header">
+        <span class="resource-badge highlight">构建体系</span>
+        <span class="resource-arrow">↗</span>
+      </div>
+      <h3 class="resource-title">Zig 构建系统指南</h3>
+      <p class="resource-desc">深入详解 build.zig、构建步骤、依赖包管理与交叉编译实践，搞定 Zig 构建系统的权威指引。</p>
+    </a>
+    <a href="/monthly/" class="resource-card">
+      <div class="resource-card-header">
+        <span class="resource-badge">社区动态</span>
+        <span class="resource-arrow">→</span>
+      </div>
+      <h3 class="resource-title">ZigCC 社区月刊</h3>
+      <p class="resource-desc">全景速递 Zig 官方进展、版本更新解析、优秀项目发布与社区精选见解。</p>
+    </a>
+  </div>
+</section>
 
-1. 分享 Zig 相关的知识和经验
-2. 翻译 Zig 官方文档和重要资源
-3. 组织线上线下的学习活动和讨论
-4. 推广 Zig 语言在中文开发者中的应用
+<!-- Community Channels Section -->
+<section class="home-section" id="join-us">
+  <div class="section-header">
+    <h2 class="section-title">加入社区 & 畅所欲言</h2>
+    <p class="section-subtitle">选择你喜欢的平台，与数千位热爱底层与系统级开发的伙伴共同成长</p>
+  </div>
+  <div class="channels-grid">
+    <a href="https://github.com/zigcc/forum/issues" target="_blank" rel="noopener" class="channel-card">
+      <div class="channel-icon">📰</div>
+      <div class="channel-info">
+        <span class="channel-name">Zig 社区日报</span>
+        <span class="channel-sub">同步追踪生态与社区最新进展</span>
+      </div>
+    </a>
+    <a href="https://ask.ziglang.cc" target="_blank" rel="noopener" class="channel-card">
+      <div class="channel-icon">💬</div>
+      <div class="channel-info">
+        <span class="channel-name">官方问答论坛</span>
+        <span class="channel-sub">ask.ziglang.cc 深度讨论与沉淀</span>
+      </div>
+    </a>
+    <a href="https://ask.ziglang.cc/weixin" target="_blank" rel="noopener" class="channel-card">
+      <div class="channel-icon">🟢</div>
+      <div class="channel-info">
+        <span class="channel-name">微信交流群</span>
+        <span class="channel-sub">日常热烈交流与答疑</span>
+      </div>
+    </a>
+    <a href="/images/qq.webp" target="_blank" rel="noopener" class="channel-card">
+      <div class="channel-icon">🐧</div>
+      <div class="channel-info">
+        <span class="channel-name">QQ 讨论群</span>
+        <span class="channel-sub">点击扫码加入技术群</span>
+      </div>
+    </a>
+    <a href="/images/qq-channel.webp" target="_blank" rel="noopener" class="channel-card">
+      <div class="channel-icon">📡</div>
+      <div class="channel-info">
+        <span class="channel-name">QQ 频道</span>
+        <span class="channel-sub">多话题频道分类探讨</span>
+      </div>
+    </a>
+    <a href="https://ask.ziglang.cc/discord" target="_blank" rel="noopener" class="channel-card">
+      <div class="channel-icon">🎮</div>
+      <div class="channel-info">
+        <span class="channel-name">Discord 社区</span>
+        <span class="channel-sub">支持代码高亮与国际化交流</span>
+      </div>
+    </a>
+    <a href="https://ask.ziglang.cc/telegram" target="_blank" rel="noopener" class="channel-card">
+      <div class="channel-icon">✈️</div>
+      <div class="channel-info">
+        <span class="channel-name">Telegram 群组</span>
+        <span class="channel-sub">自由开放的极客畅聊阵地</span>
+      </div>
+    </a>
+    <a href="https://groups.google.com/g/zigcc" target="_blank" rel="noopener" class="channel-card">
+      <div class="channel-icon">📧</div>
+      <div class="channel-info">
+        <span class="channel-name">Google Groups</span>
+        <span class="channel-sub">邮件列表异步深入交流</span>
+      </div>
+    </a>
+    <a href="mailto:hello@ziglang.cc" class="channel-card">
+      <div class="channel-icon">📮</div>
+      <div class="channel-info">
+        <span class="channel-name">联系邮箱</span>
+        <span class="channel-sub">hello@ziglang.cc 合作与咨询</span>
+      </div>
+    </a>
+    <a href="/contributing/" class="channel-card">
+      <div class="channel-icon">🛠️</div>
+      <div class="channel-info">
+        <span class="channel-name">开源贡献指南</span>
+        <span class="channel-sub">提交博文、完善教程、做贡献</span>
+      </div>
+    </a>
+  </div>
 
-## [加入我们]($heading.id('join-us'))
+  <div class="wechat-box">
+    <div class="wechat-qr-wrap">
+      <img src="/images/wechat-official.webp" alt="ZigCC 微信公众号" class="wechat-qr">
+    </div>
+    <div class="wechat-desc">
+      <h3>关注 ZigCC 官方微信公众号</h3>
+      <p>扫码关注获取最新 Zig 动态、原创深度解析及月刊精选推文，与更多 Zig 开发者同行。</p>
+    </div>
+  </div>
+</section>
 
-欢迎加入我们的社区，一起学习和交流 Zig 语言！你可以通过以下方式参与：
-- 访问我们的 [论坛](https://ask.ziglang.cc) 参与讨论
-- 加入我们的 [微信群](https://ask.ziglang.cc/weixin)、[QQ 群]($link.siteAsset('images/qq.webp'))、[QQ 频道]($link.siteAsset('images/qq-channel.webp'))、[Google Groups](https://groups.google.com/g/zigcc)、 [Telegram 群](https://ask.ziglang.cc/telegram)、[Discord 群](https://ask.ziglang.cc/discord) 与其他成员交流
-- 关注我们的微信公众号获取最新资讯
-
-  []($image.siteAsset('images/wechat-official.webp').linked(false))
-
-- 改进 ZigCC GitHub 组织下的[开源项目]($link.page('contributing'))，帮助更多人了解 Zig
-- 参加我们的线上线下活动，结识更多 Zig 爱好者
-
-无论你是 Zig 的新手还是资深开发者，我们都欢迎你的加入！让我们一起推动 Zig 语言在中文社区的发展，共同创造更多精彩的项目和资源！
-
-[让我们一起探索 Zig 的魅力，推动 Zig 在中文社区内的发展！]($text.attrs('center','large','bold'))
+<!-- Call to action footer banner -->
+<section class="banner-cta">
+  <div class="banner-inner">
+    <h2>推动 Zig 语言在中文开发者中的普及与创新</h2>
+    <p>无论你是 Zig 新手还是资深系统级架构师，ZigCC 都真诚期待你的加入与贡献！</p>
+    <div class="banner-btns">
+      <a href="/contributing/" class="btn btn-primary">
+        <span>参与社区共建</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="/post/" class="btn btn-secondary">
+        <span>阅读精选博客</span>
+      </a>
+    </div>
+  </div>
+</section>
+```
